@@ -1,0 +1,72 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-09 23:45+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../plugins/redate/redate.py:43
+msgid "%m/%d/%Y %H:%M:%S"
+msgstr ""
+
+#: ../plugins/redate/redate.py:48
+#, python-format
+msgid ""
+"Example date : %s \n"
+"\n"
+"\n"
+msgstr ""
+
+#: ../plugins/redate/redate.py:51
+msgid "No change"
+msgstr ""
+
+#: ../plugins/redate/redate.py:54
+#, python-format
+msgid ""
+"Change to %s :\n"
+"\n"
+msgstr ""
+
+#: ../plugins/redate/__init__.py:32
+msgid "Change Datetime"
+msgstr ""
+
+#: ../plugins/redate/__init__.py:45
+msgid "Redating"
+msgstr ""
+
+#: ../tmp/redate.glade.h:1
+msgid "Day(s)"
+msgstr ""
+
+#: ../tmp/redate.glade.h:2
+msgid "Hour(s)"
+msgstr ""
+
+#: ../tmp/redate.glade.h:3
+msgid "Minute(s)"
+msgstr ""
+
+#: ../tmp/redate.glade.h:4
+msgid "Redate"
+msgstr ""
+
+#: ../tmp/redate.glade.h:5
+msgid "Second(s)"
+msgstr ""
+
+#: ../tmp/redate.glade.h:6
+msgid "Week(s)"
+msgstr ""

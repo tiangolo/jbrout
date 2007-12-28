@@ -1,0 +1,42 @@
+# French translation of PACKAGE.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# manatlan <manatlan@gmail.com>, 2007.
+# , fuzzy
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-09 23:44+0100\n"
+"PO-Revision-Date: 2007-11-09 23:44+0100\n"
+"Last-Translator: manatlan <manatlan@gmail.com>\n"
+"Language-Team: French <gnomefr@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../plugins/viewExif/viewExif.py:56
+msgid "Tag"
+msgstr "Donnée"
+
+#: ../plugins/viewExif/viewExif.py:57
+msgid "Value"
+msgstr "Valeur"
+
+#: ../plugins/viewExif/viewExif.py:92
+msgid "No Displayable EXIF Tags found in file!"
+msgstr "Cette photo ne possède aucune information EXIF !"
+
+#: ../plugins/viewExif/viewExif.py:94
+msgid "Can not open file!"
+msgstr "Impossible d'ouvrir ce fichier"
+
+#: ../plugins/viewExif/__init__.py:22
+msgid "Display Exif Info"
+msgstr "Afficher les infos EXIF"
+
+#: ../tmp/viewExif.glade.h:1
+msgid "EXIF Information"
+msgstr "Informations EXIF"

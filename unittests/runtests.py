@@ -1,0 +1,28 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+"""
+#####################################################################
+Run unitests of jbrout
+#####################################################################
+
+Install the minimum life of jbrout and run all files which looks
+like "tests_*.py" in the current folder.
+
+#####################################################################
+"""
+import os
+import sys
+PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# install the "_" function
+__builtins__.__dict__["_"] = lambda x:x
+
+# make the import path good
+sys.path.append( PATH )
+
+if __name__=="__main__":
+    l=[i for i in os.listdir(".") if i.startswith(u"tests_") and i.endswith(u".py")]
+    os.chdir("..")
+    for i in l:
+        print "--- Tests",i,60*"-"
+        execfile( "unittests/"+i )

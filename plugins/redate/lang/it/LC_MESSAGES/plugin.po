@@ -1,0 +1,79 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: jbrout VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-06-27 14:22+0200\n"
+"PO-Revision-Date: 2007-07-06 10:00+0100\n"
+"Last-Translator: Igor Neri <igor@cimice.net>\n"
+"Language-Team: Italian <igor@cimice.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../plugins/redate/redate.py:43
+msgid "%m/%d/%Y %H:%M:%S"
+msgstr "%d/%m/%Y %H:%M:%S"
+
+#: ../plugins/redate/redate.py:48
+#, python-format
+msgid ""
+"Example date : %s \n"
+"\n"
+"\n"
+msgstr ""
+"Data di esempio : %s \n"
+"\n"
+"\n"
+
+#: ../plugins/redate/redate.py:51
+msgid "No change"
+msgstr "Non cambiare"
+
+#: ../plugins/redate/redate.py:54
+#, python-format
+msgid ""
+"Change to %s :\n"
+"\n"
+msgstr ""
+"Cambia in %s :\n"
+"\n"
+
+#: ../plugins/redate/__init__.py:32
+msgid "Change Datetime"
+msgstr "Cambia data e ora"
+
+#: ../plugins/redate/__init__.py:45
+#, fuzzy
+msgid "Redating"
+msgstr "Sto modificando la data"
+
+#: ../tmp/redate.glade.h:1
+#, fuzzy
+msgid "Day(s)"
+msgstr "Giorni"
+
+#: ../tmp/redate.glade.h:2
+#, fuzzy
+msgid "Hour(s)"
+msgstr "Ore"
+
+#: ../tmp/redate.glade.h:3
+#, fuzzy
+msgid "Minute(s)"
+msgstr "Minuti"
+
+#: ../tmp/redate.glade.h:4
+#, fuzzy
+msgid "Redate"
+msgstr "Modifica data"
+
+#: ../tmp/redate.glade.h:5
+#, fuzzy
+msgid "Second(s)"
+msgstr "Secondi"
+
+#: ../tmp/redate.glade.h:6
+#, fuzzy
+msgid "Week(s)"
+msgstr "Settimane"
+

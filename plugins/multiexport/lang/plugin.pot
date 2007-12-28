@@ -1,0 +1,231 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-09 23:44+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../plugins/multiexport/winexport.py:22
+msgid "Select the destination"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:157
+msgid "Export to"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:185
+msgid "Export to folder"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:191
+#: ../plugins/multiexport/__init__.py:216
+msgid "The selected path doesn't exists !"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:195
+msgid "Export as a Html Gallery"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:220
+msgid "Export to PicasaWeb"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:228
+msgid "Upload error : "
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:233
+#: ../plugins/multiexport/__init__.py:387
+#: ../plugins/multiexport/__init__.py:389
+msgid "Export to Flickr"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:239
+msgid "Export to Email"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:245
+msgid "Export to FTP"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:257
+msgid "FTP error : "
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:368
+msgid "Plugin error : "
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:382
+msgid ""
+"You need to give jBrout permission to upload your photos to Flickr.\n"
+"This is done via a Flickr-session in your web browser to which you are "
+"logged in.\n"
+"\n"
+"If you press the OK-button, jBrout will open your browser.\n"
+"When done, return to jBrout to finish the authentication procedure."
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:389
+msgid ""
+"jBrout should now open a web broser. When you're done there, return to this "
+"message box and click the OK-button."
+msgstr ""
+
+#: ../tmp/winexport.glade.h:1
+msgid "..."
+msgstr ""
+
+#: ../tmp/winexport.glade.h:2
+msgid "32 photos, taille 42mo (demo)"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:3
+msgid ""
+"640\n"
+"800\n"
+"1024\n"
+"1280\n"
+"1600"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:8
+msgid "Apply to all"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:9
+msgid "Export"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:10
+msgid "Export To"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:11
+msgid "FTP"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:12
+msgid "Family"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:13
+msgid "Filesystem"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:14
+msgid "Flickr"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:15
+msgid "Folder"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:16
+msgid "Friends"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:17
+msgid "From email"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:18
+msgid "Html Gallery"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:19
+msgid "Login"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:20
+msgid "Mail"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:21
+msgid "Max side"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:22
+msgid "Message"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:23
+msgid ""
+"Newer first\n"
+"Oldest first"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:25
+msgid "Order"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:26
+msgid "Password"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:27
+msgid "Path"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:28
+msgid "PicasaWeb"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:29
+msgid "Privacy"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:30
+msgid "Private"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:31
+msgid "Public"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:32
+msgid "Quality"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:33
+msgid "Resize"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:34
+msgid "SMTP address"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:35
+msgid "Template "
+msgstr ""
+
+#: ../tmp/winexport.glade.h:36
+msgid "don't touch originals"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:37
+msgid "gtk-apply"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:38
+msgid "gtk-cancel"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:39
+msgid "resize"
+msgstr ""
+
+#: ../tmp/winexport.glade.h:40
+msgid "to Emails"
+msgstr ""

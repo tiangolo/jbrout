@@ -1,0 +1,38 @@
+# French translation of PACKAGE.
+# Copyright (C) 2005 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# manatlan <manatlan@gmail.com>, 2005.
+# , fuzzy
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-30 21:03+0100\n"
+"PO-Revision-Date: 2006-11-30 21:03+0100\n"
+"Last-Translator: manatlan <manatlan@gmail.com>\n"
+"Language-Team: French <gnomefr@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../plugins/rotate/__init__.py:28
+msgid "Rotate Right"
+msgstr "Rotation à droite"
+
+#: ../plugins/rotate/__init__.py:29
+msgid "Rotate Left"
+msgstr "Rotation à gauche"
+
+#: ../plugins/rotate/__init__.py:30
+msgid "Rebuild thumbnail"
+msgstr "Reconstruire la vignette"
+
+#: ../plugins/rotate/__init__.py:42
+msgid "Rotating"
+msgstr "Rotation en cours"
+
+#: ../plugins/rotate/__init__.py:51
+msgid "Rebuilding thumbs"
+msgstr "Reconstruction en cours"
