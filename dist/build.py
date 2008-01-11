@@ -7,7 +7,8 @@
 
 """
 import sys,os,re,stat
-from glob import glob
+from libs import run,megarun
+
 try:
     from py2deb import Py2deb
 except ImportError:
@@ -29,22 +30,6 @@ def walktree (top = ".", depthfirst = True):
     if depthfirst:
         yield top, names
 
-
-import os,time
-def megarun(cmds):
-    for i in cmds.split("\n"):
-        i=i.strip()
-        if i:
-            print i
-            os.system(i)
-
-from subprocess import Popen,PIPE
-def run(cmds):
-    p = Popen(cmds, shell=False,stdout=PIPE,stderr=PIPE)
-    time.sleep(0.01)    # to avoid "IOError: [Errno 4] Interrupted system call"
-    out = "".join(p.stdout.readlines() ).strip()
-    outerr = "".join(p.stderr.readlines() ).strip()
-    return out
 
 
 if __name__ == "__main__":
