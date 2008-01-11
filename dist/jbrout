@@ -1,0 +1,8 @@
+#!/bin/sh
+path=`which jbrout` # to obtain self path
+path=`dirname $path` # cd ..
+path=`dirname $path` # cd ..
+
+APPPATH=$path/lib/jbrout/jbrout.py
+
+python "$APPPATH" "$@"

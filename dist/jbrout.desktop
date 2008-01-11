@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=0.2
+Encoding=UTF-8
+Name=jBrout
+Type=Application
+Exec=/usr/bin/jbrout
+Icon=/usr/lib/jbrout/data/gfx/jbrout.ico
+Terminal=false
+StartupNotify=true
+Categories=GNOME;Application;Multimedia;Graphics;Photograph
