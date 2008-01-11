@@ -13,6 +13,8 @@ def clean():
                 find jbrout -name "*.bak" | xargs rm -fr
                 find jbrout -name "*.gladep" | xargs rm -fr
                 find jbrout -name "*.*~" | xargs rm -fr
+                find dist -name "*.pyc" | xargs rm -fr
+                rm -f jbrout/data/version.txt
                 """)
 
 if __name__ == "__main__":
