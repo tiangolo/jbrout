@@ -14,7 +14,7 @@
 import os
 import gtk
 import time
-from core.commongtk import PictureSelector
+from jbrout.commongtk import PictureSelector
 
 from __main__ import GladeApp # no "libs.gladeapp", because there is a libs dir here ;-(
 

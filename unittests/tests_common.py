@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from core.common import *
+from jbrout.common import *
 
 assert cd2rd("20071114111000") == "14/11/2007 11:10:00"
 assert cd2rd("20071114") == "14/11/2007"

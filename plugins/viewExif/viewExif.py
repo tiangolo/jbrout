@@ -18,7 +18,7 @@ pygtk.require('2.0')
 #====
 
 import gtk
-from core.commongtk import PictureSelector
+from jbrout.commongtk import PictureSelector
 
 from libs.gladeapp import GladeApp
 from libs import exif

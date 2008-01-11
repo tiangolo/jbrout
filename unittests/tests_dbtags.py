@@ -3,7 +3,7 @@
 
 __builtins__.__dict__["_"] = lambda x:x
 
-from core.db import *
+from jbrout.db import *
 import os
 
 if __name__ == "__main__":

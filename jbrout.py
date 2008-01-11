@@ -62,13 +62,13 @@ except:
 
 
 
-from core.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL # for selecteur
-from core.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag
-from core.db import JBrout,Buffer
-from core.winsearch import Winsearch
-from core.winshow import WinShow
-from core.listview import ThumbnailsView
-from core.externaltools import ExternalTools
+from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL # for selecteur
+from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag
+from jbrout.db import JBrout,Buffer
+from jbrout.winsearch import Winsearch
+from jbrout.winshow import WinShow
+from jbrout.listview import ThumbnailsView
+from jbrout.externaltools import ExternalTools
 
 import tempfile,shutil
 

@@ -13,7 +13,7 @@
 ##
 import os
 import gtk
-from core.commongtk import PictureSelector
+from jbrout.commongtk import PictureSelector
 
 from libs.gladeapp import GladeApp
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from core.externaltools import *
+from jbrout.externaltools import *
 
 
 assert splitCommandLine("""/bin/toto   " to fork" -aa """) == \
