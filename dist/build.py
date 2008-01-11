@@ -3,11 +3,14 @@
 
 """
     the build process is done with py2deb (http://manatlan.infogami.com/py2deb)
-    it will build the packages DEB, RPM and SRC at the root of svn
+    it will build the packages DEB, RPM and SRC in a folder "packages" at
+    the root of svn
 
 """
 import sys,os,re,stat
 from libs import run,megarun
+from clean import clean
+import shutil
 
 try:
     from py2deb import Py2deb
@@ -44,16 +47,15 @@ if __name__ == "__main__":
 
 
     #==========================================================================
+    # remove packages dir if present
+    #==========================================================================
+    if os.path.isdir("packages"):
+        shutil.rmtree("packages")
+
+    #==========================================================================
     # clean the source
     #==========================================================================
-    megarun(""" find jbrout -name "*.pyc" | xargs rm -fr
-                find jbrout -name "*.orig" | xargs rm -fr
-                find jbrout -name "*.rej" | xargs rm -fr
-                find jbrout -name "*.bak" | xargs rm -fr
-                find jbrout -name "*.gladep" | xargs rm -fr
-                find jbrout -name "*.*~" | xargs rm -fr
-                """)
-
+    clean()
 
     #==========================================================================
     # compile the sources
@@ -133,4 +135,10 @@ jBrout is able to :
     p["/usr/lib"]=list
 
 
-    p.generate(version,log,src=True,rpm=True)
+    files=p.generate(version,log,src=True,rpm=True)
+
+    assert len(files)==3
+
+    os.makedirs("packages")
+    for i in files:
+        shutil.move(i,"packages")
