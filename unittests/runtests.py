@@ -12,7 +12,7 @@ like "tests_*.py" in the current folder.
 """
 import os
 import sys
-PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"jbrout")
 
 # install the "_" function
 __builtins__.__dict__["_"] = lambda x:x
@@ -22,7 +22,7 @@ sys.path.append( PATH )
 
 if __name__=="__main__":
     l=[i for i in os.listdir(".") if i.startswith(u"tests_") and i.endswith(u".py")]
-    os.chdir("..")
+    os.chdir("../jbrout")
     for i in l:
         print "--- Tests",i,60*"-"
-        execfile( "unittests/"+i )
+        execfile( "../unittests/"+i )
