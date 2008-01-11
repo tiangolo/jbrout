@@ -14,7 +14,7 @@
 
 import os
 import gtk
-
+import sys
 
 from __main__ import Buffer,JBrout,GladeApp
 
@@ -132,7 +132,7 @@ class Winsearch(GladeApp):
 
         self.main_widget.set_transient_for(parent)
         w,h=JBrout.conf["search.width"] or 500,JBrout.conf["search.height"] or 400
-        #self.main_widget.resize( w,h )
+
         # work arround for bug in pygtk/gtk 2.10.6 on windows set default size
         # then reshow with initial (default) size instead of simple resize
         self.main_widget.set_default_size(w,h)

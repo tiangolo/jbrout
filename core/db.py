@@ -1164,8 +1164,9 @@ class JBrout:
     @staticmethod
     def lockOn():
         """ create the lock file, return True if it can"""
-        file = os.path.join(JBrout.getHomeDir(),JBrout.__lockFile)
+        file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
         if os.path.isfile(file):
+            print file
             return False
         else:
             open(file,"w").write("")
@@ -1174,7 +1175,7 @@ class JBrout:
     @staticmethod
     def lockOff():
         """ delete the lockfile """
-        file = os.path.join(JBrout.getHomeDir(),JBrout.__lockFile)
+        file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
         if os.path.isfile(file):
             os.unlink(file)
 

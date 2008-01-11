@@ -989,11 +989,14 @@ class Window(GladeApp):
         self.tvFilteredAlbums.connect("row_activated",self.on_treeviewdb_row_activated)
 
         w,h=JBrout.conf["width"] or 800,JBrout.conf["height"] or 600
-        #self.main_widget.resize( w,h )
-        # work arround for bug in pygtk/gtk 2.10.6 on windows set default size
-        # then reshow with initial (default) size instead of simple resize
-        self.main_widget.set_default_size(w,h)
-        self.main_widget.reshow_with_initial_size()
+
+        if sys.platform[:3].lower()=="win":
+            # work arround for bug in pygtk/gtk 2.10.6 on windows set default size
+            # then reshow with initial (default) size instead of simple resize
+            self.main_widget.set_default_size(w,h)
+            self.main_widget.reshow_with_initial_size()
+        else:
+            self.main_widget.resize( w,h )
 
         self.hpaned1.set_position( JBrout.conf["hpaned"] or 160 )
         self.frameFilter.hide()
@@ -2410,7 +2413,7 @@ def main(canModify=True):
         finally:
             JBrout.lockOff()
     else:
-        print "jbrout is already running"
+        print "jbrout is already running (~/.jbrout/jbrout.lock)"
 
 USAGE = """%s [options]
 JBrout %s by Marc Lentz (c)2003-2007, Licence GPL2
