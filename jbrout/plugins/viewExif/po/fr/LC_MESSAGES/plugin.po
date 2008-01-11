@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 23:44+0100\n"
+"POT-Creation-Date: 2008-01-11 14:43+0100\n"
 "PO-Revision-Date: 2007-11-09 23:44+0100\n"
 "Last-Translator: manatlan <manatlan@gmail.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
@@ -25,11 +25,11 @@ msgstr "Donnée"
 msgid "Value"
 msgstr "Valeur"
 
-#: ../plugins/viewExif/viewExif.py:92
+#: ../plugins/viewExif/viewExif.py:98
 msgid "No Displayable EXIF Tags found in file!"
 msgstr "Cette photo ne possède aucune information EXIF !"
 
-#: ../plugins/viewExif/viewExif.py:94
+#: ../plugins/viewExif/viewExif.py:100
 msgid "Can not open file!"
 msgstr "Impossible d'ouvrir ce fichier"
 

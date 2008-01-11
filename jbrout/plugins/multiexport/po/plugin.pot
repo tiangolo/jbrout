@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-09 23:44+0100\n"
+"POT-Creation-Date: 2008-01-11 14:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,54 +20,58 @@ msgstr ""
 msgid "Select the destination"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:157
+#: ../plugins/multiexport/__init__.py:165
 msgid "Export to"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:185
+#: ../plugins/multiexport/__init__.py:193
 msgid "Export to folder"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:191
-#: ../plugins/multiexport/__init__.py:216
+#: ../plugins/multiexport/__init__.py:199
+#: ../plugins/multiexport/__init__.py:224
 msgid "The selected path doesn't exists !"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:195
+#: ../plugins/multiexport/__init__.py:203
 msgid "Export as a Html Gallery"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:220
+#: ../plugins/multiexport/__init__.py:228
 msgid "Export to PicasaWeb"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:228
-msgid "Upload error : "
-msgstr ""
-
-#: ../plugins/multiexport/__init__.py:233
-#: ../plugins/multiexport/__init__.py:387
-#: ../plugins/multiexport/__init__.py:389
-msgid "Export to Flickr"
+#: ../plugins/multiexport/__init__.py:237
+msgid "Sorry, you can't upload to picasaweb (python import error)"
 msgstr ""
 
 #: ../plugins/multiexport/__init__.py:239
+msgid "Upload error : "
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:244
+#: ../plugins/multiexport/__init__.py:399
+#: ../plugins/multiexport/__init__.py:401
+msgid "Export to Flickr"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:250
 msgid "Export to Email"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:245
+#: ../plugins/multiexport/__init__.py:256
 msgid "Export to FTP"
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:257
+#: ../plugins/multiexport/__init__.py:268
 msgid "FTP error : "
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:368
+#: ../plugins/multiexport/__init__.py:380
 msgid "Plugin error : "
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:382
+#: ../plugins/multiexport/__init__.py:394
 msgid ""
 "You need to give jBrout permission to upload your photos to Flickr.\n"
 "This is done via a Flickr-session in your web browser to which you are "
@@ -77,7 +81,7 @@ msgid ""
 "When done, return to jBrout to finish the authentication procedure."
 msgstr ""
 
-#: ../plugins/multiexport/__init__.py:389
+#: ../plugins/multiexport/__init__.py:401
 msgid ""
 "jBrout should now open a web broser. When you're done there, return to this "
 "message box and click the OK-button."

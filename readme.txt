@@ -14,10 +14,10 @@ Changes from 0.2.xxx
                       gpl.txt, version.txt (used by jbrout to know who is it),
                       jbrout.glade
         - jbrout/   : core program
-        - lang/     : translations for main program (previously named "po")
+        - po/       : translations for main program (
         - libs/     : external libs
         - plugins/  : (the __init__.py contains the class jplugin now)
-                      each plugins contains a folder "lang" instead of "po"
+                      each plugins contains a folder "po"
         - jbrout.py : the application
     - unittests/ : unit tests
     - dist/         # Distribution scripts other than setup.py

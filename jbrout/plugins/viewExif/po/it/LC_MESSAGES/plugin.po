@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-01-11 14:43+0100\n"
 "PO-Revision-Date: 2007-11-15 17:19+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: io <io>\n"
@@ -19,11 +20,11 @@ msgstr "Tag"
 msgid "Value"
 msgstr "Valore"
 
-#: ../plugins/viewExif/viewExif.py:92
+#: ../plugins/viewExif/viewExif.py:98
 msgid "No Displayable EXIF Tags found in file!"
 msgstr "Nessun Tag EXIF visualizzabile trovato nel file!"
 
-#: ../plugins/viewExif/viewExif.py:94
+#: ../plugins/viewExif/viewExif.py:100
 msgid "Can not open file!"
 msgstr "Impossibile aprire il file!"
 
@@ -34,4 +35,3 @@ msgstr "Mostra le informazioni Exif"
 #: ../tmp/viewExif.glade.h:1
 msgid "EXIF Information"
 msgstr "Informazioni EXIF"
-

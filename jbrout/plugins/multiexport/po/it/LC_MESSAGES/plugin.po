@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-27 14:22+0200\n"
+"POT-Creation-Date: 2008-01-11 14:43+0100\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -14,70 +14,81 @@ msgstr ""
 msgid "Select the destination"
 msgstr "Seleziona la destinazione"
 
-#: ../plugins/multiexport/__init__.py:157
+#: ../plugins/multiexport/__init__.py:165
 msgid "Export to"
 msgstr "Esporta su"
 
-#: ../plugins/multiexport/__init__.py:185
+#: ../plugins/multiexport/__init__.py:193
 msgid "Export to folder"
 msgstr "Esporta su cartella"
 
-#: ../plugins/multiexport/__init__.py:191
-#: ../plugins/multiexport/__init__.py:216
+#: ../plugins/multiexport/__init__.py:199
+#: ../plugins/multiexport/__init__.py:224
 msgid "The selected path doesn't exists !"
 msgstr "Il percorso selezionato non esiste"
 
-#: ../plugins/multiexport/__init__.py:195
+#: ../plugins/multiexport/__init__.py:203
 msgid "Export as a Html Gallery"
 msgstr "Esporta come galleria Html"
 
-#: ../plugins/multiexport/__init__.py:220
+#: ../plugins/multiexport/__init__.py:228
 msgid "Export to PicasaWeb"
 msgstr "Esporta su PicasaWeb"
 
-#: ../plugins/multiexport/__init__.py:228
+#: ../plugins/multiexport/__init__.py:237
+msgid "Sorry, you can't upload to picasaweb (python import error)"
+msgstr ""
+
+#: ../plugins/multiexport/__init__.py:239
 msgid "Upload error : "
 msgstr "Errore di caricamento :"
 
-#: ../plugins/multiexport/__init__.py:233
-#: ../plugins/multiexport/__init__.py:387
-#: ../plugins/multiexport/__init__.py:389
+#: ../plugins/multiexport/__init__.py:244
+#: ../plugins/multiexport/__init__.py:399
+#: ../plugins/multiexport/__init__.py:401
 msgid "Export to Flickr"
 msgstr "Esporta su Flickr"
 
-#: ../plugins/multiexport/__init__.py:239
+#: ../plugins/multiexport/__init__.py:250
 msgid "Export to Email"
 msgstr "Esporta su Email"
 
-#: ../plugins/multiexport/__init__.py:245
+#: ../plugins/multiexport/__init__.py:256
 msgid "Export to FTP"
 msgstr "Esporta su FTP"
 
-#: ../plugins/multiexport/__init__.py:257
+#: ../plugins/multiexport/__init__.py:268
 msgid "FTP error : "
 msgstr "Errore FTP :"
 
-#: ../plugins/multiexport/__init__.py:368
+#: ../plugins/multiexport/__init__.py:380
 msgid "Plugin error : "
 msgstr "Errore Plugin :"
 
-#: ../plugins/multiexport/__init__.py:382
+#: ../plugins/multiexport/__init__.py:394
 msgid ""
 "You need to give jBrout permission to upload your photos to Flickr.\n"
-"This is done via a Flickr-session in your web browser to which you are logged in.\n"
+"This is done via a Flickr-session in your web browser to which you are "
+"logged in.\n"
 "\n"
 "If you press the OK-button, jBrout will open your browser.\n"
 "When done, return to jBrout to finish the authentication procedure."
 msgstr ""
 "È necessario dare a JBrout il permesso di caricare le foto su Flickr.\n"
-"Questo è fatto tramite la sessione del proprio browser dal quale si è loggati su Flickr.\n"
+"Questo è fatto tramite la sessione del proprio browser dal quale si è "
+"loggati su Flickr.\n"
 "\n"
 "Premendo il bottone OK JBrout aprirà il browser.\n"
-"Appena fatto ritornare a JBrout per completare la procedura di autenticazione."
+"Appena fatto ritornare a JBrout per completare la procedura di "
+"autenticazione."
 
-#: ../plugins/multiexport/__init__.py:389
-msgid "jBrout should now open a web broser. When you're done there, return to this message box and click the OK-button."
-msgstr "jBrout aprirà ora il web browser. Appena fatto tornare a questo message box e premere il pulsante OK."
+#: ../plugins/multiexport/__init__.py:401
+msgid ""
+"jBrout should now open a web broser. When you're done there, return to this "
+"message box and click the OK-button."
+msgstr ""
+"jBrout aprirà ora il web browser. Appena fatto tornare a questo message box "
+"e premere il pulsante OK."
 
 #: ../tmp/winexport.glade.h:1
 msgid "..."
@@ -227,4 +238,3 @@ msgstr "ridimensiona"
 #: ../tmp/winexport.glade.h:40
 msgid "to Emails"
 msgstr "a Email"
-
