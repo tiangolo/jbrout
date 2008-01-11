@@ -56,7 +56,7 @@ class JPlugins:
                             module=__import__(namespace,[],[],["Plugin"])
 
                             # create the _() for __init__ plugins
-                            module.__dict__["_"] = createGetText("plugin",os.path.join(path,"lang"))
+                            module.__dict__["_"] = createGetText("plugin",os.path.join(path,"po"))
 
                             # create an instance
                             instance = module.Plugin(id,path)
@@ -79,7 +79,7 @@ class JPlugins:
                         module=__import__(id,[],[],["Plugin"])  # IMPORT ID !!!!!!!!!!!!
 
                         # create the _() for __init__ plugins
-                        module.__dict__["_"] = createGetText("plugin",os.path.join(path,"lang"))
+                        module.__dict__["_"] = createGetText("plugin",os.path.join(path,"po"))
 
                         # create an instance
                         instance = module.Plugin(id,path)
@@ -195,10 +195,10 @@ class JPlugins:
             try:
                 # for the .glade files
                 from libs.gladeapp import GladeApp
-                GladeApp.bindtextdomain("plugin",os.path.join(instance.path, 'lang'))
+                GladeApp.bindtextdomain("plugin",os.path.join(instance.path, 'po'))
 
                 # for the "_()" in "window gladeapp" code
-                __builtins__["_"] = createGetText("plugin",os.path.join(instance.path,"lang"))
+                __builtins__["_"] = createGetText("plugin",os.path.join(instance.path,"po"))
 
                 ret=callback(*a,**k)
             finally:

@@ -42,10 +42,10 @@ from libs.gladeapp import GladeApp
 from libs.i18n import createGetText
 
 # make translation available in the gui/gtk
-GladeApp.bindtextdomain("jbrout",os.path.join(os.path.dirname(__file__), 'lang'))
+GladeApp.bindtextdomain("jbrout",os.path.join(os.path.dirname(__file__), 'po'))
 
 # make translation available in the code
-__builtins__.__dict__["_"] = createGetText("jbrout",os.path.join(os.path.dirname(__file__), 'lang'))
+__builtins__.__dict__["_"] = createGetText("jbrout",os.path.join(os.path.dirname(__file__), 'po'))
 
 
 #=============================================================================
