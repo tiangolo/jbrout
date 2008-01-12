@@ -126,7 +126,7 @@ jBrout is able to :
     p.arch="all"
 
     # install freedekstop icon
-    p["/usr/share/applications"]=["dist/data/jbrout.desktop|jbrout.desktop "]
+    p["/usr/share/applications"]=["dist/data/jbrout.desktop|jbrout.desktop"]
 
     # install jbrout launcher
     p["/usr/bin"]=["dist/data/jbrout|jbrout"]
