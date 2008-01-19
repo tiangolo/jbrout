@@ -334,7 +334,7 @@ class ListView(ThumbnailsView):
 
         if node.isInBasket:
             pb2 = pb.copy()
-            Buffer.pbBasket2.copy_area(0, 0, 15, 13, pb2, 7, 7)
+            Buffer.pbBasket.copy_area(0, 0, 15, 13, pb2, 7, 7)
             pb=pb2
 
         if node.isReadOnly:

@@ -475,8 +475,6 @@ class Buffer:
     pbFolder = Img("data/gfx/folder.png").pixbuf
     pbBasket = Img("data/gfx/basket.png").pixbuf
 
-    pbBasket2 = Img("data/gfx/basketblack.png").pixbuf
-
     pbReadOnly = Img("data/gfx/check_no.png").pixbuf
 
     pbCheckEmpty = Img("data/gfx/check_false.png").pixbuf
