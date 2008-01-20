@@ -86,6 +86,7 @@ class WinViewExif(GladeApp):
         if os.path.isfile(self.nodes[i].file):
             f=open(self.nodes[i].file, 'rb')
             tags=exif.process_file(f)
+            f.close()
             sortedTags=tags.keys()
             sortedTags.sort()
             for tag in sortedTags:
