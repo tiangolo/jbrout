@@ -29,6 +29,9 @@ from datetime import datetime
 def cd2d(f): #yyyymmddhhiiss -> datetime
    return datetime(int(f[:4]),int(f[4:6]), int(f[6:8]),int(f[8:10]),int(f[10:12]),int(f[12:14]))
 
+def ed2d(f): #yyyy:mm:dd hh:ii:ss -> datetime (output from exif lib)
+    return datetime(int(f[:4]),int(f[5:7]), int(f[8:10]),int(f[11:13]),int(f[14:16]),int(f[17:19]))
+
 def format_file_size_for_display(file_size):
     KILOBYTE_FACTOR = 1024.0
     MEGABYTE_FACTOR = 1024.0 ** 2
@@ -59,6 +62,19 @@ def runWith(l,file,wait=True):
             return True
     return False
 
+def caseFreeCmp (a,b):
+    if a.upper() < b.upper():
+        return -1
+    elif a.upper() > b.upper():
+        return 1
+    else:
+        if a < b:
+            return 1
+        elif a > b:
+            return -1
+        else:
+            return 0
+
 import os,sys
 def openURL(url):
     """ open the url in the current browser (don't wait the browser)"""
@@ -66,7 +82,6 @@ def openURL(url):
         os.startfile(url)
     else:
         runWith(["gnome-open","mozilla-firefox","firefox","konqueror","epiphany","galeon"],unicode(url),False)
-
 
 if __name__ == "__main__":
     #~ print JBrout.home
