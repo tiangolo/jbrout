@@ -55,7 +55,8 @@ import gobject
 
 
 try:
-    __version__ = open("data/version.txt").read().strip()
+    __version__ = open(os.path.join(os.path.dirname(__file__),
+        "data","version.txt")).read().strip()
 except:
     __version__ = "src"
 
@@ -2414,6 +2415,7 @@ def main(canModify=True):
             JBrout.lockOff()
     else:
         print "jbrout is already running (~/.jbrout/jbrout.lock)"
+        sys.exit(1)
 
 USAGE = """%s [options]
 JBrout %s by Marc Lentz (c)2003-2007, Licence GPL2
