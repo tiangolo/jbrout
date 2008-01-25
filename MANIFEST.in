@@ -1,0 +1,1 @@
+recursive-include jbrout *.txt *.py *.glade *.pot *.mo *.po *.png *.xcf *.ico *.xsl
