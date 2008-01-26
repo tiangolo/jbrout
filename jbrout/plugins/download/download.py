@@ -287,7 +287,7 @@ class WinDownload(GladeApp):
                 statS = 'C'
                 statL = _('Collision with New')
             elif os.path.isfile(row[dc.C_DEST]):
-                f = open(imageInfo[dc.C_DEST], 'rb')
+                f = open(row[dc.C_DEST], 'rb')
                 destExif = exif.process_file(f)
                 f.close()
                 if 'Image DateTime' in destExif:
