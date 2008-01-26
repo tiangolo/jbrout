@@ -63,7 +63,8 @@ class Plugin(JPlugin):
         execute = winDownload.loop()[0]
         ec.save()
         if execute:
-            winExecute = WinDownloadExecute(ec,winDownload.getToDownload())
+            winExecute = WinDownloadExecute(ec,winDownload.getToDownload(),
+                winDownload.srcFolder, winDownload.destFolder)
             winExecute.loop()
             return True
         else:

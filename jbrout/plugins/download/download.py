@@ -126,11 +126,11 @@ class WinDownload(GladeApp):
         """
         self.__conf = conf
         self.nb = NameBuilder()
-        sourceFolder = self.__conf['sourceFolder']
-        if os.path.isdir(sourceFolder):
-            self.entSourceFolder.set_text(sourceFolder)
-        else:
-            self.entSourceFolder.set_text(os.path.dirname(__file__))
+        self.srcFolder = self.__conf['sourceFolder']
+        if not os.path.isdir(self.srcFolder):
+            self.srcFolder = os.path.dirname(__file__)
+        self.entSourceFolder.set_text(self.srcFolder)
+        self.entDestFolder.set_text(self.destFolder)
         self.chkDelete.set_active(self.__conf['delete'] == 1)
 
         w,h = self.__conf['width'] or 800,self.__conf['height'] or 400
@@ -172,13 +172,15 @@ class WinDownload(GladeApp):
         self.invalidSource = False
         self.invalidDest = True
         self.imLst.clear()
-        self.statusBar.push(self.cidStatusBar, _('Finding source files'))
+        self.statusBar.push(self.cidStatusBar,
+            _('Finding source files in "%s"') % self.srcFolder)
         yield True
         self.imgInfs = []
-        fileList = self._listFiles(self.entSourceFolder.get_text())
+        fileList = self._listFiles(self.srcFolder)
         fileList.sort()
         self.statusBar.pop(self.cidStatusBar)
-        self.statusBar.push(self.cidStatusBar, _('Reading source file information'))
+        self.statusBar.push(self.cidStatusBar,
+            _('Reading source file information from "%s"') % self.srcFolder)
         yield True
         if self.invalidSource or self.quitNow:
             self.statusBar.pop(self.cidStatusBar)
@@ -194,7 +196,7 @@ class WinDownload(GladeApp):
             else:
                 date = datetime.datetime.fromtimestamp(os.path.getmtime(srcFile))
             row=[
-                srcFile,
+                srcFile[len(self.srcFolder)+1:],
                 format_file_size_for_display(size),
                 size,
                 date,
@@ -231,6 +233,7 @@ class WinDownload(GladeApp):
         # Build names without seralisation
         self.statusBar.push(self.cidStatusBar, _('Building destination Names'))
         yield True
+        # Clear all destination information
         for rowIdx in range(self.imLst.getCount()):
             self.imLst.setItem(rowIdx, dc.C_SS, '')
             self.imLst.setItem(rowIdx, dc.C_STAT, '')
@@ -239,7 +242,7 @@ class WinDownload(GladeApp):
         for imageInfo in self.imgInfs:
             imageInfo[dc.C_DEST] = self.nb.name(
                                     imageInfo[dc.C_SRC],
-                                    self.destFolder,
+                                    '', # Dest folder blank as not needed here
                                     self.__conf['nameFormat'],
                                     imageInfo[dc.C_EXIF],
                                     imageInfo[dc.C_DATE],
@@ -279,6 +282,7 @@ class WinDownload(GladeApp):
         self.statusBar.push(self.cidStatusBar, _('Checking Status of Images'))
         yield True
         for rowIdx, row in enumerate(self.imLst.iterAllRows()):
+            destFile = os.path.join(self.destFolder,row[dc.C_DEST])
             count = 0
             for chkRow in self.imLst.iterAllRows():
                 if chkRow[dc.C_DEST] == row[dc.C_DEST]:
@@ -286,15 +290,15 @@ class WinDownload(GladeApp):
             if count > 1:
                 statS = 'C'
                 statL = _('Collision with New')
-            elif os.path.isfile(row[dc.C_DEST]):
-                f = open(row[dc.C_DEST], 'rb')
+            elif os.path.isfile(destFile):
+                f = open(destFile, 'rb')
                 destExif = exif.process_file(f)
                 f.close()
                 if 'Image DateTime' in destExif:
                     destDate = ed2d("%s" % destExif['EXIF DateTimeOriginal'])
                 else:
                     destDate = datetime.datetime.fromtimestamp(
-                        os.path.getmtime(row[dc.C_DEST]))
+                        os.path.getmtime(destFile))
                 if destDate.timetuple() == row[dc.C_DATE].timetuple():
                     statS = 'D'
                     statL = _('Downloaded')
@@ -373,12 +377,13 @@ class WinDownload(GladeApp):
                 (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                 gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         dialog.set_default_response(gtk.RESPONSE_OK)
-        dialog.set_filename(self.entSourceFolder.get_text())
+        dialog.set_filename(self.srcFolder)
         response = dialog.run()
         if response == gtk.RESPONSE_OK:
-            if dialog.get_filename != self.entSourceFolder.get_text():
+            if dialog.get_filename != self.srcFolder:
+                self.srcFolder = dialog.get_filename()
                 self.invalidSource = True
-                self.entSourceFolder.set_text(dialog.get_filename())
+                self.entSourceFolder.set_text(self.srcFolder)
         dialog.destroy()
 
     def on_btnPreferences_clicked(self, widget, *args):
@@ -625,10 +630,12 @@ class WinDownloadExecute(GladeApp):
     glade = os.path.join(os.path.dirname(__file__), 'download.glade')
     window = "winDownloadProgress"
 
-    def init(self, conf, list):
+    def init(self, conf, list, srcFolder, destFolder):
         """Handles window initalisation"""
-        self.list = list
         self.conf = conf
+        self.list = list
+        self.srcFolder = srcFolder
+        self.destFolder = destFolder
 
         self.quitNow = False
         task = self.doIt()
@@ -651,8 +658,10 @@ class WinDownloadExecute(GladeApp):
         for itemIndex, item in enumerate(self.list):
             if  item[dc.C_SS] != 'C': # Not Conflicted
                 # Initial set-up for item
-                self.lblSource.set_label(item[dc.C_SRC])
-                self.lblDest.set_label(item[dc.C_DEST])
+                src = os.path.join(self.srcFolder,item[dc.C_SRC])
+                dest = os.path.join(self.destFolder,item[dc.C_DEST])
+                self.lblSource.set_label(src)
+                self.lblDest.set_label(dest)
                 self.progressbar.set_text(_("Downloading %d of %d") %
                     (itemIndex+1, len(self.list)))
                 self.progressbar.set_fraction(
@@ -681,10 +690,10 @@ class WinDownloadExecute(GladeApp):
                 # Copying file
                 self.lblAction.set_label(_('Copying'))
                 yield True
-                if not os.path.isdir(os.path.dirname(item[dc.C_DEST])):
-                    os.makedirs(os.path.dirname(item[dc.C_DEST]))
-                shutil.copy2(item[dc.C_SRC], item[dc.C_DEST])
-                pc = PhotoCmd(unicode(item[dc.C_DEST]))
+                if not os.path.isdir(os.path.dirname(dest)):
+                    os.makedirs(os.path.dirname(dest))
+                shutil.copy2(src, dest)
+                pc = PhotoCmd(unicode(dest))
                 # Rotation if enabled/needed
                 if item[dc.C_RS] != 'N':
                     self.lblAction.set_label(
@@ -709,19 +718,19 @@ class WinDownloadExecute(GladeApp):
                 yield True
                 timeStamp = time.mktime(item[dc.C_DATE].timetuple())
                 try:
-                    os.utime(item[dc.C_DEST],(timeStamp,timeStamp))
+                    os.utime(dest,(timeStamp,timeStamp))
                 except OSError,detail:
                     # utime doesn't work well if uid/gid are not the same
                     # so we need to use the real touch ;-) (with mtime)
                     print "need to touch ;-("
                     stime = time.strftime("%Y%m%d%H%M.%S",time.localtime(timeStamp) )
-                    _Command._run( ["touch",'-t',stime,item[dc.C_DEST]] )
+                    _Command._run( ["touch",'-t',stime,dest] )
             # Delete source if enabled and No collision
             if  item[dc.C_SS] != 'C' and self.conf['delete'] == 1:
                 self.lblAction.set_label(_('Deleting Source'))
                 yield True
                 try:
-                    os.unlink(unicode(item[dc.C_SRC]))
+                    os.unlink(unicode(src))
                 except os.error, detail:
                     raise detail
             # Check if we need to exit
