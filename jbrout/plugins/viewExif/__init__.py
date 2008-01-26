@@ -16,10 +16,10 @@ from __main__ import JPlugin
 class Plugin(JPlugin):
     """ Plugin to display the full exif info contained in one ore more photos """
     __author__ = "Rob Wallace"
-    __version__ = "0.0.2"
+    __version__ = "0.0.3"
 
     def menuEntries(self,list):
-        return [ (5000,_("Display Exif Info"),False,self.viewExif,None), ]
+        return [ (5000,_("Display Meta Data"),False,self.viewExif,None), ]
 
     def viewExif(self,list):
         from viewExif import WinViewExif

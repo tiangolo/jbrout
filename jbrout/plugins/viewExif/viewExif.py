@@ -21,7 +21,12 @@ import gtk
 from jbrout.commongtk import PictureSelector
 
 from libs.gladeapp import GladeApp
-from libs import exif
+try:
+    import pyexiv2
+    pyexiv2Avaliable = True
+except:
+    from libs import exif
+    pyexiv2Avaliable = False
 
 import re
 
@@ -39,8 +44,11 @@ class WinViewExif(GladeApp):
 
         self.nodes = nodes
 
-        self.ignoredTags = 'JPEGThumbnail|TIFFThumbnail|EXIF MakerNote'
-        self.ignoredTags += '|MakerNote Unknown|EXIF Tag|MakerNote Tag'
+        if pyexiv2Avaliable:
+            self.ignoredTags = '.*0x0.*'
+        else:
+            self.ignoredTags = 'JPEGThumbnail|TIFFThumbnail|EXIF MakerNote'
+            self.ignoredTags += '|MakerNote Unknown|EXIF Tag|MakerNote Tag'
 
         ## Set-up the Picture selector
         self.selector = PictureSelector(self.nodes)
@@ -84,17 +92,36 @@ class WinViewExif(GladeApp):
     def setPhoto(self,i):
         self.exifList.clear()
         if os.path.isfile(self.nodes[i].file):
-            f=open(self.nodes[i].file, 'rb')
-            tags=exif.process_file(f)
-            f.close()
-            sortedTags=tags.keys()
-            sortedTags.sort()
-            for tag in sortedTags:
-                if re.match(self.ignoredTags, tag) == None:
-                    try:
-                        self.exifList.append([tag, tags[tag]])
-                    except:
-                        pass
+            if pyexiv2Avaliable:
+                image=pyexiv2.Image(self.nodes[i].file)
+                image.readMetadata()
+                for key in image.exifKeys():
+                    if re.match(self.ignoredTags, key) == None:
+                        tag_details = image.tagDetails(key)
+                        try:
+                            self.exifList.append([tag_details[0],
+                                image.interpretedExifValue(key)])
+                        except:
+                            print "Error on tag " + key
+                for key in image.iptcKeys():
+                    if re.match(self.ignoredTags, key) == None:
+                        tag_details = image.tagDetails(key)
+                        try:
+                            self.exifList.append([tag_details[0], image[key]])
+                        except:
+                            print "Error on tag " + key
+            else:
+                f=open(self.nodes[i].file, 'rb')
+                tags=exif.process_file(f)
+                f.close()
+                sortedTags=tags.keys()
+                sortedTags.sort()
+                for tag in sortedTags:
+                    if re.match(self.ignoredTags, tag) == None:
+                        try:
+                            self.exifList.append([tag, tags[tag]])
+                        except:
+                            pass
             if len(self.exifList)==0:
                 self.exifList.append([_('No Displayable EXIF Tags found in file!'), ''])
         else:
