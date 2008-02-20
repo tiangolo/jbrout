@@ -20,6 +20,12 @@ import common
 from libs.gladeapp import GladeApp
 #_=lambda x:x                        # TODO : delete this line !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+def colorToString(color):
+    """
+    Converts a gtk.gdk color to a string
+    (fix for windows not having the to_string member function)"""
+    return "#%x%x%x" %(color.red, color.blue, color.green)
+
 class WinKeyTag(GladeApp):
     glade=os.path.join(os.path.dirname(__file__), 'data/jbrout.glade')
     window="WinKeyTag"

@@ -32,6 +32,12 @@ def cd2d(f): #yyyymmddhhiiss -> datetime
 def ed2d(f): #yyyy:mm:dd hh:ii:ss -> datetime (output from exif lib)
     return datetime(int(f[:4]),int(f[5:7]), int(f[8:10]),int(f[11:13]),int(f[14:16]),int(f[17:19]))
 
+def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
+   if f:
+      return f[:4]+f[5:7]+f[8:10]+f[11:13]+f[14:16]+f[17:19]
+   else:
+      return f
+
 def format_file_size_for_display(file_size):
     KILOBYTE_FACTOR = 1024.0
     MEGABYTE_FACTOR = 1024.0 ** 2

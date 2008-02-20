@@ -6,8 +6,7 @@ from __main__ import JPlugin
 import os
 
 from datetime import datetime
-def cd2d(f): #yyyymmddhhiiss -> datetime
-   return datetime(int(f[:4]),int(f[4:6]), int(f[6:8]),int(f[8:10]),int(f[10:12]),int(f[12:14]))
+from jbrout.common import cd2d
 
 
 class Plugin(JPlugin):

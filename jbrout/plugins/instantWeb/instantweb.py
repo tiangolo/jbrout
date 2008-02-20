@@ -22,6 +22,8 @@ from cStringIO import StringIO
 import thread,gobject,time,math
 import select
 
+from jbrout.common import cd2rd
+
 try:
     import Image
 except:
@@ -55,15 +57,6 @@ class pn(object):
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
 # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-
-def cd2rd(f): #yyyymmddhhiiss -> dd/mm/yyyy hh:ii:ss
-   if f:
-      if len(f) == 14:
-         return f[6:8]+"/"+f[4:6]+"/"+f[:4]+" "+f[8:10]+":"+f[10:12]+":"+f[12:14]
-      else:
-         return f[6:8]+"/"+f[4:6]+"/"+f[:4]
-   else:
-      return f
 
 # ==============================================================================
 class MyHandler(BaseHTTPRequestHandler):

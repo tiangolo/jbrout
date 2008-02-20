@@ -37,6 +37,8 @@ from libs.mailer import sendMail
 # for common
 import os,time,shutil
 
+from jbrout.common import cd2rd
+
 class ExportConf(object):
     __attrs={
         "type":"FS",  # FS,HG,PW,FR or SM or FT
@@ -142,16 +144,6 @@ class ExportConf(object):
         for i in self.__attrs.keys():
             self.__conf[i] = self.__attrs[i]
         pass
-
-
-def cd2rd(f): #yyyymmddhhiiss -> dd/mm/yyyy hh:ii:ss
-   if f:
-      if len(f) == 14:
-         return f[6:8]+"/"+f[4:6]+"/"+f[:4]+" "+f[8:10]+":"+f[10:12]+":"+f[12:14]
-      else:
-         return f[6:8]+"/"+f[4:6]+"/"+f[:4]
-   else:
-      return f
 
 class PicasaException(Exception): pass
 

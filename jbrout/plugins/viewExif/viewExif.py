@@ -25,6 +25,7 @@ try:
     import pyexiv2
     pyexiv2Avaliable = True
 except:
+    print "pyexiv2 not avaliable trying exif"
     from libs import exif
     pyexiv2Avaliable = False
 

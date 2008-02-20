@@ -22,6 +22,7 @@ from datetime import timedelta
 import datetime
 from subprocess import Popen,PIPE
 import tempfile
+from common import cd2d,ed2d,ed2cd
 
 
 # Protect against crappy output of some unnamed (ehm,
@@ -47,16 +48,6 @@ nonPCDataRange += range(0x7f,0x9f)
 for i in nonPCDataRange:
    nonPCData += chr(i)
 allchars = maketransU('','',nonPCData)
-
-
-def cd2d(f): #yyyymmddhhiiss -> datetime
-   return datetime.datetime(int(f[:4]),int(f[4:6]), int(f[6:8]),int(f[8:10]),int(f[10:12]),int(f[12:14]))
-
-def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
-   if f:
-      return f[:4]+f[5:7]+f[8:10]+f[11:13]+f[14:16]+f[17:19]
-   else:
-      return f
 
 def splitFile(ffile):
    ffile = ffile.replace("\\","/")

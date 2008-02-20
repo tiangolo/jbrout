@@ -64,7 +64,7 @@ except:
 
 
 from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL # for selecteur
-from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag
+from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString
 from jbrout.db import JBrout,Buffer
 from jbrout.winsearch import Winsearch
 from jbrout.winshow import WinShow
@@ -104,13 +104,6 @@ def beep(m):
 #        self.quit(self.label.get_text())
 #    def on_WinGetKey_delete_event(self,*a):
 #        self.quit(False)
-
-
-def colorToString(color):
-    """
-    Converts a gtk.gdk color to a string
-    (fix for windows not having the to_string member function)"""
-    return "#%x%x%x" %(color.red, color.blue, color.green)
 
 
 class JStyle:

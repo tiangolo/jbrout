@@ -26,6 +26,7 @@ import gtk
 import gobject
 
 from commongtk import Img,rgb
+from common import cd2d
 from tools import PhotoCmd
 from libs import exif           # *!*
 import os,re,sys,thread,shutil,stat,string
@@ -48,8 +49,6 @@ def walktree (top = ".", depthfirst = True):
                 yield newtop, children
     if depthfirst:
         yield top, names
-def cd2d(f): #yyyymmddhhiiss -> datetime
-   return datetime(int(f[:4]),int(f[4:6]), int(f[6:8]),int(f[8:10]),int(f[10:12]),int(f[12:14]))
 
 def dec(s): # ensure that a return from etree is in utf-8
     if s!=None:

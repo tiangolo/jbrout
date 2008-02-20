@@ -14,6 +14,7 @@
 import gtk,gc,pango,gobject,os
 from __main__ import Buffer,GladeApp,JBrout
 from commongtk import WinKeyTag
+from common import cd2rd,format_file_size_for_display
 #TODO: add ops : add/del from basket
 #TODO: add ops : rotate
 #TODO: add ops : delete photo
@@ -382,29 +383,6 @@ class ImageShow(gtk.DrawingArea):
         # and trig expose event to redraw all
         rect = self.get_allocation()
         self.queue_draw_area(0,0,rect.width,rect.height)
-
-def cd2rd(f): #yyyymmddhhiiss -> dd/mm/yyyy hh:ii:ss
-   if f:
-      if len(f) == 14:
-         return f[6:8]+"/"+f[4:6]+"/"+f[:4]+" "+f[8:10]+":"+f[10:12]+":"+f[12:14]
-      else:
-         return f[6:8]+"/"+f[4:6]+"/"+f[:4]
-   else:
-      return f
-
-
-def format_file_size_for_display(file_size):
-    KILOBYTE_FACTOR = 1024.0
-    MEGABYTE_FACTOR = 1024.0 ** 2
-    GIGABYTE_FACTOR = 1024.0 ** 3
-
-    if file_size < KILOBYTE_FACTOR:
-        return _('%u bytes') % file_size
-    if file_size < MEGABYTE_FACTOR:
-        return _('%.1f KB') % (file_size/KILOBYTE_FACTOR)
-    if file_size < GIGABYTE_FACTOR:
-        return _('%.1f MB') % (file_size/MEGABYTE_FACTOR)
-    return _('%.1f GB') % (file_size/GIGABYTE_FACTOR)
 
 def fit(orig_width, orig_height, dest_width, dest_height,zoom):
     if orig_width == 0 or orig_height == 0:
