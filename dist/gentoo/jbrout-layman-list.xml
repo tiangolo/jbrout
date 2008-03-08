@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<layman>
 	<overlay type="svn" name="jbrout" contact="rob@wallace.gen.nz" status="unofficial" src="http://jbrout.googlecode.com/svn/trunk/dist/gentoo">
                 <link>
                         http://jbrout.googlecode.com
