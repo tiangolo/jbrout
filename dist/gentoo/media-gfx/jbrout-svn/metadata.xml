@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>package-wranglers</herd>
+  <maintainer>
+    <email>rob@wallace.gen.nz</email>
+    <name>Rob Wallace</name>
+  </maintainer>
+  <longdescription>
+    jBrout is a cross platform Photo manager wittten python/pygtk which
+    stores the metadata in the pictures rather than an external database.  
+  </longdescription>
+</pkgmetadata>
