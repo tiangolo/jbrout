@@ -255,7 +255,7 @@ class DBPhotos:
             i.removeFromBasket()
 
     def getBasket(self,nodeFrom=None):
-        if nodeFrom:
+        if nodeFrom is not None:
             return [PhotoNode(i) for i in nodeFrom.xpath("//photo[@basket='1']")]
         else:
             return [PhotoNode(i) for i in self.root.xpath("//photo[@basket='1']")]

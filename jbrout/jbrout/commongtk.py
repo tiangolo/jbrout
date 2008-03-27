@@ -27,7 +27,7 @@ def colorToString(color):
     return "#%x%x%x" %(color.red, color.blue, color.green)
 
 class WinKeyTag(GladeApp):
-    glade=os.path.join(os.path.dirname(__file__), 'data/jbrout.glade')
+    glade=os.path.join(os.path.dirname(__file__), '../data/jbrout.glade')
     window="WinKeyTag"
 
     def init(self,title,t,l):
@@ -379,8 +379,9 @@ class PictureSelector(gtk.VBox):
 
     def updateDisplay(self):
         photo_num = self.getValue()
-        self.text_display.set_text("Photo %d/%d: %s" % (photo_num + 1, len(self.photo_list), self.photo_list[photo_num].name))
-        self.thumb_display.set_from_pixbuf(self.photo_list[photo_num].getThumb())
+        if photo_num<len(self.photo_list):
+            self.text_display.set_text("Photo %d/%d: %s" % (photo_num + 1, len(self.photo_list), self.photo_list[photo_num].name))
+            self.thumb_display.set_from_pixbuf(self.photo_list[photo_num].getThumb())
 
     def set_sensitive(self, value):
         # Make the widget greyed out or active. If the photo list has only one picture, it can never be active

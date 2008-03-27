@@ -233,11 +233,10 @@ class ListView(ThumbnailsView):
                 info_text = "%d/%d" % (focusedItem+1,len(self.items) )+" - "+photo_node.name+" - "+photo_node.resolution+" - "+cd2d(photo_node.date).strftime('%d %B %Y %H:%M')+ " - " + ", ".join(photo_node.tags)
             except:
                 info_text=""
+        elif nbSelected>0:
+            info_text = _("%d/%d selected") % (nbSelected,len(self.items) )
         else:
-            if nbSelected>0:
-                info_text = _("%d/%d selected") % (nbSelected,len(self.items) )
-            else:
-                info_text = ""
+            info_text = ""
 
         try:
             self.parentWin.label_image_infos.set_text(info_text)
@@ -1618,23 +1617,24 @@ class Window(GladeApp):
 
     def on_selecteur_menu_select_plugin(self,ib,listview,callback):
         l = listview.getSelected()
-        self.showProgress(True)
-        try:
-            #~ self.tbl.stop()
-            ret=callback(l)
-            #~ self.tbl.start()
-        finally:
-            self.showProgress()
-        if ret:
-            # perhaps a file was redated and renamed
+        if l:
+            self.showProgress(True)
+            try:
+                #~ self.tbl.stop()
+                ret=callback(l)
+                #~ self.tbl.start()
+            finally:
+                self.showProgress()
+            if ret:
+                # perhaps a file was redated and renamed
 
-            # let's suppress thumbnails in cache
-            for i in l:
-                Buffer.remove(i.file)
+                # let's suppress thumbnails in cache
+                for i in l:
+                    Buffer.remove(i.file)
 
-            self.treeviewdb.get_model().activeBasket()
-            listview.refresh()
-            listview.refresh() # on win, the first call do nothing
+                self.treeviewdb.get_model().activeBasket()
+                listview.refresh()
+                listview.refresh() # on win, the first call do nothing
 
     def on_selecteur_menu_select_external_tool(self,ib,listview,et):
         l = listview.getSelected()
