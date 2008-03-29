@@ -27,7 +27,7 @@ def colorToString(color):
     return "#%x%x%x" %(color.red, color.blue, color.green)
 
 class WinKeyTag(GladeApp):
-    glade=os.path.join(os.path.dirname(__file__), '../data/jbrout.glade')
+    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
     window="WinKeyTag"
 
     def init(self,title,t,l):

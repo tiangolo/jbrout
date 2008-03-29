@@ -16,27 +16,28 @@ from __main__ import Buffer,GladeApp,JBrout
 from commongtk import WinKeyTag
 from common import cd2rd,format_file_size_for_display
 #TODO: add ops : add/del from basket
-#TODO: add ops : rotate
-#TODO: add ops : delete photo
 #TODO: add ops : external tools
 
 
 
 class WinShow(GladeApp):
-    glade='data/jbrout.glade'
+    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
+    #glade='data/jbrout.glade'
     window="WinShow"
 
     def init(self,storeTags, ln,idx,showInfo=True,isModify=False):
         self.ln=[]+ln
         self.idx=idx
-        self.selected=[]        # to be able to handle a new selection (reselect with space)
-        self.removed=[]
+        self.selected=[] # to be able to handle a new selection (reselect with space)
+        self.removed=[]  # deleted items
+        self.invalid=[]  # items with invalid thumbnail
         self.isBasketUpdate=False
         self.needInfo=showInfo
         self.isModify=isModify
 
         PixbufCache._file=None
         PixbufCache._cache=None
+        
 
 
         #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
@@ -110,7 +111,7 @@ class WinShow(GladeApp):
         if (key == "page_up") or (key == "up") or (key == "left"):
             self.idx-=1
             self.draw()
-        if (key == "page_down") or (key == "down") or (key == "right"):
+        elif (key == "page_down") or (key == "down") or (key == "right"):
             self.idx+=1
             self.draw()
         elif key=="home":
@@ -160,7 +161,14 @@ class WinShow(GladeApp):
 
             return 0
 
-    def draw(self):
+    def draw(self,invalid=False):
+        """
+        Draws the currently selected photo in the full screen view
+        
+        Keyword Arguments
+        invalid - indicates if the cached image has been invalidated
+        """
+        
         if self.idx >= len(self.ln):
             self.idx = len(self.ln)-1
         if self.idx < 0:
@@ -221,7 +229,7 @@ COMMENT :
 
         d=Display()
         d.node = node
-        d.image = PixbufCache().get(node.file)
+        d.image = PixbufCache().get(node.file,invalid)
         d.title = "%d/%d"%(self.idx+1,len(self.ln))
         try:
             self.lbl_info.set_text(msg)
@@ -290,6 +298,8 @@ COMMENT :
             #currentNode = self.viewer.display.node
             self.ln.remove(node)
             self.removed.append(node)
+            if node in self.invalid:
+                self.invalid.remove(node)
             self.draw()
 
     def on_basket_toggled(self,widget):
@@ -300,7 +310,41 @@ COMMENT :
             else:
                 currentNode.removeFromBasket()
             self.isBasketUpdate=True
+    
+    def on_left_clicked(self,*args):
+        """ Handles the rotate right button """
+        self.__rotate("L")
+    
+    def on_right_clicked(self,*args):
+        """ Handles the rotate right button """
+        self.__rotate("R")
+        
+    def __rotate(self,sens):
+        """
+        Rotates the currently selected image using the selected sense
 
+        Keyword argument:
+        sens - Direction in witch to perform the rotation (L,R)
+        """
+        node = self.ln[self.idx]
+        if self.isModify and not node.isReadOnly:
+            node.rotate(sens)
+            node=self.ln[self.idx]
+            if node not in self.invalid:
+                self.invalid.append(node)
+            self.draw(True)
+    
+    def on_comment_clicked(self,*args):
+        """Handles the comment button"""
+        node = self.ln[self.idx]
+        info = node.getInfo()
+        comment=info["comment"]
+        winComment = WinComment(comment)
+        ret=winComment.loop()
+        if ret[0]:
+            node.setComment(unicode(ret[1]))
+            self.draw()
+        
 class ImageShow(gtk.DrawingArea):
     def __init__(self):
         super(gtk.DrawingArea, self).__init__()
@@ -414,8 +458,9 @@ class PixbufCache(object):
     """ class to cache pixbuf by filename"""
     _cache=None
     _file=None
-    def get(self,file):
-        if file != PixbufCache._file:
+    def get(self,file,invalid=False):
+        
+        if file != PixbufCache._file or invalid: # TODO: Fix this to check modification
             PixbufCache._file = file
             if os.path.isfile(file):
                 PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
@@ -424,7 +469,32 @@ class PixbufCache(object):
 
         return PixbufCache._cache
 
+class WinComment(GladeApp):
+    """ Creates and handles the dialog for Editing photo comments """
+    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
+    window="WinComment"
+    
+    def init(self,comment):
+        """ Initalisation """
+        self.tbufComment = self.txtComment.get_buffer()
+        self.tbufComment.set_text(comment)
+    
+    def on_btnCancel_clicked(self,*args):
+        """ Handles the Cancel button """
+        self.quit(False,"")
+    
+    def on_btnOk_clicked(self,*args):
+        """ Handles the rotate right button """
+        start=self.tbufComment.get_start_iter()
+        end =self.tbufComment.get_end_iter()
+        self.quit(True,self.tbufComment.gset_mnemonic_modifieret_text(start,end,False))
+        
+    def on_WinGetComment_delete_event(self,*args):
+        """ Handles window delete (close) events """
+        self.quit(False,"")
+
 
 if __name__ == "__main__":
     # self test
     pass
+

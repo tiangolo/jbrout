@@ -1508,9 +1508,10 @@ class Window(GladeApp):
             if w.isBasketUpdate:    #is basket updated ?
                 model=self.treeviewdb.get_model()
                 model.activeBasket()
+            if w.invalid:   # remove invalidated thumbnails
+                for i in w.invalid:
+                    Buffer.remove(i.file)
 
-
-                #sel.refresh()
             return 1
 
     def on_selecteur_menu_delete_tag(self,b,sel,tag):
