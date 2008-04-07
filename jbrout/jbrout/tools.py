@@ -223,7 +223,7 @@ class _Command:
       assert type(buf)==unicode
 
       try:
-          tag["filedate"] = re.findall( "File date    : (.*)", buf )[0].strip()
+          tag["filedate"] = re.findall( "File date    : (\d\d\d\d:\d\d:\d\d \d\d:\d\d:\d\d)", buf )[0].strip()
           tag["resolution"] = re.findall( "Resolution   : (.*)", buf )[0].strip()
       except:
           raise CommandException( "Exif decoding trouble in "+file +"\n"+buf)
@@ -231,7 +231,7 @@ class _Command:
 
       # try to get exif info (from jhead)
       try:
-         exifdate   = re.findall( "Date/Time    : (.*)", buf )[0].strip()
+         exifdate   = re.findall( "Date/Time    : (\d\d\d\d:\d\d:\d\d \d\d:\d\d:\d\d)", buf )[0].strip()
          isflash    = re.findall( "Flash used   : (.*)", buf )[0].strip()
       except IndexError:
          exifdate   =""
