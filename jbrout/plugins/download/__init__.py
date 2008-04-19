@@ -12,12 +12,15 @@ class ExportConf(object):
         "sourceFolder": os.path.dirname(__file__),  # FS,HG,PW,FR or SM or FT
         "delete": "0", # Delete source files after download, 0=False, 1=True
         "autoRotate": "0", # Auto rotate photos after download, 0=False, 1=True
-        "preview": "0", # Preview photos while downloading, 0=False, 1=True
+        "copyOther": "0", # Copy other files with the same name as the jpeg
         "autoComment": "", # Photo auto comment
         "nameFormat": "{o}", #Photo naming format (default origional file name")
         "jobCode": "",
         "promptJobCode": "0",# Prompt for job code, 0=False, 1=True
-        "autoTag": [] # List of tags to automaticaly add to photos on import
+        "autoTag": [], # List of tags to automaticaly add to photos on import
+        "dcraw": "0", # Enable conversion of Raw files
+        "dcrawCopyMetaData": "0", # Enable copying of metadata 
+        "dcrawCopyRaw": "0" # Copy the origional file when converting RAW files
     }
     def __init__(self,conf):
         self.__conf = conf

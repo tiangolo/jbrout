@@ -35,6 +35,8 @@ from jbrout.commongtk import InputBox,MessageBox,InputQuestion,Img
 
 from nameBuilder import NameBuilder,WinNameBuilderTokens
 
+from __main__ import Buffer,TreeTags
+
 class dc():
     """Class to contain column download constants"""
     (
@@ -479,6 +481,7 @@ class WinDownloadPreferences(GladeApp):
 
         # Init general page
         self.chkAutoRotate.set_active(self.__conf["autoRotate"]==1)
+        self.chkCopyOther.set_active(self.__conf["copyOther"]==1)
         self.chkAutoComment.set_active(not len(self.__conf["autoComment"])==0)
         comment = self.__conf["autoComment"]
         self.tbufComment.set_text(comment.replace("\\n", "\n"))
@@ -489,9 +492,59 @@ class WinDownloadPreferences(GladeApp):
         self.entJobCode.set_text(self.__conf["jobCode"])
         self.chkJobCode.set_active(self.__conf["promptJobCode"]==1)
         self.updateExample()
-        # Remove Auto Tag pages & Camera mapping pages until implemented
-        self.ntbkPreferences.remove_page(3) # Auto Tag
-        self.ntbkPreferences.remove_page(2) # Camera Mapping
+        # Init Auto Tag page
+        self.ltags = eval('%s' % self.__conf['autoTag'])#[u'Birthday', u'Rob'] # TODO: read from file
+        
+        def filename(column, cell, model, iter):
+            cell.set_property('text', model.get_value(iter, 0))
+            cell.set_property('foreground', model.get_value(iter, 2))
+            cell.set_property('xalign', 0)
+            #~ cell.set_property('xpad', 1)
+        def pixbuf(column, cell, model, iter):
+            node=model.get_value(iter,1)
+            if node.__class__.__name__ == "TagNode":
+                if model.get_value(iter, 3)==0:
+                    cell.set_property('pixbuf', Buffer.pbCheckEmpty)
+                elif model.get_value(iter, 3)==1:
+                    cell.set_property('pixbuf', Buffer.pbCheckInclude)
+                elif model.get_value(iter, 3)==2:
+                    cell.set_property('pixbuf', Buffer.pbCheckExclude)
+                else:
+                    cell.set_property('pixbuf', Buffer.pbCheckDisabled)
+            else:
+                cell.set_property('pixbuf', None)
+
+            cell.set_property('width', 16)
+            cell.set_property('xalign', 0)
+        cellpb = gtk.CellRendererPixbuf()
+        cell = gtk.CellRendererText()
+        column = gtk.TreeViewColumn()
+        column.pack_start(cellpb, False)
+        column.pack_start(cell, True)
+        column.set_cell_data_func(cellpb, pixbuf)
+        column.set_cell_data_func(cell, filename)
+        
+        self.tvTags.append_column(column)
+        treeselection = self.tvTags.get_selection()
+        treeselection.set_mode(gtk.SELECTION_NONE)
+
+        storeTags = TreeTags()
+        self.tvTags.set_model( storeTags )
+        self.tvTags.set_enable_search(False)
+        self.tvTags.set_state(gtk.CAN_FOCUS)
+        
+        storeTags.expander(self.tvTags)
+        storeTags.cleanSelections()
+        storeTags.setSelected(self.ltags)
+        tags = ", ".join(self.ltags)
+        self.lblTags.set_label("Tags: %s" %tags)
+        # Init Conversion Page
+        self.chkDcraw.set_active(self.__conf["dcraw"]==1)
+        self.chkDcrawCopyMetaData.set_active(self.__conf["dcrawCopyMetaData"]==1)
+        self.chkDcrawCopyRaw.set_active(self.__conf["dcrawCopyRaw"]==1)
+        # Remove un-implemented pages
+        self.ntbkPreferences.remove_page(4) # Conversion
+        self.ntbkPreferences.remove_page(3) # Camera Mapping
 
     # Main Window handlers
     def on_winDownloadPreferences_delete_event(self, widget, *args):
@@ -503,6 +556,8 @@ class WinDownloadPreferences(GladeApp):
         # Save general page
         if self.chkAutoRotate.get_active(): self.__conf["autoRotate"] = 1
         else: self.__conf["autoRotate"] = 0
+        if self.chkCopyOther.get_active(): self.__conf["copyOther"] = 1
+        else: self.__conf["copyOther"] = 0
         comment = self.tbufComment.get_text(self.tbufComment.get_start_iter(),
                                             self.tbufComment.get_end_iter())
         self.__conf["autoComment"] = comment.replace("\n", "\\n")
@@ -512,6 +567,15 @@ class WinDownloadPreferences(GladeApp):
         if self.chkJobCode.get_active(): self.__conf["promptJobCode"] = 1
         else: self.__conf["promptJobCode"] = 0
         self.quit(True)
+        # Save Auto Tag page
+        self.__conf['autoTag']=self.ltags
+        # Save Conversion page
+        if self.chkDcraw.get_active(): self.__conf["dcraw"] = 1
+        else: self.__conf["dcraw"] = 0
+        if self.chkDcrawCopyMetaData.get_active(): self.__conf["dcrawCopyMetaData"] = 1
+        else: self.__conf["dcrawCopyMetaData"] = 0
+        if self.chkDcrawCopyRaw.get_active(): self.__conf["dcrawCopyRaw"] = 1
+        else: self.__conf["dcrawCopyRaw"] = 0
 
     def on_btnCancel_clicked(self, widget, *args):
         """Handles the Cancel button"""
@@ -561,7 +625,69 @@ class WinDownloadPreferences(GladeApp):
                     self.exExif,
                     self.exDate,
                     self.entJobCode.get_text())))
+    
+    ## Auto Tag Tab Handlers
+    def on_tvTags_button_press_event(self, widget, *args):
+        """Handles button presses in the AutoTag list"""
+        event=args[0]
+        tup= widget.get_path_at_pos( int(event.x), int(event.y) )
+        if tup:
+            path,obj,x,y = tup
 
+            if path:
+                model = widget.get_model()
+                iterTo = model.get_iter(path)
+                node = model.get(iterTo)
+
+                # let's find the x beginning of the cell
+                xcell = widget.get_cell_area(path, widget.get_column(0) ).x
+
+                if node.__class__.__name__ == "TagNode":
+                    if x>xcell:
+                        # click on the cell (not on the arrow)
+                        if event.button==1:
+                            cv = model.get_value(iterTo,3)  # TODO : really bad way ! should be better done
+                            if cv == 1:
+                                # Delete tag
+                                self.ltags.remove(node.name)
+                            else:
+                                # Add tag
+                                self.ltags.append(node.name)
+                                self.ltags.sort()
+                        model=self.tvTags.get_model()
+                        model.setSelected(self.ltags)
+                        tags = ", ".join(self.ltags)
+                        self.lblTags.set_label("Tags: %s" %tags)
+                        return 1 # stop the propagation of the event
+
+
+
+    def on_tvTags_row_activated(self, widget, *args):
+        """handles activation of rows in the auto tag list"""
+        treeselection = widget.get_selection()
+        model, iter0 = treeselection.get_selected()
+        if iter0:
+            model.switch(iter0)
+    
+    ## Conversion Tab Handlers
+    def on_chkDcraw_toggled(self, widget, *args):
+        """handles toggling of the dcraw tick-box and en/disables the
+        the associated options"""
+        if self.chkDcraw.get_active():
+            self.chkDcrawCopyMetaData.set_flags(gtk.CAN_FOCUS)
+            self.chkDcrawCopyMetaData.set_flags(gtk.SENSITIVE)
+            self.chkDcrawCopyRaw.set_flags(gtk.CAN_FOCUS)
+            self.chkDcrawCopyRaw.set_flags(gtk.SENSITIVE)
+        else:
+            self.chkDcrawCopyMetaData.unset_flags(gtk.CAN_FOCUS)
+            self.chkDcrawCopyMetaData.unset_flags(gtk.SENSITIVE)
+            self.chkDcrawCopyMetaData.set_active(False)
+            self.chkDcrawCopyRaw.unset_flags(gtk.CAN_FOCUS)
+            self.chkDcrawCopyRaw.unset_flags(gtk.SENSITIVE)
+            self.chkDcrawCopyRaw.set_active(False)
+    
+    
+    ## Camera mapping Tab Handlers
     def on_btnMappingAdd_clicked(self,*args):
         """Handles the Add Mapping button and adds a new camera mapping from
         the classes in example file & exif information (future)"""
@@ -641,9 +767,6 @@ class WinDownloadExecute(GladeApp):
         task = self.doIt()
         gobject.idle_add(task.next)
 
-        if self.conf['preview'] == 1:
-            self.imgPreview.visible = True
-
     def on_winDownloadProgress_delete_event(self, widget, *args):
         """Handles programatically closing the window"""
         self.quitNow = True
@@ -709,30 +832,46 @@ class WinDownloadExecute(GladeApp):
                 # Auto tagging
                 # TODO: Implement auto Tagging
                 # TODO: Implement tagging based on Camera Name
-##                if len(self.conf['autoTag']) > 0:
-##                    self.lblAction.set_label(_('Tagging'))
-##                    yield True
-##                    pc.addTags(unicode(self.conf['autoTag']))
+                if len(eval('%s' % self.conf['autoTag'])) > 0:
+                    self.lblAction.set_label(_('Tagging'))
+                    yield True
+                    pc.addTags(eval('%s' % self.conf['autoTag']))
                 # Set file modification date/time stamp
                 self.lblAction.set_label(_('Setting Modification Times'))
                 yield True
                 timeStamp = time.mktime(item[dc.C_DATE].timetuple())
-                try:
-                    os.utime(dest,(timeStamp,timeStamp))
-                except OSError,detail:
-                    # utime doesn't work well if uid/gid are not the same
-                    # so we need to use the real touch ;-) (with mtime)
-                    print "need to touch ;-("
-                    stime = time.strftime("%Y%m%d%H%M.%S",time.localtime(timeStamp) )
-                    _Command._run( ["touch",'-t',stime,dest] )
+                self._touch(dest,timeStamp)
             # Delete source if enabled and No collision
             if  item[dc.C_SS] != 'C' and self.conf['delete'] == 1:
                 self.lblAction.set_label(_('Deleting Source'))
                 yield True
-                try:
-                    os.unlink(unicode(src))
-                except os.error, detail:
-                    raise detail
+                self._delete(src)
+            # Copy related files if enabled and no collision
+            if self.conf['copyOther'] == 1 and item[dc.C_SS] != 'C':
+                self.lblAction.set_label(_('Finding Related Files'))
+                yield True
+                for file in os.listdir(os.path.dirname(src)):
+                    if (file != os.path.basename(src)) and \
+                       (os.path.splitext(file)[0] ==
+                       os.path.splitext(os.path.basename(src))[0])\
+                       and not(os.path.splitext(file)[1] in ['.jpg','.JPG']):# TODO: programatically get list of file types allowed
+                        relSrc = os.path.join(os.path.dirname(src), file)
+                        relDest = os.path.splitext(dest)[0] +\
+                            os.path.splitext(file)[1]
+                        if not os.path.exists(relDest):
+                            self.lblSource.set_label(relSrc)
+                            self.lblDest.set_label(relDest)
+                            self.lblAction.set_label(_('Copying Related File'))
+                            yield True
+                            shutil.copy2(relSrc, relDest)
+                            self.lblAction.set_label(_('Setting Related File Modification Time'))
+                            yield True
+                            self._touch(relDest,timeStamp)
+                            # Delete associated source if enabled
+                            if  self.conf['delete'] == 1:
+                                self.lblAction.set_label(_('Deleting Related File Source'))
+                                yield True
+                                self._delete(relSrc)
             # Check if we need to exit
             if self.quitNow:
                 if InputQuestion(self.main_widget,
@@ -746,4 +885,28 @@ class WinDownloadExecute(GladeApp):
                     self.quitNow = False
         self.quit(True)
         yield False
+    
+    def _delete(self, file):
+        """Simple function to delete the passed in file"""
+        try:
+            os.unlink(unicode(file))
+        except os.error, detail:
+            raise detail
 
+    def _touch(self, file, timeStamp):
+        """
+        Sets the dates/time stamps on the given file.
+
+        Keyword arguments:
+        file      - file to have it's date/time stamps set
+        timeStamp - the datetime object containing the date/time that the file is to be set to
+        """
+        try:
+            os.utime(file,(timeStamp,timeStamp))
+        except OSError,detail:
+            # utime doesn't work well if uid/gid are not the same
+            # so we need to use the real touch ;-) (with mtime)
+            print "need to touch ;-("
+            stime = time.strftime("%Y%m%d%H%M.%S",time.localtime(timeStamp) )
+            _Command._run( ["touch",'-t',stime,file] )
+            
