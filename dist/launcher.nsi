@@ -1,10 +1,10 @@
 ; jBrout Launcher
 ;--------------
  
-; Requires the ZipDLL plugin DLL to be in the Plugins directory of your NSIS installation
+; Requires the SetEnv plugin DLL to be in the Plugins directory of your NSIS installation
 ; this is avaliable from http://nsis.sourceforge.net/Setting_Environment_Variables_to_Active_Installer_Process
 
-; Requires the SetEnv plugin DLL to be in the Plugins directory of your NSIS installation
+; Requires the ExecDos plugin DLL to be in the Plugins directory of your NSIS installation
 ;http://nsis.sourceforge.net/ExecDos_plug-in
 
 Name "jBrout Launcher"
