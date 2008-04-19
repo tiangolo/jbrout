@@ -25,7 +25,7 @@ import time
 import re
 
 from libs import extListview
-from libs import exif
+import pyexiv2
 from libs.gladeapp import GladeApp
 
 from jbrout.common import ed2d,caseFreeCmp
@@ -112,8 +112,7 @@ class NameBuilder():
             '{A}': (self.A, _("full weekday name")),
             '{b}': (self.b, _("Abbreviated month name")),
             '{B}': (self.B, _("Full month name")),
-            '{c}': (self.c, _("Camera serial number (Canon only")),
-            '{C}': (self.C, _("Canon EOD-1D series style camera serial number")),
+            '{c}': (self.c, _("Camera serial number (Canon only)")),
             '{d}': (self.d, _("Date in the form YYMMDD")),
             '{D}': (self.D, _("Day of the month (01 to 31)")),
             '{e}': (self.e, _("File extension without the '.'")),
@@ -327,11 +326,8 @@ class NameBuilder():
     def B(self):
         return self.date.strftime("%B")
 
-    def c(self):# TODO: Implement camera serial # (canon only)
-        return ""#self.getExifTag()
-
-    def C (self):# TODO: Implement Canon EOS 1D serial #
-        return #self.getExifTag()
+    def c(self):
+        return self.getExifTag('Exif.Canon.SerialNumber')
 
     def d (self):
         return self.date.strftime("%y%m%d")
@@ -361,7 +357,7 @@ class NameBuilder():
         return self.date.strftime("%H")
 
     def i(self):
-        return self.getExifTag("EXIF ISOSpeedRatings")
+        return self.getExifTag('Exif.Photo.ISOSpeedRatings')
 
     def I(self):
         return self.date.strftime("%I")
@@ -379,13 +375,13 @@ class NameBuilder():
             return self.i()
 
     def K1(self):
-        return self.getExifTag("EXIF FocalLength")
+        return self.getExifTag('Exif.Photo.FocalLength')
 
     def K2(self):
-        return self.getExifTag("EXIF ApertureValue")
+        return self.getExifTag('Exif.Photo.ApertureValue')
 
     def K3(self):
-        return self.getExifTag("EXIF ExposureTime")
+        return self.getExifTag('Exif.Photo.ExposureTime')
 
     def m(self):
         return self.date.strftime("%m")
@@ -397,8 +393,7 @@ class NameBuilder():
         return os.path.basename(os.path.splitext(self.sourceName)[0])
 
     def O(self):
-        # TODO: Strip trailing rubbish of Owner string
-        return self.getExifTag("MakerNote OwnerName")
+        return self.getExifTag('Exif.Canon.OwnerName')
 
     def p(self):
         return self.date.strftime("%p")
@@ -459,7 +454,7 @@ class NameBuilder():
             return '0' + self.r()[-4:]
 
     def s(self):
-        return self.getExifTag("EXIF SubSecTimeOriginal")
+        return self.getExifTag('Exif.Photo.SubSecTime')
 
     def S(self):
         return self.date.strftime("%S")
@@ -480,7 +475,7 @@ class NameBuilder():
             return ""
 
     def T2(self):
-        return self.getExifTag("Image Model")
+        return self.getExifTag('Exif.Image.Model')
 
     def T3(self):
         try:
@@ -584,7 +579,7 @@ class NameBuilder():
 
     def getExifTag(self, tag):
         """Returns a given EXIF tag if it exists in the images EXIF info"""
-        if tag in self.exif:
-            return "%s" % self.exif[tag]
+        if tag in self.exif.exifKeys():
+            return "%s" % self.exif.interpretedExifValue(tag)
         else:
             return ""

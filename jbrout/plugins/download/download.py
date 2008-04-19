@@ -26,7 +26,7 @@ import re
 import shutil
 
 from libs import extListview
-from libs import exif
+import pyexiv2
 from libs.gladeapp import GladeApp
 
 from jbrout.common import format_file_size_for_display,ed2d
@@ -189,12 +189,11 @@ class WinDownload(GladeApp):
             self.buildListRunning = False
             yield False
         for srcFile in fileList:
-            f=open(srcFile, 'rb')
-            exifData=exif.process_file(f)
-            f.close()
+            exifData=pyexiv2.Image(srcFile)
+            exifData.readMetadata()
             size=os.path.getsize(srcFile)
-            if 'Image DateTime' in exifData:
-                date = ed2d('%s' % exifData['EXIF DateTimeOriginal'])
+            if 'Exif.Image.DateTime' in exifData.exifKeys():
+                date = ed2d(exifData.interpretedExifValue('Exif.Image.DateTime'))
             else:
                 date = datetime.datetime.fromtimestamp(os.path.getmtime(srcFile))
             row=[
@@ -293,11 +292,10 @@ class WinDownload(GladeApp):
                 statS = 'C'
                 statL = _('Collision with New')
             elif os.path.isfile(destFile):
-                f = open(destFile, 'rb')
-                destExif = exif.process_file(f)
-                f.close()
-                if 'Image DateTime' in destExif:
-                    destDate = ed2d("%s" % destExif['EXIF DateTimeOriginal'])
+                destExif = pyexiv2.Image(destFile)
+                destExif.readMetadata()
+                if 'Image DateTime' in destExif.exifKeys():
+                    destDate = ed2d(destExif.interpretedExifValue('Exif.Image.DateTime'))
                 else:
                     destDate = datetime.datetime.fromtimestamp(
                         os.path.getmtime(destFile))
@@ -325,12 +323,12 @@ class WinDownload(GladeApp):
             if self.__conf["autoRotate"] == 1:
                 rotS = 'N'
                 rotL = _('None')
-                if "Image Orientation" in row[dc.C_EXIF]:
-                    rotE = "%s" % row[dc.C_EXIF]["Image Orientation"]
-                    if rotE == 'Rotated 90 CW':
+                if 'Exif.Image.Orientation' in row[dc.C_EXIF].exifKeys():
+                    rotE = row[dc.C_EXIF].interpretedExifValue('Exif.Image.Orientation')
+                    if rotE == 'right, top':
                         rotS = 'R'
                         rotL = _('Right')
-                    elif rotE == 'Rotated 90 CCW':
+                    elif rotE == 'left, bottom':
                         rotS = 'L'
                         rotL = _('Left')
             else:
@@ -493,7 +491,7 @@ class WinDownloadPreferences(GladeApp):
         self.chkJobCode.set_active(self.__conf["promptJobCode"]==1)
         self.updateExample()
         # Init Auto Tag page
-        self.ltags = eval('%s' % self.__conf['autoTag'])#[u'Birthday', u'Rob'] # TODO: read from file
+        self.ltags = eval('%s' % self.__conf['autoTag'])
         
         def filename(column, cell, model, iter):
             cell.set_property('text', model.get_value(iter, 0))
@@ -646,7 +644,7 @@ class WinDownloadPreferences(GladeApp):
                     if x>xcell:
                         # click on the cell (not on the arrow)
                         if event.button==1:
-                            cv = model.get_value(iterTo,3)  # TODO : really bad way ! should be better done
+                            cv = model.get_value(iterTo,3)
                             if cv == 1:
                                 # Delete tag
                                 self.ltags.remove(node.name)
@@ -792,8 +790,8 @@ class WinDownloadExecute(GladeApp):
                 # Load preview
                 self.lblAction.set_label(_('Loading preview'))
                 yield True
-                if 'JPEGThumbnail' in item[dc.C_EXIF]:
-                    thumbJpeg = item[dc.C_EXIF]['JPEGThumbnail']
+                if item[dc.C_EXIF].getThumbnailData():
+                    thumbJpeg = item[dc.C_EXIF].getThumbnailData()[1]
                     loader = gtk.gdk.PixbufLoader ('jpeg')
                     loader.write (thumbJpeg, len(thumbJpeg))
                     thumbIm = loader.get_pixbuf ()
@@ -830,7 +828,6 @@ class WinDownloadExecute(GladeApp):
                     comment =self.conf['autoComment']
                     pc.addComment(unicode(comment.replace("\\n", "\n")))
                 # Auto tagging
-                # TODO: Implement auto Tagging
                 # TODO: Implement tagging based on Camera Name
                 if len(eval('%s' % self.conf['autoTag'])) > 0:
                     self.lblAction.set_label(_('Tagging'))

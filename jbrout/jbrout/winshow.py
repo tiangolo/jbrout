@@ -182,7 +182,6 @@ class WinShow(GladeApp):
         try:
             info = node.getInfo()
             ltags=info["tags"]
-            print ltags
             folder=node.folderName
             resolution=info["resolution"]
             tags=", ".join(ltags)
