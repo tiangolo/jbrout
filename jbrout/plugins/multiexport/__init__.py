@@ -329,7 +329,7 @@ class Plugin(JPlugin):
 
                         # applys the xslt transformation
                         xslt_doc = parse( os.path.join(pathXsl, XSL[ ec["HG.template"] ]) )
-                        nodeParams = xslt_doc.xpath("//xsl:param",{"xsl":"http://www.w3.org/1999/XSL/Transform"})
+                        nodeParams = xslt_doc.xpath("//xsl:param",namespaces={"xsl":"http://www.w3.org/1999/XSL/Transform"})
 
                         p=1
                         while True:
