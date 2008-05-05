@@ -733,7 +733,7 @@ class Window(GladeApp):
             JBrout.conf["normalizeNameFormat"] = "p%Y%m%d_%H%M%S"   # set default
 
         if JBrout.conf["autorotAtImport"] == None:    # key not present
-            JBrout.conf["autorotAtImport"] = 0        # set default
+            JBrout.conf["autorotAtImport"] = 1        # set default
 
 
         JBrout.db.setNormalizeName( JBrout.conf["normalizeName"]==1 )
@@ -1231,7 +1231,10 @@ class Window(GladeApp):
         treeselection = self.treeviewdb.get_selection()
         model, iter0 = treeselection.get_selected()
         node = model.get(iter0)
-        nbsubfiles = len(os.listdir(node.file))
+        if os.path.isdir(node.file):
+            nbsubfiles = len(os.listdir(node.file))
+        else:
+            nbsubfiles = 0
         parentIter = model.iter_parent(iter0)
 
         self.showProgress(True)

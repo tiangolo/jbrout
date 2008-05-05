@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="476791dc-18d0-4a49-8021-f04a7f9f22ea" kpf_version="4" name="jbrout.kpf">
-<folder id="c799512d-37cb-4c2a-b5db-1511831116b0" idref="43d69841-ac9e-44ae-b7bc-45de863361e7" name="templates">
-</folder>
-<toolbar id="328dcabd-3f49-400e-93ca-0118c869dc4d" idref="43d69841-ac9e-44ae-b7bc-45de863361e7" name="toolbar" priority="100">
-</toolbar>
-<command cwd="%p" doNotOpenOutputWindow="0" env="" icon="chrome://komodo/content/icons/3d-custom-color.png" id="86d020f9-6a34-4d7f-8107-512350368247" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" insertOutput="0" keyboard_shortcut="" name="glade" operateOnSelection="0" parseOutput="0" parseRegex="" runIn="no-console" showParsedOutputList="0">
-glade-3 jbrout/data/jbrout.glade</command>
-<macro async="0" icon="chrome://komodo/content/icons/data-next.png" id="49260554-5257-4bcd-88d3-026850a8751d" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" keyboard_shortcut="F9" language="JavaScript" name="run jbrout" rank="100" trigger="trigger_postopen" trigger_enabled="0">
+<macro async="0" icon="chrome://famfamfamsilk/skin/icons/control_play_blue.png" id="49260554-5257-4bcd-88d3-026850a8751d" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" keyboard_shortcut="F9" language="JavaScript" name="run jbrout" rank="100" trigger="trigger_postopen" trigger_enabled="0">
 // Macro recorded on Sun Apr 29 2007 14:27:28 GMT+0200 (CEST)
 komodo.assertMacroVersion(2);
 if (komodo.view) { komodo.view.setFocus() };
 komodo.doCommand('cmd_save')
 Run_RunEncodedCommand(window, 'python -u %p/jbrout/jbrout.py');
 if (komodo.view) { komodo.view.setFocus() };</macro>
+<command cwd="%p" doNotOpenOutputWindow="0" env="" icon="chrome://famfamfamsilk/skin/icons/application_tile_horizontal.png" id="86d020f9-6a34-4d7f-8107-512350368247" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" insertOutput="0" keyboard_shortcut="" name="glade" operateOnSelection="0" parseOutput="0" parseRegex="" runIn="no-console" showParsedOutputList="0">
+glade-3 jbrout/data/jbrout.glade</command>
 <command cwd="%p" doNotOpenOutputWindow="0" env="" id="a4866a1a-9bad-4966-9de8-050f77b003b6" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" insertOutput="0" keyboard_shortcut="" name="console" operateOnSelection="0" parseOutput="0" parseRegex="" runIn="no-console" showParsedOutputList="0">
 gnome-terminal</command>
+<toolbar id="328dcabd-3f49-400e-93ca-0118c869dc4d" idref="43d69841-ac9e-44ae-b7bc-45de863361e7" name="toolbar" priority="100">
+</toolbar>
+<folder id="c799512d-37cb-4c2a-b5db-1511831116b0" idref="43d69841-ac9e-44ae-b7bc-45de863361e7" name="templates">
+</folder>
+<folder id="43d69841-ac9e-44ae-b7bc-45de863361e7" idref="476791dc-18d0-4a49-8021-f04a7f9f22ea" name="actions">
+</folder>
+<livefolder id="476791dc-18d0-4a49-8021-f04a7f9f22ea/.jbrout" idref="476791dc-18d0-4a49-8021-f04a7f9f22ea" name=".jbrout" url="file:///home/manatlan/.jbrout">
+</livefolder>
+<folder id="ea55cad2-4f5c-4bc4-b09c-073757203ccc" idref="aac4b0e2-cb4b-4cca-a16d-c3ec08ac8a19" name="templates">
+</folder>
+<snippet id="4e261f9d-9a6c-4fab-9315-9b343bdce937" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="" name="gpl entete" set_selection="true">
+# -*- coding: utf-8 -*-
+##
+##    Copyright (C) 2007 manatlan manatlan[at]gmail(dot)com
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published
+## by the Free Software Foundation; version 2 only.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+!@#_currentPos!@#_anchor
+</snippet>
 <snippet id="b0d9f3c2-af62-4b77-8eed-6f4f8c78c0fa" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="" name="a gladeapp" set_selection="true">
 import os
 from libs.gladeapp import GladeApp
@@ -33,22 +55,6 @@ class Window(GladeApp):
 if __name__ == "__main__":
     w=Window()
     w.loop()</snippet>
-<snippet id="4e261f9d-9a6c-4fab-9315-9b343bdce937" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="" name="gpl entete" set_selection="true">
-# -*- coding: utf-8 -*-
-##
-##    Copyright (C) 2007 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-!@#_currentPos!@#_anchor
-</snippet>
 <snippet id="d959280f-0ffb-4485-aeba-172dee9644c1" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="" name="jbrout plugin" set_selection="true">
 """ PLUGIN DOC :
 self.id     : the id of the plugin (folder name)
@@ -86,12 +92,6 @@ class Plugin(JPlugin):
         self.MessageBox("album %s" % nodeFolder.name)
         return False
 </snippet>
-<folder id="ea55cad2-4f5c-4bc4-b09c-073757203ccc" idref="aac4b0e2-cb4b-4cca-a16d-c3ec08ac8a19" name="templates">
-</folder>
-<folder id="43d69841-ac9e-44ae-b7bc-45de863361e7" idref="476791dc-18d0-4a49-8021-f04a7f9f22ea" name="actions">
-</folder>
-<livefolder id="476791dc-18d0-4a49-8021-f04a7f9f22ea/.jbrout" idref="476791dc-18d0-4a49-8021-f04a7f9f22ea" name=".jbrout" url="file:///home/manatlan/.jbrout">
-</livefolder>
 <preference-set idref="476791dc-18d0-4a49-8021-f04a7f9f22ea">
   <boolean id="import_live">1</boolean>
 </preference-set>

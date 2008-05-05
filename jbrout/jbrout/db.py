@@ -221,6 +221,15 @@ class DBPhotos:
         else:
             return []
 
+
+    def toXml(self):
+        """ for tests only """
+        from StringIO import StringIO
+        fid=StringIO()
+        fid.write("""<?xml version="1.0" encoding="UTF-8"?>""")
+        ElementTree(self.root).write(fid,encoding="utf-8")
+        return fid.getvalue()
+
     def save(self):
         """ save the db, and a basket.txt file """
         fid = open(self.file,"w")
@@ -305,10 +314,13 @@ class FolderNode(object):
         return ln
 
     def getPhotos(self):
-        return [PhotoNode(i) for i in self.__node.xpath("photo")]
+        return self.select("photo")
+
     def getAllPhotos(self):
-        return [PhotoNode(i) for i in self.__node.xpath("descendant::photo")]
+        return self.select("descendant::photo")
+
     def select(self,xpath):
+        """ 'xpath' should only target photo node """
         ln=self.__node.xpath(xpath)
         return [PhotoNode(i) for i in ln]
 
@@ -408,15 +420,20 @@ class FolderNode(object):
         return False
 
     def remove(self):
+        """ delete ONLY node """
         self.__node.xpath("..")[0].remove(self.__node)
 
     def delete(self):
-        try:
-           shutil.rmtree( self.file )
-           deleted = True
-        except os.error, detail:
-           raise detail
-           deleted = False
+        """ delete real folder and node """
+        if os.path.isdir(self.file):
+            try:
+               shutil.rmtree( self.file )
+               deleted = True
+            except os.error, detail:
+               raise detail
+               deleted = False
+        else:
+            deleted=True
 
         if deleted:
             self.remove()
@@ -623,14 +640,14 @@ class PhotoNode(object):
             pb_nothumb = Buffer.pixbufNT
             pb_notfound =Buffer.pixbufNF
             pb_error   =Buffer.pixbufERR
-        else:                   # photo with no exif or with no exifdate
+        else:                   # photo with hadn't got exif before (exif setted by jbrout)
             backGroundColor=rgb(255,0,0)
             pb_nothumb = Buffer.pixbufNTNE
             pb_notfound =Buffer.pixbufNFNE
             pb_error   =Buffer.pixbufERRNE
+
         try:
             i=Img(thumb=self.file)
-            #~ pb= i.resizeC(JBrout.conf["thumbsize"] or 160,backGroundColor).pixbuf
             pb= i.resizeC(160,backGroundColor).pixbuf
         except IOError: # 404
             pb= pb_notfound
@@ -836,13 +853,20 @@ class PhotoNode(object):
         self.__node.attrib["name"]=os.path.basename(pc.file)
         self.__node.attrib["resolution"]=pc.resolution
 
-        if pc.exifdate:
-            self.__node.attrib["date"]=pc.exifdate
+        # OLD PhotoCmd
+        #~ if pc.exifdate:
+            #~ self.__node.attrib["date"]=pc.exifdate
+            #~ self.__node.attrib["real"]="yes"
+        #~ else:
+            #~ self.__node.attrib["date"]=pc.filedate
+            #~ self.__node.attrib["real"]="no"
+
+        # NEW PhotoCmd (always a exifdate)
+        self.__node.attrib["date"]=pc.exifdate
+        if pc.isreal:
             self.__node.attrib["real"]="yes"
         else:
-            self.__node.attrib["date"]=pc.filedate
             self.__node.attrib["real"]="no"
-
 
         if pc.tags:
             for tag in pc.tags:

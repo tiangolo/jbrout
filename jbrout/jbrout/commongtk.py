@@ -229,7 +229,12 @@ def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK
 ##############################################################################
 
 from StringIO import StringIO
-from libs import exif
+#~ from libs import exif
+try:
+    import pyexiv2
+except:
+    print "You should install pyexiv2 (>=0.1.2)"
+    sys.exit(-1)
 import os
 
 def rgb(r,g,b,a=00):
@@ -244,11 +249,15 @@ class Img(object):
                 raise IOError #"Img() : file not found"
         elif thumb:
             try:
-                fid = open(thumb, 'rb')
-                jo = exif.process_file(fid)
-                fid.close()
+                #~ fid = open(thumb, 'rb')
+                #~ jo = exif.process_file(fid)
+                #~ fid.close()
+                #~ data = jo["JPEGThumbnail"]
 
-                data = jo["JPEGThumbnail"]
+                img = pyexiv2.Image(thumb.encode("utf_8"))
+                img.readMetadata()
+                data=img.getThumbnailData()[1]
+
                 loader = gtk.gdk.PixbufLoader ('jpeg')
 
                 loader.write (data, len (data))

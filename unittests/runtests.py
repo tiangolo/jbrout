@@ -22,7 +22,8 @@ sys.path.append( PATH )
 
 if __name__=="__main__":
     l=[i for i in os.listdir(".") if i.startswith(u"tests_") and i.endswith(u".py")]
+    l.sort()
     os.chdir("../jbrout")
     for i in l:
-        print "--- Tests",i,60*"-"
+        print "--- Tests",i
         execfile( "../unittests/"+i )
