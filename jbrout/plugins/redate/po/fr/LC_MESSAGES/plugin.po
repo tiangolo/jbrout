@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # manatlan <manatlan@gmail.com>, 2005.
 # , fuzzy
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-20 14:16+0200\n"
+"POT-Creation-Date: 2008-05-06 11:13+0200\n"
 "PO-Revision-Date: 2006-08-12 16:44+0200\n"
 "Last-Translator: manatlan <manatlan@gmail.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
@@ -45,11 +45,11 @@ msgstr ""
 "Change en %s \n"
 "\n"
 
-#: ../plugins/redate/__init__.py:32
+#: ../plugins/redate/__init__.py:30
 msgid "Change Datetime"
 msgstr "Change sa date"
 
-#: ../plugins/redate/__init__.py:45
+#: ../plugins/redate/__init__.py:43
 msgid "Redating"
 msgstr "Redatage"
 

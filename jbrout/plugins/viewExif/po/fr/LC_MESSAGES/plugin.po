@@ -3,40 +3,44 @@
 # This file is distributed under the same license as the PACKAGE package.
 # manatlan <manatlan@gmail.com>, 2007.
 # , fuzzy
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-11 14:43+0100\n"
-"PO-Revision-Date: 2007-11-09 23:44+0100\n"
-"Last-Translator: manatlan <manatlan@gmail.com>\n"
+"POT-Creation-Date: 2008-05-06 11:18+0200\n"
+"PO-Revision-Date: 2008-05-06 11:20+0100\n"
+"Last-Translator: \n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/viewExif/viewExif.py:56
+#: ../plugins/viewExif/viewExif.py:55
 msgid "Tag"
 msgstr "Donnée"
 
-#: ../plugins/viewExif/viewExif.py:57
+#: ../plugins/viewExif/viewExif.py:56
 msgid "Value"
 msgstr "Valeur"
 
-#: ../plugins/viewExif/viewExif.py:98
-msgid "No Displayable EXIF Tags found in file!"
-msgstr "Cette photo ne possède aucune information EXIF !"
+#: ../plugins/viewExif/viewExif.py:104
+msgid "No Displayable Meta Data found in file!"
+msgstr "Cette photo ne possède aucun méta data !"
 
-#: ../plugins/viewExif/viewExif.py:100
+#: ../plugins/viewExif/viewExif.py:106
 msgid "Can not open file!"
 msgstr "Impossible d'ouvrir ce fichier"
 
 #: ../plugins/viewExif/__init__.py:22
-msgid "Display Exif Info"
-msgstr "Afficher les infos EXIF"
+msgid "Display Meta Data"
+msgstr "Afficher les méta datas"
 
 #: ../tmp/viewExif.glade.h:1
-msgid "EXIF Information"
-msgstr "Informations EXIF"
+msgid "Meta Data Information"
+msgstr "Informations Méta data"
+
+#~ msgid "Display Exif Info"
+#~ msgstr "Afficher les infos EXIF"
+

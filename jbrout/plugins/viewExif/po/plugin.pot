@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-11 15:05+0100\n"
+"POT-Creation-Date: 2008-05-06 11:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,26 +16,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/viewExif/viewExif.py:56
+#: ../plugins/viewExif/viewExif.py:55
 msgid "Tag"
 msgstr ""
 
-#: ../plugins/viewExif/viewExif.py:57
+#: ../plugins/viewExif/viewExif.py:56
 msgid "Value"
 msgstr ""
 
-#: ../plugins/viewExif/viewExif.py:98
-msgid "No Displayable EXIF Tags found in file!"
+#: ../plugins/viewExif/viewExif.py:104
+msgid "No Displayable Meta Data found in file!"
 msgstr ""
 
-#: ../plugins/viewExif/viewExif.py:100
+#: ../plugins/viewExif/viewExif.py:106
 msgid "Can not open file!"
 msgstr ""
 
 #: ../plugins/viewExif/__init__.py:22
-msgid "Display Exif Info"
+msgid "Display Meta Data"
 msgstr ""
 
 #: ../tmp/viewExif.glade.h:1
-msgid "EXIF Information"
+msgid "Meta Data Information"
 msgstr ""

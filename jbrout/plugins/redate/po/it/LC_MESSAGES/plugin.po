@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-27 14:22+0200\n"
+"POT-Creation-Date: 2008-05-06 11:13+0200\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -38,11 +38,11 @@ msgstr ""
 "Cambia in %s :\n"
 "\n"
 
-#: ../plugins/redate/__init__.py:32
+#: ../plugins/redate/__init__.py:30
 msgid "Change Datetime"
 msgstr "Cambia data e ora"
 
-#: ../plugins/redate/__init__.py:45
+#: ../plugins/redate/__init__.py:43
 #, fuzzy
 msgid "Redating"
 msgstr "Sto modificando la data"
@@ -76,4 +76,3 @@ msgstr "Secondi"
 #, fuzzy
 msgid "Week(s)"
 msgstr "Settimane"
-

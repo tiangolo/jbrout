@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-11 14:43+0100\n"
+"POT-Creation-Date: 2008-05-06 11:18+0200\n"
 "PO-Revision-Date: 2007-11-15 17:19+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: io <io>\n"
@@ -12,26 +12,31 @@ msgstr ""
 "X-Poedit-Language: it\n"
 "X-Poedit-Country: it\n"
 
-#: ../plugins/viewExif/viewExif.py:56
+#: ../plugins/viewExif/viewExif.py:55
 msgid "Tag"
 msgstr "Tag"
 
-#: ../plugins/viewExif/viewExif.py:57
+#: ../plugins/viewExif/viewExif.py:56
 msgid "Value"
 msgstr "Valore"
 
-#: ../plugins/viewExif/viewExif.py:98
-msgid "No Displayable EXIF Tags found in file!"
+#: ../plugins/viewExif/viewExif.py:104
+#, fuzzy
+msgid "No Displayable Meta Data found in file!"
 msgstr "Nessun Tag EXIF visualizzabile trovato nel file!"
 
-#: ../plugins/viewExif/viewExif.py:100
+#: ../plugins/viewExif/viewExif.py:106
 msgid "Can not open file!"
 msgstr "Impossibile aprire il file!"
 
 #: ../plugins/viewExif/__init__.py:22
-msgid "Display Exif Info"
-msgstr "Mostra le informazioni Exif"
+msgid "Display Meta Data"
+msgstr ""
 
 #: ../tmp/viewExif.glade.h:1
-msgid "EXIF Information"
+#, fuzzy
+msgid "Meta Data Information"
 msgstr "Informazioni EXIF"
+
+#~ msgid "Display Exif Info"
+#~ msgstr "Mostra le informazioni Exif"

@@ -101,7 +101,7 @@ class WinViewExif(GladeApp):
                     except:
                         print "Error on tag " + key
             if len(self.exifList)==0:
-                self.exifList.append([_('No Displayable EXIF Tags found in file!'), ''])
+                self.exifList.append([_('No Displayable Meta Data found in file!'), ''])
         else:
             self.exifList.append([_('Can not open file!'), ''])
 

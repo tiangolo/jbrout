@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # manatlan <manatlan@gmail.com>, 2007.
 # , fuzzy
-# 
-# 
+#
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-20 14:18+0200\n"
+"POT-Creation-Date: 2008-05-06 11:13+0200\n"
 "PO-Revision-Date: 2007-05-20 14:17+0200\n"
 "Last-Translator: manatlan <manatlan@gmail.com>\n"
 "Language-Team: Français <gnomefr@traduc.org>\n"
@@ -17,10 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/foldersByDates/__init__.py:19
+#: ../plugins/foldersByDates/__init__.py:18
 msgid "Create folders by dates"
 msgstr "Créer des sous répertoires par date"
 
-#: ../plugins/foldersByDates/__init__.py:25
+#: ../plugins/foldersByDates/__init__.py:24
 msgid "Day_%Y%m%d"
 msgstr "Jour_%Y%m%d"
