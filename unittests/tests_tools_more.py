@@ -10,7 +10,7 @@ import sys
 import shutil
 from datetime import datetime
 ############################################################### to be executed here
-if __file__ != "runtests.py":
+if os.path.basename(__file__) != "runtests.py":
     # execution from here
     PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"jbrout")
     sys.path.append( PATH )
@@ -52,20 +52,30 @@ if __name__ == "__main__":
         #==================================================================
         for f in l:
             p=PhotoCmd(f)
-            assert p.file == f
             assert not p.readonly
+            assert p.file == f      # are not renamed
+            assert p.exifdate       # and got exifdate
 
+        #==================================================================
+        # tests renaming
+        #==================================================================
+        for f in l:
+            p=PhotoCmd(f,needAutoRename=True)
+            assert p.file != f                  # are renamed
+            newNameShouldBe=cd2d(p.exifdate).strftime(PhotoCmd.format)
+            assert newNameShouldBe in p.file    # right new name
+            
+
+        l=[os.path.join(folder,i).decode(sys.getfilesystemencoding()) for i in os.listdir(folder) if i.lower().endswith(".jpg")]
         #==================================================================
         # tests Exifthumb after AUTOROTATE
         #==================================================================
         for f in l:
-            f2=PhotoCmd.prepareFile(f,True,True)
-            p=PhotoCmd(f2)
-            ret=p.isThumbOk()
-            if ret>-1:
-                assert ret==1
+            p=PhotoCmd(f,needAutoRotation=True)
+            if p.isThumbOk()==-1:
+                p.rebuildExifTB()
+            assert p.isThumbOk()==1
 
-        l=[os.path.join(folder,i).decode(sys.getfilesystemencoding()) for i in os.listdir(folder) if i.lower().endswith(".jpg")]
         #==================================================================
         # tests Exifthumb after ROTATE
         #==================================================================

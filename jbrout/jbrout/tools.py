@@ -118,6 +118,7 @@ class _Command:
 class NotImplemented(Exception): pass
 
 class PhotoCmd(object):
+    
     file = property(lambda self: self.__file)
     exifdate = property(lambda self:self.__exifdate)
     filedate = property(lambda self:self.__filedate)
@@ -129,12 +130,110 @@ class PhotoCmd(object):
     isreal = property(lambda self:self.__isreal)
 
     # static
-    format="p%Y%m%d_%H%M%S.jpg"
-
-    def __init__(self,file):
+    format="p%Y%m%d_%H%M%S"
+    
+    def debug(self,m):
+        print m
+        #pass
+    
+    def __init__(self,file,needAutoRename=False,needAutoRotation=False):
         assert type(file)==unicode
         assert os.path.isfile(file)
 
+
+        self.__readonly = not os.access( file, os.W_OK)
+
+        # pre-read
+        info = pyexiv2.Image(file.encode("utf_8"))
+        info.readMetadata()
+
+        if self.readonly:
+            self.debug( "*WARNING* File %s is READONLY" % file )
+        else:
+            #-----------------------------------------------------------
+            # try to correct exif date if wrong
+            #-----------------------------------------------------------
+            # if no exifdate ---> put the filedate in exifdate
+            # SO exifdate=filedate FOR ALL
+            try:
+                info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+                isDateExifOk=True
+            except KeyError:        # tag exif datetime not present
+                isDateExifOk=False
+            except AttributeError:  # content of tag exif datetime is not a datetime
+                isDateExifOk=False
+    
+            if not isDateExifOk:
+                self.debug( "*WARNING* File %s had wrong exif date -> corrected" % file )
+                
+                fd=datetime.fromtimestamp(os.stat(file).st_mtime)
+                info["Exif.Image.Make"]="jBrout" # mark exif made by jbrout
+                info["Exif.Image.DateTime"]=fd
+                info["Exif.Photo.DateTimeOriginal"]=fd
+                info["Exif.Photo.DateTimeDigitized"]=fd
+                info.writeMetadata()        
+
+            exifdate = info["Exif.Image.DateTime"]
+
+            #-----------------------------------------------------------
+            # try to autorot, if wanted
+            #-----------------------------------------------------------
+            if needAutoRotation :
+                try:
+                    orientation=int(info["Exif.Image.Orientation"])
+                    #http://sylvana.net/jpegcrop/exif_orientation.html
+                    #~ 1) transform="";;
+                    #~ 2) transform="-flip horizontal";;
+                    #~ 3) transform="-rotate 180";;
+                    #~ 4) transform="-flip vertical";;
+                    #~ 5) transform="-transpose";;
+                    #~ 6) transform="-rotate 90";;      # R
+                    #~ 7) transform="-transverse";;
+                    #~ 8) transform="-rotate 270";;     # L
+                except KeyError:
+                    orientation=0
+
+                if orientation!=1:
+                    if _Command.isWin:
+                        # do nothing
+                        # -> because no gpl tools which rotate well (img+thumb) automatically according exif
+                        #    if you provide me one, i'll integrate here
+                        self.debug( "*WARNING* File %s needs autorotate -> not done (windows)" % file )
+                        pass
+                    else:
+                        ret=_Command._run( [_Command._exiftran,'-ai',file] ) # tag is corrected by exiftran !
+                        if ret.strip()!="":
+                            self.debug("*WARNING* exiftran autorotate output=%s"%ret)
+                        self.debug( "*WARNING* File %s needs autorotate -> done " % file )
+
+            #-----------------------------------------------------------
+            # try to autorename, if wanted
+            #-----------------------------------------------------------
+            if needAutoRename :
+                def _giveMeANewName_(name):
+                    n,ext = os.path.splitext(name)
+                    mo= re.match("(.*)\((\d+)\)$",n)
+                    if mo:
+                        n=mo.group(1)
+                        num=int(mo.group(2)) +1
+                    else:
+                        num=1
+        
+                    return "%s(%d)%s" % (n,num,ext)
+        
+                newname = unicode(exifdate.strftime(PhotoCmd.format)+".jpg")
+                if os.path.basename(file) != newname:
+                    folder=os.path.dirname(file)
+                    while os.path.isfile(os.path.join(folder,newname) ):
+                        newname=_giveMeANewName_(newname)
+
+        
+                    newfile = os.path.join(folder,newname)
+        
+                    os.rename(file,newfile)
+                    file = newfile
+                    self.debug( "*WARNING* File %s needs to be renamed -> %s" % (file,newfile) )
+                                    
         self.__file = file
         self.__refresh()
 
@@ -142,24 +241,18 @@ class PhotoCmd(object):
         self.__info = pyexiv2.Image(self.__file.encode("utf_8"))
         self.__info.readMetadata()
 
-        filedate=datetime.fromtimestamp(os.stat(self.__file).st_mtime)
-        self.__readonly = not os.access( self.__file, os.W_OK)
-
-        # NEW
-        # if no exifdate ---> put the filedate in exifdate
-        # SO exifdate=filedate FOR ALL
         try:
-            self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
-        except KeyError:        # tag exif datetime not present
-            self.__setDate(filedate)    # write
-            self.__info.readMetadata()  # reread
-        except AttributeError:  # content of tag exif datetime is not a datetime
-            self.__setDate(filedate)    # write
-            self.__info.readMetadata()  # reread
-
-
-        self.__isreal   = (self.__info["Exif.Image.Make"]!="jBrout")    # except if a cam maker is named jBrout (currently, it doesn't exist ;-)
-        self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+            self.__isreal   = (self.__info["Exif.Image.Make"]!="jBrout")    # except if a cam maker is named jBrout (currently, it doesn't exist ;-)
+        except:
+            # can only be here after a destroyInfo()
+            self.__isreal = False
+            
+        try:
+            self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+        except:
+            # can only be here after a destroyInfo()
+            self.__exifdate=""
+            
         self.__filedate = self.__exifdate
 
         w,h= Image.open(self.__file).size
@@ -204,8 +297,7 @@ class PhotoCmd(object):
             self.__tags = []
 
 
-
-    def saveTB(self,f):
+    def __saveTB(self,f):   # not used
         self.__info.dumpThumbnailToFile(f)
 
     def __getThumbnail(self):
@@ -258,13 +350,6 @@ isreal : %s""" % (
         self.__maj()
         return True
 
-    def __setDate(self,fd):
-        self.__info["Exif.Image.Make"]="jBrout" # mark exif made by jbrout
-        self.__info["Exif.Image.DateTime"]=fd
-        self.__info["Exif.Photo.DateTimeOriginal"]=fd
-        self.__info["Exif.Photo.DateTimeDigitized"]=fd
-        self.__maj()
-        return True
 
     def clear(self):
         if self.__readonly: return False
@@ -315,6 +400,7 @@ isreal : %s""" % (
     def subTags(self,tags): # *new*
         """ sub a list of tags to the file, return False if it can't """
         if self.__readonly: return False
+        
         isModified = False
         for t in tags:
             assert type(t)==unicode
@@ -330,25 +416,29 @@ isreal : %s""" % (
         """ destroy ALL info (exif/iptc)
         """
         if self.__readonly: return False
+        
+        # delete EXIF and IPTC tags :
         l=self.__info.exifKeys() + self.__info.iptcKeys()
         for i in l:
-            self.__info[i]=""   #needed (so the "del" can be done)
-            del self.__info[i]
+            self.__info[i]=""       # avoid a bug in pyexiv2
+            self.__info[i]=None     # delete tag ("del t[]" doesn't do the job)
+
         self.__info.deleteThumbnail()   # seems not needed !
-        self.__info.setComment("")  # "" is utf8
-        self.__maj()    # *WARING* this recreate exif date !! because ALWAYS a exifdate
+        self.__info.clearComment()
+
+        self.__maj()    # so, ONLY CASE where self.exifdate==""
         return True
 
 
     def copyInfoTo(self,file2):
-        """ copy exif/iptc to "file2", return
+        """ copy exif/iptc to "file2", return dest photonode
         """
         assert type(file2)==unicode
         assert os.path.isfile(file2)
 
         np = PhotoCmd(file2)
         np.destroyInfo()
-
+        
         # copy all exif/iptc info
         l=self.__info.exifKeys() + self.__info.iptcKeys()
         for i in l:
@@ -367,6 +457,7 @@ isreal : %s""" % (
 
     def rebuildExifTB(self):
         if self.__readonly: return False
+        
         im= Image.open(self.__file)
         im.thumbnail((160,160), Image.ANTIALIAS)
 
@@ -374,8 +465,8 @@ isreal : %s""" % (
         im.save(file1, "JPEG")
         buf=file1.getvalue()
         file1.close()
-
         self.__info.setThumbnailData(buf)
+
         self.__maj()
         return True
 
@@ -394,38 +485,16 @@ isreal : %s""" % (
 
 
 
-    def __rename(self):
-        def _giveMeANewName_(name):
-            n,ext = os.path.splitext(name)
-            mo= re.match("(.*)\((\d+)\)$",n)
-            if mo:
-                n=mo.group(1)
-                num=int(mo.group(2)) +1
-            else:
-                num=1
-
-            return "%s(%d)%s" % (n,num,ext)
-
-        if self.__readonly: return False
-
-        folder=os.path.dirname(self.__file)
-        name = unicode(self.__info["Exif.Image.DateTime"].strftime(PhotoCmd.format)+".jpg")
-        if os.path.basename(self.__file) != name:
-            while os.path.isfile(os.path.join(folder,name) ):
-                name=_giveMeANewName_(name)
-
-            file = os.path.join(folder,name)
-
-            os.rename(self.__file,file)
-            self.__file = file
-            self.__refresh()
-        return True
 
 
     def addComment(self,c):
     # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         assert type(c)==unicode
-        self.__info.setComment(c.encode("utf_8"))
+        c=c.strip()
+        if c=="":
+            self.__info.clearComment()
+        else:
+            self.__info.setComment(c.encode("utf_8"))
 
         self.__maj()
         return True
@@ -456,34 +525,7 @@ isreal : %s""" % (
         """ return the result of jhead on this file """
         raise NotImplemented()
 
-    """
-    def autorotate(self):
-        if self.__readonly: return False
-
-        try:
-            v=self.__info["Exif.Image.Orientation"]
-        except KeyError:
-            v=None
-
-        if v in [2,3,4,5,6,7,8]:
-            #http://sylvana.net/jpegcrop/exif_orientation.html
-            #~ 1) transform="";;
-            #~ 2) transform="-flip horizontal";;
-            #~ 3) transform="-rotate 180";;
-            #~ 4) transform="-flip vertical";;
-            #~ 5) transform="-transpose";;
-            #~ 6) transform="-rotate 90";;      # R
-            #~ 7) transform="-transverse";;
-            #~ 8) transform="-rotate 270";;     # L
-
-            #TODO : rotate here and that:
-            #self.__info["Exif.Image.Orientation"] = 1
-
-            print v
-            return True
-        return False
-    """
-    #~ def rotates(self):           # NO ROTATE LOSS LESS ;-(
+     #~ def rotates(self):           # NO ROTATE LOSS LESS ;-(
         #~ im=Image.open(self.__file)
         #~ im=im.transpose(Image.ROTATE_90)
         #~ im.save(self.__file)
@@ -519,44 +561,44 @@ isreal : %s""" % (
 
         return isThumbOk
 
-    @staticmethod
-    def normalizeName(file):
-        """
-        normalize name (only real exif pictures !!!!)
-        """
-        assert type(file)==unicode
-        p=PhotoCmd(file)
-        p.__rename()
-        return p.file
+    #@staticmethod
+    #def normalizeName(file):
+    #    """
+    #    normalize name (only real exif pictures !!!!)
+    #    """
+    #    assert type(file)==unicode
+    #    p=PhotoCmd(file)
+    #    p.__rename()
+    #    return p.file
 
     @staticmethod
     def setNormalizeNameFormat(format):
         PhotoCmd.format=format
 
 
-    @staticmethod
-    def prepareFile(file,needRename,needAutoRot):
-        """
-        prepare file, rotating/autorotating according exif tags
-        (same things as normalizename + autorot, in one action)
-        only called at IMPORT/REFRESH albums
-        """
-        assert type(file)==unicode
-
-
-        if needAutoRot:
-            if _Command.isWin:
-                # do nothing
-                # -> because no gpl tools which rotate well (img+thumb) automatically according exif
-                #    if you provide me one, i'll integrate here
-                pass
-            else:
-                _Command._run( [_Command._exiftran,'-ai',file] )
-
-        if needRename:
-            return PhotoCmd.normalizeName(file)
-        else:
-            return file
+    #@staticmethod
+    #def prepareFile(file,needRename,needAutoRot):
+    #    """
+    #    prepare file, rotating/autorotating according exif tags
+    #    (same things as normalizename + autorot, in one action)
+    #    only called at IMPORT/REFRESH albums
+    #    """
+    #    assert type(file)==unicode
+    #
+    #
+    #    if needAutoRot:
+    #        if _Command.isWin:
+    #            # do nothing
+    #            # -> because no gpl tools which rotate well (img+thumb) automatically according exif
+    #            #    if you provide me one, i'll integrate here
+    #            pass
+    #        else:
+    #            _Command._run( [_Command._exiftran,'-ai',file] )
+    #
+    #    if needRename:
+    #        return PhotoCmd.normalizeName(file)
+    #    else:
+    #        return file
 
 
 if __name__=="__main__":

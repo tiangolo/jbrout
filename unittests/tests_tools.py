@@ -1,16 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-
-Just MINIMAL tests around PhotoCmd (compatible new and old one)
-
-"""
 import os
 import sys
 import shutil
 from datetime import datetime
 ############################################################### to be executed here
-if __file__ != "runtests.py":
+if os.path.basename(__file__) != "runtests.py":
     # execution from here
     PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"jbrout")
     sys.path.append( PATH )
@@ -64,7 +59,7 @@ if __name__ == "__main__":
         #==================================================================
         PhotoCmd.setNormalizeNameFormat(format)
         for f in l:
-            p=PhotoCmd(f)
+            p=PhotoCmd(f,needAutoRename=True)
             attrsBefore=la(p)
 
             if p.exifdate:
@@ -73,29 +68,25 @@ if __name__ == "__main__":
                 d=p.filedate
 
             newNameShouldBe=cd2d(d).strftime(format)
-            newName = PhotoCmd.normalizeName(f)
-            assert newNameShouldBe in newName
+            assert newNameShouldBe in p.file
 
-            p=PhotoCmd(newName)
             attrsAfter=la(p)
             assert _compare_(attrsAfter,attrsBefore)
 
         #==================================================================
-        # test preparefile, autorot,
+        # test autorotation,
         # without modification of attributes
         #==================================================================
         l=[os.path.join(folder,i).decode(sys.getfilesystemencoding()) for i in os.listdir(folder) if i.lower().endswith(".jpg")]
         for f in l:
-            p=PhotoCmd(f)
+            p=PhotoCmd(f,needAutoRotation=True)
             p.addTags([u"àùù",])
             p.addComment(u"àçç")
             attrsBefore=la(p)
             w,h=[int(i.strip()) for i in p.resolution.split("x")]
-            f2=PhotoCmd.prepareFile(f,True,True)
 
-            p2=PhotoCmd(f2)
-            w2,h2=[int(i.strip()) for i in p2.resolution.split("x")]
-            attrsAfter=la(p2)
+            w2,h2=[int(i.strip()) for i in p.resolution.split("x")]
+            attrsAfter=la(p)
             if attrsAfter[-1] != attrsBefore[-1]:
                 assert w2==h and h2==w
             assert _compare_( attrsAfter[:-1],attrsBefore[:-1])
@@ -154,7 +145,7 @@ if __name__ == "__main__":
         #==================================================================
         nd=lambda d : (cd2d(d)+timedelta(weeks=1, days=1,hours=1,minutes=1,seconds=1)).strftime("%Y%m%d%H%M%S")
         for file in l:
-            p=PhotoCmd(file)
+            p=PhotoCmd(file,needAutoRename=True)
             p.addComment(u"kélàçù")
             p.add(u"kàkà")
             attrsBefore=la(p)
@@ -163,19 +154,15 @@ if __name__ == "__main__":
             exifdate = p.exifdate
             filedate = p.filedate
             p.redate(1,1,1,1,1)
-            assert p.file == name
-            assert cpdate( nd(filedate),p.filedate )
-            if exifdate:
-                assert cpdate( nd(exifdate),p.exifdate )
-                newNameShouldBe=cd2d(p.exifdate).strftime(format)
-            else:
-                newNameShouldBe=cd2d(p.filedate).strftime(format)
+            assert p.file == name                       # don't change his name after redate
+            
 
             attrsAfter=la(p)
             assert _compare_(attrsAfter,attrsBefore,False)  # don't compare dates (done before)
 
 
-            p=PhotoCmd( PhotoCmd.normalizeName(p.file) )
+            p=PhotoCmd(file,needAutoRename=True)
+            newNameShouldBe=cd2d(p.exifdate).strftime(format)
             attrsAfter=la(p)
             assert _compare_(attrsAfter,attrsBefore,False)  # don't compare dates (done before)
             assert newNameShouldBe in p.file
@@ -228,30 +215,24 @@ if __name__ == "__main__":
         # without modification of attributes
         #==================================================================
         for f1 in l:
-            f1=PhotoCmd.normalizeName(f1)
-            f2= f1+".jpg"
-            shutil.copy(f1,f2)
             p1=PhotoCmd(f1)
-            p2=PhotoCmd(PhotoCmd.normalizeName(f2))
-            if p1.exifdate:
-                assert _compare_(la(p1),la(p2))
-                assert ("(1)" in p2.file) or ("a." in p2.file)  # double tests for 2 photocmd behaviour (new and old)
-            else:
-                assert _compare_(la(p1),la(p2),False)   # dont' compare date
+            p1.addComment(u"kélàçù")
+            p1.add(u"kàkà")
+            
+            f2= p1.file+".jpg"
+            shutil.copy(f1,f2)
+            p2=PhotoCmd(f2,needAutoRename=True)
+            assert _compare_(la(p1),la(p2))     # ensure same attrs
+            assert "(1)" in p2.file             # ensure indice
 
+            assert len(p2.tags)==1
+            assert len(p2.comment)>0
             p2.destroyInfo()
-            assert p2.filedate
-            # assert not p2.exifdate    # only for old tools - with new : there is always exifdate
             assert len(p2.tags)==0
             assert len(p2.comment)==0
-            assert len(p2.isflash)==False
 
-            p1.copyInfoTo(p2.file)
-            p2=PhotoCmd(p2.file)
-            if p1.exifdate:
-                assert _compare_(la(p1),la(p2))
-            else:
-                assert _compare_(la(p1),la(p2),False)   # dont' compare date
+            p2=p1.copyInfoTo(p2.file)
+            assert _compare_(la(p1),la(p2))
 
     finally:
         shutil.rmtree(folder)   # delete tempfolder

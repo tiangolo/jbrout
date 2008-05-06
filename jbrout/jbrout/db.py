@@ -80,12 +80,15 @@ class DBPhotos:
 
 
     def setNormalizeName(self,v):
+        assert v in (True,False)
         DBPhotos.normalizeName = v
 
     def setNormalizeNameFormat(self,v):
+        assert isinstance(v,basestring)
         PhotoCmd.setNormalizeNameFormat(v)
 
     def setAutorotAtImport(self,v):
+        assert v in (True,False)
         DBPhotos.autorotAtImport = v
 
 
@@ -115,10 +118,11 @@ class DBPhotos:
 
         for file in files:
             yield files.index(file)
-            file = PhotoCmd.prepareFile(file,
-                            needRename=DBPhotos.normalizeName,
-                            needAutoRot=DBPhotos.autorotAtImport,
-                            )
+            #OLD TOOLS:
+            #file = PhotoCmd.prepareFile(file,
+            #                needRename=DBPhotos.normalizeName,
+            #                needAutoRot=DBPhotos.autorotAtImport,
+            #                )
             self.__addPhoto( file ,tags,filesInBasket)
 
         ln = self.root.xpath(u"""//folder[@name="%s"]""" % path)
@@ -166,7 +170,10 @@ class DBPhotos:
             node.addToBasket()
 
         try:
-            iii = PhotoCmd(file)
+            iii = PhotoCmd(file,
+                            needAutoRename=DBPhotos.normalizeName,
+                            needAutoRotation=DBPhotos.autorotAtImport,
+                           )
         except:
             # getback the stack trace exception
             import traceback
