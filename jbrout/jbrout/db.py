@@ -905,11 +905,6 @@ class PhotoNode(object):
 
         return info
 
-    def getExifInfo(self):
-        """ return the result of jhead """
-        pc=PhotoCmd(self.file)
-        return pc.getExifInfo()
-
     def getThumbSize(self):
         """Get the size (width,height) of the thumbnail"""
         try:

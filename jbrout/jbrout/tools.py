@@ -519,12 +519,6 @@ isreal : %s""" % (
         self.__refresh()
 
 
-
-    def getExifInfo(self):
-    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-        """ return the result of jhead on this file """
-        raise NotImplemented()
-
      #~ def rotates(self):           # NO ROTATE LOSS LESS ;-(
         #~ im=Image.open(self.__file)
         #~ im=im.transpose(Image.ROTATE_90)
