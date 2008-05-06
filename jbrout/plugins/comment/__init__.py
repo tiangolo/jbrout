@@ -21,7 +21,7 @@ class Plugin(JPlugin):
     __version__ = "1.0"
 
     def menuEntries(self,l):
-        return [(2000,_("Comment"),True,self.comment,None)]
+        return [(2000,_("Comment"),True,self.comment,"gfx/gtk-edit.png")]
 
 
     def comment(self,list):

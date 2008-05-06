@@ -1511,9 +1511,11 @@ class Window(GladeApp):
             if w.isBasketUpdate:    #is basket updated ?
                 model=self.treeviewdb.get_model()
                 model.activeBasket()
-            if w.invalid:   # remove invalidated thumbnails
-                for i in w.invalid:
+            
+            if w.invalidThumbs:     # is thumbs need to be redrawn
+                for i in w.invalidThumbs:
                     Buffer.remove(i.file)
+                self.tbl.refresh()
 
             return 1
 

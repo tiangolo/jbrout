@@ -30,7 +30,8 @@ class WinShow(GladeApp):
         self.idx=idx
         self.selected=[] # to be able to handle a new selection (reselect with space)
         self.removed=[]  # deleted items
-        self.invalid=[]  # items with invalid thumbnail
+        self.invalidThumbs=[]
+        
         self.isBasketUpdate=False
         self.needInfo=showInfo
         self.isModify=isModify
@@ -95,11 +96,52 @@ class WinShow(GladeApp):
 
         self.basket.set_icon_widget(image)
         self.toolbar.set_style(gtk.TOOLBAR_ICONS)
+
+        #=======================================================================
+        # put real plugins
+        #=======================================================================
+        self.tooltips = gtk.Tooltips()        
+        canModify = isModify        
+        for ord,text,alter,callback,img in JBrout.plugins.menuEntries():
+            if img:
+                # try to detect if plugin are enable or not
+                if canModify:
+                    enableMenu = True
+                else:
+                    # jbrout doesn't allow modification
+                    # so, only plugins not alter'able are enabled
+                    enableMenu = not alter
+                if enableMenu:
+                    image=gtk.Image()
+                    image.set_from_file(img)
+                    image.show()
+
+                    bb = gtk.ToolButton(image)
+                    bb.set_tooltip(self.tooltips, text)
+                    bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
+                    self.toolbar.insert(bb, 3)
+                    bb.show()
+        #=======================================================================
+        
+        
         self.main_widget.show_all()
         self.main_widget.fullscreen()
 
         self.draw()
 
+    def on_selecteur_menu_select_plugin(self,ib,callback):
+        currentNode = self.ln[self.idx]
+        if self.isModify and not currentNode.isReadOnly:
+            
+            ret=callback([currentNode,])   #TODO: try/cath here
+            
+            if ret: # if change have be done ...
+                if currentNode not in self.invalidThumbs:
+                    self.invalidThumbs.append(currentNode)
+                    
+                self.draw(forceReload=True)
+        
+    
     def on_eb_scroll_event(self,widget,b):
         if int(b.direction)==1:
             self.idx+=1
@@ -161,12 +203,10 @@ class WinShow(GladeApp):
 
             return 0
 
-    def draw(self,invalid=False):
+    def draw(self,forceReload=False):
         """
         Draws the currently selected photo in the full screen view
         
-        Keyword Arguments
-        invalid - indicates if the cached image has been invalidated
         """
         
         if self.idx >= len(self.ln):
@@ -229,7 +269,10 @@ COMMENT :
 
         d=Display()
         d.node = node
-        d.image = PixbufCache().get(node.file,invalid)
+        if forceReload:
+            d.image = PixbufCache().get(node.file,forceReload)
+        else:
+            d.image = PixbufCache().get(node.file)
         d.title = "%d/%d"%(self.idx+1,len(self.ln))
         try:
             self.lbl_info.set_text(msg)
@@ -298,8 +341,6 @@ COMMENT :
             #currentNode = self.viewer.display.node
             self.ln.remove(node)
             self.removed.append(node)
-            if node in self.invalid:
-                self.invalid.remove(node)
             self.draw()
 
     def on_basket_toggled(self,widget):
@@ -311,39 +352,6 @@ COMMENT :
                 currentNode.removeFromBasket()
             self.isBasketUpdate=True
     
-    def on_left_clicked(self,*args):
-        """ Handles the rotate right button """
-        self.__rotate("L")
-    
-    def on_right_clicked(self,*args):
-        """ Handles the rotate right button """
-        self.__rotate("R")
-        
-    def __rotate(self,sens):
-        """
-        Rotates the currently selected image using the selected sense
-
-        Keyword argument:
-        sens - Direction in witch to perform the rotation (L,R)
-        """
-        node = self.ln[self.idx]
-        if self.isModify and not node.isReadOnly:
-            node.rotate(sens)
-            node=self.ln[self.idx]
-            if node not in self.invalid:
-                self.invalid.append(node)
-            self.draw(True)
-    
-    def on_comment_clicked(self,*args):
-        """Handles the comment button"""
-        node = self.ln[self.idx]
-        info = node.getInfo()
-        comment=info["comment"]
-        winComment = WinComment(comment)
-        ret=winComment.loop()
-        if ret[0]:
-            node.setComment(unicode(ret[1]))
-            self.draw()
         
 class ImageShow(gtk.DrawingArea):
     def __init__(self):
@@ -458,40 +466,44 @@ class PixbufCache(object):
     """ class to cache pixbuf by filename"""
     _cache=None
     _file=None
-    def get(self,file,invalid=False):
+    def get(self,file,forceReload=False):
         
-        if file != PixbufCache._file or invalid: # TODO: Fix this to check modification
+        if file == PixbufCache._file :
+            if forceReload:
+                PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
+        else:
             PixbufCache._file = file
             if os.path.isfile(file):
                 PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
             else:
                 PixbufCache._cache=None
 
+        
         return PixbufCache._cache
 
-class WinComment(GladeApp):
-    """ Creates and handles the dialog for Editing photo comments """
-    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
-    window="WinComment"
-    
-    def init(self,comment):
-        """ Initalisation """
-        self.tbufComment = self.txtComment.get_buffer()
-        self.tbufComment.set_text(comment)
-    
-    def on_btnCancel_clicked(self,*args):
-        """ Handles the Cancel button """
-        self.quit(False,"")
-    
-    def on_btnOk_clicked(self,*args):
-        """ Handles the rotate right button """
-        start=self.tbufComment.get_start_iter()
-        end =self.tbufComment.get_end_iter()
-        self.quit(True,self.tbufComment.gset_mnemonic_modifieret_text(start,end,False))
-        
-    def on_WinGetComment_delete_event(self,*args):
-        """ Handles window delete (close) events """
-        self.quit(False,"")
+#class WinComment(GladeApp):
+#    """ Creates and handles the dialog for Editing photo comments """
+#    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
+#    window="WinComment"
+#    
+#    def init(self,comment):
+#        """ Initalisation """
+#        self.tbufComment = self.txtComment.get_buffer()
+#        self.tbufComment.set_text(comment)
+#    
+#    def on_btnCancel_clicked(self,*args):
+#        """ Handles the Cancel button """
+#        self.quit(False,"")
+#    
+#    def on_btnOk_clicked(self,*args):
+#        """ Handles the rotate right button """
+#        start=self.tbufComment.get_start_iter()
+#        end =self.tbufComment.get_end_iter()
+#        self.quit(True,self.tbufComment.gset_mnemonic_modifieret_text(start,end,False))
+#        
+#    def on_WinGetComment_delete_event(self,*args):
+#        """ Handles window delete (close) events """
+#        self.quit(False,"")
 
 
 if __name__ == "__main__":
