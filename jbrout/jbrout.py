@@ -1495,7 +1495,7 @@ class Window(GladeApp):
             l,i = widget.items,widget.focus_cell
             isInfo = JBrout.conf["showInfo"]==1 and True or False
             isModify = JBrout.modify
-            w=WinShow(TreeTags(),l,i,isInfo,isModify)
+            w=WinShow(l,i,isInfo,isModify)
             w.hpShow.set_position( int(JBrout.conf["viewertreewidth"] or 160) )
             w.loop()
             JBrout.conf["viewertreewidth"] = int(w.hpShow.get_position())

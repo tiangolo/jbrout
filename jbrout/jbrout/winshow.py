@@ -18,6 +18,42 @@ from common import cd2rd,format_file_size_for_display
 #TODO: add ops : add/del from basket
 #TODO: add ops : external tools
 
+class TagList(gtk.VBox):
+    #TODO: this object need to display its parent Hscrollbar when needed (does'nt work ?!)
+    def __init__(self,callbackRemove):
+        #self.b = gtk.Button()
+        #self.b.set_label("Test bouton")
+        gtk.VBox.__init__(self)
+        self.__callbackRemove = callbackRemove
+        self.__tags= dict(JBrout.tags.getAllTags())
+        
+    def fill(self,ll):
+        ll.sort(lambda a,b: cmp(a.lower(),b.lower()))
+        self.__ll = ll
+        self.__refresh()
+        
+    def __refresh(self):
+        l=self.get_children()
+        for a in l:
+            a.destroy()
+            del a
+        
+        for i in self.__ll:
+            
+            hb=gtk.HBox()
+            lbl=gtk.Label()
+            lbl.set_label("%s (%s)" %(i,self.__tags[i]))
+            hb.pack_start(lbl)
+            btn=gtk.Button()
+            btn.set_label("X")
+            btn.connect('button-press-event', self.__callbackRemove,i)            
+            hb.pack_end(btn,False)
+            
+            self.pack_start(hb,False)
+
+        self.resize_children()
+        self.show_all()
+        
 
 
 class WinShow(GladeApp):
@@ -25,7 +61,7 @@ class WinShow(GladeApp):
     #glade='data/jbrout.glade'
     window="WinShow"
 
-    def init(self,storeTags, ln,idx,showInfo=True,isModify=False):
+    def init(self, ln,idx,showInfo=True,isModify=False):
         self.ln=[]+ln
         self.idx=idx
         self.selected=[] # to be able to handle a new selection (reselect with space)
@@ -39,53 +75,9 @@ class WinShow(GladeApp):
         PixbufCache._file=None
         PixbufCache._cache=None
         
-
-
-        #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-        ###################
-        def filename(column, cell, model, iter):
-            cell.set_property('text', model.get_value(iter, 0))
-            cell.set_property('foreground', model.get_value(iter, 2))
-            cell.set_property('xalign', 0)
-            #~ cell.set_property('xpad', 1)
-        def pixbuf(column, cell, model, iter):
-            node=model.get_value(iter,1)
-            if node.__class__.__name__ == "TagNode":
-                if model.get_value(iter, 3)==0:
-                    cell.set_property('pixbuf', Buffer.pbCheckEmpty)
-                elif model.get_value(iter, 3)==1:
-                    cell.set_property('pixbuf', Buffer.pbCheckInclude)
-                elif model.get_value(iter, 3)==2:
-                    cell.set_property('pixbuf', Buffer.pbCheckExclude)
-                else:
-                    cell.set_property('pixbuf', Buffer.pbCheckDisabled)
-            else:
-                cell.set_property('pixbuf', None)
-
-            cell.set_property('width', 16)
-            cell.set_property('xalign', 0)
-
-        cellpb = gtk.CellRendererPixbuf()
-        cell = gtk.CellRendererText()
-        column = gtk.TreeViewColumn()
-        column.pack_start(cellpb, False)
-        column.pack_start(cell, True)
-        column.set_cell_data_func(cellpb, pixbuf)
-        column.set_cell_data_func(cell, filename)
-        ###################
-
-        self.tv_tags.append_column(column)
-        treeselection = self.tv_tags.get_selection()
-        treeselection.set_mode(gtk.SELECTION_NONE)
-
-
-        self.tv_tags.set_model( storeTags )
-        self.tv_tags.set_enable_search(False)
-        self.tv_tags.set_state(gtk.CAN_FOCUS)
-
-        storeTags.expander(self.tv_tags)
-        storeTags.cleanSelections()
-        #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+        self.taglist = TagList(self.on_remove_tag)
+        self.sc_tags.add(self.taglist)
+        
         self.viewer = ImageShow()
 
         self.hpShow.add2(self.viewer)
@@ -224,7 +216,7 @@ class WinShow(GladeApp):
             ltags=info["tags"]
             folder=node.folderName
             resolution=info["resolution"]
-            tags=", ".join(ltags)
+
             comment=info["comment"]
             exifdate=cd2rd(info["exifdate"])
     #        filedate=cd2rd(info["filedate"])
@@ -235,14 +227,13 @@ class WinShow(GladeApp):
 
 %(resolution)s, %(filesize)s
 
+ALBUM :
 %(folder)s
-
-TAGS :
-%(tags)s
 
 COMMENT :
 %(comment)s
 
+TAGS :
 """) % locals()
         except Exception,m:
             msg = ""
@@ -254,9 +245,8 @@ COMMENT :
         else:
             self.delete.hide()
 
-        model=self.tv_tags.get_model()
-        model.setSelected(ltags)
-
+        self.taglist.fill(ltags)
+        
         d=Display()
         d.node = None
         self.viewer.display=d   # prevent toggle event
@@ -291,49 +281,10 @@ COMMENT :
     def on_WinShow_button_press_event(self,*args):
         self.quit()
 
-    def on_tv_tags_button_press_event(self, widget, *args):
-        event=args[0]
-        tup= widget.get_path_at_pos( int(event.x), int(event.y) )
-        if self.isModify:
-            if tup:
-                path,obj,x,y = tup
-
-                if path:
-                    model = widget.get_model()
-                    iterTo = model.get_iter(path)
-                    node = model.get(iterTo)
-
-                    # let's find the x beginning of the cell
-                    xcell = widget.get_cell_area(path, widget.get_column(0) ).x
-
-                    if node.__class__.__name__ == "TagNode":
-                        if x>xcell:
-                            # click on the cell (not on the arrow)
-                            if event.button==1:
-                                currentNode = self.viewer.display.node
-                                if currentNode:
-                                    # TODO : test if readonly
-                                    # TODO : test jbrout.modify
-
-                                    cv = model.get_value(iterTo,3)  # TODO : really bad way ! should be better done
-                                    if cv == 1:
-                                        currentNode.delTag(node.name)
-                                    else:
-                                        # add tag
-                                        currentNode.addTag(node.name)
-                                    self.draw()
-
-                            return 1 # stop the propagation of the event
-
-        return 0 # let the event propagation
-
-
-
-    def on_tv_tags_row_activated(self, widget, *args):
-        treeselection = widget.get_selection()
-        model, iter0 = treeselection.get_selected()
-        if iter0:
-            model.switch(iter0)
+    def on_remove_tag(self,widget,event,tag):
+        currentNode = self.viewer.display.node
+        currentNode.delTag(tag)
+        self.draw()
 
     def on_delete_clicked(self,*args):
         if self.isModify:
