@@ -26,6 +26,7 @@ import gtk
 import gobject
 
 from commongtk import Img,rgb
+
 from common import cd2d
 from tools import PhotoCmd
 import os,re,sys,thread,shutil,stat,string
@@ -1297,8 +1298,8 @@ if __name__ == "__main__":
     #~ print doc.tag
     #~ print doc.text
 
-    db = DBPhotos("kif.xml")
-    db.clearBasket()
+    db = DBPhotos()
+    #db.clearBasket()
     #~ db.add("/home/manatlan/Desktop/tests")
 
     #~ print db.cpt()

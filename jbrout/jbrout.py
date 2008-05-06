@@ -337,68 +337,150 @@ class ListView(ThumbnailsView):
             pb=pb2
 
         return pb
+
+
 #========================================================
 class DateDB(gtk.TreeStore):
 #========================================================
-    def __init__(self):
-        gtk.TreeStore.__init__(self, str,gtk.gdk.Pixbuf,str)
-
-    def init(self,offset=0,today=False,selectDate=None):
+    LEVELYEAR=1
+    LEVELMONTH=2
+    LEVELDAY=3
+    
+    @staticmethod
+    def data2date(data):
+        data=str(data)
+        if len(data)==4:
+            return datetime.datetime(int(data),1,1)
+        elif len(data)==6:
+            return datetime.datetime(int(data[:4]),int(data[4:6]),1)
+        elif len(data)==8:
+            return datetime.datetime(int(data[:4]),int(data[4:6]),int(data[-2:]))
+            
+    
+    def __init__(self,filter=None):
+        gtk.TreeStore.__init__(self, str,int,int)
+        
+    def init(self):
         self.clear()
+        
+        ln = JBrout.db.select("""//photo""")
+        years=list(set([int(i.date[:4]) for i in ln]))
+        years.sort()
+        years.reverse()
+        
+        for i in years:
+            self.append(None,[str(i),i,DateDB.LEVELYEAR])
+    
+    
+    def fillYear(self,iter0,year):
+        xpath = """//photo[substring(@date,1,4)="%s"]""" % str(year) 
 
-        if offset!=0:
-            y=self.selectedDate.year
-            m=self.selectedDate.month
-            d=self.selectedDate.day
+        ln=JBrout.db.select(xpath)
+        months = list(set([int(i.date[:6]) for i in ln]))
+        months.sort()
+        months.reverse()
+        self.delChildren(iter0)
+        for i in months:
+            d=DateDB.data2date(i)
+            sd = unicode(d.strftime("%B"),locale.getpreferredencoding ())
+            
+            self.append(iter0,[sd,i,DateDB.LEVELMONTH])
+        return ln
 
+    def fillMonth(self,iter0,yearmonth):
+        xpath = """//photo[substring(@date,1,6)="%s"]""" % str(yearmonth)
+        
+        ln=JBrout.db.select(xpath)
 
-            if abs(offset)==1:
-                m+=offset
-                if m>12:
-                    m=1
-                    y+=1
-                if m<1:
-                    m=12
-                    y-=1
-            elif abs(offset)==12:
-                y+=(offset/12)
+        days = list(set([int(i.date[:8]) for i in ln]))
+        days.sort()
+        days.reverse()
+        self.delChildren(iter0)
+        for i in days:
+            d=DateDB.data2date(i)
+            sd = unicode(d.strftime("%A %d"),locale.getpreferredencoding ())
+            
+            self.append(iter0,[sd,i,DateDB.LEVELDAY])
+        return ln
 
-            self.selectedDate = datetime.datetime(y,m,d)
+    def fillDay(self,iter0,yearmonthday):
+        xpath = """//photo[substring(@date,1,8)="%s"]""" % str(yearmonthday) 
+        return JBrout.db.select(xpath)
 
-        if today:
-            t=datetime.datetime.now()
-            self.selectedDate = datetime.datetime(t.year,t.month,1)
-        if selectDate:
-            t=selectDate
-            self.selectedDate = datetime.datetime(t.year,t.month,1)
+    
+    def delChildren(self,iter0):
+        while 1:
+            child1 = self.iter_children(iter0)
+            if child1 == None:
+                break
+            else:
+                self.remove(child1)
+        
+    def getInfo(self,iter0):
+        lbl=self.get_value(iter0,0)
+        data=self.get_value(iter0,1)
+        level=self.get_value(iter0,2)
+        
+        d=DateDB.data2date(data)
+        
+        if level == DateDB.LEVELYEAR:
+            name = _("Year %s") % d.year
+            ln=self.fillYear(iter0,data)
+            
+        elif level == DateDB.LEVELMONTH:
+            name = unicode(d.strftime("%B %Y"),locale.getpreferredencoding ())
+            ln=self.fillMonth(iter0,data)
+                
+        elif level == DateDB.LEVELDAY:
+            name = unicode(d.strftime("%A %d %B %Y"),locale.getpreferredencoding ())
+            ln=self.fillDay(iter0,data)
+        else:
+            ln=None
 
-        ym = self.selectedDate.strftime("%Y%m")
-        ln = JBrout.db.select("""//photo[substring(@date,1,6)="%s"]""" % ym)
-        jour={}
-        for node in ln:
-            jour[ node.date[:8] ] = node
+        if ln:
+            return name,ln
+        
+    def findThisDate(self,date):
+        """ return iter,ln of this date (refill tree)"""
+        assert type(date)==datetime.datetime
+        
+        year=date.year
+        yearmonth=int(date.strftime("%Y%m"))
+        yearmonthday=int(date.strftime("%Y%m%d"))
+        
+        find=None
+        a = self.get_iter_root()
+        while a:
+            if self.get_value(a,1) == year:
+                find = a
+            a = self.iter_next(a)
+        
+        ln=None
+        if find:
+            ln=self.fillYear(find,year)
+            
+            a=self.iter_children(find)
+            find=None
+            while a:
+                if self.get_value(a,1) == yearmonth:
+                    find = a
+                a = self.iter_next(a)
+                
+            if find:
+                ln=self.fillMonth(find,yearmonth)
 
-        jours = [i for i in jour.keys()]
-        jours.sort()
-        for i in jours:
-            node = jour[i]
-            d= datetime.datetime(int(i[:4]),int(i[4:6]),int(i[6:8]))
-            date = unicode(d.strftime("%A %d"),locale.getpreferredencoding ())
-
-            ymd = d.strftime("%Y%m%d")
-            self.append(None,[date,node.getThumb().scale_simple(80,80,gtk.gdk.INTERP_NEAREST),ymd])
-
-        return self.selectedDate
-
-    def whichPos(self,d):
-        ymd=d.strftime("%Y%m%d")
-        cpt=0
-        for nom,pb,yymmdd in self:
-            if ymd==yymmdd:
-                return cpt
-            cpt+=1
-        return None
-
+                a=self.iter_children(find)
+                find=None
+                while a:
+                    if self.get_value(a,1) == yearmonthday:
+                        find = a
+                    a = self.iter_next(a)
+                    
+                if find:
+                    ln=self.fillDay(find,yearmonthday)
+                
+        return find,ln            
+        
 #========================================================
 class TreeDB(gtk.TreeStore):
 #========================================================
@@ -939,25 +1021,38 @@ class Window(GladeApp):
         self.treeviewtags.set_model( store )
         store.expander(self.treeviewtags)
 
+#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        #cell_renderer = gtk.CellRendererText()
+        #column = gtk.TreeViewColumn("Dates", cell_renderer,text=0)
+        #self.selectDate.append_column(column)
+        #cellpb = gtk.CellRendererPixbuf()
+        #column = gtk.TreeViewColumn("View", cellpb,pixbuf=1)
+        #self.selectDate.append_column(column)
+        #
+        ## prepare the date combo in "tab time"
+        #cell = gtk.CellRendererText()
+        #self.comboboxyear.pack_start(cell, True)
+        #self.comboboxyear.add_attribute(cell, 'text',0)
+        ## and fill it
+        #self.fillComboYear()
+        #
+        ## init the "tab time"
+        #m = DateDB()
+        #m.init(today=True)
+        #self.selectDate.set_model(m)
+#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
-        cell_renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("Dates", cell_renderer,text=0)
-        self.selectDate.append_column(column)
-        cellpb = gtk.CellRendererPixbuf()
-        column = gtk.TreeViewColumn("View", cellpb,pixbuf=1)
-        self.selectDate.append_column(column)
-
-        # prepare the date combo in "tab time"
-        cell = gtk.CellRendererText()
-        self.comboboxyear.pack_start(cell, True)
-        self.comboboxyear.add_attribute(cell, 'text',0)
-        # and fill it
-        self.fillComboYear()
+        column = gtk.TreeViewColumn("date", cell_renderer,text=0)
+        self.treeViewDate.append_column(column)
+        #cellpb = gtk.CellRendererPixbuf()
+        #column = gtk.TreeViewColumn("View", cellpb,pixbuf=1)
+        #self.selectDate.append_column(column)
 
         # init the "tab time"
         m = DateDB()
-        m.init(today=True)
-        self.selectDate.set_model(m)
+        m.init()
+        self.treeViewDate.set_model(m)
+#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
         # build the display menu *!*
         #----------------------------------------------------------
@@ -1011,17 +1106,6 @@ class Window(GladeApp):
 
         #=============================================================================
 
-    def fillComboYear(self):
-        """ fill the comboyear in tab "time" """
-        drange=JBrout.db.getMinMaxDates()
-        if drange:
-            min,max=drange
-            m=gtk.ListStore( str)
-            m.clear()
-            if min and max :
-                for i in range(min.year,max.year+1):
-                    m.append( [str(i),] )
-            self.comboboxyear.set_model(m)
 
     def on_order_changed(self,*args):
         JBrout.conf["orderAscending"] = self.menuAscending.get_active() and 1 or 0
@@ -1575,16 +1659,15 @@ class Window(GladeApp):
         # select its date
         d=cd2d(node.date)
         self.notebook1.set_current_page(1)
-        model=self.selectDate.get_model()
-        self.date_display_update(model.init(selectDate=d))
-        pos=model.whichPos(d)
-        if pos:
-            treeselection = self.selectDate.get_selection()
-            treeselection.select_path( pos )
-            self.on_selectDate_row_activated(self.selectDate,None)
-            self.selectDate.set_cursor( pos )   # set focus (ensure visible)
+        model=self.treeViewDate.get_model()
+        iter0,ln=model.findThisDate(d)
+        if iter0:
+            path=model.get_path(iter0)
+            self.treeViewDate.expand_to_path( path )            
+            self.treeViewDate.set_cursor( path )
 
-
+            self.SetSelection(d.strftime("%d/%m/%Y"),ln,Window.MODETIME)
+            
             # and select the selected photo
             sel.setSelected([node])
 
@@ -1829,19 +1912,19 @@ class Window(GladeApp):
 
 
 
-    def date_display_update(self, date):
+    #def date_display_update(self, date):
         # try to find the active item in the list -> act
-        act=0
-        m=self.comboboxyear.get_model()
-        if m:
-            for i in range(len(m)):
-                if date.year == int(m[i][0]):
-                    act=i
-
-        # and set them
-        self.comboboxyear.set_active(act)
-        self.comboboxmonth.set_active(date.month-1)
-
+        #act=0
+        #m=self.comboboxyear.get_model()
+        #if m:
+        #    for i in range(len(m)):
+        #        if date.year == int(m[i][0]):
+        #            act=i
+        #
+        ## and set them
+        #self.comboboxyear.set_active(act)
+        #self.comboboxmonth.set_active(date.month-1)
+        #pass
 
     ###################################################################################
 
@@ -1928,10 +2011,8 @@ class Window(GladeApp):
          gpoint,page= args
          if page==1: # tab "time"
              # perhaps we must change the "year interval" in tap "time" combo ...
-             self.fillComboYear()
-
-             date = self.selectDate.get_model().init()
-             self.date_display_update(date)
+             self.treeViewDate.get_model().init()
+             #self.date_display_update(date)
 
 
 
@@ -2173,50 +2254,51 @@ class Window(GladeApp):
 
 
 
-    def on_btn_yl_clicked(self, widget, *args):
-        self.date_display_update( self.selectDate.get_model().init(-12))
-
-
-
-    def on_btn_ml_clicked(self, widget, *args):
-        self.date_display_update(self.selectDate.get_model().init(-1))
-
-
-    def on_btl_mm_clicked(self, widget, *args):
-        self.date_display_update(self.selectDate.get_model().init(1))
-
-
-    def on_btn_ym_clicked(self, widget, *args):
-        self.date_display_update(self.selectDate.get_model().init(12))
-
+    #def on_btn_yl_clicked(self, widget, *args):
+    #    self.date_display_update( self.selectDate.get_model().init(-12))
+    #
+    #
+    #
+    #def on_btn_ml_clicked(self, widget, *args):
+    #    self.date_display_update(self.selectDate.get_model().init(-1))
+    #
+    #
+    #def on_btl_mm_clicked(self, widget, *args):
+    #    self.date_display_update(self.selectDate.get_model().init(1))
+    #
+    #
+    #def on_btn_ym_clicked(self, widget, *args):
+    #    self.date_display_update(self.selectDate.get_model().init(12))
+    #
 
     def on_selectDate_row_activated(self, widget, *args):
         treeselection = widget.get_selection()
         model, iter0 = treeselection.get_selected()
-        ymd = model.get_value(iter0,2)
-
-        name = datetime.date(int(ymd[:4]), int(ymd[4:6]), int(ymd[6:8])).strftime('%A %e %B %Y')
-        name = unicode(name,locale.getpreferredencoding ())
 
         self.showProgress(True)
         try:
-            ln = JBrout.db.select("""//photo[substring(@date,1,8)="%s"]""" % ymd)
-            self.SetSelection(name,ln,Window.MODETIME)
+            info = model.getInfo(iter0)
+            path=model.get_path(iter0)
+            self.treeViewDate.expand_to_path( path )            
+            
+            if info:
+                name,ln = info
+                self.SetSelection(name,ln,Window.MODETIME)
         finally:
             self.showProgress()
 
 
-
-    def on_combodate_changed(self, widget, *args):
-        try:
-            year=int(self.comboboxyear.get_active_text())
-            month = 1 + self.comboboxmonth.get_active()
-            date = datetime.date(year, month, 1)
-        except:
-            date=None
-
-        if date:
-            self.date_display_update(self.selectDate.get_model().init(selectDate = date))
+    #
+    #def on_combodate_changed(self, widget, *args):
+    #    try:
+    #        year=int(self.comboboxyear.get_active_text())
+    #        month = 1 + self.comboboxmonth.get_active()
+    #        date = datetime.date(year, month, 1)
+    #    except:
+    #        date=None
+    #
+    #    if date:
+    #        self.date_display_update(self.selectDate.get_model().init(selectDate = date))
 
 
 
