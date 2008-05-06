@@ -229,7 +229,6 @@ def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK
 ##############################################################################
 
 from StringIO import StringIO
-#~ from libs import exif
 try:
     import pyexiv2
 except:

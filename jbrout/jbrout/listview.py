@@ -21,8 +21,6 @@ BORDER_SIZE = 2
 CELL_BORDER_WIDTH = 4
 SELECTION_THICKNESS = 2
 
-from libs import exif
-
 
 
 
@@ -766,6 +764,7 @@ class Cache:
             Cache.__buf[item.file]=item.getThumb()
         return Cache.__buf[item.file]
 
+import pyexiv2
 
 class ImageFile(object):
 
@@ -781,11 +780,15 @@ class ImageFile(object):
 
     def getThumb(self):
         """ return the thumbnail """
-        try:
-            data= exif.process_file(open(self.__file,"rb"))
-        except IOError:
-            return None
-        data = data['JPEGThumbnail']
+        #try:
+        #    data= exif.process_file(open(self.__file,"rb"))
+        #except IOError:
+        #    return None
+        #data = data['JPEGThumbnail']
+        img = pyexiv2.Image(self.__file)
+        img.readMetadata()
+        data=img.getThumbnailData()[1]
+        
         loader = gtk.gdk.PixbufLoader()
         loader.write(data, len(data))
         loader.close()

@@ -28,7 +28,6 @@ import gobject
 from commongtk import Img,rgb
 from common import cd2d
 from tools import PhotoCmd
-from libs import exif           # *!*
 import os,re,sys,thread,shutil,stat,string
 
 def walktree (top = ".", depthfirst = True):
