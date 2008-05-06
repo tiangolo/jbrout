@@ -210,22 +210,11 @@ class PhotoCmd(object):
             # try to autorename, if wanted
             #-----------------------------------------------------------
             if needAutoRename :
-                def _giveMeANewName_(name):
-                    n,ext = os.path.splitext(name)
-                    mo= re.match("(.*)\((\d+)\)$",n)
-                    if mo:
-                        n=mo.group(1)
-                        num=int(mo.group(2)) +1
-                    else:
-                        num=1
-        
-                    return "%s(%d)%s" % (n,num,ext)
-        
                 newname = unicode(exifdate.strftime(PhotoCmd.format)+".jpg")
                 if os.path.basename(file) != newname:
                     folder=os.path.dirname(file)
                     while os.path.isfile(os.path.join(folder,newname) ):
-                        newname=_giveMeANewName_(newname)
+                        newname=PhotoCmd.giveMeANewName(newname)
 
         
                     newfile = os.path.join(folder,newname)
@@ -568,6 +557,19 @@ isreal : %s""" % (
     @staticmethod
     def setNormalizeNameFormat(format):
         PhotoCmd.format=format
+
+
+    @staticmethod
+    def giveMeANewName(name):
+        n,ext = os.path.splitext(name)
+        mo= re.match("(.*)\((\d+)\)$",n)
+        if mo:
+            n=mo.group(1)
+            num=int(mo.group(2)) +1
+        else:
+            num=1
+
+        return "%s(%d)%s" % (n,num,ext)
 
 
     #@staticmethod

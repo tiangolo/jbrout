@@ -37,6 +37,16 @@ if __name__ == "__main__":
             return a1[2:]==a2[2:]
 
 
+    #==================================================================
+    # test PhotoCmd.giveMeANewName
+    #==================================================================
+    assert PhotoCmd.giveMeANewName("jo.jpg")=="jo(1).jpg"
+    assert PhotoCmd.giveMeANewName(u"/kif/jo.jpg")==u"/kif/jo(1).jpg"
+    assert PhotoCmd.giveMeANewName("/kif/jo (4).jpg") == "/kif/jo (5).jpg"
+    assert PhotoCmd.giveMeANewName("c:\\kif\\jo (123).jpg") == "c:\\kif\\jo (124).jpg"
+    assert PhotoCmd.giveMeANewName("jo(44).txt") == "jo(45).txt"
+
+
     format="photo_from_%Y_%m_%d_at_%H_%M_%S"
     folder=FOLDER+"_tmp"
 

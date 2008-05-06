@@ -671,23 +671,13 @@ class PhotoNode(object):
     def getImage(self):
         return gtk.gdk.pixbuf_new_from_file(self.file)
 
-    def giveMeANewName(self):   # todo
-        n,ext = os.path.splitext(self.name)
-        mo= re.match("(.*)\((\d+)\)",n)
-        if mo:
-            n=mo.group(1)
-            num=int(mo.group(2)) +1
-        else:
-            num=1
-
-        return "%s(%d)%s" % (n,num,ext)
 
     def moveToFolder(self,nodeFolder):
         assert nodeFolder.__class__ == FolderNode
 
         name = self.name
         while os.path.isfile(os.path.join(nodeFolder.file,name) ):
-            name=self.giveMeANewName()
+            name=PhotoCmd.giveMeANewName(name)
 
         try:
             shutil.move( self.file, os.path.join(nodeFolder.file,name) )
@@ -762,11 +752,8 @@ class PhotoNode(object):
         assert type(path)==unicode, "photonod.copyTo() : path is not unicode"
         dest = os.path.join( path, self.name)
 
-        cpt=0
         while os.path.isfile(dest):
-            dest = os.path.join( path, self.giveMeANewName() )
-            cpt+=1
-            if cpt>10: return None  #security
+            dest = os.path.join( path, PhotoCmd.giveMeANewName(os.path.basename(dest)) )
 
         if resize:
             assert len(resize)==2
@@ -839,11 +826,8 @@ class PhotoNode(object):
         #photo has been redated
         #it should be renamed if in config ...
         if DBPhotos.normalizeName:
-            file = PhotoCmd.normalizeName(self.file)
-            if file != self.file:
-                self.__node.attrib["name"] = os.path.basename(file)
-                pc = PhotoCmd(self.file)
-                self.updateInfo(pc)
+            pc = PhotoCmd(self.file,needAutoRename=True)
+            self.updateInfo(pc)
 
         return True
 
