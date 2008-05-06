@@ -71,6 +71,8 @@ if __name__ == "__main__":
         #==================================================================
         for f in l:
             p=PhotoCmd(f)
+            p.rebuildExifTB()
+            assert p.isThumbOk()==1
             p.rotate("R")
             assert p.isThumbOk()==1
             p.rotate("L")
