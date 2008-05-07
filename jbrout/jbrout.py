@@ -358,7 +358,7 @@ class DateDB(gtk.TreeStore):
             
     
     def __init__(self,filter=None):
-        gtk.TreeStore.__init__(self, str,int,int)
+        gtk.TreeStore.__init__(self, str,int,int,str) #gtk.gdk.Pixbuf)
         
     def init(self):
         self.clear()
@@ -369,7 +369,7 @@ class DateDB(gtk.TreeStore):
         years.reverse()
         
         for i in years:
-            self.append(None,[str(i),i,DateDB.LEVELYEAR])
+            self.append(None,[str(i),i,DateDB.LEVELYEAR,None])
     
     
     def fillYear(self,iter0,year):
@@ -380,11 +380,12 @@ class DateDB(gtk.TreeStore):
         months.sort()
         months.reverse()
         self.delChildren(iter0)
+        self.set_value(iter0,3,"(%d)"%len(ln))
         for i in months:
             d=DateDB.data2date(i)
-            sd = unicode(d.strftime("%B"),locale.getpreferredencoding ())
+            sd = unicode(d.strftime("%m-%B"),locale.getpreferredencoding ())
             
-            self.append(iter0,[sd,i,DateDB.LEVELMONTH])
+            self.append(iter0,[sd,i,DateDB.LEVELMONTH,None])
         return ln
 
     def fillMonth(self,iter0,yearmonth):
@@ -393,19 +394,24 @@ class DateDB(gtk.TreeStore):
         ln=JBrout.db.select(xpath)
 
         days = list(set([int(i.date[:8]) for i in ln]))
+        #pb=ln[0].getThumb().scale_simple(80,80,gtk.gdk.INTERP_NEAREST)
+        pb=None
         days.sort()
         days.reverse()
         self.delChildren(iter0)
+        self.set_value(iter0,3,"(%d)"%len(ln))
         for i in days:
             d=DateDB.data2date(i)
             sd = unicode(d.strftime("%A %d"),locale.getpreferredencoding ())
             
-            self.append(iter0,[sd,i,DateDB.LEVELDAY])
+            self.append(iter0,[sd,i,DateDB.LEVELDAY,pb])
         return ln
 
     def fillDay(self,iter0,yearmonthday):
         xpath = """//photo[substring(@date,1,8)="%s"]""" % str(yearmonthday) 
-        return JBrout.db.select(xpath)
+        ln=JBrout.db.select(xpath)
+        self.set_value(iter0,3,"(%d)"%len(ln))
+        return ln        
 
     
     def delChildren(self,iter0):
@@ -1042,11 +1048,15 @@ class Window(GladeApp):
         #self.selectDate.set_model(m)
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
+        cell_renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn("date", cell_renderer,text=0)
         self.treeViewDate.append_column(column)
         #cellpb = gtk.CellRendererPixbuf()
-        #column = gtk.TreeViewColumn("View", cellpb,pixbuf=1)
-        #self.selectDate.append_column(column)
+        #column = gtk.TreeViewColumn("View", cellpb,pixbuf=3)
+        #self.treeViewDate.append_column(column)
+        cell_renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("nb", cell_renderer,text=3)
+        self.treeViewDate.append_column(column)
 
         # init the "tab time"
         m = DateDB()
