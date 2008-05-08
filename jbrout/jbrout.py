@@ -1196,7 +1196,7 @@ class Window(GladeApp):
         storeTags=TreeTags()
         try:
             self.tvSearch.set_model( storeTags )
-            storeTags.expander(self.tv_tags)
+            storeTags.expander(self.tvSearch)
             storeTags.cleanSelections()
         except:
             pass
@@ -2737,6 +2737,17 @@ class Window(GladeApp):
 
     def getDateFromScale(self,val):
         return (self.__begin + datetime.timedelta(days=val)).date()
+
+    def on_btnSearchClear_clicked(self,*args):
+        model = self.tvSearch.get_model()
+        model.cleanSelections()
+        self.cb_format.set_active(0)
+        self.e_pcom.set_text("")
+        self.e_acom.set_text("")
+        self.hs_from.set_value(0)
+        t=(self.__end - self.__begin).days +1
+        self.hs_to.set_value(t)
+
 
     def on_btn_search_clicked(self,widget,*args):
         

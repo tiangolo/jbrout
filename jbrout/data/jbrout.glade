@@ -588,8 +588,17 @@
                     <child>
                       <widget class="GtkHButtonBox" id="hbuttonbox3">
                         <property name="visible">True</property>
+                        <property name="layout_style">GTK_BUTTONBOX_END</property>
                         <child>
-                          <placeholder/>
+                          <widget class="GtkButton" id="btnSearchClear">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="label" translatable="yes">gtk-clear</property>
+                            <property name="use_stock">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="on_btnSearchClear_clicked"/>
+                          </widget>
                         </child>
                         <child>
                           <widget class="GtkButton" id="btn_search">
@@ -609,6 +618,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="pack_type">GTK_PACK_END</property>
                         <property name="position">3</property>
                       </packing>
                     </child>
