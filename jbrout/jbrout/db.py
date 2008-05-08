@@ -75,7 +75,7 @@ class DBPhotos:
 
         if nodeB:
             ln=nodeB.xpath("""/db/basket/p""")
-            nodeB.xpath("..")[0].remove(nodeB) # adios old basket !
+            nodeB.getparent().remove(nodeB) # adios old basket !
         #==== simple basket convertion (without verification)
 
 
@@ -102,7 +102,7 @@ class DBPhotos:
         if ln:
             nodeFolder = ln[0]
             filesInBasket = [i.file for i in self.getBasket(nodeFolder)]
-            nodeFolder.xpath("..")[0].remove(nodeFolder)
+            nodeFolder.getparent().remove(nodeFolder)
         else:
             filesInBasket=[]
 
@@ -313,7 +313,7 @@ class FolderNode(object):
         return self.__node
 
     def getParent(self):
-        return FolderNode( self.__node.xpath("..")[0] )
+        return FolderNode( self.__node.getparent() )
 
     def getFolders(self):
         ln=[FolderNode(i) for i in self.__node.xpath("folder")]
@@ -321,15 +321,21 @@ class FolderNode(object):
         return ln
 
     def getPhotos(self):
-        return self.select("photo")
+        return self.__select("photo")
 
     def getAllPhotos(self):
-        return self.select("descendant::photo")
+        return self.__select("descendant::photo")
 
-    def select(self,xpath):
+    def __select(self,xpath):
         """ 'xpath' should only target photo node """
+        class PhotoNodes(list):
+            def __init__(self,l,xpath):
+                list.__init__(self,l)
+                self.xpath=xpath
+        
         ln=self.__node.xpath(xpath)
-        return [PhotoNode(i) for i in ln]
+        ll= [PhotoNode(i) for i in ln]
+        return PhotoNodes(ll,"//folder[@name='%s']/%s"%(self.file,xpath))
 
     def setComment(self,t):
         assert type(t)==unicode
@@ -428,7 +434,7 @@ class FolderNode(object):
 
     def remove(self):
         """ delete ONLY node """
-        self.__node.xpath("..")[0].remove(self.__node)
+        self.__node.getparent().remove(self.__node)
 
     def delete(self):
         """ delete real folder and node """
@@ -614,7 +620,7 @@ class PhotoNode(object):
     real = property(__getReal)
 
     def __getFolder(self):
-        na=dec(self.__node.xpath("..")[0].attrib["name"])
+        na=dec(self.__node.getparent().attrib["name"])
         assert type(na)==unicode
         return na
     folder = property(__getFolder)
@@ -623,7 +629,7 @@ class PhotoNode(object):
     file = property(__getFile)
 
     def getParent(self):
-        return FolderNode( self.__node.xpath("..")[0] )
+        return FolderNode( self.__node.getparent() )
 
     def __getIsInBasket(self):  return (self.__node.get("basket")=="1")
     isInBasket = property(__getIsInBasket)
@@ -689,7 +695,7 @@ class PhotoNode(object):
 
         if moved:
             self.__node.attrib["name"] = name
-            self.__node.xpath("..")[0].remove(self.__node)
+            self.__node.getparent().remove(self.__node)
             nf = nodeFolder._getNode()
             nf.append(self.__node)
             return True
@@ -908,7 +914,7 @@ class PhotoNode(object):
            deleted = False
 
         if deleted:
-            self.__node.xpath("..")[0].remove(self.__node)
+            self.__node.getparent().remove(self.__node)
             return True
 
         return False
@@ -926,7 +932,7 @@ class DBTags:
 
    def getAllTags(self):
         """ return list of tuples (tag, parent catg)"""
-        l=[(n.text,n.xpath("..")[0].get("name")) for n in self.root.xpath("//tag")]
+        l=[(n.text,n.getparent().get("name")) for n in self.root.xpath("//tag")]
         l.sort(cmp= lambda x,y: cmp(x[0].lower(),y[0].lower()))
         return l
 
@@ -1008,7 +1014,7 @@ class TagNode(object):
     key = property(__getKey,__setKey)
 
     def remove(self):
-        self.__node.xpath("..")[0].remove(self.__node)
+        self.__node.getparent().remove(self.__node)
 
     def moveToCatg(self,c):
         assert type(c)==CatgNode
@@ -1058,7 +1064,7 @@ class CatgNode(object):
             return TagNode(n)
 
     def remove(self):
-        self.__node.xpath("..")[0].remove(self.__node)
+        self.__node.getparent().remove(self.__node)
 
     def moveToCatg(self,c):
         self.remove()

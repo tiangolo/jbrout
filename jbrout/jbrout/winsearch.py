@@ -68,7 +68,7 @@ class Winsearch(GladeApp):
         self.__begin= min
         self.__end = datetime.now()
 
-        t=(self.__end - self.__begin).days
+        t=(self.__end - self.__begin).days +1
         self.hs_from.set_range(0,t)
         self.hs_to.set_range(0,t)
 
