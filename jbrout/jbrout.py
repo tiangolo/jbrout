@@ -72,6 +72,7 @@ from jbrout.db import JBrout,Buffer
 from jbrout.winshow import WinShow
 from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
+from jbrout.winbookmarks import WinBookmark
 
 import tempfile,shutil
 
@@ -1379,8 +1380,9 @@ class Window(GladeApp):
                 self.feedBookmark()
                 
     def on_menuEditBookmark_activate(self,*args):
-        pass
-        #TODO : code here
+        w=WinBookmark(self.__bookmarks)
+        self.__bookmarks = w.loop()[0]
+        self.feedBookmark()
 
     def feedBookmark(self):
         menuBM=self.menuitem5.get_submenu()
