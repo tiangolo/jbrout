@@ -2675,11 +2675,11 @@ class Window(GladeApp):
                 # let's find the x beginning of the cell
                 xcell = widget.get_cell_area(path, widget.get_column(0) ).x
 
-                if node.__class__.__name__ != "TagNode":
-                    # we are on a category, there is an arrow at the beginning of
-                    # the cell to set expand or collapse
-                    # we must shift the xcell beginning
-                    xcell+=16
+                #if node.__class__.__name__ != "TagNode":
+                #    # we are on a category, there is an arrow at the beginning of
+                #    # the cell to set expand or collapse
+                #    # we must shift the xcell beginning
+                #    xcell+=16
 
                 if x>xcell:
                     # click on the cell (not on the arrow)
