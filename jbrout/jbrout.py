@@ -360,11 +360,20 @@ class DateDB(gtk.TreeStore):
     def __init__(self,filter=None):
         gtk.TreeStore.__init__(self, str,int,int,str,gtk.gdk.Pixbuf)
         
+        if filter:
+            self.__filter=filter
+            self.init()
+        else:
+            self.__filter=None
+        
     def init(self):
         self.clear()
         
         ln = JBrout.db.select("""//photo""")
-        years=list(set([int(i.date[:4]) for i in ln]))
+        if self.__filter:
+            years=list(set([int(i.date[:4]) for i in ln if i.date[:8] in self.__filter]))
+        else:
+            years=list(set([int(i.date[:4]) for i in ln]))
         years.sort()
         years.reverse()
         
@@ -376,7 +385,10 @@ class DateDB(gtk.TreeStore):
         xpath = """//photo[substring(@date,1,4)="%s"]""" % str(year) 
 
         ln=JBrout.db.select(xpath)
-        months = list(set([int(i.date[:6]) for i in ln]))
+        if self.__filter:
+            months = list(set([int(i.date[:6]) for i in ln if i.date[:8] in self.__filter]))
+        else:
+            months = list(set([int(i.date[:6]) for i in ln]))
         months.sort()
         months.reverse()
         self.delChildren(iter0)
@@ -396,6 +408,10 @@ class DateDB(gtk.TreeStore):
         ln.sort(lambda a,b: cmp(a.date,b.date))
         days={}
         for i in ln:
+            if self.__filter:
+                if i.date[:8] not in self.__filter:
+                    continue
+            
             d8=int(i.date[:8])
             if d8 not in days:
                 days[d8] = i.getThumb().scale_simple(40,40,gtk.gdk.INTERP_NEAREST)
@@ -833,7 +849,8 @@ class Window(GladeApp):
 
         self.tagsInSelection=[]
         self.foldersInSelection=[]
-
+        self.timesInSelection=[]
+        
         # create the listview with the right thumbsize
         table = ListView(self,JBrout.modify)
         table.connect('button-press-event', self.on_selecteur_mouseClick)
@@ -1047,6 +1064,15 @@ class Window(GladeApp):
         m = DateDB()
         m.init()
         self.treeViewDate.set_model(m)
+        
+        # and filtered one too !
+        cell_renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("date", cell_renderer,text=0)
+        self.tvFilteredTime.append_column(column)
+        cellpb = gtk.CellRendererPixbuf()
+        column = gtk.TreeViewColumn("thumb", cellpb,pixbuf=4)
+        self.tvFilteredTime.append_column(column)
+        
         #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
         # build the display menu *!*
@@ -1070,6 +1096,7 @@ class Window(GladeApp):
 
         self.tvFilteredTags.connect("row_activated",self.on_treeviewtags_row_activated)
         self.tvFilteredAlbums.connect("row_activated",self.on_treeviewdb_row_activated)
+        self.tvFilteredTime.connect("row_activated",self.on_selectDate_row_activated)
 
         w,h=JBrout.conf["width"] or 800,JBrout.conf["height"] or 600
 
@@ -1195,14 +1222,17 @@ class Window(GladeApp):
         # feed taglist from selection into --> t
         t=set()
         f=set()
+        d=set()
         for i in ln:
             t=t.union(i.tags)
             f=f.union([i.folder,])
+            d=d.union([i.date[:8],])
 
         # store filtered tags and albums
         self.tagsInSelection = list(t)
         self.foldersInSelection = list(f)
-
+        self.timesInSelection = list(d)
+        
         if self.cbxFilter.get_active():
             # if filter view is shown : fill trees
             store = TreeTags( self.tagsInSelection)
@@ -1212,6 +1242,10 @@ class Window(GladeApp):
             store = TreeDB( self.foldersInSelection )
             self.tvFilteredAlbums.set_model( store )
             store.expander(self.tvFilteredAlbums)
+
+            store = DateDB( self.timesInSelection )
+            self.tvFilteredTime.set_model( store )
+            #store.expander(self.tvFilteredTime)
 
 
     ###################################################################################
@@ -2284,11 +2318,12 @@ class Window(GladeApp):
         try:
             info = model.getInfo(iter0)
             path=model.get_path(iter0)
-            self.treeViewDate.expand_to_path( path )            
+            widget.expand_to_path( path )            
             
             if info:
                 name,ln = info
-                self.SetSelection(name,ln,Window.MODETIME)
+                withFilter = (widget == self.treeViewDate)
+                self.SetSelection(name,ln,Window.MODETIME,withFilter)
         finally:
             self.showProgress()
 

@@ -433,6 +433,25 @@
                                 <property name="position">1</property>
                               </packing>
                             </child>
+                            <child>
+                              <widget class="GtkScrolledWindow" id="scrolledwindow6">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                                <property name="shadow_type">GTK_SHADOW_IN</property>
+                                <child>
+                                  <widget class="GtkTreeView" id="tvFilteredTime">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="headers_visible">False</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
                           </widget>
                         </child>
                       </widget>
