@@ -358,7 +358,7 @@ class DateDB(gtk.TreeStore):
             
     
     def __init__(self,filter=None):
-        gtk.TreeStore.__init__(self, str,int,int,str) #gtk.gdk.Pixbuf)
+        gtk.TreeStore.__init__(self, str,int,int,str,gtk.gdk.Pixbuf)
         
     def init(self):
         self.clear()
@@ -369,7 +369,7 @@ class DateDB(gtk.TreeStore):
         years.reverse()
         
         for i in years:
-            self.append(None,[str(i),i,DateDB.LEVELYEAR,None])
+            self.append(None,[str(i),i,DateDB.LEVELYEAR,None,None])
     
     
     def fillYear(self,iter0,year):
@@ -385,7 +385,7 @@ class DateDB(gtk.TreeStore):
             d=DateDB.data2date(i)
             sd = unicode(d.strftime("%m-%B"),locale.getpreferredencoding ())
             
-            self.append(iter0,[sd,i,DateDB.LEVELMONTH,None])
+            self.append(iter0,[sd,i,DateDB.LEVELMONTH,None,None])
         return ln
 
     def fillMonth(self,iter0,yearmonth):
@@ -393,18 +393,21 @@ class DateDB(gtk.TreeStore):
         
         ln=JBrout.db.select(xpath)
 
-        days = list(set([int(i.date[:8]) for i in ln]))
-        #pb=ln[0].getThumb().scale_simple(80,80,gtk.gdk.INTERP_NEAREST)
-        pb=None
-        days.sort()
-        days.reverse()
+        ln.sort(lambda a,b: cmp(a.date,b.date))
+        days={}
+        for i in ln:
+            d8=int(i.date[:8])
+            if d8 not in days:
+                days[d8] = i.getThumb().scale_simple(40,40,gtk.gdk.INTERP_NEAREST)
+
+        ldays=days.keys()        
+        ldays.sort()
         self.delChildren(iter0)
         self.set_value(iter0,3,"(%d)"%len(ln))
-        for i in days:
+        for i in ldays:
             d=DateDB.data2date(i)
             sd = unicode(d.strftime("%A %d"),locale.getpreferredencoding ())
-            
-            self.append(iter0,[sd,i,DateDB.LEVELDAY,pb])
+            self.append(iter0,[sd,i,DateDB.LEVELDAY,None,days[i]])
         return ln
 
     def fillDay(self,iter0,yearmonthday):
@@ -842,7 +845,7 @@ class Window(GladeApp):
         # build the "plugins buttons"
         self.tooltips = gtk.Tooltips()
         canModify = JBrout.modify
-        for ord,text,alter,callback,img in JBrout.plugins.menuEntries():
+        for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries():
             if img:
                 # try to detect if plugin are enable or not
                 if canModify:
@@ -858,7 +861,7 @@ class Window(GladeApp):
 
                     bb = gtk.ToolButton(image)
                     bb.set_tooltip(self.tooltips, text)
-                    bb.connect("clicked", self.on_selecteur_menu_select_plugin,table,callback)
+                    bb.connect("clicked", self.on_selecteur_menu_select_plugin,table,id,callback)
                     self.toolbar.insert(bb, 3)
                     bb.show()
 
@@ -960,7 +963,6 @@ class Window(GladeApp):
                 nb= "   (%s)" %v
             else:
                 nb=""
-
             cell.set_property('text', model.get_value(iter, 0)+nb)
             cell.set_property('foreground', model.get_value(iter, 3))
             cell.set_property('xalign', 0)
@@ -1027,42 +1029,25 @@ class Window(GladeApp):
         self.treeviewtags.set_model( store )
         store.expander(self.treeviewtags)
 
-#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
-        #cell_renderer = gtk.CellRendererText()
-        #column = gtk.TreeViewColumn("Dates", cell_renderer,text=0)
-        #self.selectDate.append_column(column)
-        #cellpb = gtk.CellRendererPixbuf()
-        #column = gtk.TreeViewColumn("View", cellpb,pixbuf=1)
-        #self.selectDate.append_column(column)
-        #
-        ## prepare the date combo in "tab time"
-        #cell = gtk.CellRendererText()
-        #self.comboboxyear.pack_start(cell, True)
-        #self.comboboxyear.add_attribute(cell, 'text',0)
-        ## and fill it
-        #self.fillComboYear()
-        #
-        ## init the "tab time"
-        #m = DateDB()
-        #m.init(today=True)
-        #self.selectDate.set_model(m)
-#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
-
+        #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        ## new "Tab Time" (treeview)
+        #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        
         cell_renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn("date", cell_renderer,text=0)
         self.treeViewDate.append_column(column)
-        #cellpb = gtk.CellRendererPixbuf()
-        #column = gtk.TreeViewColumn("View", cellpb,pixbuf=3)
+        #cell_renderer = gtk.CellRendererText()
+        #column = gtk.TreeViewColumn("nb", cell_renderer,text=3,expand=False)
         #self.treeViewDate.append_column(column)
-        cell_renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("nb", cell_renderer,text=3)
+        cellpb = gtk.CellRendererPixbuf()
+        column = gtk.TreeViewColumn("thumb", cellpb,pixbuf=4)
         self.treeViewDate.append_column(column)
 
         # init the "tab time"
         m = DateDB()
         m.init()
         self.treeViewDate.set_model(m)
-#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
         # build the display menu *!*
         #----------------------------------------------------------
@@ -1421,6 +1406,9 @@ class Window(GladeApp):
                 newIterFolder = model.find( newNodeFolder )
                 #~ print model.iter_is_valid(newIterFolder)
 
+                # reinit TreeViewDate, because new photos -> new dates
+                self.treeViewDate.get_model().init()
+
                 self.selectAlbum(model,newIterFolder)
         finally:
             self.showProgress()
@@ -1503,7 +1491,7 @@ class Window(GladeApp):
 
             menu2 = gtk.Menu()
             isEntries = False
-            for ord,text,alter,callback,img in JBrout.plugins.menuEntries(ln):
+            for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries(ln):
                 # try to detect if plugin are enable or not
                 if canModify:
                     enableMenu = True
@@ -1522,7 +1510,7 @@ class Window(GladeApp):
                         item.set_image(ii)
 
                     menu2.append(item)
-                    item.connect("activate",self.on_selecteur_menu_select_plugin,widget,callback)
+                    item.connect("activate",self.on_selecteur_menu_select_plugin,widget,id,callback)
                     isEntries = True
 
 
@@ -1714,8 +1702,9 @@ class Window(GladeApp):
 
             sel.reSelectFocus()
 
-    def on_selecteur_menu_select_plugin(self,ib,listview,callback):
+    def on_selecteur_menu_select_plugin(self,ib,listview,id,callback):
         l = listview.getSelected()
+        
         if l:
             self.showProgress(True)
             try:
@@ -1734,6 +1723,12 @@ class Window(GladeApp):
                 self.treeviewdb.get_model().activeBasket()
                 listview.refresh()
                 listview.refresh() # on win, the first call do nothing
+
+                # not very clean, but needs to reinit treeviewdate
+                # if redate plugin was called ...
+                if id=="redate":
+                    self.treeViewDate.get_model().init()
+
 
     def on_selecteur_menu_select_external_tool(self,ib,listview,et):
         l = listview.getSelected()
@@ -2018,12 +2013,12 @@ class Window(GladeApp):
 
 
     def on_notebook1_switch_page(self, widget, *args):
-         gpoint,page= args
-         if page==1: # tab "time"
-             # perhaps we must change the "year interval" in tap "time" combo ...
-             self.treeViewDate.get_model().init()
-             #self.date_display_update(date)
-
+        #gpoint,page= args
+        #if page==1: # tab "time"
+        #    # perhaps we must change the "year interval" in tap "time" combo ...
+        #    self.treeViewDate.get_model().init()
+        #    #self.date_display_update(date)
+        pass
 
 
     def on_treeviewdb_drag_data_received(self, widget, *args):
@@ -2128,7 +2123,7 @@ class Window(GladeApp):
                     #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
                     menu2 = gtk.Menu()
                     isEntries = False
-                    for ord,text,alter,callback in JBrout.plugins.albumEntries(node):
+                    for ord,id,text,alter,callback in JBrout.plugins.albumEntries(node):
                         # try to detect if plugin are enable or not
                         if JBrout.modify:
                             enableMenu = True

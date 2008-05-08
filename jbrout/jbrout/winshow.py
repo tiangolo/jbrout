@@ -94,7 +94,7 @@ class WinShow(GladeApp):
         #=======================================================================
         self.tooltips = gtk.Tooltips()        
         canModify = isModify        
-        for ord,text,alter,callback,img in JBrout.plugins.menuEntries():
+        for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries():
             if img:
                 # try to detect if plugin are enable or not
                 if canModify:
@@ -133,6 +133,7 @@ class WinShow(GladeApp):
                     
                 self.draw(forceReload=True)
         
+            #TODO: if plugin "redate" is called, we'll need to redraw "time tab"
     
     def on_eb_scroll_event(self,widget,b):
         if int(b.direction)==1:

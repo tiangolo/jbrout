@@ -123,7 +123,7 @@ class JPlugins:
 
     def menuEntries(self,l=[]):
         """ will return a ordered list of "menu entries" of plugins
-            [ ( order, label, alter, callback, IMAGE ),  ... ]
+            [ ( order, id, label, alter, callback, IMAGE ),  ... ]
 
             "l" can be the present selection of photonode
         """
@@ -150,13 +150,13 @@ class JPlugins:
         b=[]
         for ord,nom,alter,callback,img,instance in a:
             pathImg = img and os.path.join(instance.path,img) or None
-            b.append( (len(b),nom,alter,self.__callMenuEntry(callback,instance),pathImg ))
+            b.append( (len(b),instance.id,nom,alter,self.__callMenuEntry(callback,instance),pathImg ))
         return b
 
 
     def albumEntries(self,node):
         """ will return a ordered list of "album entries" of plugins
-            [ ( order, label, alter, callback ),  ... ]
+            [ ( order, id, label, alter, callback ),  ... ]
 
             "node" is a folder node
         """
@@ -181,7 +181,7 @@ class JPlugins:
         # remakes the order (from 0), and place callback of callback, from a --> b
         b=[]
         for ord,nom,alter,callback,instance in a:
-            b.append( (len(b),nom,alter,self.__callMenuEntry(callback,instance) ))
+            b.append( (len(b),instance.id,nom,alter,self.__callMenuEntry(callback,instance) ))
         return b
 
 
