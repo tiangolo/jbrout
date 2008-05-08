@@ -1144,6 +1144,7 @@ class Window(GladeApp):
             min = datetime.now()
         self.__begin= min
         self.__end = datetime.datetime.now()
+        self.__end = datetime.datetime(self.__end.year,self.__end.month,self.__end.day,0,0,0)
 
         t=(self.__end - self.__begin).days +1
         self.hs_from.set_range(0,t)
@@ -2817,22 +2818,23 @@ class Window(GladeApp):
         if store:
             ll=store.getSelected()
             for tcheck,nom,l in ll:
-                if type(l)==list:
-                    orList = u" or ".join([u"t='%s'"%i for i in l])
-                    if tcheck==1: #include
-                        ops.append( u"(%s)" % orList )
-                        tops.append(u"'%s'"%nom)
-                    else: # ==2 #exclude
-                        ops.append( u"not(%s)" % orList )
-                        tops.append(_(u"NOT '%s'")%nom)
-                else:
-                    op = u"t='%s'"%l
-                    if tcheck==1: #include
-                        ops.append( op )
-                        tops.append(u"'%s'"%nom)
-                    else: # ==2 #exclude
-                        ops.append( u"not(%s)" % op )
-                        tops.append(_(u"NOT '%s'")%nom)
+                if l:
+                    if type(l)==list:
+                        orList = u" or ".join([u"t='%s'"%i for i in l])
+                        if tcheck==1: #include
+                            ops.append( u"(%s)" % orList )
+                            tops.append(u"'%s'"%nom)
+                        else: # ==2 #exclude
+                            ops.append( u"not(%s)" % orList )
+                            tops.append(_(u"NOT '%s'")%nom)
+                    else:
+                        op = u"t='%s'"%l
+                        if tcheck==1: #include
+                            ops.append( op )
+                            tops.append(u"'%s'"%nom)
+                        else: # ==2 #exclude
+                            ops.append( u"not(%s)" % op )
+                            tops.append(_(u"NOT '%s'")%nom)
 
         if ops:
             libl,xpath = u" and ".join(tops),u"//photo[%s]" % u" and ".join(ops)
