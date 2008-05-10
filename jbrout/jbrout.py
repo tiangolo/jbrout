@@ -1403,16 +1403,25 @@ class Window(GladeApp):
         # clean bookmarks
         childs = menuBM.get_children()
         for i in childs:
-            if i not in (self.menuAddBookmark,self.menuEditBookmark,self.menuSepBookmark):
+            if i not in (self.menuAddBookmark,self.menuEditBookmark):
                 menuBM.remove(i)
                 del i
                 
         # and feed
-        for name,xpath in self.__bookmarks:
-            item = gtk.MenuItem(name)
-            item.connect("activate",self.selectBookmark,(name,xpath) )
+        if self.__bookmarks:
+            self.menuEditBookmark.show()
+            
+            item = gtk.SeparatorMenuItem()
             item.show()
             menuBM.append(item)
+        
+            for name,xpath in self.__bookmarks:
+                item = gtk.MenuItem(name)
+                item.connect("activate",self.selectBookmark,(name,xpath) )
+                item.show()
+                menuBM.append(item)
+        else:
+            self.menuEditBookmark.hide()
             
     def selectBookmark(self,w,args):
         name,xpath = args
