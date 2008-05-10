@@ -136,20 +136,10 @@ class JPlugin:
 #========================================================
     # JPlugin.parent : parent win (init at the start)
 
-    #class PlugConf:
-    #    def __init__(self,myConf,myName):
-    #        self.__conf = myConf
-    #        self.__name = myName
-    #    def __setitem__(self,n,v):
-    #        self.__conf[self.__name+"."+n] = v
-    #    def __getitem__(self,n):
-    #        return self.__conf[self.__name+"."+n]
-
     def __init__(self,id,path):
         self.id=id
         self.path=path
-        #self.conf = JPlugin.PlugConf(JBrout.conf,id)
-        self.conf = JBrout.conf.getSubConf(id)
+        self.conf = JBrout.conf.getSubConf("Plugin.%s"%id)
 
     def MessageBox(self,m,title=None):
         MessageBox(JPlugin.parent.main_widget,m,title)
