@@ -33,10 +33,10 @@ class Plugin(JPlugin):
 
         win = Winweb()
         win.setNodes(list)
-        win.cb_originals.set_active( (self.conf["access.originals"] or 0)==1 )
-        win.cb_albums.set_active( (self.conf["mode.album"] or 0)==1 )
+        win.cb_originals.set_active( (self.conf["accessOriginals"] or 0)==1 )
+        win.cb_albums.set_active( (self.conf["modeAlbum"] or 0)==1 )
 
         win.loop()
-        self.conf["mode.album"] = win.cb_albums.get_active() and 1 or 0
-        self.conf["access.originals"] = win.cb_originals.get_active() and 1 or 0
+        self.conf["modeAlbum"] = win.cb_albums.get_active() and 1 or 0
+        self.conf["accessOriginals"] = win.cb_originals.get_active() and 1 or 0
         return False

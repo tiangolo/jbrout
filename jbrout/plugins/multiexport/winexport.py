@@ -15,6 +15,7 @@ import os
 import gtk
 import time
 from jbrout.commongtk import PictureSelector
+from crypt import crypt,uncrypt
 
 from __main__ import GladeApp # no "libs.gladeapp", because there is a libs dir here ;-(
 
@@ -98,7 +99,7 @@ class Windowexport(GladeApp):
         self.cbTemplate.set_active( conf["HG.template"] )
 
         self.tbLoginPW.set_text( conf["PW.login"] )
-        self.tbPasswordPW.set_text( conf["PW.password"] )
+        self.tbPasswordPW.set_text( uncrypt(conf["PW.password"]) )
         if (bool(conf["PW.privacy"])): self.rbPrivatePW.set_active(1)
         else: self.rbPublicPW.set_active(1)
 
@@ -118,7 +119,7 @@ class Windowexport(GladeApp):
 
         self.tbFtp.set_text( conf["FT.ftp"] )
         self.tbLoginFT.set_text( conf["FT.login"] )
-        self.tbPasswordFT.set_text( conf["FT.password"] )
+        self.tbPasswordFT.set_text( uncrypt(conf["FT.password"]) )
         self.tbPath.set_text( conf["FT.path"] )
 
     def getExportType(self):
@@ -154,7 +155,7 @@ class Windowexport(GladeApp):
             self.__conf["HG.template"]=self.cbTemplate.get_active()
         elif type == "PW":
             self.__conf["PW.login"]=self.tbLoginPW.get_text(  )
-            self.__conf["PW.password"]=self.tbPasswordPW.get_text(  )
+            self.__conf["PW.password"]=crypt(self.tbPasswordPW.get_text(  ))
             self.__conf["PW.privacy"]=int(self.rbPrivatePW.get_active())
         elif type == "FR":
             self.__conf["FR.public"]=int(self.rbPublicFR.get_active())
@@ -168,7 +169,7 @@ class Windowexport(GladeApp):
         elif type == "FT":
             self.__conf["FT.ftp"]=self.tbFtp.get_text(  )
             self.__conf["FT.login"]=self.tbLoginFT.get_text(  )
-            self.__conf["FT.password"]=self.tbPasswordFT.get_text(  )
+            self.__conf["FT.password"]=crypt(self.tbPasswordFT.get_text(  ))
             self.__conf["FT.path"]=self.tbPath.get_text( )
 
         # common

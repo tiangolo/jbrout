@@ -31,6 +31,8 @@ from common import cd2d
 from tools import PhotoCmd
 import os,re,sys,thread,shutil,stat,string
 
+from libs.dict4ini import DictIni
+
 def walktree (top = ".", depthfirst = True):
     try:
         names = os.listdir(top)
@@ -1099,77 +1101,37 @@ class CatgNode(object):
 #~ from plugger import PluginsManager
 from plugins import JPlugins
 import sys,os
+
 # ============================================================================================
 class Conf(object):
 # ============================================================================================
-    def __getLines(self):
-        try:
-            fid = open( self.__file,"r")
-            buf = fid.readlines()
-            fid.close()
-        except:
-            buf=[]
-        return buf
-
 
     def __init__(self,file):
-      self.__file = file
-      self.__vars = {}
-
-      buf = self.__getLines()
-
-      for ligne in buf:
-            ligne = ligne.strip()
-            if ligne and ligne[0] not in ("#",";"):
-                p = ligne.find("=")
-                if p>0:
-                    val = ligne[p+1:].strip()
-                    if val.isdigit():
-                        val = int(val)
-                    self.__vars[ ligne[:p].strip() ] = val
+        self.__ini = DictIni(file)
+        
+        # to recreate the new INI file, bases on dict4ini
+        if not self.__ini.has_key("jBrout"):
+            # clear old values, to restart a new one
+            self.__ini.clear()
 
     def __getitem__(self,n):
-      if n in self.__vars:
-         return self.__vars[n]
-      #~ else:
-         #~ raise "attribul global inconnu"
+        """ main conf get """
+        return self.__ini.jBrout[n]
+
+    def has_key(self,n):
+        """ main conf test """
+        return self.__ini.jBrout.has_key(n)
 
     def __setitem__(self,n,v):
-        self.__vars[n] =v
+        """ main conf set """
+        self.__ini.jBrout[n]=v
+
+    def getSubConf(self,n):
+        """ sub conf get """
+        return self.__ini[n]
 
     def save(self):
-        #~ fid = open( self.__file,"w")
-        #~ for k in self.__vars:
-            #~ fid.write("%s=%s\r\n" % (k,str(self.__vars[k])) )
-        #~ fid.close()
-
-        vars = {}
-        vars.update(self.__vars)
-
-        buf = self.__getLines()
-
-        # subsitute lines (buf -> ligne)
-        news=[]
-        for ligne in buf:
-            ligne = ligne.strip("\r\n \t")
-            if ligne and ligne[0] not in ("#",";"):
-                p = ligne.find("=")
-                var = ligne[:p].strip()
-                if var in vars:
-                    ligne = "%s=%s" % (var,str(vars[var]))
-                    del(vars[var])
-
-            news.append(ligne)
-
-        # and add the rest .... some news variables
-        for i in vars:
-            news.append("%s=%s" % (i,str(vars[i])))
-
-        # and write it to disk
-        fid = open( self.__file,"w")
-        for i in news:
-            fid.write(i+"\n")
-        fid.close()
+        self.__ini.save()
 
 class JBrout:
     __lockFile = "jbrout.lock"

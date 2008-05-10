@@ -38,6 +38,7 @@ from libs.mailer import sendMail
 import os,time,shutil
 
 from jbrout.common import cd2rd
+from crypt import uncrypt
 
 class ExportConf(object):
     __attrs={
@@ -222,7 +223,7 @@ class Plugin(JPlugin):
                 destination=unicode(tempfile.mkdtemp(".tmp","jbrout"))
 
                 try:
-                    picasa = PicasaWeb(ec["PW.login"],ec["PW.password"])
+                    picasa = PicasaWeb(ec["PW.login"],uncrypt(ec["PW.password"]))
                     if picasa:
                         album=picasa.createAlbum("Jbrout " + time.strftime("%Y-%m-%d, %H-%M-%S"),public=(ec["PW.privacy"]==0))
                     else:
@@ -250,7 +251,7 @@ class Plugin(JPlugin):
                 destination=unicode(tempfile.mkdtemp(".tmp","jbrout"))
 
                 try:
-                    ftp = ftplib.FTP(ec["FT.ftp"],ec["FT.login"],ec["FT.password"])
+                    ftp = ftplib.FTP(ec["FT.ftp"],ec["FT.login"],uncrypt(ec["FT.password"]))
                     try:
                         ftp.cwd(ec["FT.path"])
                     except:

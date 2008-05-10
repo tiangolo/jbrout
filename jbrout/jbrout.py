@@ -136,19 +136,20 @@ class JPlugin:
 #========================================================
     # JPlugin.parent : parent win (init at the start)
 
-    class PlugConf:
-        def __init__(self,myConf,myName):
-            self.__conf = myConf
-            self.__name = myName
-        def __setitem__(self,n,v):
-            self.__conf[self.__name+"."+n] = v
-        def __getitem__(self,n):
-            return self.__conf[self.__name+"."+n]
+    #class PlugConf:
+    #    def __init__(self,myConf,myName):
+    #        self.__conf = myConf
+    #        self.__name = myName
+    #    def __setitem__(self,n,v):
+    #        self.__conf[self.__name+"."+n] = v
+    #    def __getitem__(self,n):
+    #        return self.__conf[self.__name+"."+n]
 
     def __init__(self,id,path):
         self.id=id
         self.path=path
-        self.conf = JPlugin.PlugConf(JBrout.conf,id)
+        #self.conf = JPlugin.PlugConf(JBrout.conf,id)
+        self.conf = JBrout.conf.getSubConf(id)
 
     def MessageBox(self,m,title=None):
         MessageBox(JPlugin.parent.main_widget,m,title)
@@ -828,34 +829,45 @@ class Window(GladeApp):
 
     def init(self):
         #=============================================================================
-        if JBrout.conf["normalizeName"] == None:
+        if not JBrout.conf.has_key("normalizeName"):
             ret=InputQuestion(self.main_widget,
                 _('Do you want JBrout to rename your imported photos according to their create timestamp (Recommended) ?'),
                 buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
              )
             if ret:
-                JBrout.conf["normalizeName"] = 1
+                JBrout.conf["normalizeName"] = True
             else:
-                JBrout.conf["normalizeName"] = 0
+                JBrout.conf["normalizeName"] = False
 
-
-        if JBrout.conf["normalizeNameFormat"] == None:              # key not present
+        if not JBrout.conf.has_key("normalizeNameFormat"):              # key not present
             JBrout.conf["normalizeNameFormat"] = "p%Y%m%d_%H%M%S"   # set default
 
-        if JBrout.conf["autorotAtImport"] == None:    # key not present
-            JBrout.conf["autorotAtImport"] = 1        # set default
+        if not JBrout.conf.has_key("autorotAtImport"):    # key not present
+            JBrout.conf["autorotAtImport"] = True        # set default
+
+        if not JBrout.conf.has_key("thumbsize"):    # key not present
+            JBrout.conf["thumbsize"] = 160        # set default
+
+        if not JBrout.conf.has_key("orderAscending"):    # key not present
+            JBrout.conf["orderAscending"] = False        # set default
 
 
-        JBrout.db.setNormalizeName( JBrout.conf["normalizeName"]==1 )
-        JBrout.db.setNormalizeNameFormat( JBrout.conf["normalizeNameFormat"] )
-        JBrout.db.setAutorotAtImport( JBrout.conf["autorotAtImport"]==1 )
+
+        JBrout.db.setNormalizeName( JBrout.conf["normalizeName"] )
+        JBrout.db.setNormalizeNameFormat( str(JBrout.conf["normalizeNameFormat"]) )
+        JBrout.db.setAutorotAtImport( JBrout.conf["autorotAtImport"] )
 
         self.tagsInSelection=[]
         self.foldersInSelection=[]
         self.timesInSelection=[]
         
         self.__saveSelection=None
-        self.__bookmarks=[]
+        
+        try:
+            self.__bookmarks=zip(JBrout.conf["bookmarkNames"],JBrout.conf["bookmarkXpaths"])
+        except:
+            self.__bookmarks=[]
+        
         
         # create the listview with the right thumbsize
         table = ListView(self,JBrout.modify)
@@ -1102,7 +1114,7 @@ class Window(GladeApp):
         self.feedBookmark()
 
         # get order from config
-        self.menuAscending.set_active( JBrout.conf["orderAscending"]==1 )
+        self.menuAscending.set_active( JBrout.conf["orderAscending"] and 1 or 0)
 
         self.tvFilteredTags.connect("row_activated",self.on_treeviewtags_row_activated)
         self.tvFilteredAlbums.connect("row_activated",self.on_treeviewdb_row_activated)
@@ -1212,7 +1224,7 @@ class Window(GladeApp):
 
 
     def on_order_changed(self,*args):
-        JBrout.conf["orderAscending"] = self.menuAscending.get_active() and 1 or 0
+        JBrout.conf["orderAscending"] = (self.menuAscending.get_active()==1)
 
         # live change
         self.tbl.init(self.tbl.items,JBrout.conf["orderAscending"])
@@ -2103,6 +2115,8 @@ class Window(GladeApp):
 
         JBrout.conf["hpaned"] = self.hpaned1.get_position()
         JBrout.conf["width"],JBrout.conf["height"] = self.main_widget.get_size()
+        JBrout.conf["bookmarkNames"] = [n for n,x in self.__bookmarks]
+        JBrout.conf["bookmarkXpaths"]= [x for n,x in self.__bookmarks]
         JBrout.db.save()
         JBrout.tags.save()
         JBrout.conf.save()
