@@ -264,12 +264,12 @@ class PhotoCmd(object):
                                # 89 : Yes, auto, red-eye reduction
         try:
             v=int(self.__info["Exif.Photo.Flash"])
-            if v in (1,5,7,9,13,15,25,29,31,89):
+            if v in (1,5,7,9,13,15,25,29,31,89, 73):
                 self.__isflash      = "Yes"
             elif v in (0,16,24):
                 self.__isflash      = "No"
             else:
-                raise "UNKNow flash value : %d '%s'"%(v,file.encode("utf_8"))
+                raise "UNKNow flash value : %d '%s'"%(v,self.__file.encode("utf_8"))
         except KeyError:
             self.__isflash    =""
 
