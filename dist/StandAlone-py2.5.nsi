@@ -6,8 +6,9 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "jBrout"
-!define PRODUCT_VERSION "0.3.79"
-!define PRODUCT_WEB_SITE "http://jbrout.python-hosting.com"
+!define PRODUCT_VERSION "0.3.112"
+!define PRODUCT_PUBLISHER "jBrout Development Team"
+!define PRODUCT_WEB_SITE "http://jbrout.googlecode.com"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -68,7 +69,7 @@ var ICONS_GROUP
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "jBrout-${PRODUCT_VERSION}-Setup-py2.5.exe"
+OutFile "jBrout-${PRODUCT_VERSION}-Setup.exe"
 InstallDir "$PROGRAMFILES\jBrout"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -113,9 +114,7 @@ Section "jBrout Application" SEC01
   File "..\jbrout\data\gfx\new_jbrout.svg"
   File "..\jbrout\data\gfx\refresh.png"
   SetOutPath "$INSTDIR\app\data\tools"
-  File "..\jbrout\data\tools\jpegnail.exe"
   File "..\jbrout\data\tools\jpegtran.exe"
-  File "..\jbrout\data\tools\jhead.exe"
   SetOutPath "$INSTDIR\app\jbrout"
   File "..\jbrout\jbrout\__init__.py"
   File "..\jbrout\jbrout\common.py"
@@ -124,15 +123,14 @@ Section "jBrout Application" SEC01
   File "..\jbrout\jbrout\externaltools.py"
   File "..\jbrout\jbrout\listview.py"
   File "..\jbrout\jbrout\tools.py"
-  File "..\jbrout\jbrout\winsearch.py"
+  File "..\jbrout\jbrout\winbookmarks.py"
   File "..\jbrout\jbrout\winshow.py"
   SetOutPath "$INSTDIR\app\libs"
   File "..\jbrout\libs\__init__.py"
-  File "..\jbrout\libs\exif.py"
+  File "..\jbrout\libs\dict4ini.py"
   File "..\jbrout\libs\extListview.py"
   File "..\jbrout\libs\gladeapp.py"
   File "..\jbrout\libs\i18n.py"
-  File "..\jbrout\libs\iptcinfo.py"
   SetOutPath "$INSTDIR\app\plugins"
   File "..\jbrout\plugins\__init__.py"
     SetOutPath "$INSTDIR\app\po"
@@ -191,12 +189,13 @@ Section "GTK Runtime" SEC03
   Delete "$TEMP\GTK_runtime-2.10.11.zip"
 SectionEnd
 
-
 Section "Comment Plug-in" SEC11
   SetOutPath "$INSTDIR\app\plugins\comment"
   File "..\jbrout\plugins\comment\__init__.py"
   File "..\jbrout\plugins\comment\comment.py"
   File "..\jbrout\plugins\comment\comment.glade"
+  SetOutPath "$INSTDIR\app\plugins\comment\gfx"
+  File "..\jbrout\plugins\comment\gfx\gtk-edit.png"
   SetOutPath "$INSTDIR\app\plugins\comment\po"
   File "..\jbrout\plugins\comment\po\plugin.pot"
   SetOutPath "$INSTDIR\app\plugins\comment\po\fr\LC_MESSAGES"
@@ -260,6 +259,7 @@ SectionEnd
 Section "Multi Export PLug-in" SEC15
   SetOutPath "$INSTDIR\app\plugins\multiexport"
   File "..\jbrout\plugins\multiexport\__init__.py"
+  File "..\jbrout\plugins\multiexport\crypt.py"
   File "..\jbrout\plugins\multiexport\winexport.py"
   SetOutPath "$INSTDIR\app\plugins\multiexport\xsl"
   File "..\jbrout\plugins\multiexport\xsl\album.photosite.xsl"
