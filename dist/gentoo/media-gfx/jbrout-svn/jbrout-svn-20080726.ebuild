@@ -22,20 +22,20 @@ DEPEND=">=dev-lang/python-2.4
 	media-gfx/jhead
 	dev-python/lxml
 	dev-python/imaging
-	media-gfx/pyexiv2-bzr"
+	>=media-gfx/pyexiv2-0.1.2"
 
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/${PN}" 
 
 src_unpack() {
-	mkdir ${S}
-	cd ${S}
-	svn export http://jbrout.googlecode.com/svn/trunk/setup.py -r HEAD setup.py
-	svn export http://jbrout.googlecode.com/svn/trunk/jbrout -r HEAD jbrout
+	#mkdir ${S}
+	#cd ${S}
+	#svn export http://jbrout.googlecode.com/svn/trunk/setup.py -r HEAD setup.py
+	#svn export http://jbrout.googlecode.com/svn/trunk/jbrout -r HEAD jbrout
 	
-	#subversion_src_unpack
-	#cd "${S}"
+	subversion_src_unpack
+	cd "${S}"
 }
 
 #src_compile(){
@@ -46,8 +46,8 @@ src_install() {
 
 	cd ${D}
 	mkdir ${S}/sh
-	echo "#\!/bin/bash" >> ${S}/sh/jbrout
-	echo "cd $(find -name jbrout.py | cut -c2- | rev | cut -c11- | rev)" >> ${S}/sh/jbrout>> ${S}/sh/jbrout
+	echo -e "#\041/bin/bash" >> ${S}/sh/jbrout
+	echo "cd $(find -name jbrout.py | cut -c2- | rev | cut -c11- | rev)" >> ${S}/sh/jbrout
 	echo "/usr/bin/env python jbrout.py \$@" >> ${S}/sh/jbrout
 
 	exeinto /usr/bin
