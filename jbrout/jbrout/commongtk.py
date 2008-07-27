@@ -16,6 +16,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk,os,gobject
 import common
+import sys
 #~ from __main__ import _
 from libs.gladeapp import GladeApp
 #_=lambda x:x                        # TODO : delete this line !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -39,7 +39,7 @@ class WinViewExif(GladeApp):
 
         self.nodes = nodes
 
-        self.ignoredTags = '.*0x0.*'
+        self.ignoredTags = '.*0x.*'
 
         ## Set-up the Picture selector
         self.selector = PictureSelector(self.nodes)
