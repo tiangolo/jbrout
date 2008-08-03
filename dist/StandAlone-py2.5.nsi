@@ -5,8 +5,8 @@
 ; this is avaliable from http://nsis.sourceforge.net/ZipDLL_plug-in
 
 ; HM NIS Edit Wizard helper defines
-!define PRODUCT_NAME "jBrout"
-!define PRODUCT_VERSION "0.3.112"
+!define PRODUCT_NAME "jBrout Stand-alone"
+!define PRODUCT_VERSION "0.3.118"
 !define PRODUCT_PUBLISHER "jBrout Development Team"
 !define PRODUCT_WEB_SITE "http://jbrout.googlecode.com"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -154,14 +154,14 @@ Section "jBrout Application" SEC01
                  SW_SHOWNORMAL \
                  "" \
                  "jBrout Photo Manager"
-  CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\jBrout Read Only.lnk" \
-                 "$INSTDIR\jBrout.exe" \
-                 ' --view' \
-                 "$INSTDIR\app\data\gfx\jBrout.ico" \
-                 0 \
-                 SW_SHOWNORMAL \
-                 "" \
-                 "jBrout Photo Manager in Read Only Mode"
+  ;CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\jBrout Read Only.lnk" \
+  ;               "$INSTDIR\jBrout.exe" \
+  ;               ' --view' \
+  ;               "$INSTDIR\app\data\gfx\jBrout.ico" \
+  ;               0 \
+  ;               SW_SHOWNORMAL \
+  ;               "" \
+  ;               "jBrout Photo Manager in Read Only Mode"
   CreateShortCut "$DESKTOP\jBrout.lnk" \
                  "$INSTDIR\jBrout.exe" \
                  '' \
@@ -174,7 +174,7 @@ Section "jBrout Application" SEC01
 SectionEnd
 
 Section "Python Runtime" SEC02
-  AddSize 25353
+  AddSize 33990
   SetOutPath "$TEMP"
   FILE "winRuntime\python_runtime-2.5.zip" 
   ZipDLL::extractall "$TEMP\python_runtime-2.5.zip" "$INSTDIR"
@@ -182,11 +182,11 @@ Section "Python Runtime" SEC02
 SectionEnd
 
 Section "GTK Runtime" SEC03
-  AddSize 29598
+  AddSize 32638
   SetOutPath "$TEMP"
-  FILE "winRuntime\GTK_runtime-2.10.11.zip" 
-  ZipDLL::extractall "$TEMP\GTK_runtime-2.10.11.zip" "$INSTDIR"
-  Delete "$TEMP\GTK_runtime-2.10.11.zip"
+  FILE "winRuntime\GTK_runtime.zip"
+  ZipDLL::extractall "$TEMP\GTK_runtime.zip" "$INSTDIR"
+  Delete "$TEMP\GTK_runtime.zip"
 SectionEnd
 
 Section "Comment Plug-in" SEC11
@@ -215,7 +215,7 @@ Section "Download Plug-in"
   File "..\jbrout\plugins\download\nameBuilder.glade"
 SectionEnd
 
-Section "Open in Explorer Plig-in" SEC12
+Section "Open in Explorer Plug-in" SEC12
   SetOutPath "$INSTDIR\app\plugins\openExplorer"
   File "..\jbrout\plugins\openExplorer\__init__.py"
   SetOutPath "$INSTDIR\app\plugins\openExplorer\po"
