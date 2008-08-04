@@ -409,8 +409,7 @@ isreal : %s""" % (
         # delete EXIF and IPTC tags :
         l=self.__info.exifKeys() + self.__info.iptcKeys()
         for i in l:
-            self.__info[i]=""       # avoid a bug in pyexiv2
-            self.__info[i]=None     # delete tag ("del t[]" doesn't do the job)
+            del self.__info[i]
 
         self.__info.deleteThumbnail()   # seems not needed !
         self.__info.clearComment()
@@ -433,7 +432,14 @@ isreal : %s""" % (
         for i in l:
             if i not in ["Exif.Photo.UserComment",]: # key "Exif.Photo.UserComment" bugs always ?!
                 if not i.startswith("Exif.Thumbnail"):  # don't need exif.thumb things because it's rebuilded after
-                    np.__info[i] =self.__info[i]
+                    # TODO: fix nasty bodge to get around pyexiv2 issues with multi part exif fields
+                    # known not to copy the following:
+                    #   - unknown maker not fields
+                    #   - lens data for canon
+                    try: 
+                        np.__info[i] =self.__info[i]
+                    except:
+                        print "Problems copying %s keyword" %i
 
         # copy comment
         np.addComment( self.comment )
