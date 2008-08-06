@@ -21,26 +21,50 @@ class Plugin(JPlugin):
     """Plugin pour rotationner les photos ou rebuilder leurs thumbnails"""
 
     __author__ = "manatlan"
-    __version__ = "1.0"
+    __version__ = "1.1"
 
     def menuEntries(self,l):
         return [
-                (1000,_("Rotate Right"),True,self.rotateRight,"gfx/rotate-right.png"),
-                (1001,_("Rotate Left"),True,self.rotateLeft,"gfx/rotate-left.png"),
-                (1002,_("Rebuild thumbnail"),True,self.rebuildThumb,None)
+                (1000,_("Auto Rotate"),True,self.auto,None),
+                (1001,_("Rotate Right 90"),True,self.rotate90,"gfx/rotate-right.png"),
+                (1002,_("Rotate Right 180"),True,self.rotate180,None),
+                (1003,_("Rotate Left 90"),True,self.rotate270,"gfx/rotate-left.png"),
+                (1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
+                (1005,_("Flip Vertical"),True,self.flipVertical,None),
+                (1006,_("Transpose"),True,self.transpose,None),
+                (1007,_("Transverse"),True,self.transverse,None),
+                (1008,_("Rebuild thumbnail"),True,self.rebuildThumb,None)
                ]
 
-    def rotateRight(self,l):
-        return self.__rotate(l,"R")
+    def auto(self,l):
+        return self.__transform(l,"auto")
+    
+    def rotate90(self,l):
+        return self.__transform(l,"rotate90")
 
-    def rotateLeft(self,l):
-        return self.__rotate(l,"L")
+    def rotate180(self,l):
+        return self.__transform(l,"rotate180")
+    
+    def rotate270(self,l):
+        return self.__transform(l,"rotate270")
+    
+    def flipHorizontal(self,l):
+        return self.__transform(l,"flipHorizontal")
+    
+    def flipVertical(self,l):
+        return self.__transform(l,"flipVertical")
+    
+    def transpose(self,l):
+        return self.__transform(l,"transpose")
+    
+    def transverse(self,l):
+        return self.__transform(l,"transverse")
 
-    def __rotate(self,list,sens):
+    def __transform(self,list,sens):
         try:
             for i in list:
-                self.showProgress( list.index(i), len(list) , _("Rotating") )
-                i.rotate(sens)
+                self.showProgress( list.index(i), len(list) , _("Transforming Image") )
+                i.transform(sens)
         finally:
             self.showProgress()
         return True

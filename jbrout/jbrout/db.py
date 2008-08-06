@@ -708,6 +708,13 @@ class PhotoNode(object):
         pc = PhotoCmd(self.file)
         pc.rotate(sens)
         self.updateInfo(pc)
+    
+    def transform(self,sens):
+        assert sens in ["auto","rotate90","rotate180","rotate270","flipHorizontal","flipVertical","transpose","transverse"]
+
+        pc = PhotoCmd(self.file)
+        pc.transform(sens)
+        self.updateInfo(pc)
 
     def setComment(self,txt):
         assert type(txt)==unicode

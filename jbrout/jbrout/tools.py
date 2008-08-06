@@ -23,6 +23,7 @@ MAJOR CHANGES :
   - api are the same than old one (but should change in the future)
   - thumbnail are created in python (pil+pyexiv2)
   - autorot only available on LINUX (was bugued in windows in old tools)
+  - addition of transfrom command (rotate is now depricated)
 """
 import os,sys
 try:
@@ -46,6 +47,21 @@ def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
    else:
       return f
 
+autoTrans = {
+    1: ["none", _("None")],
+    2: ["flipHorizontal", _("Flip Horizontal")],
+    3: ["rotate180", _("Rotate 180")],
+    4: ["flipVertical", _("Flip Vertical")],
+    5: ["transpose", _("Transpose")],
+    6: ["rotate90", _("Rotate Left")],
+    7: ["transverse", _("Transverse")],
+    8: ["rotate270", _("Rotate Right")]}
+    
+class CommandException(Exception):
+   def __init__(self,m):
+      self.message=m
+   def __str__(self):
+      return self.message
 
 # ##############################################################################################
 class _Command:
@@ -53,7 +69,7 @@ class _Command:
    """ low-level access (wrapper) to external tools used in jbrout
    """
    isWin=(sys.platform[:3] == "win")
-   __path =os.path.join(os.getcwdu(),u"data/tools")
+   __path =os.path.join(os.getcwdu(),u"data",u"tools")
 
    err=""
    if isWin:
@@ -510,6 +526,50 @@ isreal : %s""" % (
             self.rebuildExifTB()
         else:
             ret= _Command._run( [_Command._exiftran,opt,'-i',self.__file] ) # exiftran rotate internal exif thumb
+
+        self.__refresh()
+        
+    def transform(self,sens):
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+        """ LOSSLESS transformation of the picture 'file', and its internal 
+        thumbnail according 'sens'
+         """
+        if sens=="auto":
+            if _Command.isWin:
+                sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
+            else:
+                exiftranOpt = "-a"
+        if sens=="rotate90":
+            jpegtranOpt = ["-rotate", "90"]
+            exiftranOpt = "-9"
+            print "90"
+        elif sens=="rotate180":
+            jpegtranOpt = ["-rotate", "180"]
+            exiftranOpt = "-1"
+        elif sens=="rotate270":
+            jpegtranOpt = ["-rotate", "270"]
+            exiftranOpt = "-2"
+        elif sens=="flipHorizontal":
+            jpegtranOpt = ["-flip", "horizontal"]
+            exiftranOpt = "-f"
+        elif sens=="flipVertical":
+            jpegtranOpt = ["-flip", "vertical"]
+            exiftranOpt = "-F"
+        elif sens=="transpose":
+            jpegtranOpt = ["-transpose"]
+            exiftranOpt = "-t"
+        elif sens=="transverse":
+            jpegtranOpt = ["-transverse"]
+            exiftranOpt = "-T"
+
+        if _Command.isWin:
+            if not(sens == "none"):
+                print self.__file
+                ret= _Command._run( [_Command._jpegtran]+jpegtranOpt+['-copy','all',self.__file,self.__file] )
+                # rebuild the exif thumb, because jpegtran doesn't do it on windows
+                self.rebuildExifTB()
+        else:
+            ret= _Command._run( [_Command._exiftran,exiftranOpt,'-i',self.__file] ) # exiftran rotate internal exif thumb
 
         self.__refresh()
 
