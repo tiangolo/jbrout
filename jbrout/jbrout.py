@@ -833,7 +833,14 @@ class Window(GladeApp):
             JBrout.conf["normalizeNameFormat"] = "p%Y%m%d_%H%M%S"   # set default
 
         if not JBrout.conf.has_key("autorotAtImport"):    # key not present
-            JBrout.conf["autorotAtImport"] = True        # set default
+            ret=InputQuestion(self.main_widget,
+                _('Do you want JBrout to auto-rotate your imported photos according to their orientation tag (Recommended) ?'),
+                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
+             )
+            if ret:
+                JBrout.conf["autorotAtImport"] = True
+            else:
+                JBrout.conf["autorotAtImport"] = False
 
         if not JBrout.conf.has_key("thumbsize"):    # key not present
             JBrout.conf["thumbsize"] = 160        # set default

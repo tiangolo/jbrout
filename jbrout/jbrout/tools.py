@@ -156,12 +156,12 @@ class PhotoCmd(object):
         assert type(file)==unicode
         assert os.path.isfile(file)
 
-
-        self.__readonly = not os.access( file, os.W_OK)
+        self.__file = file
+        self.__readonly = not os.access( self.__file, os.W_OK)
 
         # pre-read
-        info = pyexiv2.Image(file.encode("utf_8"))
-        info.readMetadata()
+        self.__info = pyexiv2.Image(self.__file.encode("utf_8"))
+        self.__info.readMetadata()
 
         if self.readonly:
             self.debug( "*WARNING* File %s is READONLY" % file )
@@ -172,7 +172,7 @@ class PhotoCmd(object):
             # if no exifdate ---> put the filedate in exifdate
             # SO exifdate=filedate FOR ALL
             try:
-                info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+                self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
                 isDateExifOk=True
             except KeyError:        # tag exif datetime not present
                 isDateExifOk=False
@@ -183,44 +183,19 @@ class PhotoCmd(object):
                 self.debug( "*WARNING* File %s had wrong exif date -> corrected" % file )
                 
                 fd=datetime.fromtimestamp(os.stat(file).st_mtime)
-                info["Exif.Image.Make"]="jBrout" # mark exif made by jbrout
-                info["Exif.Image.DateTime"]=fd
-                info["Exif.Photo.DateTimeOriginal"]=fd
-                info["Exif.Photo.DateTimeDigitized"]=fd
-                info.writeMetadata()        
+                self.__info["Exif.Image.Make"]="jBrout" # mark exif made by jbrout
+                self.__info["Exif.Image.DateTime"]=fd
+                self.__info["Exif.Photo.DateTimeOriginal"]=fd
+                self.__info["Exif.Photo.DateTimeDigitized"]=fd
+                self.__info.writeMetadata()        
 
-            exifdate = info["Exif.Image.DateTime"]
+            exifdate = self.__info["Exif.Image.DateTime"]
 
             #-----------------------------------------------------------
             # try to autorot, if wanted
             #-----------------------------------------------------------
             if needAutoRotation :
-                try:
-                    orientation=int(info["Exif.Image.Orientation"])
-                    #http://sylvana.net/jpegcrop/exif_orientation.html
-                    #~ 1) transform="";;
-                    #~ 2) transform="-flip horizontal";;
-                    #~ 3) transform="-rotate 180";;
-                    #~ 4) transform="-flip vertical";;
-                    #~ 5) transform="-transpose";;
-                    #~ 6) transform="-rotate 90";;      # R
-                    #~ 7) transform="-transverse";;
-                    #~ 8) transform="-rotate 270";;     # L
-                except KeyError:
-                    orientation=0
-
-                if orientation!=1:
-                    if _Command.isWin:
-                        # do nothing
-                        # -> because no gpl tools which rotate well (img+thumb) automatically according exif
-                        #    if you provide me one, i'll integrate here
-                        self.debug( "*WARNING* File %s needs autorotate -> not done (windows)" % file )
-                        pass
-                    else:
-                        ret=_Command._run( [_Command._exiftran,'-ai',file] ) # tag is corrected by exiftran !
-                        if ret.strip()!="":
-                            self.debug("*WARNING* exiftran autorotate output=%s"%ret)
-                        self.debug( "*WARNING* File %s needs autorotate -> done " % file )
+                self.transform("auto")
 
             #-----------------------------------------------------------
             # try to autorename, if wanted
@@ -239,7 +214,6 @@ class PhotoCmd(object):
                     file = newfile
                     self.debug( "*WARNING* File %s needs to be renamed -> %s" % (file,newfile) )
                                     
-        self.__file = file
         self.__refresh()
 
     def __refresh(self):
@@ -536,13 +510,15 @@ isreal : %s""" % (
          """
         if sens=="auto":
             if _Command.isWin:
-                sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
+                try:
+                    sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
+                except KeyError:
+                    sens = "none"
             else:
                 exiftranOpt = "-a"
         if sens=="rotate90":
             jpegtranOpt = ["-rotate", "90"]
             exiftranOpt = "-9"
-            print "90"
         elif sens=="rotate180":
             jpegtranOpt = ["-rotate", "180"]
             exiftranOpt = "-1"
@@ -564,7 +540,6 @@ isreal : %s""" % (
 
         if _Command.isWin:
             if not(sens == "none"):
-                print self.__file
                 ret= _Command._run( [_Command._jpegtran]+jpegtranOpt+['-copy','all',self.__file,self.__file] )
                 # rebuild the exif thumb, because jpegtran doesn't do it on windows
                 self.rebuildExifTB()
