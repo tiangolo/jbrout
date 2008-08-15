@@ -85,6 +85,10 @@ class WinViewExif(GladeApp):
         if os.path.isfile(self.nodes[i].file):
             image=pyexiv2.Image(self.nodes[i].file)
             image.readMetadata()
+            try:
+                self.exifList.append([_('JPEG Comment'),image.getComment().decode("utf_8")])
+            except:
+                print "Error reafing JPEG comment"
             for key in image.exifKeys():
                 if re.match(self.ignoredTags, key) == None:
                     tag_details = image.tagDetails(key)
