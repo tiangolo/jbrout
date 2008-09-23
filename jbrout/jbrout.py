@@ -65,7 +65,6 @@ except:
 
 
 
-
 from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL # for selecteur
 from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString
 from jbrout.db import JBrout,Buffer
@@ -870,6 +869,11 @@ class Window(GladeApp):
         table = ListView(self,JBrout.modify)
         table.connect('button-press-event', self.on_selecteur_mouseClick)
 
+
+        # code to make a black background in the listview (override style)
+        # (but i'm not able to select a white color for texts ;-( ))
+        #table.modify_bg(gtk.STATE_NORMAL,gtk.gdk.Color(red=0, green=0, blue=0, pixel=0))
+
         # and init all static images
         Buffer.clear()
 
@@ -1164,7 +1168,6 @@ class Window(GladeApp):
         self.hs_from.set_value(1)
         self.hs_from.set_value(0)
         self.hs_to.set_value(t)
-
 
         cell = gtk.CellRendererText()
         self.cb_format.pack_start(cell, True)
@@ -2389,12 +2392,14 @@ class Window(GladeApp):
             default=""
 
         # preselect the previous mount point
-        dialog.select_filename (JBrout.conf["addFolderDefaultPath"] or default)
+        dialog.set_current_folder(JBrout.conf["addFolderDefaultPath"] or default)
 
         response = dialog.run ()
         if response == gtk.RESPONSE_OK:
-            folder = dialog.get_filename().decode( "utf_8" ) # gtk return utf8
-            JBrout.conf["addFolderDefaultPath"] = folder
+            folder=dialog.get_filename()
+            if folder:
+                folder = folder.decode( "utf_8" ) # gtk return utf8
+                JBrout.conf["addFolderDefaultPath"] = folder
         else:
             folder = None
         dialog.destroy()
@@ -2868,11 +2873,8 @@ def main(canModify=True):
     if JBrout.lockOn():
         try:
             sys.excepthook = myExceptHook
-
             JBrout.init(canModify)
 
-            #~ JBrout.db.redoIPTC()
-            #~ JBrout.db.save()
             gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
             window = Window()
 

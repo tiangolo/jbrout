@@ -33,12 +33,12 @@ class Plugin(JPlugin):
         return [(90,_("Open in explorer"),False,self.openFromAlbum)]
 
     def openFromAlbum(self,node):
-        runWith(["nautilus","rox","konqueror","explorer.exe"],unicode(node.file))    # path of folder
+        runWith(["xdg-open","nautilus","rox","konqueror","explorer.exe"],unicode(node.file))    # path of folder
         return False    # no visual modif
         
     def open(self,list):
         path = os.path.dirname(list[0].file)
         #~ path = path.encode(sys.getfilesystemencoding())
-        runWith(["nautilus","rox","konqueror","explorer.exe"],path)
+        runWith(["xdg-open","nautilus","rox","konqueror","explorer.exe"],path)
 
         return False    # no visual modif
