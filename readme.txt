@@ -25,3 +25,7 @@ Changes from 0.2.xxx
 - about's close button works now ;-)
 - new icon
 - folder unittests for unit tests
+- download plugin for getting images from a mounted camera or flash card
+- additional options for rotation plugin including auto-rotate
+- option to auto-rotate on import
+- new plugin for Down loading images from camera or media
