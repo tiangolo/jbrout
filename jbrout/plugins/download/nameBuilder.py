@@ -579,7 +579,7 @@ class NameBuilder():
 
     def getExifTag(self, tag):
         """Returns a given EXIF tag if it exists in the images EXIF info"""
-        if tag in self.exif.exifKeys():
+        try:
             return "%s" % self.exif.interpretedExifValue(tag)
-        else:
+        except:
             return ""

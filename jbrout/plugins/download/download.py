@@ -30,7 +30,7 @@ import pyexiv2
 from libs.gladeapp import GladeApp
 
 from jbrout.common import format_file_size_for_display,ed2d
-from jbrout.tools import PhotoCmd,_Command
+from jbrout.tools import PhotoCmd,_Command, autoTrans
 from jbrout.commongtk import InputBox,MessageBox,InputQuestion,Img
 
 from nameBuilder import NameBuilder,WinNameBuilderTokens
@@ -321,18 +321,14 @@ class WinDownload(GladeApp):
         yield True
         for rowIdx, row in enumerate(self.imLst.iterAllRows()):
             if self.__conf["autoRotate"] == 1:
-                rotS = 'N'
-                rotL = _('None')
-                if 'Exif.Image.Orientation' in row[dc.C_EXIF].exifKeys():
-                    rotE = row[dc.C_EXIF].interpretedExifValue('Exif.Image.Orientation')
-                    if rotE == 'right, top':
-                        rotS = 'R'
-                        rotL = _('Right')
-                    elif rotE == 'left, bottom':
-                        rotS = 'L'
-                        rotL = _('Left')
+                try:
+                    rotS = autoTrans[int(row[dc.C_EXIF]['Exif.Image.Orientation'])][0]
+                    rotL = autoTrans[int(row[dc.C_EXIF]['Exif.Image.Orientation'])][1]
+                except KeyError:
+                    rotS = autoTrans[1][0]
+                    rotL = autoTrans[1][1]
             else:
-                rotS = 'N' # Use 'N' for none internally & display disabled
+                rotS = autoTrans[1][0]
                 rotL = _('Disabled')
             if self.invalidSource or self.invalidDest or self.quitNow:
                 self.statusBar.pop(self.cidStatusBar)
@@ -453,7 +449,6 @@ class WinDownload(GladeApp):
 
 class WinDownloadPreferences(GladeApp):
     """Class to handle the Download Preferences window"""
-    # TODO: implement auto-tag settings
     # TODO: implement camera tagging settings
 
     glade = os.path.join(os.path.dirname(__file__), 'download.glade')
@@ -796,13 +791,22 @@ class WinDownloadExecute(GladeApp):
                     loader.write (thumbJpeg, len(thumbJpeg))
                     thumbIm = loader.get_pixbuf ()
                     loader.close ()
-                    if item[dc.C_RS] == 'R':
-                        rotation = gtk.gdk.PIXBUF_ROTATE_CLOCKWISE
-                    elif item[dc.C_RS] == 'L':
-                        rotation = gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE
-                    else:
-                        rotation = gtk.gdk.PIXBUF_ROTATE_NONE
-                    thumbIm = thumbIm.rotate_simple(rotation)
+                    if item[dc.C_RS] == "flipHorizontal":
+                        thumbIm = thumbIm.flip(True)
+                    elif item[dc.C_RS] == "rotate180":
+                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_UPSIDEDOWN)
+                    elif item[dc.C_RS] == "flipVertical":
+                        thumbIm = thumbIm.flip(False)
+                    elif item[dc.C_RS] == "transpose":
+                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+                        thumbIm = thumbIm.flip(False)
+                    elif item[dc.C_RS] == "rotate90":
+                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+                    elif item[dc.C_RS] == "transverse":
+                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+                        thumbIm = thumbIm.flip(True)
+                    elif item[dc.C_RS] == "rotate270":
+                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
                 else:
                     thumbIm = gtk.gdk.pixbuf_new_from_file(
                         os.path.join('data','gfx','imgNoThumb.png'))
@@ -818,9 +822,9 @@ class WinDownloadExecute(GladeApp):
                 # Rotation if enabled/needed
                 if item[dc.C_RS] != 'N':
                     self.lblAction.set_label(
-                        '%s %s' % (_('Rotating'),item[dc.C_ROT]))
+                        '%s %s' % (_('Performing Transformation:'),item[dc.C_ROT]))
                     yield True
-                    pc.rotate(item[dc.C_RS])
+                    pc.transform(item[dc.C_RS])
                 # Auto comment if enabled
                 if len(self.conf['autoComment']) > 0:
                     self.lblAction.set_label(_('Commenting'))

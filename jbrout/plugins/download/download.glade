@@ -11,6 +11,8 @@
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="default_width">800</property>
     <property name="default_height">500</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="destroy_with_parent">True</property>
     <signal name="delete_event" handler="on_winDownloadStart_delete_event"/>
     <child>
       <widget class="GtkVBox" id="vbxMain">
@@ -190,6 +192,7 @@
     <property name="title" translatable="yes">Downloading Photos from Camera</property>
     <property name="modal">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+    <property name="destroy_with_parent">True</property>
     <child>
       <widget class="GtkVBox" id="vbxMain">
         <property name="visible">True</property>
