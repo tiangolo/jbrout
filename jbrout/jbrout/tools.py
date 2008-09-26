@@ -22,7 +22,7 @@ MAJOR CHANGES :
   - use only jpegtran/exiftran tools (for LOSSLESS rotation)
   - api are the same than old one (but should change in the future)
   - thumbnail are created in python (pil+pyexiv2)
-  - autorot only available on LINUX (was bugued in windows in old tools)
+  - autorot only available on LINUX and Windows
   - addition of transfrom command (rotate is now depricated)
 """
 import os,sys
@@ -513,7 +513,7 @@ isreal : %s""" % (
                 try:
                     sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
                 except KeyError:
-                    sens = "none"
+                    sens = autoTrans[1][0]
             else:
                 exiftranOpt = "-a"
         if sens=="rotate90":
@@ -538,13 +538,13 @@ isreal : %s""" % (
             jpegtranOpt = ["-transverse"]
             exiftranOpt = "-T"
 
-        if _Command.isWin:
-            if not(sens == "none"):
-                ret= _Command._run( [_Command._jpegtran]+jpegtranOpt+['-copy','all',self.__file,self.__file] )
-                # rebuild the exif thumb, because jpegtran doesn't do it on windows
-                self.rebuildExifTB()
-        else:
-            ret= _Command._run( [_Command._exiftran,exiftranOpt,'-i',self.__file] ) # exiftran rotate internal exif thumb
+        if not(sens == "none"):
+            if _Command.isWin:
+                    ret= _Command._run( [_Command._jpegtran]+jpegtranOpt+['-copy','all',self.__file,self.__file] )
+                    # rebuild the exif thumb, because jpegtran doesn't do it on windows
+                    self.rebuildExifTB()
+            else:
+                ret= _Command._run( [_Command._exiftran,exiftranOpt,'-i',self.__file] ) # exiftran rotate internal exif thumb
 
         self.__refresh()
 
