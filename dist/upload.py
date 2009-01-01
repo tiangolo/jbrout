@@ -50,17 +50,28 @@ if __name__ == "__main__":
     else:
         print "packages are not here ?!?"
 
-    print "NOT FINISHED ... to be continued ..."
-    sys.exit()
+    #print "NOT FINISHED ... to be continued ..."
+    #sys.exit()
 
     #TODO: adapt following lines when 0.3 will go out ...
+    home=os.environ['HOME']
+ 
+    s = ftplib.FTP('ftpperso.free.fr','jbrout',open(os.path.join(home,".jbroutpassword")).read())
 
-    s = ftplib.FTP('ftpperso.free.fr','jbrout',open("~/.jbroutpassword").read())
-
-    file = DEST+"jbrout-"+version+".sources.tar.gz"
-    if os.path.isfile(file):
+    
+    if src:
+        file = src
         print "upload",os.path.basename(file)
         s.cwd("download/sources")
+        f = open(file,'rb')
+        s.storbinary('STOR '+os.path.basename(file), f)
+        s.cwd("../..")
+
+
+    if rpm:
+        file=rpm
+        print "upload",os.path.basename(file)
+        s.cwd("download/rpm")
         f = open(file,'rb')
         s.storbinary('STOR '+os.path.basename(file), f)
         s.cwd("../..")
@@ -73,28 +84,14 @@ if __name__ == "__main__":
         #~ s.storbinary('STOR '+os.path.basename(file), f)
         #~ s.cwd("../..")
 
-    file = find("jbrout_.*"+version+".*\.deb",DEST+"binary")
-    if file:
-        s.cwd("download/debian/binary")
-
-        print "upload",os.path.basename(file)
-        f = open(file,'rb')
-        s.storbinary('STOR '+os.path.basename(file), f)
-
-        file = DEST+"binary/Packages.gz"
-        print "upload",os.path.basename(file)
-        f = open(file,'rb')
-        s.storbinary('STOR '+os.path.basename(file), f)
-
-        s.cwd("../../..")
-
-
-    file=find("jbrout-.*"+version+".*\.rpm",DEST)
-    if file:
-        print "upload",os.path.basename(file)
-        s.cwd("download/rpm")
-        f = open(file,'rb')
-        s.storbinary('STOR '+os.path.basename(file), f)
-        s.cwd("../..")
+    if debs:
+        for file in debs:
+            s.cwd("download/debian/binary")
+    
+            print "upload",os.path.basename(file)
+            f = open(file,'rb')
+            s.storbinary('STOR '+os.path.basename(file), f)
+    
+            s.cwd("../../..")
 
     s.quit()
