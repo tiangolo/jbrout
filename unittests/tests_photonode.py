@@ -57,7 +57,7 @@ if __name__ == "__main__":
         assert len(fn.getPhotos())==len(l)
         assert len(fn.getParent().getPhotos())==0   # there shouldn't be photos in exec path
         assert len(fn.getParent().getAllPhotos())==len(l)
-        assert len(fn.select("//photo"))==len(l)
+        assert len(fn._select("//photo"))==len(l)
         assert len(fn.getFolders())==0              # there shouldn't be folder in photo temp folder
 
         pn=fn.getPhotos()[0]

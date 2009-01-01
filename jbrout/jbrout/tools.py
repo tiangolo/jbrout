@@ -211,7 +211,7 @@ class PhotoCmd(object):
                     newfile = os.path.join(folder,newname)
         
                     os.rename(file,newfile)
-                    file = newfile
+                    self.__file = newfile
                     self.debug( "*WARNING* File %s needs to be renamed -> %s" % (file,newfile) )
                                     
         self.__refresh()
@@ -399,7 +399,12 @@ isreal : %s""" % (
         # delete EXIF and IPTC tags :
         l=self.__info.exifKeys() + self.__info.iptcKeys()
         for i in l:
-            del self.__info[i]
+            try:
+                del self.__info[i]
+            except KeyError: # 'tag not set'
+                # the tag seems not to be here, so
+                # we don't need to clear it, no ?
+                pass
 
         self.__info.deleteThumbnail()   # seems not needed !
         self.__info.clearComment()

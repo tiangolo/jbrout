@@ -142,7 +142,7 @@ class DBPhotos:
         except:
             nodeDir=None
 
-        if not nodeDir:
+        if nodeDir is None:
             rep=[]
             while 1:
                 rep.append(dir)
@@ -323,12 +323,12 @@ class FolderNode(object):
         return ln
 
     def getPhotos(self):
-        return self.__select("photo")
+        return self._select("photo")
 
     def getAllPhotos(self):
-        return self.__select("descendant::photo")
+        return self._select("descendant::photo")
 
-    def __select(self,xpath):
+    def _select(self,xpath):
         """ 'xpath' should only target photo node """
         class PhotoNodes(list):
             def __init__(self,l,xpath):
