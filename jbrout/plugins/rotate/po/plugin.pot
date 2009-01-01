@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 15:24+0100\n"
+"POT-Creation-Date: 2009-01-01 15:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,42 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/rotate/__init__.py:28
+#: ../plugins/rotate/__init__.py:34
 msgid "Auto Rotate"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:29
+#: ../plugins/rotate/__init__.py:35
 msgid "Rotate Right 90"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:30
-msgid "Rotate Right 180"
-msgstr ""
-
-#: ../plugins/rotate/__init__.py:31
+#. (1002,_("Rotate Right 180"),True,self.rotate180,None),
+#: ../plugins/rotate/__init__.py:37
 msgid "Rotate Left 90"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:32
-msgid "Flip Horizontal"
-msgstr ""
-
-#: ../plugins/rotate/__init__.py:33
-msgid "Flip Vertical"
-msgstr ""
-
-#: ../plugins/rotate/__init__.py:34
-msgid "Transpose"
-msgstr ""
-
-#: ../plugins/rotate/__init__.py:35
-msgid "Transverse"
-msgstr ""
-
-#: ../plugins/rotate/__init__.py:36 ../plugins/rotate/__init__.py:75
+#. (1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
+#. (1005,_("Flip Vertical"),True,self.flipVertical,None),
+#. (1006,_("Transpose"),True,self.transpose,None),
+#. (1007,_("Transverse"),True,self.transverse,None),
+#: ../plugins/rotate/__init__.py:42 ../plugins/rotate/__init__.py:81
 msgid "Rebuild thumbnail"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:66
+#: ../plugins/rotate/__init__.py:72
 msgid "Transforming Image"
 msgstr ""

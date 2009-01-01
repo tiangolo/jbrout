@@ -3,22 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:25+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-01-01 15:24+0100\n"
+"PO-Revision-Date: 2009-01-01 15:47+0100\n"
+"Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../plugins/download/__init__.py:69
 msgid "Download"
-msgstr ""
+msgstr "Récupérer des photos d'un média"
 
 #: ../plugins/download/download.py:79
 msgid "Source"
@@ -47,9 +46,10 @@ msgstr ""
 msgid "Rotation"
 msgstr ""
 
-#: ../plugins/download/download.py:111 ../tmp/download.glade.h:23
+#: ../plugins/download/download.py:111
+#: ../tmp/download.glade.h:23
 msgid "Download Photos From Camera"
-msgstr ""
+msgstr "Récupérer des photos d'un média"
 
 #: ../plugins/download/download.py:146
 msgid "Please enter the new Job Code"
@@ -73,9 +73,7 @@ msgid "Building destination Names"
 msgstr ""
 
 #: ../plugins/download/download.py:253
-msgid ""
-"More than one serialisation tag used please use preferencess to remove from "
-"File Naming > Parttern"
+msgid "More than one serialisation tag used please use preferencess to remove from File Naming > Parttern"
 msgstr ""
 
 #. Check Status
@@ -113,9 +111,7 @@ msgid "Select source folder"
 msgstr ""
 
 #: ../plugins/download/download.py:718
-msgid ""
-"Please enter the values to use for {T8}, {T9} and auto Tag for the selected "
-"camera:"
+msgid "Please enter the values to use for {T8}, {T9} and auto Tag for the selected camera:"
 msgstr ""
 
 #: ../plugins/download/download.py:719
@@ -360,8 +356,7 @@ msgid "First digit of folder number followed by last 4 digits of image number"
 msgstr ""
 
 #: ../plugins/download/nameBuilder.py:147
-msgid ""
-"First digit of folder number - 1, followed by last 4 digits of image number"
+msgid "First digit of folder number - 1, followed by last 4 digits of image number"
 msgstr ""
 
 #: ../plugins/download/nameBuilder.py:148
@@ -498,9 +493,7 @@ msgid "Date based download sequence number"
 msgstr ""
 
 #: ../plugins/download/nameBuilder.py:312
-msgid ""
-"More than one serialisation tag used please remove extras from File Naming > "
-"Pattern "
+msgid "More than one serialisation tag used please remove extras from File Naming > Pattern "
 msgstr ""
 
 #: ../tmp/download.glade.h:1
@@ -517,23 +510,23 @@ msgstr ""
 
 #: ../tmp/download.glade.h:4
 msgid "Add Comment to all downloaded photos"
-msgstr ""
+msgstr "Ajouter un commentaire par défaut"
 
 #: ../tmp/download.glade.h:5
 msgid "Auto Comment"
-msgstr ""
+msgstr "Commentaire par défaut"
 
 #: ../tmp/download.glade.h:6
 msgid "Auto Tag"
-msgstr ""
+msgstr "Tag par défaut"
 
 #: ../tmp/download.glade.h:7
 msgid "Auto Tags To Add"
-msgstr ""
+msgstr "Tag par défaut à ajouter"
 
 #: ../tmp/download.glade.h:8
 msgid "Automaticaly rotate photos on download"
-msgstr ""
+msgstr "Rotationne les photos automatiquement"
 
 #: ../tmp/download.glade.h:9
 msgid "Camera Mapping"
@@ -545,7 +538,7 @@ msgstr ""
 
 #: ../tmp/download.glade.h:11
 msgid "Comment to add"
-msgstr ""
+msgstr "Commentaire à ajouter"
 
 #: ../tmp/download.glade.h:12
 msgid "Conversion"
@@ -577,7 +570,7 @@ msgstr ""
 
 #: ../tmp/download.glade.h:19
 msgid "Delete Source Images"
-msgstr ""
+msgstr "Supprimer les images de la source"
 
 #: ../tmp/download.glade.h:20
 msgid "Destination File:"
@@ -617,11 +610,11 @@ msgstr ""
 
 #: ../tmp/download.glade.h:30
 msgid "File Naming"
-msgstr ""
+msgstr "Renommer"
 
 #: ../tmp/download.glade.h:31
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #: ../tmp/download.glade.h:32
 msgid "Identify camera using serial number, owner string  or user comment"
@@ -637,8 +630,7 @@ msgid "Pattern:"
 msgstr ""
 
 #: ../tmp/download.glade.h:36
-msgid ""
-"Please enter the values to use for {T8}, {T9} and Tag for the selected camera"
+msgid "Please enter the values to use for {T8}, {T9} and Tag for the selected camera"
 msgstr ""
 
 #: ../tmp/download.glade.h:37
@@ -792,3 +784,4 @@ msgstr ""
 #: ../tmp/nameBuilder.glade.h:1
 msgid "Filename Tokens"
 msgstr ""
+
