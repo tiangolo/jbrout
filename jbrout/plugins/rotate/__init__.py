@@ -24,15 +24,21 @@ class Plugin(JPlugin):
     __version__ = "1.1"
 
     def menuEntries(self,l):
+        
+        # I had commented theses new operations
+        # I think we will let them available when we will have a preference dialog
+        # which will let the user choose what entries he wants ... no ?
+        # because it "bloats" the contectual menu now ... no ?
+        
         return [
                 (1000,_("Auto Rotate"),True,self.auto,None),
                 (1001,_("Rotate Right 90"),True,self.rotate90,"gfx/rotate-right.png"),
-                (1002,_("Rotate Right 180"),True,self.rotate180,None),
+                #(1002,_("Rotate Right 180"),True,self.rotate180,None),
                 (1003,_("Rotate Left 90"),True,self.rotate270,"gfx/rotate-left.png"),
-                (1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
-                (1005,_("Flip Vertical"),True,self.flipVertical,None),
-                (1006,_("Transpose"),True,self.transpose,None),
-                (1007,_("Transverse"),True,self.transverse,None),
+                #(1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
+                #(1005,_("Flip Vertical"),True,self.flipVertical,None),
+                #(1006,_("Transpose"),True,self.transpose,None),
+                #(1007,_("Transverse"),True,self.transverse,None),
                 (1008,_("Rebuild thumbnail"),True,self.rebuildThumb,None)
                ]
 
@@ -72,7 +78,7 @@ class Plugin(JPlugin):
     def rebuildThumb(self,list):
         try:
             for i in list:
-                self.showProgress( list.index(i), len(list)  , _("Rebuilding thumbs") )
+                self.showProgress( list.index(i), len(list)  , _("Rebuild thumbnail") )
                 i.rebuildThumbnail()
         finally:
             self.showProgress()

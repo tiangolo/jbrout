@@ -48,14 +48,14 @@ def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
       return f
 
 autoTrans = {
-    1: ["none", _("None")],
-    2: ["flipHorizontal", _("Flip Horizontal")],
-    3: ["rotate180", _("Rotate 180")],
-    4: ["flipVertical", _("Flip Vertical")],
-    5: ["transpose", _("Transpose")],
-    6: ["rotate90", _("Rotate Left")],
-    7: ["transverse", _("Transverse")],
-    8: ["rotate270", _("Rotate Right")]}
+    1: ["none", "None"],        # what as the purpose of theses second argument ? marc
+    2: ["flipHorizontal", "Flip Horizontal"],
+    3: ["rotate180", "Rotate 180"],
+    4: ["flipVertical", "Flip Vertical"],
+    5: ["transpose", "Transpose"],
+    6: ["rotate90", "Rotate Left"],
+    7: ["transverse", "Transverse"],
+    8: ["rotate270", "Rotate Right"]}
     
 class CommandException(Exception):
    def __init__(self,m):

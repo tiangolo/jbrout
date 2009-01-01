@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:25+0100\n"
+"POT-Creation-Date: 2009-01-01 15:18+0100\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Transverse"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:36
+#: ../plugins/rotate/__init__.py:36 ../plugins/rotate/__init__.py:75
 msgid "Rebuild thumbnail"
 msgstr "Rifai la miniatura"
 
@@ -53,9 +53,8 @@ msgstr "Rifai la miniatura"
 msgid "Transforming Image"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:75
-msgid "Rebuilding thumbs"
-msgstr "Sto rifacendo le miniature"
+#~ msgid "Rebuilding thumbs"
+#~ msgstr "Sto rifacendo le miniature"
 
 #~ msgid "Rotating"
 #~ msgstr "Sto ruotando"

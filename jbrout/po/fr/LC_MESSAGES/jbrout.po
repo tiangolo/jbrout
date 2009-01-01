@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:25+0100\n"
-"PO-Revision-Date: 2007-11-24 17:56+0100\n"
-"Last-Translator: manatlan <manatlan@gmail.com>\n"
+"POT-Creation-Date: 2009-01-01 15:01+0100\n"
+"PO-Revision-Date: 2009-01-01 15:08+0100\n"
+"Last-Translator: \n"
 "Language-Team: French <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,8 @@ msgid "Jbrout Error"
 msgstr "Jbrout erreur"
 
 #. ========================================================
-#: ../jbrout.py:165 ../tmp/jbrout.glade.h:20
+#: ../jbrout.py:165
+#: ../tmp/jbrout.glade.h:20
 msgid "Tags"
 msgstr ""
 
@@ -55,28 +56,20 @@ msgstr "Sélection : %d/%d"
 #: ../jbrout.py:445
 #, python-format
 msgid "Year %s"
-msgstr ""
+msgstr "Année %s"
 
-#: ../jbrout.py:635 ../jbrout.py:1370
+#: ../jbrout.py:635
+#: ../jbrout.py:1370
 msgid "Basket"
 msgstr "Panier"
 
 #: ../jbrout.py:823
-msgid ""
-"Do you want JBrout to rename your imported photos according to their create "
-"timestamp (Recommended) ?"
-msgstr ""
-"Voulez-vous que Jbrout renomme automatiquement vos photos à l'import, en "
-"fonction de la date de la prise de vue (Recommandé) ?"
+msgid "Do you want JBrout to rename your imported photos according to their create timestamp (Recommended) ?"
+msgstr "Voulez-vous que Jbrout renomme automatiquement vos photos à l'import, en fonction de la date de la prise de vue (Recommandé) ?"
 
 #: ../jbrout.py:836
-#, fuzzy
-msgid ""
-"Do you want JBrout to auto-rotate your imported photos according to their "
-"orientation tag (Recommended) ?"
-msgstr ""
-"Voulez-vous que Jbrout renomme automatiquement vos photos à l'import, en "
-"fonction de la date de la prise de vue (Recommandé) ?"
+msgid "Do you want JBrout to auto-rotate your imported photos according to their orientation tag (Recommended) ?"
+msgstr "Voulez-vous que Jbrout rotationne automatiquement vos photos à l'import, en fonction du tag orientation de vos prises de vue (Recommandé) ?"
 
 #: ../jbrout.py:1176
 msgid "Landscape"
@@ -98,13 +91,14 @@ msgstr ""
 
 #: ../jbrout.py:1389
 msgid "Enter a bookmark Name"
-msgstr ""
+msgstr "Donner un nom au signet"
 
 #: ../jbrout.py:1439
 msgid "Rename folder"
 msgstr "Renommer l'album"
 
-#: ../jbrout.py:1457 ../jbrout.py:2301
+#: ../jbrout.py:1457
+#: ../jbrout.py:2301
 msgid "New folder"
 msgstr "Nouvel album"
 
@@ -160,7 +154,8 @@ msgstr "Sélectionner cet album"
 msgid "Select this time"
 msgstr "Sélectionner cette période"
 
-#: ../jbrout.py:1701 ../jbrout.py:2327
+#: ../jbrout.py:1701
+#: ../jbrout.py:2327
 msgid "Operations"
 msgstr "Opérations"
 
@@ -178,7 +173,8 @@ msgstr "Supprimer le tag"
 
 #. if node.__class__.__name__ == "TagNode":
 #. menu.append( makeItem(_("Set keyboard shortcut"),self.on_menu_set_key) )
-#: ../jbrout.py:1753 ../jbrout.py:2643
+#: ../jbrout.py:1753
+#: ../jbrout.py:2643
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -227,11 +223,13 @@ msgstr "Cette catégorie n'est pas vide"
 msgid "Don't drop parents to a child"
 msgstr "Impossible de drag'n'dropper un noeud parent sur un fils"
 
-#: ../jbrout.py:2238 ../jbrout.py:2614
+#: ../jbrout.py:2238
+#: ../jbrout.py:2614
 msgid "Drop in space"
 msgstr "Drag'n'drop dans n'importe quoi"
 
-#: ../jbrout.py:2240 ../jbrout.py:2612
+#: ../jbrout.py:2240
+#: ../jbrout.py:2612
 msgid "Nothing was dragged"
 msgstr "Rien à drag'n'dropper"
 
@@ -318,7 +316,8 @@ msgstr "Format:Portrait"
 msgid "comment(%s)"
 msgstr "commentaire(%s)"
 
-#: ../jbrout.py:2836 ../jbrout.py:2840
+#: ../jbrout.py:2836
+#: ../jbrout.py:2840
 msgid " and "
 msgstr " et "
 
@@ -327,7 +326,8 @@ msgstr " et "
 msgid "album(%s)"
 msgstr "album(%s)"
 
-#: ../jbrout.py:2854 ../jbrout.py:2862
+#: ../jbrout.py:2854
+#: ../jbrout.py:2862
 #, python-format
 msgid "NOT '%s'"
 msgstr "NON '%s'"
@@ -356,40 +356,6 @@ msgstr "%.1f Mo"
 msgid "%.1f GB"
 msgstr "%.1f Go"
 
-#: ../jbrout/tools.py:51
-#, fuzzy
-msgid "None"
-msgstr "Aucun changement"
-
-#: ../jbrout/tools.py:52
-msgid "Flip Horizontal"
-msgstr ""
-
-#: ../jbrout/tools.py:53
-#, fuzzy
-msgid "Rotate 180"
-msgstr "Rotation à gauche"
-
-#: ../jbrout/tools.py:54
-msgid "Flip Vertical"
-msgstr ""
-
-#: ../jbrout/tools.py:55
-msgid "Transpose"
-msgstr ""
-
-#: ../jbrout/tools.py:56
-msgid "Rotate Left"
-msgstr "Rotation à gauche"
-
-#: ../jbrout/tools.py:57
-msgid "Transverse"
-msgstr ""
-
-#: ../jbrout/tools.py:58
-msgid "Rotate Right"
-msgstr "Rotation à droite"
-
 #: ../jbrout/commongtk.py:117
 msgid "Jbrout Input"
 msgstr "Jbrout saisie"
@@ -407,7 +373,7 @@ msgid "Apply to this photo"
 msgstr "Appliquer à cette photo"
 
 #: ../jbrout/winshow.py:226
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "%(exifdate)s\n"
@@ -425,21 +391,20 @@ msgstr ""
 "\n"
 "%(exifdate)s\n"
 "\n"
-"%(resolution)s,·%(filesize)s\n"
+"%(resolution)s, %(filesize)s\n"
 "\n"
+"ALBUM :\n"
 "%(folder)s\n"
 "\n"
-"TAGS·:\n"
-"%(tags)s\n"
-"\n"
-"COMMENTAIRE·:\n"
+"COMMENTAIRE :\n"
 "%(comment)s\n"
 "\n"
+"TAGS :\n"
 
 #: ../jbrout/winshow.py:363
-#, fuzzy, python-format
+#, python-format
 msgid "(%d selected)"
-msgstr "Sélection : %d/%d"
+msgstr "(%d Sélectionée(s))"
 
 #. raise error if a problem
 #. ~ test_Command(f)
@@ -449,7 +414,7 @@ msgstr ""
 
 #: ../tmp/jbrout.glade.h:2
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Ajouter un signet"
 
 #: ../tmp/jbrout.glade.h:3
 msgid "Add folder"
@@ -469,7 +434,7 @@ msgstr "Croissant"
 
 #: ../tmp/jbrout.glade.h:7
 msgid "Bookmarks"
-msgstr ""
+msgstr "Signets"
 
 #: ../tmp/jbrout.glade.h:8
 msgid "Descending"
@@ -477,11 +442,11 @@ msgstr "Décroissant"
 
 #: ../tmp/jbrout.glade.h:9
 msgid "Edit Bookmarks"
-msgstr ""
+msgstr "Editer les signets"
 
 #: ../tmp/jbrout.glade.h:10
 msgid "Enter New Comment"
-msgstr ""
+msgstr "Entrer un nouveau commentaire"
 
 #: ../tmp/jbrout.glade.h:11
 msgid "Format"
@@ -494,7 +459,7 @@ msgstr "Jbrout"
 
 #: ../tmp/jbrout.glade.h:13
 msgid "Mark this picture to be removed"
-msgstr ""
+msgstr "Marquer cette image en suppression"
 
 #: ../tmp/jbrout.glade.h:14
 msgid "Period from"
@@ -510,7 +475,7 @@ msgstr "Presser une touche"
 
 #: ../tmp/jbrout.glade.h:17
 msgid "Put this picture in the basket"
-msgstr ""
+msgstr "Mettre cette image dans le panier"
 
 #: ../tmp/jbrout.glade.h:18
 msgid "Search"
@@ -526,7 +491,7 @@ msgstr "Période"
 
 #: ../tmp/jbrout.glade.h:22
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_Signets"
 
 #: ../tmp/jbrout.glade.h:24
 #, no-c-format
@@ -576,7 +541,7 @@ msgstr "Enlever"
 
 #: ../tmp/jbrout.glade.h:35
 msgid "jBrout Full Screen Display"
-msgstr ""
+msgstr "Mode plein écran"
 
 #: ../tmp/jbrout.glade.h:36
 msgid "jbrout"
@@ -590,6 +555,17 @@ msgstr ""
 msgid "to"
 msgstr "Jusqu'au"
 
+#, fuzzy
+#~ msgid "None"
+#~ msgstr "Aucun changement"
+
+#, fuzzy
+#~ msgid "Rotate 180"
+#~ msgstr "Rotation à gauche"
+#~ msgid "Rotate Left"
+#~ msgstr "Rotation à gauche"
+#~ msgid "Rotate Right"
+#~ msgstr "Rotation à droite"
 #~ msgid ""
 #~ "January\n"
 #~ "February\n"
@@ -616,25 +592,18 @@ msgstr "Jusqu'au"
 #~ "Octobre\n"
 #~ "Novembre\n"
 #~ "Décembre"
-
 #~ msgid "This key is already in use"
 #~ msgstr "Cette touche est déjà utilisée"
-
 #~ msgid "Set keyboard shortcut"
 #~ msgstr "Sélectionner un raccourci clavier"
-
 #~ msgid "Use key tagging"
 #~ msgstr "Autoriser les touches pour taguer"
-
 #~ msgid "little"
 #~ msgstr "Petite"
-
 #~ msgid "medium"
 #~ msgstr "Moyenne"
-
 #~ msgid "big"
 #~ msgstr "Large"
-
 #~ msgid "Thumbnail size"
 #~ msgstr "Taille des vignettes"
 
@@ -694,25 +663,18 @@ msgstr "Jusqu'au"
 #, fuzzy
 #~ msgid "Options"
 #~ msgstr "Opérations"
-
 #~ msgid "Jbrout About"
 #~ msgstr "A propos"
-
 #~ msgid "Select the destination"
 #~ msgstr "Sélectionner la destination"
-
 #~ msgid "Export to"
 #~ msgstr "Exporter"
-
 #~ msgid "Exporting"
 #~ msgstr "Export"
-
 #~ msgid "Commenting"
 #~ msgstr "En cours"
-
 #~ msgid "%m/%d/%Y %H:%M:%S"
 #~ msgstr "%d/%m/%Y %H:%M:%S"
-
 #~ msgid ""
 #~ "Example date : %s \n"
 #~ "\n"
@@ -721,115 +683,80 @@ msgstr "Jusqu'au"
 #~ "Date·d'exemple :·%s·\n"
 #~ "\n"
 #~ "\n"
-
 #~ msgid ""
 #~ "Change to %s :\n"
 #~ "\n"
 #~ msgstr ""
 #~ "Change en %s \n"
 #~ "\n"
-
 #~ msgid "Change Datetime"
 #~ msgstr "Changer la date"
-
 #~ msgid "Redating"
 #~ msgstr "Redatage"
-
 #~ msgid "Export to Html"
 #~ msgstr "Créer une galerie HTML"
-
 #~ msgid "Exporting to Html"
 #~ msgstr "Export en HTML"
-
 #~ msgid "Web Share"
 #~ msgstr "Partage Web"
-
 #~ msgid "Rebuild thumbnail"
 #~ msgstr "Reconstruire l'imagette"
-
 #~ msgid "Rotating"
 #~ msgstr "Rotation"
-
 #~ msgid "Rebuilding thumbs"
 #~ msgstr "Reconstruction des imagettes"
-
 #~ msgid "Open in Explorer"
 #~ msgstr "Ouvrir dans l'explorer"
-
 #~ msgid "Upload to flickr"
 #~ msgstr "Envoyer sur Flickr"
-
 #~ msgid "uploading"
 #~ msgstr "Envoi"
-
 #~ msgid "public"
 #~ msgstr "Publique"
-
 #~ msgid "friend"
 #~ msgstr "Amis"
-
 #~ msgid "family"
 #~ msgstr "Famille"
-
 #~ msgid "..."
 #~ msgstr "..."
-
 #~ msgid "Destination"
 #~ msgstr "Destination"
-
 #~ msgid "Export To HTML"
 #~ msgstr "Créer une galerie HTML"
-
 #~ msgid "Mode"
 #~ msgstr "Mode"
-
 #~ msgid "Original"
 #~ msgstr "Originale"
-
 #~ msgid "Quality"
 #~ msgstr "Qualité"
-
 #~ msgid "Reduced"
 #~ msgstr "Réduction"
-
 #~ msgid "Size"
 #~ msgstr "Taille"
-
 #~ msgid "All Selection"
 #~ msgstr "Toutes"
-
 #~ msgid "One by One"
 #~ msgstr "Une par une"
-
 #~ msgid "Day(s)"
 #~ msgstr "Jour(s)"
-
 #~ msgid "Hour(s)"
 #~ msgstr "Heure(s)"
-
 #~ msgid "Minute(s)"
 #~ msgstr "Minute(s)"
-
 #~ msgid "Second(s)"
 #~ msgstr "Seconde(s)"
-
 #~ msgid "Week(s)"
 #~ msgstr "Semaine(s)"
-
 #~ msgid "Instant Web"
 #~ msgstr "Partage Web"
-
 #~ msgid "access to originals"
 #~ msgstr "Accéder aux originales"
-
 #~ msgid "view as albums"
 #~ msgstr "Voir comme albums"
-
 #~ msgid "Password"
 #~ msgstr "Mot de passe"
-
 #~ msgid "Privacy"
 #~ msgstr "Type d'accès"
-
 #~ msgid "Upload to FlickR"
 #~ msgstr "Envoyer sur Flickr"
+

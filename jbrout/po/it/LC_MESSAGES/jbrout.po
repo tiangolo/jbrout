@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:25+0100\n"
+"POT-Creation-Date: 2009-01-01 15:01+0100\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -349,38 +349,6 @@ msgstr ""
 #: ../jbrout/common.py:52
 #, python-format
 msgid "%.1f GB"
-msgstr ""
-
-#: ../jbrout/tools.py:51
-msgid "None"
-msgstr ""
-
-#: ../jbrout/tools.py:52
-msgid "Flip Horizontal"
-msgstr ""
-
-#: ../jbrout/tools.py:53
-msgid "Rotate 180"
-msgstr ""
-
-#: ../jbrout/tools.py:54
-msgid "Flip Vertical"
-msgstr ""
-
-#: ../jbrout/tools.py:55
-msgid "Transpose"
-msgstr ""
-
-#: ../jbrout/tools.py:56
-msgid "Rotate Left"
-msgstr ""
-
-#: ../jbrout/tools.py:57
-msgid "Transverse"
-msgstr ""
-
-#: ../jbrout/tools.py:58
-msgid "Rotate Right"
 msgstr ""
 
 #: ../jbrout/commongtk.py:117
