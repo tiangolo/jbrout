@@ -2169,9 +2169,9 @@ class Window(GladeApp):
         about = gtk.AboutDialog()
         about.set_name('jbrout')
         about.set_version(__version__)
-        about.set_copyright('Copyright 2005 Marc Lentz')
+        about.set_copyright('Copyright 2005-2009 Marc Lentz')
         about.set_license(open("data/gpl.txt").read())
-        about.set_authors(['Marc Lentz',"","thanks to:", '- Frederic Peters',"- Erik Charlesson (french online help)","- Pieter Edelman (flickr uploader)"])
+        about.set_authors(['Marc Lentz',"Rob Wallace","","thanks to:", '- Frederic Peters',"- Erik Charlesson (french online help)","- Pieter Edelman (flickr uploader)"])
         about.set_website('http://jbrout.googlecode.com')
         def close(w, res):
             if res == gtk.RESPONSE_CANCEL:
