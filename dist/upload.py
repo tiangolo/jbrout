@@ -50,14 +50,9 @@ if __name__ == "__main__":
     else:
         print "packages are not here ?!?"
 
-    #print "NOT FINISHED ... to be continued ..."
-    #sys.exit()
-
-    #TODO: adapt following lines when 0.3 will go out ...
     home=os.environ['HOME']
  
     s = ftplib.FTP('ftpperso.free.fr','jbrout',open(os.path.join(home,".jbroutpassword")).read())
-
     
     if src:
         file = src
