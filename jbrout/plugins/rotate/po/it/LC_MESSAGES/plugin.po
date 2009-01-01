@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-27 14:22+0200\n"
+"POT-Creation-Date: 2009-01-01 14:25+0100\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -11,22 +11,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../plugins/rotate/__init__.py:28
-msgid "Rotate Right"
-msgstr "Ruota a destra"
+msgid "Auto Rotate"
+msgstr ""
 
 #: ../plugins/rotate/__init__.py:29
-msgid "Rotate Left"
-msgstr "Ruota a sinistra"
+#, fuzzy
+msgid "Rotate Right 90"
+msgstr "Ruota a destra"
 
 #: ../plugins/rotate/__init__.py:30
+#, fuzzy
+msgid "Rotate Right 180"
+msgstr "Ruota a destra"
+
+#: ../plugins/rotate/__init__.py:31
+#, fuzzy
+msgid "Rotate Left 90"
+msgstr "Ruota a sinistra"
+
+#: ../plugins/rotate/__init__.py:32
+msgid "Flip Horizontal"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:33
+msgid "Flip Vertical"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:34
+msgid "Transpose"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:35
+msgid "Transverse"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:36
 msgid "Rebuild thumbnail"
 msgstr "Rifai la miniatura"
 
-#: ../plugins/rotate/__init__.py:42
-msgid "Rotating"
-msgstr "Sto ruotando"
+#: ../plugins/rotate/__init__.py:66
+msgid "Transforming Image"
+msgstr ""
 
-#: ../plugins/rotate/__init__.py:51
+#: ../plugins/rotate/__init__.py:75
 msgid "Rebuilding thumbs"
 msgstr "Sto rifacendo le miniature"
 
+#~ msgid "Rotating"
+#~ msgstr "Sto ruotando"

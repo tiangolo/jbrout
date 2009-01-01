@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-06 11:20+0200\n"
+"POT-Creation-Date: 2009-01-01 14:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,21 +17,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../plugins/rotate/__init__.py:28
-msgid "Rotate Right"
+msgid "Auto Rotate"
 msgstr ""
 
 #: ../plugins/rotate/__init__.py:29
-msgid "Rotate Left"
+msgid "Rotate Right 90"
 msgstr ""
 
 #: ../plugins/rotate/__init__.py:30
+msgid "Rotate Right 180"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:31
+msgid "Rotate Left 90"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:32
+msgid "Flip Horizontal"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:33
+msgid "Flip Vertical"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:34
+msgid "Transpose"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:35
+msgid "Transverse"
+msgstr ""
+
+#: ../plugins/rotate/__init__.py:36
 msgid "Rebuild thumbnail"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:42
-msgid "Rotating"
+#: ../plugins/rotate/__init__.py:66
+msgid "Transforming Image"
 msgstr ""
 
-#: ../plugins/rotate/__init__.py:51
+#: ../plugins/rotate/__init__.py:75
 msgid "Rebuilding thumbs"
 msgstr ""

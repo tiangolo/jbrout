@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-06 11:20+0200\n"
+"POT-Creation-Date: 2009-01-01 14:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,249 +16,316 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../jbrout.py:83
+#: ../jbrout.py:85
 msgid "Jbrout Error"
 msgstr ""
 
 #. ========================================================
-#: ../jbrout.py:172 ../tmp/jbrout.glade.h:32
+#: ../jbrout.py:165 ../tmp/jbrout.glade.h:20
 msgid "Tags"
 msgstr ""
 
-#: ../jbrout.py:172 ../tmp/jbrout.glade.h:10
+#: ../jbrout.py:165
 msgid "Comment"
 msgstr ""
 
-#: ../jbrout.py:172
+#: ../jbrout.py:165
 msgid "Album"
 msgstr ""
 
-#: ../jbrout.py:172
+#: ../jbrout.py:165
 msgid "Date"
 msgstr ""
 
-#: ../jbrout.py:172
+#: ../jbrout.py:165
 msgid "Name"
 msgstr ""
 
-#: ../jbrout.py:195
+#: ../jbrout.py:188
 #, python-format
 msgid "Apply to %d photo(s)"
 msgstr ""
 
-#: ../jbrout.py:237
+#: ../jbrout.py:230
 #, python-format
 msgid "%d/%d selected"
 msgstr ""
 
-#: ../jbrout.py:535 ../jbrout.py:1160
+#: ../jbrout.py:445
+#, python-format
+msgid "Year %s"
+msgstr ""
+
+#: ../jbrout.py:635 ../jbrout.py:1370
 msgid "Basket"
 msgstr ""
 
-#: ../jbrout.py:723
+#: ../jbrout.py:823
 msgid ""
 "Do you want JBrout to rename your imported photos according to their create "
 "timestamp (Recommended) ?"
 msgstr ""
 
-#: ../jbrout.py:1037
+#: ../jbrout.py:836
+msgid ""
+"Do you want JBrout to auto-rotate your imported photos according to their "
+"orientation tag (Recommended) ?"
+msgstr ""
+
+#: ../jbrout.py:1176
+msgid "Landscape"
+msgstr ""
+
+#: ../jbrout.py:1176
+msgid "Portrait"
+msgstr ""
+
+#: ../jbrout.py:1237
 #, python-format
 msgid "Display (%s)"
 msgstr ""
 
-#: ../jbrout.py:1103
+#: ../jbrout.py:1304
 #, python-format
 msgid "%s (%d photo(s))"
 msgstr ""
 
-#: ../jbrout.py:1177
+#: ../jbrout.py:1389
+msgid "Enter a bookmark Name"
+msgstr ""
+
+#: ../jbrout.py:1439
 msgid "Rename folder"
 msgstr ""
 
-#: ../jbrout.py:1195 ../jbrout.py:2028
+#: ../jbrout.py:1457 ../jbrout.py:2301
 msgid "New folder"
 msgstr ""
 
-#: ../jbrout.py:1242
+#: ../jbrout.py:1504
 msgid "Are you sure to delete this folder ?"
 msgstr ""
 
-#: ../jbrout.py:1244
+#: ../jbrout.py:1506
 #, python-format
 msgid ""
 "Are you sure to delete this folder ?\n"
 "(This folder contains %d file(s))"
 msgstr ""
 
-#: ../jbrout.py:1311
+#: ../jbrout.py:1573
 #, python-format
 msgid "Importing %d/%d"
 msgstr ""
 
-#: ../jbrout.py:1323
+#: ../jbrout.py:1585
 #, python-format
 msgid "%d tag(s) were added !"
 msgstr ""
 
 #. drag from a real folder
-#: ../jbrout.py:1344
+#: ../jbrout.py:1609
 msgid "Are you sure to move this folder here ?"
 msgstr ""
 
 #. drag from the basket
-#: ../jbrout.py:1356
+#: ../jbrout.py:1621
 msgid "Can't drag the basket to a folder"
 msgstr ""
 
 #. there are pictures which could be added to basket
-#: ../jbrout.py:1402
+#: ../jbrout.py:1667
 msgid "Add to Basket"
 msgstr ""
 
 #. there are pictures which could be removed basket
-#: ../jbrout.py:1404
+#: ../jbrout.py:1669
 msgid "Remove From Basket"
 msgstr ""
 
 #. there is only one selected picture
-#: ../jbrout.py:1407
+#: ../jbrout.py:1672
 msgid "Select this folder"
 msgstr ""
 
-#: ../jbrout.py:1408
+#: ../jbrout.py:1673
 msgid "Select this time"
 msgstr ""
 
-#: ../jbrout.py:1436 ../jbrout.py:2054
+#: ../jbrout.py:1701 ../jbrout.py:2327
 msgid "Operations"
 msgstr ""
 
-#: ../jbrout.py:1458
+#: ../jbrout.py:1723
 msgid "External Tools"
 msgstr ""
 
-#: ../jbrout.py:1480
+#: ../jbrout.py:1745
 msgid "** ALL **"
 msgstr ""
 
-#: ../jbrout.py:1483
+#: ../jbrout.py:1748
 msgid "Delete tag"
 msgstr ""
 
 #. if node.__class__.__name__ == "TagNode":
 #. menu.append( makeItem(_("Set keyboard shortcut"),self.on_menu_set_key) )
-#: ../jbrout.py:1488 ../jbrout.py:2353
+#: ../jbrout.py:1753 ../jbrout.py:2643
 msgid "Delete"
 msgstr ""
 
-#: ../jbrout.py:1524
+#: ../jbrout.py:1791
 msgid "Deleting tags"
 msgstr ""
 
-#: ../jbrout.py:1592
+#: ../jbrout.py:1858
 #, python-format
 msgid "Delete %d photo(s) are you sure ?"
 msgstr ""
 
-#: ../jbrout.py:1700
+#: ../jbrout.py:1973
 msgid "Adding tags"
 msgstr ""
 
-#: ../jbrout.py:1702
+#: ../jbrout.py:1975
 msgid "can't add tag to a readonly picture"
 msgstr ""
 
-#: ../jbrout.py:1748
+#: ../jbrout.py:2021
 msgid "New tag"
 msgstr ""
 
-#: ../jbrout.py:1759
+#: ../jbrout.py:2032
 msgid "Tag already exists"
 msgstr ""
 
-#: ../jbrout.py:1769
+#: ../jbrout.py:2042
 msgid "New category"
 msgstr ""
 
-#: ../jbrout.py:1780
+#: ../jbrout.py:2053
 msgid "Category already exists"
 msgstr ""
 
-#: ../jbrout.py:1815
+#: ../jbrout.py:2088
 msgid "This tag is in use"
 msgstr ""
 
-#: ../jbrout.py:1826
+#: ../jbrout.py:2099
 msgid "Category is not empty"
 msgstr ""
 
-#: ../jbrout.py:1963
+#: ../jbrout.py:2236
 msgid "Don't drop parents to a child"
 msgstr ""
 
-#: ../jbrout.py:1965 ../jbrout.py:2324
+#: ../jbrout.py:2238 ../jbrout.py:2614
 msgid "Drop in space"
 msgstr ""
 
-#: ../jbrout.py:1967 ../jbrout.py:2322
+#: ../jbrout.py:2240 ../jbrout.py:2612
 msgid "Nothing was dragged"
 msgstr ""
 
-#: ../jbrout.py:1977
+#: ../jbrout.py:2250
 msgid "Drop from nowhere"
 msgstr ""
 
-#: ../jbrout.py:2025
+#: ../jbrout.py:2298
 msgid "Select only"
 msgstr ""
 
-#: ../jbrout.py:2027
+#: ../jbrout.py:2300
 msgid "Rename"
 msgstr ""
 
-#: ../jbrout.py:2029
+#: ../jbrout.py:2302
 msgid "Refresh"
 msgstr ""
 
-#: ../jbrout.py:2030
+#: ../jbrout.py:2303
 msgid "Remove from db"
 msgstr ""
 
-#: ../jbrout.py:2031
+#: ../jbrout.py:2304
 msgid "Delete from disk"
 msgstr ""
 
-#: ../jbrout.py:2068
+#: ../jbrout.py:2353
 msgid "Remove"
 msgstr ""
 
-#: ../jbrout.py:2097
+#: ../jbrout.py:2382
 msgid "Add Folder"
 msgstr ""
 
-#: ../jbrout.py:2230
+#: ../jbrout.py:2519
 #, python-format
 msgid "Tag %s"
 msgstr ""
 
-#: ../jbrout.py:2235
+#: ../jbrout.py:2524
 msgid "Tags "
 msgstr ""
 
-#: ../jbrout.py:2295
+#: ../jbrout.py:2585
 msgid "Don't drop tags on a tag"
 msgstr ""
 
-#: ../jbrout.py:2315
+#: ../jbrout.py:2605
 msgid "Tag/catg couldn't be a parent of the destination"
 msgstr ""
 
-#: ../jbrout.py:2349
+#: ../jbrout.py:2639
 msgid "Add Tag"
 msgstr ""
 
-#: ../jbrout.py:2350
+#: ../jbrout.py:2640
 msgid "Add Category"
+msgstr ""
+
+#: ../jbrout.py:2749
+msgid "To %m/%d/%Y %A"
+msgstr ""
+
+#: ../jbrout.py:2756
+msgid "From %m/%d/%Y %A"
+msgstr ""
+
+#: ../jbrout.py:2808
+#, python-format
+msgid "NOT %s"
+msgstr ""
+
+#: ../jbrout.py:2828
+msgid "Format:Landscape"
+msgstr ""
+
+#: ../jbrout.py:2831
+msgid "Format:Portrait"
+msgstr ""
+
+#: ../jbrout.py:2836
+#, python-format
+msgid "comment(%s)"
+msgstr ""
+
+#: ../jbrout.py:2836 ../jbrout.py:2840
+msgid " and "
+msgstr ""
+
+#: ../jbrout.py:2840
+#, python-format
+msgid "album(%s)"
+msgstr ""
+
+#: ../jbrout.py:2854 ../jbrout.py:2862
+#, python-format
+msgid "NOT '%s'"
+msgstr ""
+
+#: ../jbrout.py:2867
+msgid "ALL"
 msgstr ""
 
 #: ../jbrout/common.py:47
@@ -281,75 +348,55 @@ msgstr ""
 msgid "%.1f GB"
 msgstr ""
 
-#: ../jbrout/commongtk.py:116
+#: ../jbrout/tools.py:51
+msgid "None"
+msgstr ""
+
+#: ../jbrout/tools.py:52
+msgid "Flip Horizontal"
+msgstr ""
+
+#: ../jbrout/tools.py:53
+msgid "Rotate 180"
+msgstr ""
+
+#: ../jbrout/tools.py:54
+msgid "Flip Vertical"
+msgstr ""
+
+#: ../jbrout/tools.py:55
+msgid "Transpose"
+msgstr ""
+
+#: ../jbrout/tools.py:56
+msgid "Rotate Left"
+msgstr ""
+
+#: ../jbrout/tools.py:57
+msgid "Transverse"
+msgstr ""
+
+#: ../jbrout/tools.py:58
+msgid "Rotate Right"
+msgstr ""
+
+#: ../jbrout/commongtk.py:117
 msgid "Jbrout Input"
 msgstr ""
 
-#: ../jbrout/commongtk.py:157
+#: ../jbrout/commongtk.py:158
 msgid "Jbrout Message"
 msgstr ""
 
-#: ../jbrout/commongtk.py:187
+#: ../jbrout/commongtk.py:188
 msgid "Jbrout Question"
 msgstr ""
 
-#: ../jbrout/winsearch.py:51
-#, python-format
-msgid "NOT %s"
-msgstr ""
-
-#: ../jbrout/winsearch.py:88
-msgid "Landscape"
-msgstr ""
-
-#: ../jbrout/winsearch.py:88
-msgid "Portrait"
-msgstr ""
-
-#: ../jbrout/winsearch.py:251
-msgid "Format:Landscape"
-msgstr ""
-
-#: ../jbrout/winsearch.py:254
-msgid "Format:Portrait"
-msgstr ""
-
-#: ../jbrout/winsearch.py:259
-#, python-format
-msgid "comment(%s)"
-msgstr ""
-
-#: ../jbrout/winsearch.py:259 ../jbrout/winsearch.py:263
-msgid " and "
-msgstr ""
-
-#: ../jbrout/winsearch.py:263
-#, python-format
-msgid "album(%s)"
-msgstr ""
-
-#: ../jbrout/winsearch.py:276 ../jbrout/winsearch.py:284
-#, python-format
-msgid "NOT '%s'"
-msgstr ""
-
-#: ../jbrout/winsearch.py:289
-msgid "ALL"
-msgstr ""
-
-#: ../jbrout/winsearch.py:310
-msgid "To %m/%d/%Y %A"
-msgstr ""
-
-#: ../jbrout/winsearch.py:325
-msgid "From %m/%d/%Y %A"
-msgstr ""
-
-#: ../jbrout/winshow.py:154
+#: ../jbrout/winshow.py:189
 msgid "Apply to this photo"
 msgstr ""
 
-#: ../jbrout/winshow.py:193
+#: ../jbrout/winshow.py:226
 #, python-format
 msgid ""
 "\n"
@@ -357,17 +404,16 @@ msgid ""
 "\n"
 "%(resolution)s, %(filesize)s\n"
 "\n"
+"ALBUM :\n"
 "%(folder)s\n"
-"\n"
-"TAGS :\n"
-"%(tags)s\n"
 "\n"
 "COMMENT :\n"
 "%(comment)s\n"
 "\n"
+"TAGS :\n"
 msgstr ""
 
-#: ../jbrout/winshow.py:403
+#: ../jbrout/winshow.py:363
 #, python-format
 msgid "(%d selected)"
 msgstr ""
@@ -379,138 +425,142 @@ msgid "-"
 msgstr ""
 
 #: ../tmp/jbrout.glade.h:2
-msgid "<"
+msgid "Add Bookmark"
 msgstr ""
 
 #: ../tmp/jbrout.glade.h:3
-msgid "<<"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:4
-msgid ">"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:5
-msgid ">>"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:6
 msgid "Add folder"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:7
+#: ../tmp/jbrout.glade.h:4
 msgid "Album / comment"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:8
+#: ../tmp/jbrout.glade.h:5
 msgid "Albums"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:9
+#: ../tmp/jbrout.glade.h:6
 msgid "Ascending"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:11
+#: ../tmp/jbrout.glade.h:7
+msgid "Bookmarks"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:8
 msgid "Descending"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:12
+#: ../tmp/jbrout.glade.h:9
+msgid "Edit Bookmarks"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:10
 msgid "Enter New Comment"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:13
+#: ../tmp/jbrout.glade.h:11
 msgid "Format"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:14
+#: ../tmp/jbrout.glade.h:12
 msgid "JBrout"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:15
-msgid ""
-"January\n"
-"February\n"
-"March\n"
-"April\n"
-"May\n"
-"June\n"
-"July\n"
-"August\n"
-"September\n"
-"October\n"
-"November\n"
-"December"
+#: ../tmp/jbrout.glade.h:13
+msgid "Mark this picture to be removed"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:27
+#: ../tmp/jbrout.glade.h:14
 msgid "Period from"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:28
+#: ../tmp/jbrout.glade.h:15
 msgid "Photo comment"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:29
+#: ../tmp/jbrout.glade.h:16
 msgid "Press a key"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:30
+#: ../tmp/jbrout.glade.h:17
+msgid "Put this picture in the basket"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:18
 msgid "Search"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:31
+#: ../tmp/jbrout.glade.h:19
 msgid "Selection's filter"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:33
+#: ../tmp/jbrout.glade.h:21
 msgid "Time"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:35
+#: ../tmp/jbrout.glade.h:22
+msgid "_Bookmarks"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:24
 #, no-c-format
 msgid "_Display (%s)"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:36
+#: ../tmp/jbrout.glade.h:25
 msgid "_Edit external tools"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:37
+#: ../tmp/jbrout.glade.h:26
 msgid "_File"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:38
+#: ../tmp/jbrout.glade.h:27
 msgid "_Help"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:39
+#: ../tmp/jbrout.glade.h:28
 msgid "_Order"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:40
+#: ../tmp/jbrout.glade.h:29
 msgid "filter"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:41
+#: ../tmp/jbrout.glade.h:30
 msgid "gtk-cancel"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:42
+#: ../tmp/jbrout.glade.h:31
+msgid "gtk-clear"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:32
+msgid "gtk-close"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:33
 msgid "gtk-ok"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:43
+#: ../tmp/jbrout.glade.h:34
+msgid "gtk-remove"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:35
 msgid "jBrout Full Screen Display"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:44
+#: ../tmp/jbrout.glade.h:36
 msgid "jbrout"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:45
+#: ../tmp/jbrout.glade.h:37
 msgid "label"
 msgstr ""
 
-#: ../tmp/jbrout.glade.h:46
+#: ../tmp/jbrout.glade.h:38
 msgid "to"
 msgstr ""

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-06 11:18+0200\n"
+"POT-Creation-Date: 2009-01-01 14:25+0100\n"
 "PO-Revision-Date: 2008-05-06 11:20+0100\n"
 "Last-Translator: \n"
 "Language-Team: French <gnomefr@traduc.org>\n"
@@ -25,11 +25,15 @@ msgstr "Donnée"
 msgid "Value"
 msgstr "Valeur"
 
-#: ../plugins/viewExif/viewExif.py:104
+#: ../plugins/viewExif/viewExif.py:89
+msgid "JPEG Comment"
+msgstr ""
+
+#: ../plugins/viewExif/viewExif.py:108
 msgid "No Displayable Meta Data found in file!"
 msgstr "Cette photo ne possède aucun méta data !"
 
-#: ../plugins/viewExif/viewExif.py:106
+#: ../plugins/viewExif/viewExif.py:110
 msgid "Can not open file!"
 msgstr "Impossible d'ouvrir ce fichier"
 
@@ -43,4 +47,3 @@ msgstr "Informations Méta data"
 
 #~ msgid "Display Exif Info"
 #~ msgstr "Afficher les infos EXIF"
-
