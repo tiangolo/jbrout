@@ -1154,7 +1154,8 @@ class Window(GladeApp):
         try:
             min,max=JBrout.db.getMinMaxDates()
         except:
-            min = datetime.now()
+            min = datetime.datetime.now()
+            
         self.__begin= min
         self.__end = datetime.datetime.now()
         self.__end = datetime.datetime(self.__end.year,self.__end.month,self.__end.day,0,0,0)
