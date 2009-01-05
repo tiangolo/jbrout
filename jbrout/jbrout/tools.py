@@ -252,11 +252,13 @@ class PhotoCmd(object):
                                #~ 32: 'Not Available'}),
 
                                # 89 : Yes, auto, red-eye reduction
+                               
         try:
             v=int(self.__info["Exif.Photo.Flash"])
-            if v in (1,5,7,9,13,15,25,29,31,89, 73):
+            # value taken from http://209.85.129.132/search?q=cache:YYpAe4uzONgJ:gallery.menalto.com/node/55248+exif+%22flash+value%22+95&hl=fr&ct=clnk&cd=3&gl=fr
+            if v in (1,5,7,9,13,15,25,29,31,65,69,71,73,77,79,80,89,93,95):
                 self.__isflash      = "Yes"
-            elif v in (0,16,24):
+            elif v in (0,16,24,32):
                 self.__isflash      = "No"
             else:
                 raise "UNKNow flash value : %d '%s'"%(v,self.__file.encode("utf_8"))
