@@ -711,6 +711,9 @@ class TreeTags(gtk.TreeStore):
             model.set_value(iter0,3,0)
         self.foreach( _clean )
 
+    def isSwitchDisabled(self,it):
+        """ return TRUE if this item is 'disabled' """
+        return self.get_value(it,3)==3
 
     def switch_inc(self,it):
         if self.get_value(it,3)!=1:
@@ -2713,9 +2716,11 @@ class Window(GladeApp):
                 if x>xcell:
                     # click on the cell (not on the arrow)
                     if event.button==1:
-                        model.switch_inc(iterTo)
+                        if not model.isSwitchDisabled(iterTo):
+                            model.switch_inc(iterTo)
                     elif event.button==3:
-                        model.switch_exc(iterTo)
+                        if not model.isSwitchDisabled(iterTo):
+                            model.switch_exc(iterTo)
                     return 1 # stop the propagation of the event
                 else:
                     # click nowhere or on the arrow ;-)
