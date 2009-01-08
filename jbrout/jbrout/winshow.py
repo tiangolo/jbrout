@@ -87,7 +87,7 @@ class WinShow(GladeApp):
         image.show()
 
         self.basket.set_icon_widget(image)
-        self.toolbar.set_style(gtk.TOOLBAR_ICONS)
+        self.toolbar1.set_style(gtk.TOOLBAR_ICONS)
 
         #=======================================================================
         # put real plugins
@@ -111,7 +111,7 @@ class WinShow(GladeApp):
                     bb = gtk.ToolButton(image)
                     bb.set_tooltip(self.tooltips, text)
                     bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
-                    self.toolbar.insert(bb, 3)
+                    self.toolbar1.insert(bb, 3)
                     bb.show()
         #=======================================================================
         
