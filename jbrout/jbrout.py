@@ -1210,7 +1210,6 @@ class Window(GladeApp):
         treeselection = self.tvSearch.get_selection()
         treeselection.set_mode(gtk.SELECTION_NONE)
 
-
         storeTags=TreeTags()
         try:
             self.tvSearch.set_model( storeTags )
@@ -2202,12 +2201,28 @@ class Window(GladeApp):
 
 
     def on_notebook1_switch_page(self, widget, *args):
-        #gpoint,page= args
-        #if page==1: # tab "time"
-        #    # perhaps we must change the "year interval" in tap "time" combo ...
-        #    self.treeViewDate.get_model().init()
-        #    #self.date_display_update(date)
-        pass
+        gpoint,page= args
+        if page==3: # search tab
+            # refresh the "search tree tags" according real tags
+            
+            # store old selections
+            oldSelection=self.tvSearch.get_model().getSelected()
+            
+            # update search tab with real tags
+            model = TreeTags()
+            self.tvSearch.set_model( model )
+            model.expander(self.tvSearch)
+            
+            # try to restore old selection
+            for code,tag,sos in oldSelection:
+                #isCatg = type(sos)==list
+                iterTo = model.find(tag)
+                if iterTo:
+                    if code == 1:
+                        model.switch_inc(iterTo)
+                    elif code==2:
+                        model.switch_exc(iterTo)
+                
 
 
     def on_treeviewdb_drag_data_received(self, widget, *args):
