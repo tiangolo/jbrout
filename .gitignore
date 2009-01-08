@@ -1,0 +1,11 @@
+# File endings to ignore
+*.bak
+*.py~
+*.pyc
+*.swp
+
+# Installer and Launcher
+jBrout*.exe
+
+# Actual files to ignore
+jbrout/data/version.txt
