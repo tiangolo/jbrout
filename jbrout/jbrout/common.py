@@ -89,6 +89,24 @@ def openURL(url):
     else:
         runWith(["gnome-open","mozilla-firefox","firefox","konqueror","epiphany","galeon"],unicode(url),False)
 
+
+def xpathquoter(s):
+    """
+        make string correct for xpath in attributes
+        return correct quote/simplequote around according content of s
+        with concat() function if needed
+        more info : http://article.gmane.org/gmane.comp.python.lxml.devel/4040/match=escape+xpath
+    """
+    quote='"' in s
+    squote="'" in s
+    if quote and squote:
+        return "concat(%s)" % """,'"',""".join([xpathquoter(i) for i in s.split('"')])
+    elif squote:
+        return '"%s"' % s
+    else:
+        return "'%s'" % s
+
+
 if __name__ == "__main__":
     #~ print JBrout.home
     #~ JBrout.conf["jo"] = "hack"

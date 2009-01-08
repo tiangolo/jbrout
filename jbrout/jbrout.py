@@ -65,7 +65,7 @@ except:
 
 
 
-from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL # for selecteur
+from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL,xpathquoter # for selecteur
 from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString
 from jbrout.db import JBrout,Buffer
 from jbrout.winshow import WinShow
@@ -2519,12 +2519,12 @@ class Window(GladeApp):
             node = model.get(iter0)
             if node.__class__.__name__ == "TagNode":
                 tag = node.name
-                xpath = 't="%s"'%tag
+                xpath = 't=%s'%xpathquoter(tag)
                 npath = _("Tag %s")%tag
             else:
                 l = [i.name for i in node.getAllTags()]
                 if l:
-                    xpath = " or ".join( ['t="%s"'%t for t in l] )
+                    xpath = " or ".join( ['t=%s'%xpathquoter(t) for t in l] )
                     npath = _("Tags ")+(", ".join( ['%s'%t for t in l] ))
                 else:
                     xpath=None
@@ -2851,7 +2851,7 @@ class Window(GladeApp):
             for tcheck,nom,l in ll:
                 if l:
                     if type(l)==list:
-                        orList = u" or ".join([u"t='%s'"%i for i in l])
+                        orList = u" or ".join([u"t=%s"%xpathquoter(i) for i in l])
                         if tcheck==1: #include
                             ops.append( u"(%s)" % orList )
                             tops.append(u"'%s'"%nom)
@@ -2859,7 +2859,7 @@ class Window(GladeApp):
                             ops.append( u"not(%s)" % orList )
                             tops.append(_(u"NOT '%s'")%nom)
                     else:
-                        op = u"t='%s'"%l
+                        op = u"t=%s"%xpathquoter(l)
                         if tcheck==1: #include
                             ops.append( op )
                             tops.append(u"'%s'"%nom)
@@ -2893,7 +2893,7 @@ def main(canModify=True):
         sys.exit(1)
 
 USAGE = """%s [options]
-JBrout %s by Marc Lentz (c)2003-2007, Licence GPL2
+JBrout %s by Marc Lentz (c)2003-2009, Licence GPL2
 http://jbrout.googlecode.com""" % ("%prog",__version__)
 
 if __name__ == "__main__":
