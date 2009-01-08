@@ -27,6 +27,9 @@ def colorToString(color):
     (fix for windows not having the to_string member function)"""
     return "#%x%x%x" %(color.red, color.blue, color.green)
 
+
+import unicodedata
+
 class WinKeyTag(GladeApp):
     glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
     window="WinKeyTag"
@@ -54,11 +57,23 @@ class WinKeyTag(GladeApp):
         self.text.set_position(len(t))
         self.main_widget.set_title("Tag")
 
+    #def feed(self,l,s): # filter with begginning of 't'
+    #    l.clear()
+    #    s=unicode(s).lower()
+    #    for t,c in self.liste:
+    #        if t.lower().startswith(s):
+    #            l.append( (t,"(%s)"%c) )
+    
     def feed(self,l,s): # filter with begginning of 't'
         l.clear()
-        s=unicode(s).lower()
+        s=unicode(s).upper()
+        s=unicodedata.normalize('NFD',s)
+        s=s.encode('ascii','ignore')
         for t,c in self.liste:
-            if t.lower().startswith(s):
+            u=unicode(t).upper()
+            u=unicodedata.normalize('NFD',u)
+            u=u.encode('ascii','ignore')
+            if u.upper().startswith(s):
                 l.append( (t,"(%s)"%c) )
 
     def on_text_changed(self,w):
