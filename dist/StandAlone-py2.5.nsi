@@ -6,7 +6,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "jBrout Stand-alone"
-!define PRODUCT_VERSION "0.3.118"
+!define PRODUCT_VERSION "0.3.139"
 !define PRODUCT_PUBLISHER "jBrout Development Team"
 !define PRODUCT_WEB_SITE "http://jbrout.googlecode.com"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -213,6 +213,10 @@ Section "Download Plug-in"
   File "..\jbrout\plugins\download\download.glade"
   File "..\jbrout\plugins\download\nameBuilder.py"
   File "..\jbrout\plugins\download\nameBuilder.glade"
+  SetOutPath "$INSTDIR\app\plugins\downloadpo\po\fr\LC_MESSAGES"
+  File "..\jbrout\plugins\download\po\fr\LC_MESSAGES\plugin.po"
+  File "..\jbrout\plugins\download\po\fr\LC_MESSAGES\plugin.mo"
+
 SectionEnd
 
 Section "Open in Explorer Plug-in" SEC12

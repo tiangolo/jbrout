@@ -1,7 +1,10 @@
 # File endings to ignore
+*.*~
 *.bak
+*.orij
 *.py~
 *.pyc
+*.rej
 *.swp
 
 # Installer and Launcher
