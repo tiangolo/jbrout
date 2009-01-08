@@ -4,9 +4,8 @@
 ; requires the ZipDLL plugin DLL to be in the Plugins directory of your NSIS installation
 ; this is avaliable from http://nsis.sourceforge.net/ZipDLL_plug-in
 
-; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "jBrout Stand-alone"
-!define PRODUCT_VERSION "0.3.139"
+!include version.nsi
 !define PRODUCT_PUBLISHER "jBrout Development Team"
 !define PRODUCT_WEB_SITE "http://jbrout.googlecode.com"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"

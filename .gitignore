@@ -12,3 +12,4 @@ jBrout*.exe
 
 # Actual files to ignore
 jbrout/data/version.txt
+dist/version.nsi
