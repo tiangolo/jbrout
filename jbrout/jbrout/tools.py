@@ -47,8 +47,9 @@ def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
    else:
       return f
 
+# the second argument provides a string when using this code to provide rotation to plugins
 autoTrans = {
-    1: ["none", "None"],        # what as the purpose of theses second argument ? marc
+    1: ["none", "None"],
     2: ["flipHorizontal", "Flip Horizontal"],
     3: ["rotate180", "Rotate 180"],
     4: ["flipVertical", "Flip Vertical"],
