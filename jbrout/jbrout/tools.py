@@ -173,7 +173,8 @@ class PhotoCmd(object):
             # if no exifdate ---> put the filedate in exifdate
             # SO exifdate=filedate FOR ALL
             try:
-                self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+                #self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+                self.__info["Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
                 isDateExifOk=True
             except KeyError:        # tag exif datetime not present
                 isDateExifOk=False
@@ -190,7 +191,8 @@ class PhotoCmd(object):
                 self.__info["Exif.Photo.DateTimeDigitized"]=fd
                 self.__info.writeMetadata()        
 
-            exifdate = self.__info["Exif.Image.DateTime"]
+            #exifdate = self.__info["Exif.Image.DateTime"]
+            exifdate = self.__info["Exif.Photo.DateTimeOriginal"]
 
             #-----------------------------------------------------------
             # try to autorot, if wanted
@@ -228,10 +230,14 @@ class PhotoCmd(object):
             self.__isreal = False
             
         try:
-            self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+            #self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+            self.__exifdate = self.__info["Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
         except:
-            # can only be here after a destroyInfo()
-            self.__exifdate=""
+            try:
+                self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+            except:
+                # can only be here after a destroyInfo()
+                self.__exifdate=""
             
         self.__filedate = self.__exifdate
 
@@ -322,7 +328,8 @@ isreal : %s""" % (
 
         #TODO:attention au fichier sans EXIF ici !!!!
 
-        fd=self.__info["Exif.Image.DateTime"]
+        #fd=self.__info["Exif.Image.DateTime"]
+        fd=self.__info["Exif.Photo.DateTimeOriginal"]
         fd+=timedelta(weeks=w, days=d,hours=h,minutes=m,seconds=s)
 
         self.__info["Exif.Image.DateTime"]=fd
