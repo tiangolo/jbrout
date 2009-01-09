@@ -192,8 +192,8 @@ class WinDownload(GladeApp):
             exifData=pyexiv2.Image(srcFile)
             exifData.readMetadata()
             size=os.path.getsize(srcFile)
-            if 'Exif.Image.DateTime' in exifData.exifKeys():
-                date = ed2d(exifData.interpretedExifValue('Exif.Image.DateTime'))
+            if 'Exif.Photo.DateTimeOriginal' in exifData.exifKeys():
+                date = ed2d(exifData.interpretedExifValue('Exif.Photo.DateTimeOriginal'))
             else:
                 date = datetime.datetime.fromtimestamp(os.path.getmtime(srcFile))
             row=[
@@ -295,7 +295,7 @@ class WinDownload(GladeApp):
                 destExif = pyexiv2.Image(destFile)
                 destExif.readMetadata()
                 if 'Image DateTime' in destExif.exifKeys():
-                    destDate = ed2d(destExif.interpretedExifValue('Exif.Image.DateTime'))
+                    destDate = ed2d(destExif.interpretedExifValue('Exif.Photo.DateTimeOriginal'))
                 else:
                     destDate = datetime.datetime.fromtimestamp(
                         os.path.getmtime(destFile))
