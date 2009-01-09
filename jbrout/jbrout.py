@@ -2888,7 +2888,6 @@ class Window(GladeApp):
         else:
             libl,xpath = _(u"ALL"),u"//photo"
         
-        print (xpath,)
         ln = JBrout.db.select(xpath)
         self.SetSelection(libl,xpath,ln,self.mode)
         
