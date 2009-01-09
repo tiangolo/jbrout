@@ -2805,15 +2805,16 @@ class Window(GladeApp):
             sfrom = u"ABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöûùüç"
             sto   = u"abcdefghijklmnopqrstuvwxyzaaaeeeeiioouuuc"
             valRech = valRech.translate( string.maketrans(sfrom.encode("utf_16"),sto.encode("utf_16")) ).decode("utf_16")
-            return u"""contains(translate(c, "%s", "%s") ,"%s")""" % (sfrom,sto,valRech)
+            return u"""contains(translate(c, "%s", "%s") ,%s)""" % (sfrom,sto,xpathquoter(valRech))
         
         def mkacom(valRech):    # album comment
             valRech=unicode(valRech).encode("utf_16")
             sfrom = u"ABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöûùüç"
             sto   = u"abcdefghijklmnopqrstuvwxyzaaaeeeeiioouuuc"
             valRech = valRech.translate( string.maketrans(sfrom.encode("utf_16"),sto.encode("utf_16")) ).decode("utf_16")
-            return  u""" ( contains(translate(../c, "%s", "%s") ,"%s")""" % (sfrom,sto,valRech) +\
-                    u""" or contains(translate(../@name, "%s", "%s") ,"%s") )""" % (sfrom,sto,valRech)
+            valRech = xpathquoter(valRech)
+            return  u""" ( contains(translate(../c, "%s", "%s") ,%s)""" % (sfrom,sto,valRech) +\
+                    u""" or contains(translate(../@name, "%s", "%s") ,%s) )""" % (sfrom,sto,valRech)
         
         
         
@@ -2887,6 +2888,7 @@ class Window(GladeApp):
         else:
             libl,xpath = _(u"ALL"),u"//photo"
         
+        print (xpath,)
         ln = JBrout.db.select(xpath)
         self.SetSelection(libl,xpath,ln,self.mode)
         
