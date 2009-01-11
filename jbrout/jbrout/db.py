@@ -420,14 +420,17 @@ class FolderNode(object):
     def createNewFolder(self,newname):
         assert type(newname)==unicode
         newname = os.path.join( self.file, newname )
-        if not (os.path.isdir(newname) or os.path.isfile(newname)):
-            try:
-               os.mkdir( newname )
-               created = True
-            except os.error, detail:
-               raise detail
-               created = False
-
+        if not os.path.isfile(newname):
+            if os.path.isdir(newname):
+                created = True
+            else:
+                try:
+                   os.mkdir( newname )
+                   created = True
+                except os.error, detail:
+                   raise detail
+                   created = False
+    
             if created:
                 nodeDir = Element("folder", name=newname)
                 self.__node.append( nodeDir )
