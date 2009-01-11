@@ -71,7 +71,7 @@ if __name__ == "__main__":
         assert len(fn.getFolders())==1
 
         nfn2=fn.createNewFolder(u"tmp1")
-        assert nfn2  # because tmp1 should already exists
+        assert nfn2==False  # because tmp1 should already exists
 
         nfn2=fn.createNewFolder(pn.file)
         assert nfn2==False  # because this is a photo, and the file already exists

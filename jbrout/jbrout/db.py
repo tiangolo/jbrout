@@ -422,12 +422,19 @@ class FolderNode(object):
         newname = os.path.join( self.file, newname )
         ll=[i for i in self.getFolders() if i.file==newname]
         if len(ll)==1:
-            return ll[0]
+            # folder is already mapped in the db/xml
+            # so no creation
+            return False
         else:
             if not os.path.isfile(newname):
+                # it's not a file
+                
                 if os.path.isdir(newname):
+                    # but it's a existing folder
                     created = True
                 else:
+                    # this is a real new folder
+                    # let's create it in the FS
                     try:
                        os.mkdir( newname )
                        created = True
@@ -436,6 +443,7 @@ class FolderNode(object):
                        created = False
         
                 if created:
+                    #so map the folder to a db node
                     nodeDir = Element("folder", name=newname)
                     self.__node.append( nodeDir )
                     return FolderNode(nodeDir)
