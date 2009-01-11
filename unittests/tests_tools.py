@@ -219,7 +219,8 @@ if __name__ == "__main__":
             p1.addComment(u"kélàçù")
             p1.add(u"kàkà")
             
-            f2= p1.file+".jpg"
+            f2= u"../unittests/photos_tmp/jojo.jpg"
+            print f1,"--->",f2
             shutil.copy(f1,f2)
             p2=PhotoCmd(f2,needAutoRename=True)
             assert _compare_(la(p1),la(p2))     # ensure same attrs

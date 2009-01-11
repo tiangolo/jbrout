@@ -216,18 +216,30 @@ class PhotoCmd(object):
             # try to autorename, if wanted
             #-----------------------------------------------------------
             if needAutoRename :
-                newname = unicode(exifdate.strftime(PhotoCmd.format)+".jpg")
-                if os.path.basename(file) != newname:
-                    folder=os.path.dirname(file)
-                    while os.path.isfile(os.path.join(folder,newname) ):
-                        newname=PhotoCmd.giveMeANewName(newname)
-
-        
+                folder=os.path.dirname(file)
+                nameShouldBe = unicode(exifdate.strftime(PhotoCmd.format))
+                newname = nameShouldBe+u".jpg"
+                
+                if not os.path.isfile(os.path.join(folder,newname)):
+                    # there is no files which already have this name
+                    # we can simply rename it 
                     newfile = os.path.join(folder,newname)
         
                     os.rename(file,newfile)
                     self.__file = newfile
-                    self.debug( "*WARNING* File %s needs to be renamed -> %s" % (file,newfile) )
+                else:
+                    # there is a file, in the same folder which already got
+                    # the same name
+                    
+                    if nameShouldBe != os.path.basename(file)[:len(nameShouldBe)]:
+                        while os.path.isfile(os.path.join(folder,newname) ):
+                            newname=PhotoCmd.giveMeANewName(newname)
+    
+                        newfile = os.path.join(folder,newname)
+            
+                        os.rename(file,newfile)
+                        self.__file = newfile
+                        #self.debug( "*WARNING* File %s needs to be renamed -> %s" % (file,newfile) )
                                     
         self.__refresh()
 
@@ -641,7 +653,7 @@ isreal : %s""" % (
         else:
             num=1
 
-        return "%s(%d)%s" % (n,num,ext)
+        return u"%s(%d)%s" % (n,num,ext)
 
 
     #@staticmethod
