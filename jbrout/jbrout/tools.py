@@ -64,6 +64,18 @@ class CommandException(Exception):
    def __str__(self):
       return self.message
 
+
+def decode(s, encodings=['ascii', 'utf8', 'latin1',] ):
+    """ method to decode text (tag or comment) to unicode """
+    for encoding in encodings:
+        try:
+            return s.decode(encoding)
+        except UnicodeDecodeError:
+            pass
+    print " *WARNING* : no valid decoding for string '%s'"%(str([s]))
+    return s.decode('utf8', 'replace')
+
+
 # ##############################################################################################
 class _Command:
 # ##############################################################################################
@@ -276,15 +288,15 @@ class PhotoCmd(object):
         except KeyError:
             self.__isflash    =""
 
-        self.__comment = self.__info.getComment().decode("utf_8","replace")
+        self.__comment = decode(self.__info.getComment())
 
         try:
             l=self.__info["Iptc.Application2.Keywords"]
             if type(l) == tuple:
-                self.__tags = [unicode(i.strip("\x00"),"utf_8") for i in l] # strip("\x00") = digikam patch
+                self.__tags = [decode(i.strip("\x00")) for i in l] # strip("\x00") = digikam patch
                 self.__tags.sort()
             else:
-                self.__tags = [unicode(l,"utf_8")]
+                self.__tags = [decode(l.strip("\x00"))]
         except KeyError:
             self.__tags = []
 
