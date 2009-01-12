@@ -185,7 +185,7 @@ class DBPhotos:
             nodeDir.remove(newNode)
 
             # and raise exception
-            raise err+"\nPhoto has incorrect exif/iptc tags, can't be imported !!"
+            raise err+"\nPhoto has incorrect exif/iptc tags, can't be imported :\n"+str([file,])
             return None
         else:
             importedTags=node.updateInfo( iii )
