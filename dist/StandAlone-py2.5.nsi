@@ -212,7 +212,7 @@ Section "Download Plug-in"
   File "..\jbrout\plugins\download\download.glade"
   File "..\jbrout\plugins\download\nameBuilder.py"
   File "..\jbrout\plugins\download\nameBuilder.glade"
-  SetOutPath "$INSTDIR\app\plugins\downloadpo\po\fr\LC_MESSAGES"
+  SetOutPath "$INSTDIR\app\plugins\download\po\fr\LC_MESSAGES"
   File "..\jbrout\plugins\download\po\fr\LC_MESSAGES\plugin.po"
   File "..\jbrout\plugins\download\po\fr\LC_MESSAGES\plugin.mo"
 
