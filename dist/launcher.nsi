@@ -39,6 +39,15 @@ Section ""
   SetOutPath "$ProgramDirectory"
   ExecDos::exec '"$PYTHONEXE" jbrout.py $R0' '' '$EXEDIR\jbrout.log'
   Pop $0
-  StrCmp $0 '0' +2
-  MessageBox MB_OK 'jBrout exited error code $0 please see "$EXEDIR\jbrout.log" for details'
+  StrCmp $0 '0'  +10 
+  IfFileExists "$EXEDIR\jbrout.log" +3 0
+  MessageBox MB_OK "jBrout exited with error code $0 but did not leave a log file"
+  goto finish
+  MessageBox MB_YESNO "jBrout exited with error code $0 do you wish to view the log file?" IDYES true IDNO finish
+  true:
+    IfFileExists "$WINDIR\notepad.exe" +3 0
+    MessageBox MB_OK 'Notepad is not installed please view "$EXEDIR\jbrout.log" manually'
+    goto finish
+    Exec '"$WINDIR\notepad.exe" "$EXEDIR\jbrout.log"' 
+  finish:
 SectionEnd
