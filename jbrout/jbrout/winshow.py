@@ -426,7 +426,11 @@ class PixbufCache(object):
         else:
             PixbufCache._file = file
             if os.path.isfile(file):
-                PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
+                try:
+                    PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
+                except Exception,m:
+                    print "*WARNING* can't load this file : ",(file,),m
+                    PixbufCache._cache=None
             else:
                 PixbufCache._cache=None
 

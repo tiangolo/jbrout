@@ -269,7 +269,7 @@ class Img(object):
                 #~ fid.close()
                 #~ data = jo["JPEGThumbnail"]
 
-                img = pyexiv2.Image(thumb.encode("utf_8"))
+                img = pyexiv2.Image(thumb)
                 img.readMetadata()
                 data=img.getThumbnailData()[1]
 
