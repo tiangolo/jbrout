@@ -173,7 +173,7 @@ class PhotoCmd(object):
         self.__readonly = not os.access( self.__file, os.W_OK)
 
         # pre-read
-        self.__info = pyexiv2.Image(self.__file.encode("utf_8"))
+        self.__info = pyexiv2.Image(self.__file)
         self.__info.readMetadata()
 
         if self.readonly:
@@ -244,7 +244,7 @@ class PhotoCmd(object):
         self.__refresh()
 
     def __refresh(self):
-        self.__info = pyexiv2.Image(self.__file.encode("utf_8"))
+        self.__info = pyexiv2.Image(self.__file)
         self.__info.readMetadata()
 
         try:
