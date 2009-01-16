@@ -552,13 +552,10 @@ isreal : %s""" % (
         thumbnail according 'sens'
          """
         if sens=="auto":
-            if _Command.isWin:
-                try:
-                    sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
-                except KeyError:
-                    sens = autoTrans[1][0]
-            else:
-                exiftranOpt = "-a"
+            try:
+                sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
+            except KeyError:
+                sens = autoTrans[1][0]
         if sens=="rotate90":
             jpegtranOpt = ["-rotate", "90"]
             exiftranOpt = "-9"
