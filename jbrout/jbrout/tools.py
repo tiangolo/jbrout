@@ -57,7 +57,7 @@ autoTrans = {
     6: ["rotate90", "Rotate Left"],
     7: ["transverse", "Transverse"],
     8: ["rotate270", "Rotate Right"]}
-    
+
 class CommandException(Exception):
    def __init__(self,m):
       self.message=m
@@ -147,7 +147,7 @@ class _Command:
 class NotImplemented(Exception): pass
 
 class PhotoCmd(object):
-    
+
     file = property(lambda self: self.__file)
     exifdate = property(lambda self:self.__exifdate)
     filedate = property(lambda self:self.__filedate)
@@ -160,11 +160,11 @@ class PhotoCmd(object):
 
     # static
     format="p%Y%m%d_%H%M%S"
-    
+
     def debug(self,m):
         print m
         #pass
-    
+
     def __init__(self,file,needAutoRename=False,needAutoRotation=False):
         assert type(file)==unicode
         assert os.path.isfile(file)
@@ -192,16 +192,16 @@ class PhotoCmd(object):
                 isDateExifOk=False
             except AttributeError:  # content of tag exif datetime is not a datetime
                 isDateExifOk=False
-    
+
             if not isDateExifOk:
                 self.debug( "*WARNING* File %s had wrong exif date -> corrected" % file )
-                
+
                 fd=datetime.fromtimestamp(os.stat(file).st_mtime)
                 self.__info["Exif.Image.Make"]="jBrout" # mark exif made by jbrout
                 self.__info["Exif.Image.DateTime"]=fd
                 self.__info["Exif.Photo.DateTimeOriginal"]=fd
                 self.__info["Exif.Photo.DateTimeDigitized"]=fd
-                self.__info.writeMetadata()        
+                self.__info.writeMetadata()
 
             #exifdate = self.__info["Exif.Image.DateTime"]
             exifdate = self.__info["Exif.Photo.DateTimeOriginal"]
@@ -219,28 +219,28 @@ class PhotoCmd(object):
                 folder=os.path.dirname(file)
                 nameShouldBe = unicode(exifdate.strftime(PhotoCmd.format))
                 newname = nameShouldBe+u".jpg"
-                
+
                 if not os.path.isfile(os.path.join(folder,newname)):
                     # there is no files which already have this name
-                    # we can simply rename it 
+                    # we can simply rename it
                     newfile = os.path.join(folder,newname)
-        
+
                     os.rename(file,newfile)
                     self.__file = newfile
                 else:
                     # there is a file, in the same folder which already got
                     # the same name
-                    
+
                     if nameShouldBe != os.path.basename(file)[:len(nameShouldBe)]:
                         while os.path.isfile(os.path.join(folder,newname) ):
                             newname=PhotoCmd.giveMeANewName(newname)
-    
+
                         newfile = os.path.join(folder,newname)
-            
+
                         os.rename(file,newfile)
                         self.__file = newfile
                         #self.debug( "*WARNING* File %s needs to be renamed -> %s" % (file,newfile) )
-                                    
+
         self.__refresh()
 
     def __refresh(self):
@@ -252,7 +252,7 @@ class PhotoCmd(object):
         except:
             # can only be here after a destroyInfo()
             self.__isreal = False
-            
+
         try:
             #self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
             self.__exifdate = self.__info["Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
@@ -262,7 +262,7 @@ class PhotoCmd(object):
             except:
                 # can only be here after a destroyInfo()
                 self.__exifdate=""
-            
+
         self.__filedate = self.__exifdate
 
         w,h= Image.open(self.__file).size
@@ -283,7 +283,7 @@ class PhotoCmd(object):
                                #~ 32: 'Not Available'}),
 
                                # 89 : Yes, auto, red-eye reduction
-                               
+
         try:
             v=int(self.__info["Exif.Photo.Flash"])
             # value taken from http://209.85.129.132/search?q=cache:YYpAe4uzONgJ:gallery.menalto.com/node/55248+exif+%22flash+value%22+95&hl=fr&ct=clnk&cd=3&gl=fr
@@ -417,7 +417,7 @@ isreal : %s""" % (
     def subTags(self,tags): # *new*
         """ sub a list of tags to the file, return False if it can't """
         if self.__readonly: return False
-        
+
         isModified = False
         for t in tags:
             assert type(t)==unicode
@@ -433,7 +433,7 @@ isreal : %s""" % (
         """ destroy ALL info (exif/iptc)
         """
         if self.__readonly: return False
-        
+
         # delete EXIF and IPTC tags :
         l=self.__info.exifKeys() + self.__info.iptcKeys()
         for i in l:
@@ -459,7 +459,7 @@ isreal : %s""" % (
 
         np = PhotoCmd(file2)
         np.destroyInfo()
-        
+
         # copy all exif/iptc info
         l=self.__info.exifKeys() + self.__info.iptcKeys()
         for i in l:
@@ -469,7 +469,7 @@ isreal : %s""" % (
                     # known not to copy the following:
                     #   - unknown maker not fields
                     #   - lens data for canon
-                    try: 
+                    try:
                         np.__info[i] =self.__info[i]
                     except:
                         print "Problems copying %s keyword" %i
@@ -485,18 +485,25 @@ isreal : %s""" % (
 
     def rebuildExifTB(self):
         if self.__readonly: return False
-        
-        im= Image.open(self.__file)
-        im.thumbnail((160,160), Image.ANTIALIAS)
 
-        file1 = StringIO.StringIO()
-        im.save(file1, "JPEG")
-        buf=file1.getvalue()
-        file1.close()
-        self.__info.setThumbnailData(buf)
+        try:
+            im= Image.open(self.__file)
+            im.thumbnail((160,160), Image.ANTIALIAS)
+        except Exception,m:
+            print "*WARNING* can't load this file : ",(self.__file,),m
+            im=None
 
-        self.__maj()
-        return True
+        if im:
+            file1 = StringIO.StringIO()
+            im.save(file1, "JPEG")
+            buf=file1.getvalue()
+            file1.close()
+            self.__info.setThumbnailData(buf)
+
+            self.__maj()
+            return True
+        else:
+            return False
 
 
 
@@ -545,10 +552,10 @@ isreal : %s""" % (
             ret= _Command._run( [_Command._exiftran,opt,'-i',self.__file] ) # exiftran rotate internal exif thumb
 
         self.__refresh()
-        
+
     def transform(self,sens):
     # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-        """ LOSSLESS transformation of the picture 'file', and its internal 
+        """ LOSSLESS transformation of the picture 'file', and its internal
         thumbnail according 'sens'
          """
         if sens=="auto":
