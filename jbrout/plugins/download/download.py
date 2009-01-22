@@ -20,6 +20,9 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import sys
+import urllib
+
 import datetime
 import time
 import re
@@ -29,7 +32,7 @@ from libs import extListview
 import pyexiv2
 from libs.gladeapp import GladeApp
 
-from jbrout.common import format_file_size_for_display,ed2d
+from jbrout.common import format_file_size_for_display,ed2d,dnd_args_to_dir_list
 from jbrout.tools import PhotoCmd,_Command, autoTrans
 from jbrout.commongtk import InputBox,MessageBox,InputQuestion,Img
 
@@ -74,6 +77,11 @@ class WinDownload(GladeApp):
     def init(self, conf, nodeFolder):
         """Initalises the main download window and builds download table"""
 
+        self.btnSourceFolder.drag_dest_set(
+            gtk.DEST_DEFAULT_ALL,
+            [( 'text/uri-list', 0, 1 ),('text/plain', 0, 1)], # drag from os
+            gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
+        
         txtRdr = gtk.CellRendererText()
 
         columns = ((_('Source'),      [(txtRdr, gobject.TYPE_STRING)],
@@ -381,7 +389,16 @@ class WinDownload(GladeApp):
                 self.invalidSource = True
                 self.entSourceFolder.set_text(self.srcFolder)
         dialog.destroy()
-
+    
+    def on_btnSourceFolder_drag_data_received(self, widget, *args):
+        
+        list = dnd_args_to_dir_list(args)
+        
+        if list:
+            self.srcFolder = list[0]
+            self.invalidSource = True
+            self.entSourceFolder.set_text(self.srcFolder) 
+        
     def on_btnPreferences_clicked(self, widget, *args):
         """Handles the Preferences button, loads the preferences dialog and
         initiates the update of the download list"""

@@ -65,7 +65,7 @@ except:
 
 
 
-from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL,xpathquoter # for selecteur
+from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL,dnd_args_to_dir_list,xpathquoter # for selecteur
 from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString
 from jbrout.db import JBrout,Buffer
 from jbrout.winshow import WinShow
@@ -2430,48 +2430,7 @@ class Window(GladeApp):
 
 
     def on_btn_addFolder_drag_data_received(self, widget, *args):
-
-        #def get_file_path_from_dnd_dropped_uri(uri):
-        #    path = urllib.url2pathname(uri) # escape special chars
-        #    path = path.strip('\r\n\x00') # remove \r\n and NULL
-        #
-        #    # get the path to file
-        #    if path.startswith('file:\\\\\\'): # windows
-        #        path = path[8:] # 8 is len('file:///')
-        #    elif path.startswith('file://'): # nautilus, rox
-        #        path = path[7:] # 7 is len('file://')
-        #    elif path.startswith('file:'): # xffm
-        #        path = path[5:] # 5 is len('file:')
-        #    return unicode(path)
-
-        def get_file_path_from_dnd_dropped_uri(uri):    # rob wallace was here
-            if sys.platform[:3].lower()=="win":
-                if uri.startswith('file:///'):
-                    uri = uri[8:] # 8 is len('file:///')
-                elif uri.startswith('file:\\\\\\'):
-                    uri = uri[8:] # 8 is len('file:///')
-            else:
-                if uri.startswith('file:///'): # nautilus, rox
-                    uri = uri[7:] # 7 is len('file://')
-                elif uri.startswith('file:'): # xffm
-                    uri = uri[5:] # 5 is len('file:')
-            path = urllib.url2pathname(uri) # escape special chars
-            path = path.strip('\r\n\x00') # remove \r\n and NULL
-            return unicode(path)
-
-
-        context, x, y, selection, info, time = args
-
-        # new way
-        #----------------------------------
-        list=[]
-        uri = selection.data.strip()
-        uri_splitted = uri.split() # we may have more than one file dropped
-        for uri in uri_splitted:
-            path = get_file_path_from_dnd_dropped_uri(uri)
-            if os.path.isdir(path):
-                list.append(path)
-
+        list = dnd_args_to_dir_list(args)
         if list:
             self.on_drop_folders_from_os(self.treeviewdb.get_model(),list)
 

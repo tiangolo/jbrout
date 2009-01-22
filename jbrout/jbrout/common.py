@@ -106,6 +106,37 @@ def xpathquoter(s):
     else:
         return "'%s'" % s
 
+import sys
+import urllib
+
+def get_file_path_from_dnd_dropped_uri(uri):
+    if sys.platform[:3].lower()=="win":
+        if uri.startswith('file:///'):
+            uri = uri[8:] # 8 is len('file:///')
+        elif uri.startswith('file:\\\\\\'):
+            uri = uri[8:] # 8 is len('file:///')
+    else:
+        if uri.startswith('file:///'): # nautilus, rox
+            uri = uri[7:] # 7 is len('file://')
+        elif uri.startswith('file:'): # xffm
+            uri = uri[5:] # 5 is len('file:')
+    path = urllib.url2pathname(uri) # escape special chars
+    path = path.strip('\r\n\x00') # remove \r\n and NULL
+    return unicode(path)
+
+def dnd_args_to_dir_list(args):
+    context, x, y, selection, info, time = args
+    uri = selection.data.strip()
+    uri_splitted = uri.split()
+    list=[]
+    uri = selection.data.strip()
+    uri_splitted = uri.split() # we may have more than one file dropped
+    for uri in uri_splitted:
+        path = get_file_path_from_dnd_dropped_uri(uri)
+        if os.path.isdir(path):
+            list.append(path)
+    return list
+
 
 if __name__ == "__main__":
     #~ print JBrout.home

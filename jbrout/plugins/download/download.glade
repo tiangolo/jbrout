@@ -52,6 +52,8 @@
                 <property name="use_underline">True</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="on_btnSourceFolder_clicked"/>
+		<signal name="drag_data_received" handler="on_btnSourceFolder_drag_data_received"/>
+
               </widget>
               <packing>
                 <property name="expand">False</property>
