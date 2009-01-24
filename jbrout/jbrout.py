@@ -2184,16 +2184,6 @@ class Window(GladeApp):
         about.show()
 
 
-    def on_btn_addFolder_clicked(self, widget, *args):
-        print "on_btn_addFolder_clicked called with self.%s" % widget.get_name()
-
-
-
-    def on_btn_addFolder_drag_data_received(self, widget, *args):
-        print "on_btn_addFolder_drag_data_received called with self.%s" % widget.get_name()
-
-
-
     def on_hs_size_value_changed(self, widget, *args):
         self.tbl.thumbnail_width = int(widget.get_value())
         JBrout.conf["thumbsize"] = int(widget.get_value())
@@ -2398,6 +2388,7 @@ class Window(GladeApp):
                 #~ self.selectAlbum(model,iter0)
 
     def on_btn_addFolder_clicked(self, widget, *args):
+        self.tbl.stop()
         dialog = gtk.FileChooserDialog (_("Add Folder"),
              None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
              (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
@@ -2426,6 +2417,7 @@ class Window(GladeApp):
 
         if folder:
             self.on_drop_folders_from_os(self.treeviewdb.get_model(),[folder])
+        self.tbl.start()
 
 
 
