@@ -35,6 +35,7 @@ from libs.gladeapp import GladeApp
 from jbrout.common import format_file_size_for_display,ed2d,dnd_args_to_dir_list
 from jbrout.tools import PhotoCmd,_Command, autoTrans
 from jbrout.commongtk import InputBox,MessageBox,InputQuestion,Img
+from jbrout.folderselect import FolderSelect
 
 from nameBuilder import NameBuilder,WinNameBuilderTokens
 
@@ -375,20 +376,13 @@ class WinDownload(GladeApp):
     def on_btnSourceFolder_clicked(self, widget, *args):
         """Handles the chanmge source folder button (...), gets the new source
         folder and initiates the update of the download list"""
-        dialog = gtk.FileChooserDialog(_('Select source folder'),
-                self.main_widget,
-                gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response(gtk.RESPONSE_OK)
-        dialog.set_filename(self.srcFolder)
-        response = dialog.run()
-        if response == gtk.RESPONSE_OK:
-            if dialog.get_filename != self.srcFolder:
-                self.srcFolder = dialog.get_filename()
+        dialog = FolderSelect(folder=self.srcFolder)
+        folders = dialog.loop()[0]
+        if len(folders):
+            if folders[0] != self.srcFolder:
+                self.srcFolder = folders[0]
                 self.invalidSource = True
                 self.entSourceFolder.set_text(self.srcFolder)
-        dialog.destroy()
     
     def on_btnSourceFolder_drag_data_received(self, widget, *args):
         
