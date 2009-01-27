@@ -6,6 +6,7 @@ changelog:
  - click on a already selected item in a selection, make this the only selected
  - better display text under thumbnails
 """
+import threading
 import gtk
 import gobject
 import pango
@@ -21,7 +22,7 @@ BORDER_SIZE = 2
 CELL_BORDER_WIDTH = 4
 SELECTION_THICKNESS = 2
 
-
+gobject.threads_init()
 
 
 
@@ -133,26 +134,16 @@ class ThumbnailsView(gtk.Layout):
         self.items = []
         self.update_layout()
         selection.add_notify_callback(self.notify_selection_change)
-        self.hdl=None
-
-    def __load_thumbnails_bg(self):
-        while True:
-            if self.priority_loads:
-                idx = self.priority_loads.pop(0)
-                self.get_thumb(idx)
-                self.invalidate_cell(idx)
-            time.sleep(0.01)
-            yield True
+        self.hdl = ThumbThread(self)
+        self.hdl.start()
 
     def stop(self):
         """ stop background process which load thumbs """
-        if self.hdl:
-            gobject.source_remove(self.hdl)
-            self.hdl=None
+        self.hdl.running = False
+
     def start(self):
         """ start background process to load thumbs """
-        if not self.hdl:
-            self.hdl=gobject.idle_add(self.__load_thumbnails_bg().next)
+        self.hdl.running = True
 
     def set_photos(self, photos):
         self.stop()
@@ -644,6 +635,27 @@ class ThumbnailsView(gtk.Layout):
         else:
             adjustment.value = y
 
+class ThumbThread(threading.Thread):
+    def __init__(self, thumbnailsview):
+        super(ThumbThread, self).__init__()
+        self.thumbnailsview = thumbnailsview
+        self.running = False
+
+    def load_thumbnails(self):
+        if self.thumbnailsview.priority_loads:
+            idx = self.thumbnailsview.priority_loads.pop(0)
+            self.thumbnailsview.get_thumb(idx)
+            self.thumbnailsview.invalidate_cell(idx)
+        return False
+
+    def run(self):
+        while True:
+            try:
+                if self.running:
+                    gobject.idle_add(self.load_thumbnails)
+                    time.sleep(0.01)
+            except:
+                pass
 
 class ListView(ThumbnailsView):
     allow_drag=True
