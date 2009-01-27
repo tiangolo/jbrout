@@ -20,7 +20,7 @@ class ExportConf(object):
     __attrs={
         "height": 500,
         "width": 800,
-        "sourceFolder": os.path.dirname(__file__), # Source folder/drive for images (invalid default)
+        "sourceFolder": os.path.dirname(__file__),  # FS,HG,PW,FR or SM or FT
         "delete": "0", # Delete source files after download, 0=False, 1=True
         "autoRotate": "0", # Auto rotate photos after download, 0=False, 1=True
         "copyOther": "0", # Copy other files with the same name as the jpeg

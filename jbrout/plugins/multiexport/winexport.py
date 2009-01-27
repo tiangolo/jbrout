@@ -15,18 +15,27 @@ import os
 import gtk
 import time
 from jbrout.commongtk import PictureSelector
-from jbrout.folderselect import FolderSelect
 from crypt import crypt,uncrypt
 
 from __main__ import GladeApp # no "libs.gladeapp", because there is a libs dir here ;-(
 
 def chooseFolder(t):
-    dialog = FolderSelect(folder=t)
-    folders = dialog.loop()[0]
-    if len(folders):
-        ret = folders[0]
+    dialog = gtk.FileChooserDialog (_("Select the destination"),
+         None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+         (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
+          gtk.RESPONSE_OK))
+    dialog.set_default_response (gtk.RESPONSE_OK)
+
+    # preselect the previous mount point
+    dialog.select_filename (t)
+
+    response = dialog.run ()
+    if response == gtk.RESPONSE_OK:
+        ret = dialog.get_filename()
     else:
-        ret=None
+        ret = None
+
+    dialog.destroy()
     return ret
 
 class Windowexport(GladeApp):
