@@ -2313,6 +2313,9 @@ class Window(GladeApp):
             if node!=None:
                 # on a real folder
                 if event.button==3:
+                    path,obj,x,y = widget.get_path_at_pos( int(event.x), int(event.y) )
+                    if path:
+                        self.treeviewdb.set_cursor(path)
                     menu = gtk.Menu()
                     menu.append( makeItem(_("Select only"),self.on_menu_select_only) )
                     if JBrout.modify:
