@@ -1177,7 +1177,7 @@ class Window(GladeApp):
         self.cb_format.pack_start(cell, True)
         self.cb_format.add_attribute(cell, 'text',0)
 
-        self.setSearchCombo(self.cb_format,["",_("Landscape"),_("Portrait")],0)
+        self.setSearchCombo(self.cb_format,[_("Any"),_("Landscape"),_("Portrait")],0)
 
         ###################
         def filename(column, cell, model, iter):
