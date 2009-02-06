@@ -1086,6 +1086,10 @@ class CatgNode(object):
             n.text = t
             self.__node.append(n)
             return TagNode(n)
+    
+    def rename(self,newName):
+        self.__node.attrib["name"] = newName
+        
 
     def remove(self):
         self.__node.getparent().remove(self.__node)

@@ -2054,6 +2054,22 @@ class Window(GladeApp):
                     self.treeviewtags.set_cursor( path )
                 else:
                     MessageBox(self.main_widget,_("Category already exists"))
+    
+    def on_menu_rename_catg(self,e):
+        treeselection = self.treeviewtags.get_selection()
+        model,paths = treeselection.get_selected_rows()
+        if len(paths)==1:
+            iter0 = model.get_iter(paths[0])
+            node = model.get(iter0)
+            self.showProgress(True)
+            ret = InputBox(self.main_widget,_("Rename category"),node.name)
+            self.showProgress()
+            if ret and ret.strip() != node.name:
+                if node.isUnique("tags",ret.strip()):
+                    node.rename(ret.strip())
+                    model[paths[0]][0] = '['+ret.strip()+']'
+                else:
+                    MessageBox(self.main_widget,_("Category already exists"))
 
     #def on_menu_set_key(self, e):
     #    treeselection = self.treeviewtags.get_selection()
@@ -2619,6 +2635,7 @@ class Window(GladeApp):
                         if node.__class__.__name__ == "CatgNode":
                             menu.append( makeItem(_("Add Tag"),self.on_menu_add_tag) )
                             menu.append( makeItem(_("Add Category"),self.on_menu_add_catg) )
+                            menu.append( makeItem(_("Rename Category"),self.on_menu_rename_catg) )
                         #if node.__class__.__name__ == "TagNode":
                         #    menu.append( makeItem(_("Set keyboard shortcut"),self.on_menu_set_key) )
                         menu.append( makeItem(_("Delete"),self.on_menu_delete_tags) )
