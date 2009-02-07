@@ -106,7 +106,8 @@ class Windowexport(GladeApp):
         elif conf["type"] == "CA":
             self.nbExport.set_current_page(6)
         else:
-            raise "bad export type in conf : "+str(conf["type"])
+            print "bad export type in conf : %s" % str(conf["type"])
+            self.nbExport.set_current_page(0)
 
         self.tbFolderA.set_text( conf["CA.folder"] )
         if conf["CA.type"] == "tar":
