@@ -16,6 +16,10 @@ import tempfile, ftplib
 
 from __main__ import JPlugin
 
+# For CA (Compressed Archive)
+import tarfile
+import zipfile
+
 # For HG (Html Gallery)
 from lxml.etree import Element,ElementTree,parse,XSLT
 
@@ -42,7 +46,19 @@ from crypt import uncrypt
 
 class ExportConf(object):
     __attrs={
-        "type":"FS",  # FS,HG,PW,FR or SM or FT
+        "type":"FS",  # CA, FS,HG,PW,FR or SM or FT
+
+        # Compressed Archive conf
+        # ===================
+        "CA.folder": "",
+
+            "CA.type":'zip',  # tar. tbz, tgz or zip
+            "CA.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+            "CA.percent":80,
+            "CA.maxside":1600,
+            "CA.quality":80,
+            "CA.order":0,
+
 
         # FileSystem conf
         # ===================
@@ -182,7 +198,29 @@ class Plugin(JPlugin):
             maxside=ec[type+".maxside"]
             order=ec[type+".order"]
 
-            if type == "FS":
+            if type == "CA":
+                msg = _("Export to archive")
+                #==================================================================
+                path = ec["CA.folder"]
+                if os.path.isdir(path):
+                    destination=unicode(tempfile.mkdtemp(".tmp","jbrout"))
+                    print "Opening Archive"
+                    if ec["CA.type"] in ['tar','tbz','tgz']:
+                        if ec["CA.type"] == 'tar':
+                            archMode = 'w'
+                        elif ec["CA.type"] == 'tbz':
+                            archMode = 'w:bz2'
+                        else:
+                            archMode = 'w:gz'
+                        archive = tarfile.open(os.path.join(path, ("Jbrout " + time.strftime("%Y-%m-%d, %H-%M-%S") + '.' + ec["CA.type"])), archMode)
+                    else:
+                        archive = zipfile.ZipFile(os.path.join(path, ("Jbrout " + time.strftime("%Y-%m-%d, %H-%M-%S") + '.zip')), "w")
+                    # TODO: open archive
+                else:
+                    self.MessageBox(_("The selected path doesn't exists !"))
+                    return False
+                
+            elif type == "FS":
                 msg = _("Export to folder")
                 #==================================================================
                 path = ec["FS.folder"]
@@ -280,7 +318,14 @@ class Plugin(JPlugin):
                         elif resize == 2: # max side
                             file = photo.copyTo(destination,resize=( int(maxside),quality))
 
-                        if type == "FS":
+                        if type == "CA":
+                            # TODO: add file to archive
+                            print "Adding file '%s'" % file
+                            if ec["CA.type"] in ['tar','tbz','tgz']:
+                                archive.add(file, os.path.basename(file).encode("utf_8"))
+                            else:
+                                archive.write(file, os.path.basename(file).encode("utf_8"))
+                        elif type == "FS":
                             # nothing to do more
                             pass
                         elif type == "HG":
@@ -319,7 +364,11 @@ class Plugin(JPlugin):
                             ftp.storbinary('STOR '+os.path.basename(file), fid)
 
                     # and close the work
-                    if type == "HG":
+                    if type == "CA":
+                        # TODO: close archive
+                        print "Closing archive"
+                        archive.close()
+                    elif type == "HG":
                         # finish the work for the html galleyr
                         xml_doc = ElementTree(nodeAlbum)
 

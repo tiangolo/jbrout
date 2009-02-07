@@ -57,6 +57,19 @@ class Windowexport(GladeApp):
         for i in templateList:
             m.append( [i,] )
         self.cbTemplate.set_model(m)
+        
+        self.cbTypeA.pack_start(cell, True)
+        self.cbTypeA.add_attribute(cell, 'text',0)
+        
+        am=gtk.ListStore( str)
+        am.clear()
+        am.append( ['Uncompressed tar (.tar)',] )
+        am.append( ['Tar bzip2 (.tbz)',] )
+        am.append( ['Tar gzip (.tgz)',] )
+        am.append( ['Zip (.zip)',] )
+        
+        self.cbTypeA.set_model(am)
+
 
         self.photoList = photoList
 
@@ -90,9 +103,21 @@ class Windowexport(GladeApp):
             self.nbExport.set_current_page(4)
         elif conf["type"] == "FT":
             self.nbExport.set_current_page(5)
+        elif conf["type"] == "CA":
+            self.nbExport.set_current_page(6)
         else:
             raise "bad export type in conf : "+str(conf["type"])
 
+        self.tbFolderA.set_text( conf["CA.folder"] )
+        if conf["CA.type"] == "tar":
+            self.cbTypeA.set_active(0)
+        elif conf["CA.type"] == "tbz":
+            self.cbTypeA.set_active(1)
+        elif conf["CA.type"] == "tgz":
+            self.cbTypeA.set_active(2)
+        else: # Use zip as the default/failsafe
+            self.cbTypeA.set_active(3)
+        
         self.tbFolderF.set_text( conf["FS.folder"] )
 
         self.tbFolderH.set_text( conf["HG.folder"] )
@@ -123,7 +148,7 @@ class Windowexport(GladeApp):
         self.tbPath.set_text( conf["FT.path"] )
 
     def getExportType(self):
-        return ["FS","HG","PW","FR","SM","FT"][self.nbExport.get_current_page()]
+        return ["FS","HG","PW","FR","SM","FT","CA"][self.nbExport.get_current_page()]
 
     def getResizeType(self):
         if self.rbNoResize.get_active():
@@ -148,7 +173,11 @@ class Windowexport(GladeApp):
         # Put back the conf which is desired
         self.__conf["type"] = type
 
-        if type == "FS":
+        if type == "CA":
+            self.__conf["CA.folder"]=self.tbFolderA.get_text()
+            types = ['tar','tbz','tgz','zip']
+            self.__conf["CA.type"]=types[self.cbTypeA.get_active()]
+        elif type == "FS":
             self.__conf["FS.folder"]=self.tbFolderF.get_text()
         elif type == "HG":
             self.__conf["HG.folder"]=self.tbFolderH.get_text()
@@ -201,7 +230,7 @@ class Windowexport(GladeApp):
 
     def on_nbExport_switch_page(self,*args):
         tp = self.getExportType()
-        if tp in ["FS","FT"]:
+        if tp in ["CA","FS","FT"]:
             self.frameOrder.hide()
         else:
             self.frameOrder.show()
@@ -213,6 +242,11 @@ class Windowexport(GladeApp):
         self.hsQuality.set_value(float(self.__conf[tp+".quality"]))
         self.eMaxSide.set_text(str(self.__conf[tp+".maxside"]))    #combobox
         self.cbOrder.set_active(int(self.__conf[tp+".order"]))
+
+    def on_btnFolderA_clicked(self,*args):
+        ret=chooseFolder(self.tbFolderA.get_text())
+        if ret:
+            self.tbFolderA.set_text( ret )
 
     def on_btnFolderH_clicked(self,*args):
         ret=chooseFolder(self.tbFolderH.get_text())
