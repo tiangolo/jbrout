@@ -50,4 +50,5 @@ Section ""
     goto finish
     Exec '"$WINDIR\notepad.exe" "$EXEDIR\jbrout.log"' 
   finish:
+  SetOutPath "$ProgramDirectory"
 SectionEnd
