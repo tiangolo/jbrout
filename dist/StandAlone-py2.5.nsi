@@ -173,7 +173,6 @@ Section "jBrout Application" SEC01
 SectionEnd
 
 Section "Python Runtime" SEC02
-  AddSize 33990
   SetOutPath "$TEMP"
   FILE "winRuntime\python_runtime-2.5.zip" 
   ZipDLL::extractall "$TEMP\python_runtime-2.5.zip" "$INSTDIR"
