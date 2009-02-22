@@ -84,9 +84,9 @@ def filesFor( dirname ):
         allResults.append( (dirname, result))
     return allResults
 
-srcPath = os.path.abspath('.')
+srcPath = '.'
 baseVersion = '0.3'
-__version__ = setVersion(srcPath,baseVersion)
+__version__ = setVersion(os.path.abspath(srcPath),baseVersion)
 
 
 dataFiles = filesFor( srcPath)
