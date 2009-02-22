@@ -3,6 +3,10 @@
 
 from distutils.core import setup
 #import py2exe
+from subprocess import Popen,PIPE
+import time
+import string
+import re
 import sys
 import glob
 
@@ -42,6 +46,26 @@ def packagesFor( filename, basePackage="" ):
             set.update( packagesFor( dir, moduleName))
     return set
 
+def setVersion(basePath, baseVersion):
+    if os.path.isdir(os.path.join(basePath, '.git')):
+        infoCmd = ["git","svn","info"]
+    else:
+        infoCmd = ["svn","info"]
+    try:
+        p = Popen(infoCmd, shell=False,stdout=PIPE,stderr=PIPE)
+        time.sleep(0.01)    # to avoid "IOError: [Errno 4] Interrupted system call"
+        out = string.join(p.stdout.readlines() ).strip()
+        version=baseVersion + "." + re.search("(?<=Revision\: )\d+", out).group()
+        versionFile=os.path.join('jbrout','data','version.txt')
+        open(versionFile,'w').write(version)
+    except:
+        try:
+            version = open(os.path.join(srcPath,"jbrout","data","version.txt")).read().strip()
+        except:
+            print """Building from unknown source, using 'src' as the version"""
+            version = 'src'
+    return version
+
 def filesFor( dirname ):
     """Return all non-python-file filenames in dir"""
     result = []
@@ -59,12 +83,10 @@ def filesFor( dirname ):
     if result:
         allResults.append( (dirname, result))
     return allResults
-srcPath = '.'
-try:
-    __version__ = open(os.path.join(srcPath,"jbrout","data","version.txt"))\
-        .read().strip()
-except:
-    __version__ = "src"
+
+srcPath = os.path.abspath('.')
+baseVersion = '0.3'
+__version__ = setVersion(srcPath,baseVersion)
 
 
 dataFiles = filesFor( srcPath)
