@@ -77,6 +77,7 @@ import tempfile,shutil
 
 import urllib,time,datetime,sys
 import traceback, string, optparse
+import filecmp
 
 
 def myExceptHook(type, value, tb):
@@ -1944,7 +1945,8 @@ class Window(GladeApp):
         for pnode in l:
             tmpfile = os.path.join(destination,pnode.name)
             try:
-                pnode.getInfoFrom( tmpfile )
+                if not filecmp.cmp(tmpfile,pnode.file):
+                    pnode.getInfoFrom( tmpfile)
             except IOError:
                 # file was deleted by external tools ? not cool
                 # get back the file from temp dir

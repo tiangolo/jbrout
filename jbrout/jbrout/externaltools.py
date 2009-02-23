@@ -133,7 +133,7 @@ class ExternalTool(object):
 defaultContent=u"""# -*- coding: utf-8 -*-
 # =============================================================================
 # HERE YOU CAN EDIT YOUR EXTERNAL TOOLS, here are the usable patterns
-# See: http://jbrout.python-hosting.com/wiki/ExternalTools
+# See: http://code.google.com/p/jbrout/wiki/ExternalTools
 # =============================================================================
 # $* : all files (can't be used with others patterns)
 # $f : file path
@@ -149,6 +149,7 @@ defaultContent=u"""# -*- coding: utf-8 -*-
 # here are some external tools to uncomment ::
 #  1|Edit with The Gimp|gimp $*
 #  1|Write Comment on the picture| montage -geometry +0+0 -background white -label "$c" -pointsize 40 $f $f
+#  0|Slideshow|qiv -s -d 3 -f -i $*
 
 """
 
