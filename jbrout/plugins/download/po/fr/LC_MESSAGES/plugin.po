@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 15:24+0100\n"
+"POT-Creation-Date: 2009-03-10 20:08+0100\n"
 "PO-Revision-Date: 2009-01-01 15:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,48 +19,47 @@ msgstr ""
 msgid "Download"
 msgstr "Récupérer des photos d'un média"
 
-#: ../plugins/download/download.py:79
+#: ../plugins/download/download.py:87
 msgid "Source"
 msgstr ""
 
-#: ../plugins/download/download.py:81
+#: ../plugins/download/download.py:89
 msgid "Size"
 msgstr ""
 
 #. Datetime object
-#: ../plugins/download/download.py:87
+#: ../plugins/download/download.py:95
 msgid "Date/Time"
 msgstr ""
 
 #. EXIF
-#: ../plugins/download/download.py:91
+#: ../plugins/download/download.py:99
 msgid "Destination"
 msgstr ""
 
-#: ../plugins/download/download.py:93
+#: ../plugins/download/download.py:101
 msgid "Status"
 msgstr ""
 
 #. Short Status
-#: ../plugins/download/download.py:97
+#: ../plugins/download/download.py:105
 msgid "Rotation"
 msgstr ""
 
-#: ../plugins/download/download.py:111
-#: ../tmp/download.glade.h:23
+#: ../plugins/download/download.py:119 ../tmp/download.glade.h:23
 msgid "Download Photos From Camera"
 msgstr "Récupérer des photos d'un média"
 
-#: ../plugins/download/download.py:146
+#: ../plugins/download/download.py:154
 msgid "Please enter the new Job Code"
 msgstr ""
 
-#: ../plugins/download/download.py:178
+#: ../plugins/download/download.py:186
 #, python-format
 msgid "Finding source files in \"%s\""
 msgstr ""
 
-#: ../plugins/download/download.py:185
+#: ../plugins/download/download.py:193
 #, python-format
 msgid "Reading source file information from \"%s\""
 msgstr ""
@@ -68,126 +67,130 @@ msgstr ""
 #. Start new
 #. Build image Names
 #. Build names without seralisation
-#: ../plugins/download/download.py:235
+#: ../plugins/download/download.py:243
 msgid "Building destination Names"
 msgstr ""
 
-#: ../plugins/download/download.py:253
-msgid "More than one serialisation tag used please use preferencess to remove from File Naming > Parttern"
+#: ../plugins/download/download.py:261
+msgid ""
+"More than one serialisation tag used please use preferencess to remove from "
+"File Naming > Parttern"
 msgstr ""
 
 #. Check Status
-#: ../plugins/download/download.py:283
+#: ../plugins/download/download.py:291
 msgid "Checking Status of Images"
 msgstr ""
 
-#: ../plugins/download/download.py:293
+#: ../plugins/download/download.py:301
 msgid "Collision with New"
 msgstr ""
 
-#: ../plugins/download/download.py:304
+#: ../plugins/download/download.py:312
 msgid "Downloaded"
 msgstr ""
 
-#: ../plugins/download/download.py:307
+#: ../plugins/download/download.py:315
 msgid "Collision with Existing"
 msgstr ""
 
-#: ../plugins/download/download.py:310
+#: ../plugins/download/download.py:318
 msgid "New"
 msgstr ""
 
 #. Check Rotation
-#: ../plugins/download/download.py:320
+#: ../plugins/download/download.py:328
 msgid "Checking Rotation Required for Images"
 msgstr ""
 
-#: ../plugins/download/download.py:332
+#: ../plugins/download/download.py:340
 msgid "Disabled"
 msgstr ""
 
-#: ../plugins/download/download.py:370
+#: ../plugins/download/download.py:378
 msgid "Select source folder"
 msgstr ""
 
-#: ../plugins/download/download.py:718
-msgid "Please enter the values to use for {T8}, {T9} and auto Tag for the selected camera:"
+#: ../plugins/download/download.py:735
+msgid ""
+"Please enter the values to use for {T8}, {T9} and auto Tag for the selected "
+"camera:"
 msgstr ""
 
-#: ../plugins/download/download.py:719
+#: ../plugins/download/download.py:736
 msgid "Camera"
 msgstr ""
 
-#: ../plugins/download/download.py:721
+#: ../plugins/download/download.py:738
 msgid "Serial Number"
 msgstr ""
 
-#: ../plugins/download/download.py:723
+#: ../plugins/download/download.py:740
 msgid "Owner String"
 msgstr ""
 
-#: ../plugins/download/download.py:725
+#: ../plugins/download/download.py:742
 msgid "User Comment"
 msgstr ""
 
-#: ../plugins/download/download.py:781
+#: ../plugins/download/download.py:798
 #, python-format
 msgid "Downloading %d of %d"
 msgstr ""
 
 #. Load preview
-#: ../plugins/download/download.py:786
+#: ../plugins/download/download.py:803
 msgid "Loading preview"
 msgstr ""
 
 #. New item
 #. Copying file
-#: ../plugins/download/download.py:816
+#: ../plugins/download/download.py:833
 msgid "Copying"
 msgstr ""
 
-#: ../plugins/download/download.py:825
+#: ../plugins/download/download.py:842
 msgid "Performing Transformation:"
 msgstr ""
 
-#: ../plugins/download/download.py:830
+#: ../plugins/download/download.py:847
 msgid "Commenting"
 msgstr ""
 
-#: ../plugins/download/download.py:837
+#: ../plugins/download/download.py:854
 msgid "Tagging"
 msgstr ""
 
 #. Set file modification date/time stamp
-#: ../plugins/download/download.py:841
+#: ../plugins/download/download.py:858
 msgid "Setting Modification Times"
 msgstr ""
 
-#: ../plugins/download/download.py:847
+#: ../plugins/download/download.py:864
 msgid "Deleting Source"
 msgstr ""
 
-#: ../plugins/download/download.py:852
+#: ../plugins/download/download.py:869
 msgid "Finding Related Files"
 msgstr ""
 
-#: ../plugins/download/download.py:865
+#: ../plugins/download/download.py:882
 msgid "Copying Related File"
 msgstr ""
 
-#: ../plugins/download/download.py:868
+#: ../plugins/download/download.py:885
 msgid "Setting Related File Modification Time"
 msgstr ""
 
-#: ../plugins/download/download.py:873
+#: ../plugins/download/download.py:890
 msgid "Deleting Related File Source"
 msgstr ""
 
-#: ../plugins/download/download.py:879
+#: ../plugins/download/download.py:896
 msgid "Do you realy want to stop the download process"
 msgstr ""
 
-#: ../plugins/download/download.py:880
+#: ../plugins/download/download.py:897
 msgid "Jbrout Question"
 msgstr ""
 
@@ -356,7 +359,8 @@ msgid "First digit of folder number followed by last 4 digits of image number"
 msgstr ""
 
 #: ../plugins/download/nameBuilder.py:147
-msgid "First digit of folder number - 1, followed by last 4 digits of image number"
+msgid ""
+"First digit of folder number - 1, followed by last 4 digits of image number"
 msgstr ""
 
 #: ../plugins/download/nameBuilder.py:148
@@ -493,7 +497,9 @@ msgid "Date based download sequence number"
 msgstr ""
 
 #: ../plugins/download/nameBuilder.py:312
-msgid "More than one serialisation tag used please remove extras from File Naming > Pattern "
+msgid ""
+"More than one serialisation tag used please remove extras from File Naming > "
+"Pattern "
 msgstr ""
 
 #: ../tmp/download.glade.h:1
@@ -630,7 +636,8 @@ msgid "Pattern:"
 msgstr ""
 
 #: ../tmp/download.glade.h:36
-msgid "Please enter the values to use for {T8}, {T9} and Tag for the selected camera"
+msgid ""
+"Please enter the values to use for {T8}, {T9} and Tag for the selected camera"
 msgstr ""
 
 #: ../tmp/download.glade.h:37
@@ -784,4 +791,3 @@ msgstr ""
 #: ../tmp/nameBuilder.glade.h:1
 msgid "Filename Tokens"
 msgstr ""
-
