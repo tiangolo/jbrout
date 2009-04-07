@@ -43,7 +43,7 @@ class TagList(gtk.VBox):
             hb=gtk.HBox()
             lbl=gtk.Label()
             lbl.set_label("%s (%s)" %(i,self.__tags[i]))
-            hb.pack_start(lbl)
+            hb.pack_start(lbl,False,False)
             btn=gtk.Button()
             btn.set_label("X")
             btn.connect('button-press-event', self.__callbackRemove,i)            
@@ -76,7 +76,7 @@ class WinShow(GladeApp):
         PixbufCache._cache=None
         
         self.taglist = TagList(self.on_remove_tag)
-        self.sc_tags.add(self.taglist)
+        self.sc_tags.add_with_viewport(self.taglist)
         
         self.viewer = ImageShow()
 
