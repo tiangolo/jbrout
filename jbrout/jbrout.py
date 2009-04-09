@@ -2187,6 +2187,7 @@ class Window(GladeApp):
         openURL(u"http://jbrout.free.fr/help/%s/" % lang)
 
     def on_a_propos_activate(self, widget, *args):
+        import Image
         about = gtk.AboutDialog()
         about.set_name('jbrout')
         about.set_version(__version__)
@@ -2194,6 +2195,12 @@ class Window(GladeApp):
         about.set_license(open("data/gpl.txt").read())
         about.set_authors(['Marc Lentz',"Rob Wallace","","thanks to:", '- Frederic Peters',"- Erik Charlesson (french online help)","- Pieter Edelman (flickr uploader)"])
         about.set_website('http://jbrout.googlecode.com')
+        about.set_comments(
+"""Library Versions:
+Python: %d.%d.%d
+PyGTK: %d.%d.%d
+GTK: %d.%d.%d
+PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Image.VERSION,)))
         def close(w, res):
             if res == gtk.RESPONSE_CANCEL:
                 w.destroy()
