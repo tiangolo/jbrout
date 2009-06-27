@@ -339,7 +339,7 @@ class DateDB(gtk.TreeStore):
     LEVELYEAR=1
     LEVELMONTH=2
     LEVELDAY=3
-    
+
     @staticmethod
     def data2date(data):
         data=str(data)
@@ -349,20 +349,20 @@ class DateDB(gtk.TreeStore):
             return datetime.datetime(int(data[:4]),int(data[4:6]),1)
         elif len(data)==8:
             return datetime.datetime(int(data[:4]),int(data[4:6]),int(data[-2:]))
-            
-    
+
+
     def __init__(self,filter=None):
         gtk.TreeStore.__init__(self, str,int,int,str,gtk.gdk.Pixbuf)
-        
+
         if filter:
             self.__filter=filter
             self.init()
         else:
             self.__filter=None
-        
+
     def init(self):
         self.clear()
-        
+
         ln = JBrout.db.select("""//photo""")
         if self.__filter:
             years=list(set([int(i.date[:4]) for i in ln if i.date[:8] in self.__filter]))
@@ -370,13 +370,13 @@ class DateDB(gtk.TreeStore):
             years=list(set([int(i.date[:4]) for i in ln]))
         years.sort()
         years.reverse()
-        
+
         for i in years:
             self.append(None,[str(i),i,DateDB.LEVELYEAR,None,None])
-    
-    
+
+
     def fillYear(self,iter0,year):
-        xpath = """//photo[substring(@date,1,4)="%s"]""" % str(year) 
+        xpath = """//photo[substring(@date,1,4)="%s"]""" % str(year)
 
         ln=JBrout.db.select(xpath)
         if self.__filter:
@@ -390,13 +390,13 @@ class DateDB(gtk.TreeStore):
         for i in months:
             d=DateDB.data2date(i)
             sd = unicode(d.strftime("%m-%B"),locale.getpreferredencoding ())
-            
+
             self.append(iter0,[sd,i,DateDB.LEVELMONTH,None,None])
         return xpath,ln
 
     def fillMonth(self,iter0,yearmonth):
         xpath = """//photo[substring(@date,1,6)="%s"]""" % str(yearmonth)
-        
+
         ln=JBrout.db.select(xpath)
 
         ln.sort(lambda a,b: cmp(a.date,b.date))
@@ -405,12 +405,12 @@ class DateDB(gtk.TreeStore):
             if self.__filter:
                 if i.date[:8] not in self.__filter:
                     continue
-            
+
             d8=int(i.date[:8])
             if d8 not in days:
                 days[d8] = i.getThumb().scale_simple(40,40,gtk.gdk.INTERP_NEAREST)
 
-        ldays=days.keys()        
+        ldays=days.keys()
         ldays.sort()
         self.delChildren(iter0)
         self.set_value(iter0,3,"(%d)"%len(ln))
@@ -421,12 +421,12 @@ class DateDB(gtk.TreeStore):
         return xpath,ln
 
     def fillDay(self,iter0,yearmonthday):
-        xpath = """//photo[substring(@date,1,8)="%s"]""" % str(yearmonthday) 
+        xpath = """//photo[substring(@date,1,8)="%s"]""" % str(yearmonthday)
         ln=JBrout.db.select(xpath)
         self.set_value(iter0,3,"(%d)"%len(ln))
-        return xpath,ln        
+        return xpath,ln
 
-    
+
     def delChildren(self,iter0):
         while 1:
             child1 = self.iter_children(iter0)
@@ -434,22 +434,22 @@ class DateDB(gtk.TreeStore):
                 break
             else:
                 self.remove(child1)
-        
+
     def getInfo(self,iter0):
         lbl=self.get_value(iter0,0)
         data=self.get_value(iter0,1)
         level=self.get_value(iter0,2)
-        
+
         d=DateDB.data2date(data)
-        
+
         if level == DateDB.LEVELYEAR:
             name = _("Year %s") % d.year
             xpath,ln=self.fillYear(iter0,data)
-            
+
         elif level == DateDB.LEVELMONTH:
             name = unicode(d.strftime("%B %Y"),locale.getpreferredencoding ())
             xpath,ln=self.fillMonth(iter0,data)
-                
+
         elif level == DateDB.LEVELDAY:
             name = unicode(d.strftime("%A %d %B %Y"),locale.getpreferredencoding ())
             xpath,ln=self.fillDay(iter0,data)
@@ -458,33 +458,33 @@ class DateDB(gtk.TreeStore):
 
         if ln:
             return name,xpath,ln
-        
+
     def findThisDate(self,date):
         """ return iter,ln of this date (refill tree)"""
         assert type(date)==datetime.datetime
-        
+
         year=date.year
         yearmonth=int(date.strftime("%Y%m"))
         yearmonthday=int(date.strftime("%Y%m%d"))
-        
+
         find=None
         a = self.get_iter_root()
         while a:
             if self.get_value(a,1) == year:
                 find = a
             a = self.iter_next(a)
-        
+
         ln=None
         if find:
             xpath,ln=self.fillYear(find,year)
-            
+
             a=self.iter_children(find)
             find=None
             while a:
                 if self.get_value(a,1) == yearmonth:
                     find = a
                 a = self.iter_next(a)
-                
+
             if find:
                 xpath,ln=self.fillMonth(find,yearmonth)
 
@@ -494,12 +494,12 @@ class DateDB(gtk.TreeStore):
                     if self.get_value(a,1) == yearmonthday:
                         find = a
                     a = self.iter_next(a)
-                    
+
                 if find:
                     xpath,ln=self.fillDay(find,yearmonthday)
-                
-        return find,xpath,ln      
-        
+
+        return find,xpath,ln
+
 #========================================================
 class TreeDB(gtk.TreeStore):
 #========================================================
@@ -860,15 +860,15 @@ class Window(GladeApp):
         self.tagsInSelection=[]
         self.foldersInSelection=[]
         self.timesInSelection=[]
-        
+
         self.__saveSelection=None
-        
+
         try:
             self.__bookmarks=zip(JBrout.conf["bookmarkNames"],JBrout.conf["bookmarkXpaths"])
         except:
             self.__bookmarks=[]
-        
-        
+
+
         # create the listview with the right thumbsize
         table = ListView(self,JBrout.modify)
         table.connect('button-press-event', self.on_selecteur_mouseClick)
@@ -1072,7 +1072,7 @@ class Window(GladeApp):
         #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
         ## new "Tab Time" (treeview)
         #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
-        
+
         cell_renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn("date", cell_renderer,text=0)
         self.treeViewDate.append_column(column)
@@ -1087,7 +1087,7 @@ class Window(GladeApp):
         m = DateDB()
         m.init()
         self.treeViewDate.set_model(m)
-        
+
         # and filtered one too !
         cell_renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn("date", cell_renderer,text=0)
@@ -1095,7 +1095,7 @@ class Window(GladeApp):
         cellpb = gtk.CellRendererPixbuf()
         column = gtk.TreeViewColumn("thumb", cellpb,pixbuf=4)
         self.tvFilteredTime.append_column(column)
-        
+
         #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
         # build the display menu *!*
@@ -1159,7 +1159,7 @@ class Window(GladeApp):
             min,max=JBrout.db.getMinMaxDates()
         except:
             min = datetime.datetime.now()
-            
+
         self.__begin= min
         self.__end = datetime.datetime.now()
         self.__end = datetime.datetime(self.__end.year,self.__end.month,self.__end.day,0,0,0)
@@ -1219,8 +1219,8 @@ class Window(GladeApp):
         except:
             pass
         #$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
-        
-        
+
+
         # init some attributs
         self.storeMultipleSelectedPathsOfTags=[]
 
@@ -1331,7 +1331,7 @@ class Window(GladeApp):
         self.tagsInSelection = list(t)
         self.foldersInSelection = list(f)
         self.timesInSelection = list(d)
-        
+
         if self.cbxFilter.get_active():
             # if filter view is shown : fill trees
             store = TreeTags( self.tagsInSelection)
@@ -1366,7 +1366,7 @@ class Window(GladeApp):
                     name = node.name
                     mode = Window.MODEFOLDER
                     self.comment.set(node)
-                    
+
                     xpath=ln.xpath
                 else:
                     # on the basket (perhaps ?! ;-)
@@ -1378,7 +1378,7 @@ class Window(GladeApp):
                 if not fromFilteredTree:
                     self.treeviewdb.expand_to_path( path )
                     self.treeviewdb.set_cursor( path )
-                    
+
                 self.SetSelection(name,xpath,ln,mode,not fromFilteredTree)
             finally:
                 self.showProgress()
@@ -1395,7 +1395,7 @@ class Window(GladeApp):
             if ret:
                 self.__bookmarks.append((ret,xpath))
                 self.feedBookmark()
-                
+
     def on_menuEditBookmark_activate(self,*args):
         w=WinBookmark(self.__bookmarks)
         self.__bookmarks = w.loop()[0]
@@ -1403,22 +1403,22 @@ class Window(GladeApp):
 
     def feedBookmark(self):
         menuBM=self.menuitem5.get_submenu()
-        
+
         # clean bookmarks
         childs = menuBM.get_children()
         for i in childs:
             if i not in (self.menuAddBookmark,self.menuEditBookmark):
                 menuBM.remove(i)
                 del i
-                
+
         # and feed
         if self.__bookmarks:
             self.menuEditBookmark.show()
-            
+
             item = gtk.SeparatorMenuItem()
             item.show()
             menuBM.append(item)
-        
+
             for name,xpath in self.__bookmarks:
                 item = gtk.MenuItem(name)
                 item.connect("activate",self.selectBookmark,(name,xpath) )
@@ -1426,13 +1426,13 @@ class Window(GladeApp):
                 menuBM.append(item)
         else:
             self.menuEditBookmark.hide()
-            
+
     def selectBookmark(self,w,args):
         name,xpath = args
 
         ln = JBrout.db.select(xpath)
         self.SetSelection(name,xpath,ln,self.mode)  # don't change mode
-        
+
 
     def on_menu_rename(self,e):
         treeselection = self.treeviewdb.get_selection()
@@ -1780,7 +1780,7 @@ class Window(GladeApp):
             if w.isBasketUpdate:    #is basket updated ?
                 model=self.treeviewdb.get_model()
                 model.activeBasket()
-            
+
             if w.invalidThumbs:     # is thumbs need to be redrawn
                 for i in w.invalidThumbs:
                     Buffer.remove(i.file)
@@ -1848,11 +1848,11 @@ class Window(GladeApp):
         iter0,xpath,ln=model.findThisDate(d)
         if iter0:
             path=model.get_path(iter0)
-            self.treeViewDate.expand_to_path( path )            
+            self.treeViewDate.expand_to_path( path )
             self.treeViewDate.set_cursor( path )
 
             self.SetSelection(d.strftime("%d/%m/%Y"),xpath,ln,Window.MODETIME)
-            
+
             # and select the selected photo
             sel.setSelected([node])
 
@@ -1891,7 +1891,7 @@ class Window(GladeApp):
 
     def on_selecteur_menu_select_plugin(self,ib,listview,id,callback):
         l = listview.getSelected()
-        
+
         if l:
             self.showProgress(True)
             try:
@@ -2056,7 +2056,7 @@ class Window(GladeApp):
                     self.treeviewtags.set_cursor( path )
                 else:
                     MessageBox(self.main_widget,_("Category already exists"))
-    
+
     def on_menu_rename_catg(self,e):
         treeselection = self.treeviewtags.get_selection()
         model,paths = treeselection.get_selected_rows()
@@ -2159,7 +2159,10 @@ class Window(GladeApp):
     def on_editTools_activate(self,*args):
         if not os.path.isfile(JBrout.toolsFile):
             ExternalTools.generate(JBrout.toolsFile)
-        runWith(["notepad.exe","leafpad","scite","gedit","kate"],unicode(JBrout.toolsFile))
+        if JBrout.conf.has_key("editor"):
+            runWith([JBrout.conf["editor"],"notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(JBrout.toolsFile))
+        else:
+            runWith(["notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(JBrout.toolsFile))
 
     #def on_search_activate(self, widget, *args):
     #    win_search = Winsearch( TreeTags(), self.main_widget )
@@ -2229,15 +2232,15 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         gpoint,page= args
         if page==3: # search tab
             # refresh the "search tree tags" according real tags
-            
+
             # store old selections
             oldSelection=self.tvSearch.get_model().getSelected()
-            
+
             # update search tab with real tags
             model = TreeTags()
             self.tvSearch.set_model( model )
             model.expander(self.tvSearch)
-            
+
             # try to restore old selection
             for code,tag,sos in oldSelection:
                 #isCatg = type(sos)==list
@@ -2247,7 +2250,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                         model.switch_inc(iterTo)
                     elif code==2:
                         model.switch_exc(iterTo)
-                
+
 
 
     def on_treeviewdb_drag_data_received(self, widget, *args):
@@ -2379,7 +2382,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     menu.popup(None,None,None,event.button,event.time)
                     return 1
                 elif event.button==2:
-                    
+
                     ##-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= patch
                     #tup = widget.get_path_at_pos( int(event.x), int(event.y) )
                     #if tup: # if click on something
@@ -2390,7 +2393,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     #path=model.get_path(iter0)
                     #self.treeviewdb.set_cursor( path )
                     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-                    
+
                     self.selectAlbum(model,iter0,False)
                     return 1
             else:
@@ -2489,8 +2492,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         try:
             info = model.getInfo(iter0)
             path=model.get_path(iter0)
-            widget.expand_to_path( path )            
-            
+            widget.expand_to_path( path )
+
             if info:
                 name,xpath,ln = info
                 withFilter = (widget == self.treeViewDate)
@@ -2743,13 +2746,13 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 #~ model.switch_inc(iterTo)
             #~ elif event.button==3:
                 #~ model.switch_exc(iterTo)
-        
+
     def on_tvSearch_row_activated(self,widget,*args):
         treeselection = widget.get_selection()
         model, iter0 = treeselection.get_selected()
         if iter0:
             model.switch(iter0)
-        
+
     def on_hs_to_value_changed(self, widget, *args):
         val=widget.get_value()
         if val<self.hs_from.get_value():
@@ -2787,14 +2790,14 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
 
 
     def on_btn_search_clicked(self,widget,*args):
-        
+
         def mkpcom(valRech):    # photo comment
             valRech=unicode(valRech).encode("utf_16")
             sfrom = u"ABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöûùüç"
             sto   = u"abcdefghijklmnopqrstuvwxyzaaaeeeeiioouuuc"
             valRech = valRech.translate( string.maketrans(sfrom.encode("utf_16"),sto.encode("utf_16")) ).decode("utf_16")
             return u"""contains(translate(c, "%s", "%s") ,%s)""" % (sfrom,sto,xpathquoter(valRech))
-        
+
         def mkacom(valRech):    # album comment
             valRech=unicode(valRech).encode("utf_16")
             sfrom = u"ABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöûùüç"
@@ -2803,9 +2806,9 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             valRech = xpathquoter(valRech)
             return  u""" ( contains(translate(../c, "%s", "%s") ,%s)""" % (sfrom,sto,valRech) +\
                     u""" or contains(translate(../@name, "%s", "%s") ,%s) )""" % (sfrom,sto,valRech)
-        
-        
-        
+
+
+
         def string2ops(chaine,callback):
             tmots=[]
             mots=[]
@@ -2820,7 +2823,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                         mots.append( callback(mot) )
                         tmots.append( mot )
             return tmots,mots
-                
+
         dt_from = self.getDateFromScale(self.hs_from.get_value())
         dt_to = self.getDateFromScale(self.hs_to.get_value())
 
@@ -2875,10 +2878,10 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             libl,xpath = u" and ".join(tops),u"//photo[%s]" % u" and ".join(ops)
         else:
             libl,xpath = _(u"ALL"),u"//photo"
-        
+
         ln = JBrout.db.select(xpath)
         self.SetSelection(libl,xpath,ln,self.mode)
-        
+
 def main(canModify=True):
     if JBrout.lockOn():
         try:
