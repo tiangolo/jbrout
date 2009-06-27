@@ -465,14 +465,15 @@ isreal : %s""" % (
         for i in l:
             if i not in ["Exif.Photo.UserComment",]: # key "Exif.Photo.UserComment" bugs always ?!
                 if not i.startswith("Exif.Thumbnail"):  # don't need exif.thumb things because it's rebuilded after
-                    # TODO: fix nasty bodge to get around pyexiv2 issues with multi part exif fields
-                    # known not to copy the following:
-                    #   - unknown maker not fields
-                    #   - lens data for canon
-                    try:
-                        np.__info[i] =self.__info[i]
-                    except:
-                        print "Problems copying %s keyword" %i
+                    if len(re.findall('0x0',i))==0: # Work around to fix error in pyev2 with most unknown makernoite tags
+                        # TODO: fix nasty bodge to get around pyexiv2 issues with multi part exif fields
+                        # known not to copy the following:
+                        #   - unknown maker not fields
+                        #   - lens data for canon
+                        try:
+                            np.__info[i] =self.__info[i]
+                        except:
+                            print "Problems copying %s keyword" %i
 
         # copy comment
         np.addComment( self.comment )
