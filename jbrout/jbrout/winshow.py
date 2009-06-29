@@ -26,34 +26,34 @@ class TagList(gtk.VBox):
         gtk.VBox.__init__(self)
         self.__callbackRemove = callbackRemove
         self.__tags= dict(JBrout.tags.getAllTags())
-        
+
     def fill(self,ll):
         ll.sort(lambda a,b: cmp(a.lower(),b.lower()))
         self.__ll = ll
         self.__refresh()
-        
+
     def __refresh(self):
         l=self.get_children()
         for a in l:
             a.destroy()
             del a
-        
+
         for i in self.__ll:
-            
+
             hb=gtk.HBox()
             lbl=gtk.Label()
             lbl.set_label("%s (%s)" %(i,self.__tags[i]))
             hb.pack_start(lbl,False,False)
             btn=gtk.Button()
             btn.set_label("X")
-            btn.connect('button-press-event', self.__callbackRemove,i)            
+            btn.connect('button-press-event', self.__callbackRemove,i)
             hb.pack_end(btn,False)
-            
+
             self.pack_start(hb,False)
 
         self.resize_children()
         self.show_all()
-        
+
 
 
 class WinShow(GladeApp):
@@ -67,17 +67,23 @@ class WinShow(GladeApp):
         self.selected=[] # to be able to handle a new selection (reselect with space)
         self.removed=[]  # deleted items
         self.invalidThumbs=[]
-        
+
+        self.zoom=False
+
+        self.win_width=0
+        self.win_height=0
+        self.pointer_position = (0,0,0,0) #x, y, screen_width, screen_height
+
         self.isBasketUpdate=False
         self.needInfo=showInfo
         self.isModify=isModify
 
         PixbufCache._file=None
         PixbufCache._cache=None
-        
+
         self.taglist = TagList(self.on_remove_tag)
         self.sc_tags.add_with_viewport(self.taglist)
-        
+
         self.viewer = ImageShow()
 
         self.hpShow.add2(self.viewer)
@@ -92,8 +98,8 @@ class WinShow(GladeApp):
         #=======================================================================
         # put real plugins
         #=======================================================================
-        self.tooltips = gtk.Tooltips()        
-        canModify = isModify        
+        self.tooltips = gtk.Tooltips()
+        canModify = isModify
         for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries():
             if img:
                 # try to detect if plugin are enable or not
@@ -114,8 +120,8 @@ class WinShow(GladeApp):
                     self.toolbar1.insert(bb, 3)
                     bb.show()
         #=======================================================================
-        
-        
+
+
         self.main_widget.show_all()
         self.main_widget.fullscreen()
 
@@ -124,22 +130,23 @@ class WinShow(GladeApp):
     def on_selecteur_menu_select_plugin(self,ib,callback):
         currentNode = self.ln[self.idx]
         if self.isModify and not currentNode.isReadOnly:
-            
+
             ret=callback([currentNode,])   #TODO: try/cath here
-            
+
             if ret: # if change have be done ...
                 if currentNode not in self.invalidThumbs:
                     self.invalidThumbs.append(currentNode)
-                    
+
                 self.draw(forceReload=True)
-        
+
             #TODO: if plugin "redate" is called, we'll need to redraw "time tab"
-    
+
     def on_eb_scroll_event(self,widget,b):
+        print "eb scroll event !"
         if int(b.direction)==1:
-            self.idx+=1
+            self.zoom=True
         else:
-            self.idx-=1
+            self.zoom=False
         self.draw()
     def on_WinShow_key_press_event(self, widget, b):
         key= gtk.gdk.keyval_name(b.keyval).lower()
@@ -166,12 +173,8 @@ class WinShow(GladeApp):
             else:
                 self.selected.append(node)
             self.draw()
-        #~ elif b.keyval == 65451: # +
-            #~ self.zoom=min(self.zoom+1,10)
-            #~ self.show()
-        #~ elif b.keyval == 65453: # -
-            #~ self.zoom=max(self.zoom-1,1)
-            #~ self.show()
+        elif key == "f11":
+            self.on_zoom_toggled()
         elif key=="backspace":
             # clear selection
             self.selected=[]
@@ -179,10 +182,11 @@ class WinShow(GladeApp):
         elif key=="delete":
             # delete
             self.on_delete_clicked(None)    # and call draw
-        elif key=="insert":
+        elif key=="insert" or key=="f9":
             self.needInfo = not self.needInfo
             self.draw()
         else:
+            #print key
             currentNode = self.ln[self.idx]
             if self.isModify and not currentNode.isReadOnly:
                 if b.keyval<255 and b.string.strip()!="":
@@ -199,9 +203,8 @@ class WinShow(GladeApp):
     def draw(self,forceReload=False):
         """
         Draws the currently selected photo in the full screen view
-        
+
         """
-        
         if self.idx >= len(self.ln):
             self.idx = len(self.ln)-1
         if self.idx < 0:
@@ -247,7 +250,7 @@ TAGS :
             self.delete.hide()
 
         self.taglist.fill(ltags)
-        
+
         d=Display()
         d.node = None
         self.viewer.display=d   # prevent toggle event
@@ -272,15 +275,25 @@ TAGS :
             print "*ERROR* bad characters in jpeg info : ",m
         d.isSelected = (node in self.selected)
         d.nbSelected = len(self.selected)
-        self.viewer.show( d )
+        self.viewer.show( d,self.zoom,self.pointer_position )
         gc.collect()
 
 
     def on_WinShow_delete_event(self,*args):
         self.quit()
 
-    def on_WinShow_button_press_event(self,*args):
-        self.quit()
+    def on_WinShow_button_press_event(self, event, data):
+        #print "winshow button press"
+        screen_width, screen_height=data.window.get_size()
+        pointer_x, pointer_y = data.get_coords()
+        self.pointer_position=(pointer_x, pointer_y, screen_width,screen_height)
+        #print "Type %s, button %s, x = %s,y = %s" % (data.type, data.button, self.pointer_position[0], self.pointer_position[1])
+        if data.button == 1: #left click does zoom
+            self.on_zoom_toggled()
+        elif data.button == 2 : #center click
+            pass
+        else: #button 3 closes
+            self.quit()
 
     def on_remove_tag(self,widget,event,tag):
         currentNode = self.viewer.display.node
@@ -303,10 +316,15 @@ TAGS :
             else:
                 currentNode.removeFromBasket()
             self.isBasketUpdate=True
-    
-        
+
+    def on_zoom_toggled(self):
+        self.zoom= not self.zoom
+        self.draw()
+
 class ImageShow(gtk.DrawingArea):
     def __init__(self):
+        self.zoom=False
+        self.pointer_position=(0,0,0,0) #x,y,window_width,window_height
         super(gtk.DrawingArea, self).__init__()
         self.connect("expose_event", self.expose)
 
@@ -318,6 +336,7 @@ class ImageShow(gtk.DrawingArea):
         # set a clip region for the expose event
         context.rectangle(event.area.x, event.area.y,
                                event.area.width, event.area.height)
+        #print "expose : x:%s y:%s witdth:%s height:%s" %(event.area.x, event.area.y,event.area.width,event.area.height)
         context.clip()
 
         self.draw(context)
@@ -334,7 +353,8 @@ class ImageShow(gtk.DrawingArea):
         if self.display:
             if self.display.image:
                 context.save()
-                pb,x,y=render(self.display.image,rect.width,rect.height)
+                #print self.zoom
+                pb,x,y=render(self.display.image,rect.width,rect.height,self.zoom,self.pointer_position)
                 context.set_source_pixbuf(pb,x,y)
                 context.paint()
                 context.restore()
@@ -380,33 +400,44 @@ class ImageShow(gtk.DrawingArea):
             #    context.show_layout(layout)
 
 
-    def show(self,d):
+    def show(self,d,zoom=False,pointer_position=()):
         # store instance display
         self.display = d
+        self.zoom=zoom
+        self.pointer_position=pointer_position
 
         # and trig expose event to redraw all
         rect = self.get_allocation()
         self.queue_draw_area(0,0,rect.width,rect.height)
 
-def fit(orig_width, orig_height, dest_width, dest_height,zoom):
+def fit(orig_width, orig_height, dest_width, dest_height,zoom=False,pointer_position=(0,0,0,0)):
     if orig_width == 0 or orig_height == 0:
         return 0, 0
     scale = min(dest_width/orig_width, dest_height/orig_height)
     if scale > 1:
         scale = 1
-    scale*=zoom
+    if zoom==True:
+        scale=1
+    #print "fit: zoom %s scale %s" % (zoom, scale)
     fit_width = scale * orig_width
     fit_height = scale * orig_height
     return int(fit_width), int(fit_height)
 
-def render(pb,maxw,maxh):
+def render(pb,maxw,maxh,zoom=1,pointer_position=(0,0,0,0)):
     """ resize pixbuf 'pb' to fit in box maxw*maxh
         return the new pixbuf and x,y to center it
     """
     (wx,wy) = pb.get_width(),pb.get_height()
-    dwx,dwy = fit(wx,wy,float(maxw),float(maxh),1)
+    dwx,dwy = fit(wx,wy,float(maxw),float(maxh),zoom)
     pb = pb.scale_simple(dwx,dwy,gtk.gdk.INTERP_NEAREST)
-    x,y=(maxw/2)-(dwx/2),(maxh/2)-(dwy/2)
+    if pointer_position==(0,0,0,0):
+        ratiox=ratioy=1.0/2
+    else:
+        (mouse_x,mouse_y,screen_width,screen_height)=pointer_position
+        ratiox=1.0*((mouse_x-(screen_width-maxw))/maxw)
+        ratioy=1.0*((mouse_y-(screen_height-maxh))/maxh)
+    x,y=(maxw - dwx)*ratiox,(maxh - dwy)*ratioy
+    #print "maxw:%s dwx:%s maxh:%s dwy:%s x:%s y:%s pointer_position:%s" %(maxw, dwx, maxh, dwy, x, y, pointer_position)
     return pb,x,y
 
 class Display(object):
@@ -419,7 +450,7 @@ class PixbufCache(object):
     _cache=None
     _file=None
     def get(self,file,forceReload=False):
-        
+
         if file == PixbufCache._file :
             if forceReload:
                 PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
@@ -434,29 +465,29 @@ class PixbufCache(object):
             else:
                 PixbufCache._cache=None
 
-        
+
         return PixbufCache._cache
 
 #class WinComment(GladeApp):
 #    """ Creates and handles the dialog for Editing photo comments """
 #    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
 #    window="WinComment"
-#    
+#
 #    def init(self,comment):
 #        """ Initalisation """
 #        self.tbufComment = self.txtComment.get_buffer()
 #        self.tbufComment.set_text(comment)
-#    
+#
 #    def on_btnCancel_clicked(self,*args):
 #        """ Handles the Cancel button """
 #        self.quit(False,"")
-#    
+#
 #    def on_btnOk_clicked(self,*args):
 #        """ Handles the rotate right button """
 #        start=self.tbufComment.get_start_iter()
 #        end =self.tbufComment.get_end_iter()
 #        self.quit(True,self.tbufComment.gset_mnemonic_modifieret_text(start,end,False))
-#        
+#
 #    def on_WinGetComment_delete_event(self,*args):
 #        """ Handles window delete (close) events """
 #        self.quit(False,"")
