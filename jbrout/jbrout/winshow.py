@@ -144,10 +144,11 @@ class WinShow(GladeApp):
     def on_eb_scroll_event(self,widget,b):
         print "eb scroll event !"
         if int(b.direction)==1:
-            self.zoom=True
+            self.idx+=1
         else:
-            self.zoom=False
+            self.idx-=1
         self.draw()
+
     def on_WinShow_key_press_event(self, widget, b):
         key= gtk.gdk.keyval_name(b.keyval).lower()
         if (key == "page_up") or (key == "up") or (key == "left"):
@@ -291,7 +292,7 @@ TAGS :
         if data.button == 1: #left click does zoom
             self.on_zoom_toggled()
         elif data.button == 2 : #center click
-            pass
+            self.quit()
         else: #button 3 closes
             self.quit()
 
@@ -429,15 +430,27 @@ def render(pb,maxw,maxh,zoom=1,pointer_position=(0,0,0,0)):
     """
     (wx,wy) = pb.get_width(),pb.get_height()
     dwx,dwy = fit(wx,wy,float(maxw),float(maxh),zoom)
+    image_x, image_y = fit(wx,wy,float(maxw),float(maxh), False)
     pb = pb.scale_simple(dwx,dwy,gtk.gdk.INTERP_NEAREST)
-    if pointer_position==(0,0,0,0):
+    if pointer_position==(0,0,0,0) or zoom==False:
         ratiox=ratioy=1.0/2
     else:
         (mouse_x,mouse_y,screen_width,screen_height)=pointer_position
-        ratiox=1.0*((mouse_x-(screen_width-maxw))/maxw)
-        ratioy=1.0*((mouse_y-(screen_height-maxh))/maxh)
+
+        mouse_x=max(mouse_x -(screen_width-maxw),0) #remove pane space
+        mouse_x=max(mouse_x-(maxw-image_x)/2.0, 0)
+        if mouse_x>image_x:
+            mouse_x=image_x
+        mouse_y=max(mouse_y -(screen_height-maxh),0) #remove eventual space
+        mouse_y=max(mouse_y-(maxh-image_y)/2.0, 0)
+        if mouse_y>dwy:
+            mouse_y=dwy
+        print "mouse_x:%s mouse_y:%s" % (mouse_x, mouse_y)
+
+        ratiox=1.0*(mouse_x/image_x)
+        ratioy=1.0*(mouse_y/image_y)
     x,y=(maxw - dwx)*ratiox,(maxh - dwy)*ratioy
-    #print "maxw:%s dwx:%s maxh:%s dwy:%s x:%s y:%s pointer_position:%s" %(maxw, dwx, maxh, dwy, x, y, pointer_position)
+    #print "maxw:%s dwx:%s maxh:%s dwy:%s x:%s y:%s wx:%s wy:%s pointer_position:%s ratiox:%s ratioy:%s" %(maxw, dwx, maxh, dwy, x, y, wx, wy, pointer_position, ratiox, ratioy)
     return pb,x,y
 
 class Display(object):
