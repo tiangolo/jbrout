@@ -1234,6 +1234,7 @@ class Window(GladeApp):
         self.tbl.init(self.tbl.items,JBrout.conf["orderAscending"])
 
     def on_affichage_select(self,widget,idx):
+        """select display (menu)"""
         self.tbl.select=idx - 1
         self.tbl.refresh()
 
@@ -1303,6 +1304,7 @@ class Window(GladeApp):
 
 
     def SetSelection(self,title,xpath,ln,mode,withFilter=True):
+        """Select the folder to display as thumbs"""
         self.__saveSelection = (title,xpath)
         self.mode = mode
         self.main_widget.set_title(_("%s (%d photo(s))") % (title,len(ln)))
@@ -1638,16 +1640,25 @@ class Window(GladeApp):
     ## SELECTEUR / LISTVIEW
     ###################################################################################
 
-    def on_selecteur_mouseClick(self,widget,event): #sel,item,event):
+    def on_selecteur_mouseClick(self,widget,event): 
         if event.button==3 and event.type == gtk.gdk.BUTTON_PRESS:
+            menu=self.get_menu(widget,widget.getSelected())
+            menu.popup(None,None,None,event.button,event.time)
+            return 1
+            
+        elif event.button==1 and event.type == gtk.gdk._2BUTTON_PRESS:
+            # call the winshow
 
+            l,i = widget.items,widget.focus_cell
+            self.call_winshow(l,i)
+            return 1
+        
+    def get_menu(self,widget,ln):
             def makeItem(nom,callback,selecteur):
                 item = gtk.ImageMenuItem(nom)
                 item.connect("activate",callback,selecteur)
                 item.show()
                 return item
-
-            ln = widget.getSelected()
 
             # control if we can add/remove selected photos from basket -> can*
             # control if there is a readOnly file
@@ -1756,37 +1767,33 @@ class Window(GladeApp):
 
                 menu.append( makeItem(_("Delete"), self.on_selecteur_menu_delete,widget ))
 
-            menu.popup(None,None,None,event.button,event.time)
-            return 1
-        elif event.button==1 and event.type == gtk.gdk._2BUTTON_PRESS:
-            # call the winshow
+            return menu
+        
+    def call_winshow(self,l,i,selected=[]):
+        isInfo = JBrout.conf["showInfo"]==1 and True or False
+        isModify = JBrout.modify
+        w=WinShow(l,i,isInfo,isModify, selected)
+        w.hpShow.set_position( int(JBrout.conf["viewertreewidth"] or 160) )
+        w.loop()
+        JBrout.conf["viewertreewidth"] = int(w.hpShow.get_position())
+        JBrout.conf["showInfo"]=w.needInfo and 1 or 0
 
-            l,i = widget.items,widget.focus_cell
-            isInfo = JBrout.conf["showInfo"]==1 and True or False
-            isModify = JBrout.modify
-            w=WinShow(l,i,isInfo,isModify)
-            w.hpShow.set_position( int(JBrout.conf["viewertreewidth"] or 160) )
-            w.loop()
-            JBrout.conf["viewertreewidth"] = int(w.hpShow.get_position())
-            JBrout.conf["showInfo"]=w.needInfo and 1 or 0
+        if w.removed:
+            sel = self.tbl.setSelected(w.removed)
+            self.on_selecteur_menu_delete(None,self.tbl)
 
-            if w.removed:
-                sel = self.tbl.setSelected(w.removed)
-                self.on_selecteur_menu_delete(None,self.tbl)
+        if w.selected:  # perhaps a new desired selection
+            sel = self.tbl.setSelected(w.selected)
 
-            if w.selected:  # perhaps a new desired selection
-                sel = self.tbl.setSelected(w.selected)
+        if w.isBasketUpdate:    #is basket updated ?
+            model=self.treeviewdb.get_model()
+            model.activeBasket()
 
-            if w.isBasketUpdate:    #is basket updated ?
-                model=self.treeviewdb.get_model()
-                model.activeBasket()
-
-            if w.invalidThumbs:     # is thumbs need to be redrawn
-                for i in w.invalidThumbs:
-                    Buffer.remove(i.file)
-                self.tbl.refresh()
-
-            return 1
+        if w.invalidThumbs:     # is thumbs need to be redrawn
+            for i in w.invalidThumbs:
+                Buffer.remove(i.file)
+            self.tbl.refresh()
+            
 
     def on_selecteur_menu_delete_tag(self,b,sel,tag):
         ln=sel.getSelected()
@@ -2151,7 +2158,20 @@ class Window(GladeApp):
         JBrout.tags.save()
         JBrout.conf.save()
         self.quit()
-
+        
+    def on_window_key_press_event(self, widget, b, *args):
+        key= gtk.gdk.keyval_name(b.keyval).lower()
+        if key in ['f11','kp_enter','return'] :
+            self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
+        elif key=="escape":
+            self.on_window_delete_event(self, widget)
+            self.quit()
+        elif key=='menu':
+            menu=self.get_menu(self.tbl,self.tbl.getSelected())
+            #menu.popup(None,None,None,event.button,event.time)
+            menu.popup(None,None,None,3,0)
+        else:
+            print key
 
     def on_window_size_allocate(self, widget, *args):
         pass

@@ -15,6 +15,7 @@ import gtk,gc,pango,gobject,os
 from __main__ import Buffer,GladeApp,JBrout
 from commongtk import WinKeyTag
 from common import cd2rd,format_file_size_for_display
+from jbrout.externaltools import ExternalTools
 #TODO: add ops : add/del from basket
 #TODO: add ops : external tools
 
@@ -61,10 +62,10 @@ class WinShow(GladeApp):
     #glade='data/jbrout.glade'
     window="WinShow"
 
-    def init(self, ln,idx,showInfo=True,isModify=False):
+    def init(self, ln,idx,showInfo=True,isModify=False,selected=[]):
         self.ln=[]+ln
         self.idx=idx
-        self.selected=[] # to be able to handle a new selection (reselect with space)
+        self.selected=selected # to be able to handle a new selection (reselect with space)
         self.removed=[]  # deleted items
         self.invalidThumbs=[]
 
@@ -187,7 +188,7 @@ class WinShow(GladeApp):
             self.needInfo = not self.needInfo
             self.draw()
         else:
-            #print key
+            # print key
             currentNode = self.ln[self.idx]
             if self.isModify and not currentNode.isReadOnly:
                 if b.keyval<255 and b.string.strip()!="":
@@ -283,7 +284,7 @@ TAGS :
     def on_WinShow_delete_event(self,*args):
         self.quit()
 
-    def on_WinShow_button_press_event(self, event, data):
+    def on_WinShow_button_press_event(self, widget, data):
         #print "winshow button press"
         screen_width, screen_height=data.window.get_size()
         pointer_x, pointer_y = data.get_coords()

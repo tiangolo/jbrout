@@ -6,6 +6,7 @@
     <property name="width_request">688</property>
     <property name="visible">True</property>
     <property name="title" translatable="yes">jbrout</property>
+    <signal name="key_press_event" handler="on_window_key_press_event"/>
     <signal name="size_allocate" handler="on_window_size_allocate"/>
     <signal name="delete_event" handler="on_window_delete_event"/>
     <child>
