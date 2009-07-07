@@ -446,7 +446,7 @@ def render(pb,maxw,maxh,zoom=1,pointer_position=(0,0,0,0)):
         mouse_y=max(mouse_y-(maxh-image_y)/2.0, 0)
         if mouse_y>dwy:
             mouse_y=dwy
-        print "mouse_x:%s mouse_y:%s" % (mouse_x, mouse_y)
+        #print "mouse_x:%s mouse_y:%s" % (mouse_x, mouse_y)
 
         ratiox=1.0*(mouse_x/image_x)
         ratioy=1.0*(mouse_y/image_y)

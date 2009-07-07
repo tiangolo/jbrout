@@ -25,10 +25,9 @@ import pyexiv2
 
 import re
 
-class WinViewExif(GladeApp):
-    glade=os.path.join(os.path.dirname(__file__), 'viewExif.glade')
+class WinViewMetaData(GladeApp):
+    glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data', 'viewMetaData.glade')
 
-    #-- WinViewExif.new {
     def init(self, nodes):
         #############################################################
         ## IN in self.nodes:
@@ -112,24 +111,22 @@ class WinViewExif(GladeApp):
     def on_winViewExif_delete_event(self, widget, *args):
         self.quit(False)
 
+    def on_winViewExif_key_press_event(self, widget, b, *args):
+        key= gtk.gdk.keyval_name(b.keyval).lower()
+        if key=="escape":
+            self.on_winViewExif_delete_event(self, widget)
+        elif key == "home":
+            self.selector.slider.set_value(0)
+        elif key == "left":
+            self.selector.slider.set_value( self.selector.slider.get_value()-1 )
+
+        elif key == "right":
+            self.selector.slider.set_value( self.selector.slider.get_value()+1 )
+        elif key == "end":
+            self.selector.slider.set_value(len(self.nodes))
+
     def on_button_close_clicked(self, widget, *args):
         self.quit(False)
 
     def on_selector_value_changed(self, *args):
         self.setPhoto(self.selector.getValue())
-
-def main():
-    win_viewExif = WinViewExif()
-
-    win_viewExif.loop()
-
-if __name__ == "__main__":
-    from libs.i18n import createGetText
-
-    # make translation available in the gui/gtk
-    GladeApp.bindtextdomain("jbrout",os.path.join(os.path.dirname(__file__), 'po'))
-
-    # make translation available in the code
-    __builtins__.__dict__["_"] = createGetText("jbrout",os.path.join(os.path.dirname(__file__), 'po'))
-
-    main()

@@ -1640,19 +1640,19 @@ class Window(GladeApp):
     ## SELECTEUR / LISTVIEW
     ###################################################################################
 
-    def on_selecteur_mouseClick(self,widget,event): 
+    def on_selecteur_mouseClick(self,widget,event):
         if event.button==3 and event.type == gtk.gdk.BUTTON_PRESS:
             menu=self.get_menu(widget,widget.getSelected())
             menu.popup(None,None,None,event.button,event.time)
             return 1
-            
+
         elif event.button==1 and event.type == gtk.gdk._2BUTTON_PRESS:
             # call the winshow
 
             l,i = widget.items,widget.focus_cell
             self.call_winshow(l,i)
             return 1
-        
+
     def get_menu(self,widget,ln):
             def makeItem(nom,callback,selecteur):
                 item = gtk.ImageMenuItem(nom)
@@ -1686,6 +1686,8 @@ class Window(GladeApp):
             if len(ln)==1: # there is only one selected picture
                 menu.append( makeItem(_("Select this folder"), self.on_selecteur_menu_select_folder,widget ))
                 menu.append( makeItem(_("Select this time"), self.on_selecteur_menu_select_time,widget ))
+
+            menu.append( makeItem(_("View Metadata"), self.on_selecteur_menu_metadata,widget ))
 
             menu2 = gtk.Menu()
             isEntries = False
@@ -1768,7 +1770,7 @@ class Window(GladeApp):
                 menu.append( makeItem(_("Delete"), self.on_selecteur_menu_delete,widget ))
 
             return menu
-        
+
     def call_winshow(self,l,i,selected=[]):
         isInfo = JBrout.conf["showInfo"]==1 and True or False
         isModify = JBrout.modify
@@ -1793,7 +1795,7 @@ class Window(GladeApp):
             for i in w.invalidThumbs:
                 Buffer.remove(i.file)
             self.tbl.refresh()
-            
+
 
     def on_selecteur_menu_delete_tag(self,b,sel,tag):
         ln=sel.getSelected()
@@ -1895,6 +1897,14 @@ class Window(GladeApp):
             sel.refresh()
 
             sel.reSelectFocus()
+
+    def on_selecteur_menu_metadata(self,b,sel):
+        l = sel.getSelected()
+        from jbrout.viewMetaData import WinViewMetaData
+
+        win = WinViewMetaData(l)
+
+        win.loop()
 
     def on_selecteur_menu_select_plugin(self,ib,listview,id,callback):
         l = listview.getSelected()
@@ -2158,7 +2168,7 @@ class Window(GladeApp):
         JBrout.tags.save()
         JBrout.conf.save()
         self.quit()
-        
+
     def on_window_key_press_event(self, widget, b, *args):
         key= gtk.gdk.keyval_name(b.keyval).lower()
         if key in ['f11','kp_enter','return'] :
@@ -2170,8 +2180,8 @@ class Window(GladeApp):
             menu=self.get_menu(self.tbl,self.tbl.getSelected())
             #menu.popup(None,None,None,event.button,event.time)
             menu.popup(None,None,None,3,0)
-        else:
-            print key
+##        else:
+##            print key
 
     def on_window_size_allocate(self, widget, *args):
         pass
