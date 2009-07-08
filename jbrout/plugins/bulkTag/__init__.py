@@ -21,32 +21,51 @@ class Plugin(JPlugin):
     __version__ = "0.1"
 
     def menuEntries(self,l):
-        return [(8000,_("Unify Tags"),True,self.unifyTags,None)]
+        return [(8000,_("Unify Tags"),True,self.unifyTags,None),
+                (8001,_("Bulk Tag"),True,self.bulkTag,None)]
 
 
-    def unifyTags(self,list):
-        """Unifys tags between the selected list of photos (makes the Tags all the same)"""
+    def readTags(self,imgList):
+        """Returns a list of the tags used in the given image list"""
         tags=[]
-        for i in list:
-            self.showProgress(list.index(i), len(list), _("Reading Tags"))
+        for i in imgList:
+            self.showProgress(imgList.index(i), len(imgList), _("Reading Tags"))
             for tag in i.tags:
                 if tag not in tags:
                     tags.append(tag)
         self.showProgress()
+        return tags
+
+    def writeTags(self,imgList, tags):
+        """Writes a list of tags to the given set of images"""
+        for i in imgList:
+            self.showProgress(imgList.index(i), len(imgList), _("Tagging"))
+            i.addTags(tags)
+        self.showProgress()
+
+    def unifyTags(self,list):
+        """Unifys tags between the selected list of photos (makes the Tags all the same)"""
+        tags = self.readTags(list)
         if len(tags) != 0:
-            msg = u""
-            for tag in tags:
-                msg = msg + ', ' + tag
-            msg = _("Are you sure you whish to add the following tags to the selected images:\n") + msg[2:]
+            msg = "Are you sure you whish to add the following tags to the selected images:\n" + ", ".join(tags)
             if self.InputQuestion(msg,title=_("Unify Tags")):
-                for i in list:
-                    self.showProgress(list.index(i), len(list), _("Tagging"))
-                    i.addTags(tags)
+                self.writeTags(list, tags)
                 ret = True
             else:
                 ret = False
         else:
             ret = False
-        self.showProgress()
         return ret
+
+    def bulkTag(self,list):
+        """Tool for tagging a number of images with a set of tags"""
+        from bulkTag import WinBulkTag
+        tags = self.readTags(list)
+        winBulkTag = WinBulkTag(tags)
+        ok, tags = winBulkTag.loop()
+        if ok and len(tags) > 0:
+            self.writeTags(list, tags)
+            return True
+        else:
+            return False
 
