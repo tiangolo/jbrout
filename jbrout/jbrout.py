@@ -2913,7 +2913,14 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         self.SetSelection(libl,xpath,ln,self.mode)
 
 def main(canModify=True):
-    if JBrout.lockOn():
+    locked = not JBrout.lockOn()
+    if locked:
+        if InputQuestion(None,
+                _("jBrout appears to already be running are you sure you wish to run another copy"),
+                _("jBrout Already Running"),
+                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK) ):
+            locked = False
+    if not locked:
         try:
             sys.excepthook = myExceptHook
             JBrout.init(canModify)
@@ -2926,7 +2933,7 @@ def main(canModify=True):
         finally:
             JBrout.lockOff()
     else:
-        print "jbrout is already running (~/.jbrout/jbrout.lock)"
+        print "jBrout is already running if not delete the file (~/.jbrout/jbrout.lock)"
         sys.exit(1)
 
 USAGE = """%s [options]
