@@ -38,7 +38,7 @@ from PIL import Image
 import StringIO
 
 import string,re
-from subprocess import Popen,PIPE
+from subprocess import Popen,PIPE,call
 
 
 def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
@@ -92,13 +92,22 @@ class _Command:
 
       if not os.path.isfile(_jpegtran):
           err+="jpegtran is not present in 'tools'\n"
+      
+      _exiftool = os.path.join(__path,"exiftool.exe")
+      if not os.path.isfile(_exiftool):
+          err+="exiftool is not present in 'tools'\n"
+
    else:
       # set "non windows" path (needs 'which')
       _exiftran = u"".join(os.popen("which exiftran").readlines()).strip()
       _jpegtran = None
+      _exiftool = u"".join(os.popen("which exiftool").readlines()).strip()
 
       if not os.path.isfile(_exiftran):
           err+="exiftran is not present, please install 'exiftran'(fbida)\n"
+
+      if not os.path.isfile(_exiftool):
+          err+="exiftool is not present, please install 'exiftool'\n"
 
    if err:
       raise CommandException(err)
@@ -120,9 +129,13 @@ class _Command:
         outerr = string.join(p.stderr.readlines() ).strip()
 
         if "exiftran" in cmdline:
-           if "processing" in outerr:
-               # exiftran output process in stderr ;-(
-               outerr=""
+            if "processing" in outerr:
+                # exiftran output process in stderr ;-(
+                outerr=""
+        if "exiftool" in cmdline:
+            if "NikonPreview" in outerr:
+                #exiftool warning that has no impact on result
+                outerr=""
 
         if outerr:
            raise CommandException( cmdline +"\n OUTPUT ERROR:"+outerr)
@@ -165,12 +178,14 @@ class PhotoCmd(object):
         print m
         #pass
 
-    def __init__(self,file,needAutoRename=False,needAutoRotation=False):
+    def __init__(self,file,needAutoRename=False,needAutoRotation=False,syncXMP=True):
         assert type(file)==unicode
         assert os.path.isfile(file)
 
         self.__file = file
         self.__readonly = not os.access( self.__file, os.W_OK)
+        
+        self.__sync_xmp_iptc()
 
         # pre-read
         self.__info = pyexiv2.Image(self.__file)
@@ -480,9 +495,8 @@ isreal : %s""" % (
 
         # and rebuild exif
         np.rebuildExifTB()
-
+        
         return np
-
 
     def rebuildExifTB(self):
         if self.__readonly: return False
@@ -511,10 +525,22 @@ isreal : %s""" % (
     def __majTags(self):
         self.__info["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in self.__tags]
         self.__maj()
+        self.__update_xmp()
+        
+    def __sync_xmp_iptc(self):
+        """Import XMP subjects, merge with IPTC keywords and save to both"""
+        ret= _Command._run( [_Command._exiftool, "-overwrite_original", "-addtagsfromfile@", "-keywords-<subject", self.__file] )
+        ret= _Command._run( [_Command._exiftool, "-overwrite_original", "-addtagsfromfile@", "-keywords+<subject", self.__file] ) 
+        ret= _Command._run( [_Command._exiftool,"-overwrite_original", "-subject< keywords",self.__file] ) 
+        
+    def __update_xmp(self):
+        """Save tags to XMP subjects"""
+        ret= _Command._run( [_Command._exiftool,"-overwrite_original", "-subject< keywords",self.__file] ) 
 
     def __maj(self):
         self.__info.writeMetadata()
         self.__refresh()
+
 
 
 
