@@ -67,7 +67,7 @@ except:
 
 from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL,dnd_args_to_dir_list,xpathquoter # for selecteur
 from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString
-from jbrout.db import JBrout,Buffer
+from jbrout.db import JBrout,Buffer,Conf
 from jbrout.winshow import WinShow
 from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
@@ -2209,6 +2209,7 @@ class Window(GladeApp):
         if not os.path.isfile(confFile):
             ExternalTools.generate(confFile)
         runWith(["notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(confFile))
+        JBrout.conf = Conf( JBrout.getConfFile("jbrout.conf") )
 
     #def on_search_activate(self, widget, *args):
     #    win_search = Winsearch( TreeTags(), self.main_widget )
