@@ -23,7 +23,7 @@ msgstr "Commenter"
 
 #: ../plugins/comment/__init__.py:41 ../plugins/comment/__init__.py:46
 msgid "Commenting"
-msgstr "Commentairage"
+msgstr "Application du commentaire"
 
 #: ../plugins/comment/comment.py:52
 #, python-format

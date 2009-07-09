@@ -95,4 +95,11 @@ class Plugin(JPlugin):
 <preference-set idref="476791dc-18d0-4a49-8021-f04a7f9f22ea">
   <boolean id="import_live">1</boolean>
 </preference-set>
+<preference-set idref="476791dc-18d0-4a49-8021-f04a7f9f22ea/jbrout/plugins/bulkTag">
+  <string id="import_exclude_matches">*.*~;*.bak;*.tmp;CVS;.#*;*.pyo;*.pyc;.svn;*%*;tmp*.html;.DS_Store</string>
+  <string id="import_include_matches"></string>
+  <boolean id="import_live">1</boolean>
+  <boolean id="import_recursive">1</boolean>
+  <string id="import_type">useFolders</string>
+</preference-set>
 </project>

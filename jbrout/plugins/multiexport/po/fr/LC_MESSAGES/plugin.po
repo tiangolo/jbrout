@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout multiexport plugin VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-01 14:25+0100\n"
+"POT-Creation-Date: 2009-07-09 11:40+0200\n"
 "PO-Revision-Date: 2007-06-27 11:07+0200\n"
 "Last-Translator: manatlan <manatlan@gmail.com>\n"
 "Language-Team: French <gnomefr@traduc.org>\n"
@@ -17,62 +17,64 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/multiexport/winexport.py:23
-msgid "Select the destination"
-msgstr "Choisir la destination"
-
-#: ../plugins/multiexport/__init__.py:158
+#: ../plugins/multiexport/__init__.py:174
 msgid "Export to"
 msgstr "Exporter vers"
 
-#: ../plugins/multiexport/__init__.py:186
-msgid "Export to folder"
-msgstr "Exporter dans le répertoire"
+#: ../plugins/multiexport/__init__.py:202
+#, fuzzy
+msgid "Export to archive"
+msgstr "Envoyer par mail"
 
-#: ../plugins/multiexport/__init__.py:192
-#: ../plugins/multiexport/__init__.py:217
+#: ../plugins/multiexport/__init__.py:220
+#: ../plugins/multiexport/__init__.py:230
+#: ../plugins/multiexport/__init__.py:255
 msgid "The selected path doesn't exists !"
 msgstr "Le chemin selectionné n'existe pas"
 
-#: ../plugins/multiexport/__init__.py:196
+#: ../plugins/multiexport/__init__.py:224
+msgid "Export to folder"
+msgstr "Exporter dans le répertoire"
+
+#: ../plugins/multiexport/__init__.py:234
 msgid "Export as a Html Gallery"
 msgstr "Fabrique une gallery html"
 
-#: ../plugins/multiexport/__init__.py:221
+#: ../plugins/multiexport/__init__.py:259
 msgid "Export to PicasaWeb"
 msgstr "Export vers PicasaWeb"
 
-#: ../plugins/multiexport/__init__.py:230
+#: ../plugins/multiexport/__init__.py:268
 msgid "Sorry, you can't upload to picasaweb (python import error)"
-msgstr ""
+msgstr "Désolé, vous ne pouvez pas exporter vers Picassaweb (erreur d'import python)"
 
-#: ../plugins/multiexport/__init__.py:232
+#: ../plugins/multiexport/__init__.py:270
 msgid "Upload error : "
 msgstr "Erreur d'upload : "
 
-#: ../plugins/multiexport/__init__.py:237
-#: ../plugins/multiexport/__init__.py:392
-#: ../plugins/multiexport/__init__.py:394
+#: ../plugins/multiexport/__init__.py:275
+#: ../plugins/multiexport/__init__.py:441
+#: ../plugins/multiexport/__init__.py:443
 msgid "Export to Flickr"
 msgstr "Exporter vers FlickR"
 
-#: ../plugins/multiexport/__init__.py:243
+#: ../plugins/multiexport/__init__.py:281
 msgid "Export to Email"
 msgstr "Envoyer par mail"
 
-#: ../plugins/multiexport/__init__.py:249
+#: ../plugins/multiexport/__init__.py:287
 msgid "Export to FTP"
 msgstr "Envoyer sur un compte FTP"
 
-#: ../plugins/multiexport/__init__.py:261
+#: ../plugins/multiexport/__init__.py:299
 msgid "FTP error : "
 msgstr "Erreur FTP : "
 
-#: ../plugins/multiexport/__init__.py:373
+#: ../plugins/multiexport/__init__.py:422
 msgid "Plugin error : "
 msgstr "Erreur Plugin : "
 
-#: ../plugins/multiexport/__init__.py:387
+#: ../plugins/multiexport/__init__.py:436
 msgid ""
 "You need to give jBrout permission to upload your photos to Flickr.\n"
 "This is done via a Flickr-session in your web browser to which you are "
@@ -88,13 +90,17 @@ msgstr ""
 "\n"
 "Jbrout va maintenant ouvrir la page de validation de FlickR"
 
-#: ../plugins/multiexport/__init__.py:394
+#: ../plugins/multiexport/__init__.py:443
 msgid ""
 "jBrout should now open a web broser. When you're done there, return to this "
 "message box and click the OK-button."
 msgstr ""
 "Quand vous avez fini de l'étape de validation de jbrout dans flickr, "
 "vouspourrez poursuivre en cliquant sur le bouton suivant"
+
+#: ../plugins/multiexport/winexport.py:23
+msgid "Select the destination"
+msgstr "Choisir la destination"
 
 #: ../tmp/winexport.glade.h:1
 msgid "..."
@@ -118,62 +124,66 @@ msgid "Apply to all"
 msgstr "Appliquer à tous"
 
 #: ../tmp/winexport.glade.h:9
-msgid "Export"
-msgstr "Export"
+msgid "Archive"
+msgstr "Archiver"
 
 #: ../tmp/winexport.glade.h:10
+msgid "Export"
+msgstr "Exporter"
+
+#: ../tmp/winexport.glade.h:11
 msgid "Export To"
 msgstr "Exporter vers"
 
-#: ../tmp/winexport.glade.h:11
+#: ../tmp/winexport.glade.h:12
 msgid "FTP"
 msgstr "FTP"
 
-#: ../tmp/winexport.glade.h:12
+#: ../tmp/winexport.glade.h:13
 msgid "Family"
 msgstr "Famille"
 
-#: ../tmp/winexport.glade.h:13
+#: ../tmp/winexport.glade.h:14
 msgid "Filesystem"
 msgstr "Un répertoire"
 
-#: ../tmp/winexport.glade.h:14
-msgid "Flickr"
-msgstr ""
-
 #: ../tmp/winexport.glade.h:15
+msgid "Flickr"
+msgstr "Flickr"
+
+#: ../tmp/winexport.glade.h:16
 msgid "Folder"
 msgstr "Répertoire"
 
-#: ../tmp/winexport.glade.h:16
+#: ../tmp/winexport.glade.h:17
 msgid "Friends"
 msgstr "Amis"
 
-#: ../tmp/winexport.glade.h:17
+#: ../tmp/winexport.glade.h:18
 msgid "From email"
 msgstr "A partir de l'email"
 
-#: ../tmp/winexport.glade.h:18
+#: ../tmp/winexport.glade.h:19
 msgid "Html Gallery"
 msgstr "Gallerie HTML"
 
-#: ../tmp/winexport.glade.h:19
+#: ../tmp/winexport.glade.h:20
 msgid "Login"
 msgstr "Compte"
 
-#: ../tmp/winexport.glade.h:20
+#: ../tmp/winexport.glade.h:21
 msgid "Mail"
 msgstr "Email"
 
-#: ../tmp/winexport.glade.h:21
+#: ../tmp/winexport.glade.h:22
 msgid "Max side"
 msgstr "Taille maximum"
 
-#: ../tmp/winexport.glade.h:22
+#: ../tmp/winexport.glade.h:23
 msgid "Message"
 msgstr "Message"
 
-#: ../tmp/winexport.glade.h:23
+#: ../tmp/winexport.glade.h:24
 msgid ""
 "Newer first\n"
 "Oldest first"
@@ -181,68 +191,72 @@ msgstr ""
 "Les récentes en premières\n"
 "Les plus vielles en premières"
 
-#: ../tmp/winexport.glade.h:25
+#: ../tmp/winexport.glade.h:26
 msgid "Order"
 msgstr "Ordre"
 
-#: ../tmp/winexport.glade.h:26
+#: ../tmp/winexport.glade.h:27
 msgid "Password"
 msgstr "Mot de passe"
 
-#: ../tmp/winexport.glade.h:27
+#: ../tmp/winexport.glade.h:28
 msgid "Path"
 msgstr "Chemin"
 
-#: ../tmp/winexport.glade.h:28
+#: ../tmp/winexport.glade.h:29
 msgid "PicasaWeb"
 msgstr "Picasaweb"
 
-#: ../tmp/winexport.glade.h:29
-msgid "Privacy"
-msgstr ""
-
 #: ../tmp/winexport.glade.h:30
+msgid "Privacy"
+msgstr "Confidentialité"
+
+#: ../tmp/winexport.glade.h:31
 msgid "Private"
 msgstr "Privée"
 
-#: ../tmp/winexport.glade.h:31
+#: ../tmp/winexport.glade.h:32
 msgid "Public"
 msgstr "Publique"
 
-#: ../tmp/winexport.glade.h:32
+#: ../tmp/winexport.glade.h:33
 msgid "Quality"
 msgstr "Qualité"
 
-#: ../tmp/winexport.glade.h:33
+#: ../tmp/winexport.glade.h:34
 msgid "Resize"
 msgstr "Retailler"
 
-#: ../tmp/winexport.glade.h:34
+#: ../tmp/winexport.glade.h:35
 msgid "SMTP address"
 msgstr "Serveur SMTP"
 
-#: ../tmp/winexport.glade.h:35
+#: ../tmp/winexport.glade.h:36
 msgid "Template "
 msgstr "Gabarit"
 
-#: ../tmp/winexport.glade.h:36
+#: ../tmp/winexport.glade.h:37
+msgid "Type"
+msgstr "Type"
+
+#: ../tmp/winexport.glade.h:38
 msgid "don't touch originals"
 msgstr "Ne pas modifier"
 
-#: ../tmp/winexport.glade.h:37
+#: ../tmp/winexport.glade.h:39
 msgid "gtk-apply"
-msgstr ""
+msgstr "Appliquer"
 
-#: ../tmp/winexport.glade.h:38
+#: ../tmp/winexport.glade.h:40
 #, fuzzy
 msgid "gtk-cancel"
 msgstr "Abandonner"
 
-#: ../tmp/winexport.glade.h:39
+#: ../tmp/winexport.glade.h:41
 msgid "resize"
 msgstr "Retailler"
 
-#: ../tmp/winexport.glade.h:40
+#: ../tmp/winexport.glade.h:42
 msgid "to Emails"
 msgstr "Aux emails"
 

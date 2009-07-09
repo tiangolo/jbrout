@@ -31,7 +31,7 @@ msgstr "Accès aux originaux"
 
 #: ../tmp/instantweb.glade.h:3
 msgid "label"
-msgstr ""
+msgstr "Libellé"
 
 #: ../tmp/instantweb.glade.h:4
 msgid "view as albums"

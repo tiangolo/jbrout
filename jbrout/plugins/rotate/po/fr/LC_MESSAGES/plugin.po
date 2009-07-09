@@ -17,7 +17,7 @@ msgstr ""
 
 #: ../plugins/rotate/__init__.py:34
 msgid "Auto Rotate"
-msgstr ""
+msgstr "Rotation automatique"
 
 #: ../plugins/rotate/__init__.py:35
 msgid "Rotate Right 90"
