@@ -133,7 +133,7 @@ class _Command:
                 # exiftran output process in stderr ;-(
                 outerr=""
         if "exiftool" in cmdline:
-            if "NikonPreview" in outerr:
+            if "Warning" in outerr:
                 #exiftool warning that has no impact on result
                 outerr=""
 
