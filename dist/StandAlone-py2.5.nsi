@@ -114,6 +114,7 @@ Section "jBrout Application" SEC01
   File "..\jbrout\data\gfx\refresh.png"
   SetOutPath "$INSTDIR\app\data\tools"
   File "..\jbrout\data\tools\jpegtran.exe"
+  File "..\jbrout\data\tools\exiftool.exe"
   SetOutPath "$INSTDIR\app\jbrout"
   File "..\jbrout\jbrout\__init__.py"
   File "..\jbrout\jbrout\common.py"
