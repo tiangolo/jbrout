@@ -31,6 +31,14 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkMenuItem" id="editOptions">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Edit options</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_editOptions_activate"/>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
                         <property name="visible">True</property>
                       </widget>

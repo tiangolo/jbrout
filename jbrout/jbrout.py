@@ -831,6 +831,16 @@ class Window(GladeApp):
                 JBrout.conf["normalizeName"] = True
             else:
                 JBrout.conf["normalizeName"] = False
+        
+        if not JBrout.conf.has_key("synchronizeXmp"):
+            ret=InputQuestion(self.main_widget,
+                _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
+                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
+             )
+            if ret:
+                JBrout.conf["synchronizeXmp"] = True
+            else:
+                JBrout.conf["synchronizeXmp"] = False
 
         if not JBrout.conf.has_key("normalizeNameFormat"):              # key not present
             JBrout.conf["normalizeNameFormat"] = "p%Y%m%d_%H%M%S"   # set default
@@ -2193,6 +2203,12 @@ class Window(GladeApp):
             runWith([JBrout.conf["editor"],"notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(JBrout.toolsFile))
         else:
             runWith(["notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(JBrout.toolsFile))
+
+    def on_editOptions_activate(self,*args):
+        confFile=JBrout.getConfFile("jbrout.conf")
+        if not os.path.isfile(confFile):
+            ExternalTools.generate(confFile)
+        runWith(["notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(confFile))
 
     #def on_search_activate(self, widget, *args):
     #    win_search = Winsearch( TreeTags(), self.main_widget )

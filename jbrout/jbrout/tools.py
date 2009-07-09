@@ -39,7 +39,7 @@ import StringIO
 
 import string,re
 from subprocess import Popen,PIPE,call
-
+import db 
 
 def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
    if f:
@@ -178,14 +178,17 @@ class PhotoCmd(object):
         print m
         #pass
 
-    def __init__(self,file,needAutoRename=False,needAutoRotation=False,syncXMP=True):
+    def __init__(self,file,needAutoRename=False,needAutoRotation=False):
         assert type(file)==unicode
         assert os.path.isfile(file)
+        
+        self.synchronizeXmp=db.JBrout.conf["synchronizeXmp"]
 
         self.__file = file
         self.__readonly = not os.access( self.__file, os.W_OK)
         
-        self.__sync_xmp_iptc()
+        if self.synchronizeXmp:
+            self.__sync_xmp_iptc()
 
         # pre-read
         self.__info = pyexiv2.Image(self.__file)
@@ -520,12 +523,11 @@ isreal : %s""" % (
         else:
             return False
 
-
-
     def __majTags(self):
         self.__info["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in self.__tags]
         self.__maj()
-        self.__update_xmp()
+        if self.synchronizeXmp:
+            self.__update_xmp()
         
     def __sync_xmp_iptc(self):
         """Import XMP subjects, merge with IPTC keywords and save to both"""
@@ -540,14 +542,6 @@ isreal : %s""" % (
     def __maj(self):
         self.__info.writeMetadata()
         self.__refresh()
-
-
-
-
-
-
-
-
 
     def addComment(self,c):
     # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
