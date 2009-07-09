@@ -1,0 +1,19 @@
+#: ../plugins/bulkTag/__init__.py:24 ../plugins/bulkTag/__init__.py:51
+msgid "Unify Tags"
+msgstr "Unifier les mots-clés"
+
+#: ../plugins/bulkTag/__init__.py:25
+msgid "Bulk Tag"
+msgstr "Application globale de mots-clés"
+
+#: ../plugins/bulkTag/__init__.py:32
+msgid "Reading Tags"
+msgstr "Lecture des mots-clés"
+
+#: ../plugins/bulkTag/__init__.py:42
+msgid "Tagging"
+msgstr "Application des mots-clés"
+
+#: ../tmp/bulkTag.glade.h:1
+msgid "Tags Not Yet Loaded"
+msgstr "Les mots-clés n'ont pas été chargés"
