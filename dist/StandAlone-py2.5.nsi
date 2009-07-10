@@ -92,6 +92,7 @@ Section "jBrout Application" SEC01
   File "..\jbrout\data\gpl.txt"
   File "..\jbrout\data\jbrout.glade"
   File "..\jbrout\data\version.txt"
+  File "..\jbrout\data\viewMetaData.glade"
   SetOutPath "$INSTDIR\app\data\gfx"
   File "..\jbrout\data\gfx\basket.png"
   File "..\jbrout\data\gfx\calendar.png"
@@ -123,6 +124,7 @@ Section "jBrout Application" SEC01
   File "..\jbrout\jbrout\externaltools.py"
   File "..\jbrout\jbrout\listview.py"
   File "..\jbrout\jbrout\tools.py"
+  File "..\jbrout\jbrout\viewMetaData.py"
   File "..\jbrout\jbrout\winbookmarks.py"
   File "..\jbrout\jbrout\winshow.py"
   SetOutPath "$INSTDIR\app\libs"
@@ -325,19 +327,17 @@ Section "Rotation Plug-in" SEC17
   File "..\jbrout\plugins\rotate\po\it\LC_MESSAGES\plugin.po"
 SectionEnd
 
-Section "View Exif Information Plug-in" SEC18
-  SetOutPath "$INSTDIR\app\plugins\viewExif"
-  File "..\jbrout\plugins\viewExif\viewExif.glade"
-  File "..\jbrout\plugins\viewExif\viewExif.py"
-  File "..\jbrout\plugins\viewExif\__init__.py"
-  SetOutPath "$INSTDIR\app\plugins\viewExif\po"
-  File "..\jbrout\plugins\viewExif\po\plugin.pot"
-  SetOutPath "$INSTDIR\app\plugins\viewExif\po\fr\LC_MESSAGES"
-  File "..\jbrout\plugins\viewExif\po\fr\LC_MESSAGES\plugin.mo"
-  File "..\jbrout\plugins\viewExif\po\fr\LC_MESSAGES\plugin.po"
-  SetOutPath "$INSTDIR\app\plugins\viewExif\po\it\LC_MESSAGES"
-  File "..\jbrout\plugins\viewExif\po\it\LC_MESSAGES\plugin.mo"
-  File "..\jbrout\plugins\viewExif\po\it\LC_MESSAGES\plugin.po"
+Section "Bulk Tagging Plug-in" SEC18
+  SetOutPath "$INSTDIR\app\plugins\bulkTag"
+  File "..\jbrout\plugins\bulkTag\bulkTag.glade"
+  File "..\jbrout\plugins\bulkTag\bulkTag.py"
+  File "..\jbrout\plugins\bulkTag\__init__.py"
+  SetOutPath "$INSTDIR\app\plugins\bulkTag\po"
+  File "..\jbrout\plugins\bulkTag\po\plugin.pot"
+  SetOutPath "$INSTDIR\app\plugins\bulkTag\po\fr\LC_MESSAGES"
+  File "..\jbrout\plugins\bulkTag\po\fr\LC_MESSAGES\plugin.mo"
+  File "..\jbrout\plugins\bulkTag\po\fr\LC_MESSAGES\plugin.po"
+
 SectionEnd
 
 Section -AdditionalIcons
