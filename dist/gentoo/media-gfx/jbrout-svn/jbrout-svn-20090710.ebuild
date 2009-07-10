@@ -22,7 +22,8 @@ DEPEND=">=dev-lang/python-2.4
 	media-gfx/jhead
 	dev-python/lxml
 	dev-python/imaging
-	>=media-gfx/pyexiv2-0.1.2"
+	>=media-gfx/pyexiv2-0.1.2
+	media-libs/exiftool"
 
 RDEPEND="${DEPEND}"
 
