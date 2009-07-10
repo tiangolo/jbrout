@@ -207,6 +207,12 @@ class WinShow(GladeApp):
         Draws the currently selected photo in the full screen view
 
         """
+        cursor = gtk.gdk.Cursor(gtk.gdk.WATCH)
+        self.main_widget.window.set_cursor(cursor)
+
+        gobject.idle_add( self._draw, forceReload )
+
+    def _draw(self,forceReload):
         if self.idx >= len(self.ln):
             self.idx = len(self.ln)-1
         if self.idx < 0:
@@ -280,6 +286,7 @@ TAGS :
         self.viewer.show( d,self.zoom,self.pointer_position )
         gc.collect()
 
+        self.main_widget.window.set_cursor(None)
 
     def on_WinShow_delete_event(self,*args):
         self.quit()
