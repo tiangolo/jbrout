@@ -121,7 +121,7 @@ jBrout is able to :
     """
     p.url = "http://jbrout.free.fr"
     # python-pyexiv2 is now in debian(sid), hardy(universe)
-    p.depends="python, python-lxml, python-gtk2, python-glade2, python-imaging, python-pyexiv2 (>=0.1.2), exiftran"
+    p.depends="python, python-lxml, python-gtk2, python-glade2, python-imaging, python-pyexiv2 (>=0.1.2), exiftran, libimage-exiftool-perl"
     p.license="gpl"
     p.section="graphics"
     p.arch="all"

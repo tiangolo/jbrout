@@ -11,7 +11,7 @@
 ## GNU General Public License for more details.
 ##
 
-import urllib, urllib2, md5, mimetools, mimetypes, os.path
+import urllib, urllib2, hashlib, mimetools, mimetypes, os.path
 from xml.dom import minidom
 
 class FlickrAPI:
@@ -25,18 +25,18 @@ class FlickrAPI:
   def callMethod(self, method, args, sign = False):
     # Call the Flickr API method with the args dict
     # Return a sequence of True and a xml object if the method succeeds, otherwise a sequence of False and the error message
-    
+
     # Construct the post data
     args["method"] = method
     post_data = self.__makePost(args, sign)
-    
+
     # Make the REST request
     return self.__makeRESTRequest("http://api.flickr.com/services/rest/", post_data)
 
   def upload(self, filepath, comment, tags, privacy):
     # Upload the photo "filepath" with comment "comment", and a list of tags
     # to Flickr. Privacy is [bool, bool, bool] (public, friend, family)
-    
+
     # Get the filename
     assert type(filepath) == unicode
     filepath = filepath.encode("utf_8")
@@ -45,7 +45,7 @@ class FlickrAPI:
     for index in range(len(privacy)):
         if (privacy[index] == True): privacy[index] = 1
         elif (privacy[index] == False): privacy[index] = 0
-    
+
     # Construct a string of escaped tags
     tags_str = ""
     for tag in tags:
@@ -56,10 +56,10 @@ class FlickrAPI:
     boundary, post_data = self.__makeImagePost({"auth_token": self.token, "title": filename, "description": comment, "tags": tags_str, "is_public": privacy[0], "is_friend": privacy[1], "is_family": privacy[2]}, filepath)
     response = self.__makeRESTRequest("http://api.flickr.com/services/upload/", post_data, boundary)
     return response
-    
+
   def obtainToken(self, perms):
     # Get a token with the appropriate permissions.
-    
+
     token = None
 
     response = self.callMethod("flickr.auth.getFrob", {}, sign = True)
@@ -90,48 +90,48 @@ class FlickrAPI:
           if (self.token_perms == perms):
             return True
     return False
-      
+
   def __makeRESTRequest(self, url, post_data, boundary = None):
     # Make a REST request to Flickr with the url and the post data. Boundary is needed for multipart/form-data
-    
+
     # Construct the request
     req = urllib2.Request(url)
     req.add_data(post_data)
     if (boundary):
       # We're dealing with multipart/form-data instead of application/x-www-form-urlencoded, ans we should tell our request so
       req.add_header("Content-Type", "multipart/form-data; boundary=%s" % boundary)
-  
+
     # Get a response
     response = urllib2.urlopen(req).read()
     response_obj = minidom.parseString(response)
-    
+
     # Return failure or success
     if (response_obj.childNodes[0].getAttribute("stat") == "fail"):
       return [False, response_obj.childNodes[0].childNodes[1].getAttribute("code"), response_obj.childNodes[0].childNodes[1].getAttribute("msg")]
     else:
       return [True, response_obj]
-    
+
   def __makePost(self, args, sign = False):
     # Construct POST data with api key and such
-    
+
     # Add the api_key to the args list
     args["api_key"] = self.api_key
-    
+
     # Calculate the signature
     if (sign):
       args["api_sig"] = self.__getSignature(args)
-    
+
     return urllib.urlencode(args)
 
   def __makeImagePost(self, args, filepath):
     # Create the POST data for image uploading, which is a bit different then normal POST data
-    
+
     # Insert the API key
     args["api_key"] = self.api_key
-    
+
     # Get the signature
     args["api_sig"] = self.__getSignature(args)
-    
+
     # Choose a MIME boundary
     boundary = mimetools.choose_boundary()
 
@@ -148,7 +148,7 @@ class FlickrAPI:
     post_data += "--%s\r\n" % (boundary)
     post_data += 'Content-Disposition: form-data; name=\"photo\"; filename=\"%s\"\r\n' % os.path.split(filepath)[-1]
     post_data += "Content-Type: %s\r\n\r\n" % mimetypes.guess_type(filepath)[0]
-    
+
     photo = open(filepath).read()
     post_data += photo
 
@@ -156,9 +156,9 @@ class FlickrAPI:
     terminator = "\r\n--%s--" % boundary
     terminator = terminator.encode("utf_8")
     post_data += terminator
-    
+
     return boundary, post_data
-    
+
   def __getSignature(self, args):
     # Calculate the signature
     keys = args.keys()
@@ -166,22 +166,22 @@ class FlickrAPI:
     sig_str = self.secret
     for key in keys:
       sig_str += key + str(args[key])
-    return md5.new(sig_str).hexdigest()
+    return hashlib.md5.new(sig_str).hexdigest()
 
 class FlickrUploader:
   def __init__(self, conf,showAuthWin):
     self.conf = conf
-    
+
     # This API key is owned by Mr. Pi and only destined for jbrout!
     api_key = "d17736b0c362f26940281359ed3f1f30"
     secret  = "4875575e0d3f526d"
-    
+
     # Get a token for uploading pictures from the settings
     try:
       token = self.conf["FR.token"]
     except:
       token = None
-    
+
     # Get a Flickr api class
     self.flickr = FlickrAPI(api_key, secret, showAuthWin, token)
 
