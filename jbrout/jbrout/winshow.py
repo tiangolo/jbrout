@@ -16,6 +16,7 @@ from __main__ import Buffer,GladeApp,JBrout
 from commongtk import WinKeyTag
 from common import cd2rd,format_file_size_for_display
 from jbrout.externaltools import ExternalTools
+from jbrout.tools import XMPUpdater
 #TODO: add ops : add/del from basket
 #TODO: add ops : external tools
 
@@ -308,6 +309,8 @@ TAGS :
         currentNode = self.viewer.display.node
         currentNode.delTag(tag)
         self.draw()
+        xmp=XMPUpdater([currentNode])
+        xmp.UpdateXmp()
 
     def on_delete_clicked(self,*args):
         if self.isModify:

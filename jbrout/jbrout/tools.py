@@ -182,14 +182,10 @@ class PhotoCmd(object):
         assert type(file)==unicode
         assert os.path.isfile(file)
         
-        self.synchronizeXmp=db.JBrout.conf["synchronizeXmp"]
 
         self.__file = file
         self.__readonly = not os.access( self.__file, os.W_OK)
         
-        if self.synchronizeXmp:
-            self.__sync_xmp_iptc()
-
         # pre-read
         self.__info = pyexiv2.Image(self.__file)
         self.__info.readMetadata()
@@ -526,19 +522,7 @@ isreal : %s""" % (
     def __majTags(self):
         self.__info["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in self.__tags]
         self.__maj()
-        if self.synchronizeXmp:
-            self.__update_xmp()
         
-    def __sync_xmp_iptc(self):
-        """Import XMP subjects, merge with IPTC keywords and save to both"""
-        ret= _Command._run( [_Command._exiftool, "-overwrite_original", "-addtagsfromfile@", "-keywords-<subject", self.__file] )
-        ret= _Command._run( [_Command._exiftool, "-overwrite_original", "-addtagsfromfile@", "-keywords+<subject", self.__file] ) 
-        ret= _Command._run( [_Command._exiftool,"-overwrite_original", "-subject< keywords",self.__file] ) 
-        
-    def __update_xmp(self):
-        """Save tags to XMP subjects"""
-        ret= _Command._run( [_Command._exiftool,"-overwrite_original", "-subject< keywords",self.__file] ) 
-
     def __maj(self):
         self.__info.writeMetadata()
         self.__refresh()
@@ -704,6 +688,82 @@ isreal : %s""" % (
     #        return PhotoCmd.normalizeName(file)
     #    else:
     #        return file
+
+class XMPUpdater():
+    def __init__(self,photo_list):
+        """XMPUpdater is in charge of manipulating XMP data.
+        It might disapear when pyexiv2 will have XMP support"""
+        
+        # Do we synchronize automatically ?
+        self.synchronizeXmp=db.JBrout.conf["synchronizeXmp"]
+        
+        # List of pictures
+        self.list=photo_list
+        
+        # List of pictures' name
+        if len(self.list)>0:
+            if type(self.list[0]) in [str,unicode]:
+                self.pictures=self.list
+            else:
+                self.pictures=[]
+                for picture in self.list:
+                    self.pictures.append(picture.file.encode('utf-8'))
+
+    def SyncXmpIptc(self):
+        """Merge XMP and IPTC if option is on"""
+        print 'SyncXmpIptc'
+        if not self.synchronizeXmp:
+            return 1
+        self.DoMergeXmpIptc()
+        
+    def UpdateXmp(self):
+        """Save tags to XMP subjects if option is on"""
+        print 'UpdateXmp'
+        if not self.synchronizeXmp:
+            return 1
+        self.DoSaveXmp()
+
+    def DoMergeXmpIptc(self):
+        """Import XMP subjects, merge with IPTC keywords and save to both"""
+        print 'MergeXmpIptc'
+        if not self.synchronizeXmp:
+            return 1
+        #initialize command
+        command=[_Command._exiftool]
+        #remove subject from keywords to avoid duplicates
+        command.extend(["-r", "-overwrite_original", "-addtagsfromfile@", "-keywords-<subject"])
+        #add pictures list
+        command.extend(self.pictures)
+        print command
+        ret= _Command._run( command )
+
+        #initialize command
+        command=[_Command._exiftool]
+        #add subject to keywords
+        command.extend(["-r", "-overwrite_original", "-addtagsfromfile@", "-keywords+<subject"])
+        #add pictures list
+        command.extend(self.pictures)
+        print command
+        ret= _Command._run( command )
+        
+        #initialize command
+        command=[_Command._exiftool]
+        #copy keywords to subect
+        command.extend(["-r", "-overwrite_original", "-subject< keywords"])
+        command.extend(self.pictures)
+        print command
+        ret= _Command._run(command) 
+
+    def DoSaveXmp(self):
+        """Save tags to XMP subjects"""
+        print 'SaveXmp'
+        if not self.synchronizeXmp:
+            return 1
+        command=[_Command._exiftool]
+        command.extend(["-r", "-overwrite_original", "-subject< keywords"])
+        command.extend(self.pictures)
+        ret= _Command._run(command) 
+
 
 
 if __name__=="__main__":

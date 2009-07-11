@@ -15,8 +15,6 @@ import time
 import os
 import gc
 
-
-
 BORDER_SIZE = 2
 CELL_BORDER_WIDTH = 4
 SELECTION_THICKNESS = 2
@@ -286,7 +284,7 @@ class ThumbnailsView(gtk.Layout):
                     if not i in self.selection:
                         self.selection.append(i)
             else:
-                if event.button==1 or (event.button==3 and cell_num not in self.selection):
+                if (event.button==3 or event.button==1) and cell_num not in self.selection:#don't set selection if target is already selected
                     self.selection.set([cell_num])
 
             self.focus_cell = cell_num  # needed before thaw() ! else it will not be good in notification event !!!!!

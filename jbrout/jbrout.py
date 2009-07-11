@@ -72,6 +72,7 @@ from jbrout.winshow import WinShow
 from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
 from jbrout.winbookmarks import WinBookmark
+from jbrout.tools import XMPUpdater
 
 import tempfile,shutil
 
@@ -165,9 +166,9 @@ class ListView(ThumbnailsView):
 
     choix = [_("Tags"),_("Comment"),_("Album"),_("Date"),_("Name")]
 
-    def __init__(self, pere,allow_dragndrop):
+    def __init__(self, parent,allow_dragndrop):
         ThumbnailsView.__init__(self)
-        self.parentWin = pere
+        self.parentWin = parent
 
         self.connect('key-press-event', self.on_key_press_for_tag)
 
@@ -1578,8 +1579,11 @@ class Window(GladeApp):
             newNodeFolder=None
 
             importedTags={}
-
-
+            
+            #synchronize XMP and IPTC before effectively import
+            xmp=XMPUpdater(files)
+            xmp.SyncXmpIptc()
+            #Now let's import !
             for folder in files:
                 if os.path.isdir(folder):
                     iterator = JBrout.db.add( folder,importedTags )
@@ -1659,8 +1663,9 @@ class Window(GladeApp):
         elif event.button==1 and event.type == gtk.gdk._2BUTTON_PRESS:
             # call the winshow
 
-            l,i = widget.items,widget.focus_cell
-            self.call_winshow(l,i)
+            #l,i = widget.items,widget.focus_cell
+            self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
+
             return 1
 
     def get_menu(self,widget,ln):
@@ -1819,6 +1824,8 @@ class Window(GladeApp):
         finally:
             self.showProgress()
         sel.refresh()
+        xmp=XMPUpdater(ln)
+        xmp.UpdateXmp()
 
     def on_selecteur_menu_add_to_basket(self,b,sel):
         ln = sel.getSelected()
@@ -2009,6 +2016,8 @@ class Window(GladeApp):
                         i.addTags(l)
             finally:
                 self.showProgress()
+            xmp=XMPUpdater(ln)
+            xmp.UpdateXmp()
 
             sel.refresh()
         #~ context, x, y, selection, info, time = args
@@ -2168,6 +2177,7 @@ class Window(GladeApp):
 
 
     def on_window_delete_event(self, widget, *args):
+        """Window close"""
         #~ JBrout.conf["hpanedView"]=self.hpanedView.get_position()
 
         JBrout.conf["hpaned"] = self.hpaned1.get_position()
@@ -2180,6 +2190,7 @@ class Window(GladeApp):
         self.quit()
 
     def on_window_key_press_event(self, widget, b, *args):
+        """User pressed a key"""
         key= gtk.gdk.keyval_name(b.keyval).lower()
         if key in ['f11','kp_enter','return'] :
             self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
@@ -2188,15 +2199,15 @@ class Window(GladeApp):
             self.quit()
         elif key=='menu':
             menu=self.get_menu(self.tbl,self.tbl.getSelected())
-            #menu.popup(None,None,None,event.button,event.time)
             menu.popup(None,None,None,3,0)
-##        else:
-##            print key
+        else:
+            print key
 
     def on_window_size_allocate(self, widget, *args):
         pass
 
     def on_editTools_activate(self,*args):
+        """edit external commands"""
         if not os.path.isfile(JBrout.toolsFile):
             ExternalTools.generate(JBrout.toolsFile)
         if JBrout.conf.has_key("editor"):
@@ -2205,6 +2216,7 @@ class Window(GladeApp):
             runWith(["notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(JBrout.toolsFile))
 
     def on_editOptions_activate(self,*args):
+        """edit jBrout options"""
         confFile=JBrout.getConfFile("jbrout.conf")
         if not os.path.isfile(confFile):
             ExternalTools.generate(confFile)
