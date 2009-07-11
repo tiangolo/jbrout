@@ -185,7 +185,7 @@ class DBPhotos:
             nodeDir.remove(newNode)
 
             # and raise exception
-            raise err+"\nPhoto has incorrect exif/iptc tags, can't be imported :\n"+str([file,])
+            raise Exception(err+"\nPhoto has incorrect exif/iptc tags, can't be imported :\n"+str([file,]))
             return None
         else:
             importedTags=node.updateInfo( iii )
@@ -334,7 +334,7 @@ class FolderNode(object):
             def __init__(self,l,xpath):
                 list.__init__(self,l)
                 self.xpath=xpath
-        
+
         ln=self.__node.xpath(xpath)
         ll= [PhotoNode(i) for i in ln]
         return PhotoNodes(ll,"//folder[@name='%s']/%s"%(self.file,xpath))
@@ -428,7 +428,7 @@ class FolderNode(object):
         else:
             if not os.path.isfile(newname):
                 # it's not a file
-                
+
                 if os.path.isdir(newname):
                     # but it's a existing folder
                     created = True
@@ -441,7 +441,7 @@ class FolderNode(object):
                     except os.error, detail:
                        raise detail
                        created = False
-        
+
                 if created:
                     #so map the folder to a db node
                     nodeDir = Element("folder", name=newname)
@@ -723,7 +723,7 @@ class PhotoNode(object):
         pc = PhotoCmd(self.file)
         pc.rotate(sens)
         self.updateInfo(pc)
-    
+
     def transform(self,sens):
         assert sens in ["auto","rotate90","rotate180","rotate270","flipHorizontal","flipVertical","transpose","transverse"]
 
@@ -1086,10 +1086,10 @@ class CatgNode(object):
             n.text = t
             self.__node.append(n)
             return TagNode(n)
-    
+
     def rename(self,newName):
         self.__node.attrib["name"] = newName
-        
+
 
     def remove(self):
         self.__node.getparent().remove(self.__node)
@@ -1134,7 +1134,7 @@ class Conf(object):
 
     def __init__(self,file):
         self.__ini = DictIni(file)
-        
+
         # to recreate the new INI file, bases on dict4ini
         if not self.__ini.has_key("jBrout"):
             # clear old values, to restart a new one
