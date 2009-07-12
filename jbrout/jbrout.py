@@ -1587,8 +1587,6 @@ class Window(GladeApp):
 
             importedTags={}
             
-            #synchronize XMP and IPTC before effectively import
-            XMPUpdater(files).SyncXmpIptc()
             #Now let's import !
             for folder in files:
                 if os.path.isdir(folder):
