@@ -309,8 +309,7 @@ TAGS :
         currentNode = self.viewer.display.node
         currentNode.delTag(tag)
         self.draw()
-        xmp=XMPUpdater([currentNode])
-        xmp.UpdateXmp()
+        XMPUpdater([currentNode]).UpdateXmp()
 
     def on_delete_clicked(self,*args):
         if self.isModify:

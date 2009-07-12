@@ -58,6 +58,9 @@ autoTrans = {
     7: ["transverse", "Transverse"],
     8: ["rotate270", "Rotate Right"]}
 
+rawFormats=["NEF","nef"]
+supportedFormats=["JPG","jpg","JPEG","jpeg","NEF","nef"]
+
 class CommandException(Exception):
    def __init__(self,m):
       self.message=m
@@ -232,7 +235,7 @@ class PhotoCmd(object):
             if needAutoRename :
                 folder=os.path.dirname(file)
                 nameShouldBe = unicode(exifdate.strftime(PhotoCmd.format))
-                newname = nameShouldBe+u".jpg"
+                newname = nameShouldBe+u'.'+file.split('.')[-1].lower()
 
                 if not os.path.isfile(os.path.join(folder,newname)):
                     # there is no files which already have this name
@@ -711,21 +714,18 @@ class XMPUpdater():
 
     def SyncXmpIptc(self):
         """Merge XMP and IPTC if option is on"""
-        print 'SyncXmpIptc'
         if not self.synchronizeXmp:
             return 1
         self.DoMergeXmpIptc()
         
     def UpdateXmp(self):
         """Save tags to XMP subjects if option is on"""
-        print 'UpdateXmp'
         if not self.synchronizeXmp:
             return 1
         self.DoSaveXmp()
 
     def DoMergeXmpIptc(self):
         """Import XMP subjects, merge with IPTC keywords and save to both"""
-        print 'MergeXmpIptc'
         if not self.synchronizeXmp:
             return 1
         #initialize command
@@ -734,7 +734,6 @@ class XMPUpdater():
         command.extend(["-r", "-overwrite_original", "-addtagsfromfile@", "-keywords-<subject"])
         #add pictures list
         command.extend(self.pictures)
-        print command
         ret= _Command._run( command )
 
         #initialize command
@@ -743,7 +742,6 @@ class XMPUpdater():
         command.extend(["-r", "-overwrite_original", "-addtagsfromfile@", "-keywords+<subject"])
         #add pictures list
         command.extend(self.pictures)
-        print command
         ret= _Command._run( command )
         
         #initialize command
@@ -751,20 +749,16 @@ class XMPUpdater():
         #copy keywords to subect
         command.extend(["-r", "-overwrite_original", "-subject< keywords"])
         command.extend(self.pictures)
-        print command
         ret= _Command._run(command) 
 
     def DoSaveXmp(self):
         """Save tags to XMP subjects"""
-        print 'SaveXmp'
         if not self.synchronizeXmp:
             return 1
         command=[_Command._exiftool]
         command.extend(["-r", "-overwrite_original", "-subject< keywords"])
         command.extend(self.pictures)
         ret= _Command._run(command) 
-
-
 
 if __name__=="__main__":
 

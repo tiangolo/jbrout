@@ -72,7 +72,7 @@ from jbrout.winshow import WinShow
 from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
 from jbrout.winbookmarks import WinBookmark
-from jbrout.tools import XMPUpdater
+from jbrout.tools import XMPUpdater, rawFormats
 
 import tempfile,shutil
 
@@ -330,6 +330,13 @@ class ListView(ThumbnailsView):
             wx= pb.get_width()
             Buffer.pbReadOnly.copy_area(0, 0, 15, 13, pb2, wx-22,7)
             pb=pb2
+
+        if node.name.split('.')[-1] in rawFormats:
+            pb2 = pb.copy()
+            wx= pb.get_width()
+            Buffer.pixRaw.copy_area(0, 0, 15, 13, pb2, wx-44,7)
+            pb=pb2
+            
 
         return pb
 
@@ -1581,8 +1588,7 @@ class Window(GladeApp):
             importedTags={}
             
             #synchronize XMP and IPTC before effectively import
-            xmp=XMPUpdater(files)
-            xmp.SyncXmpIptc()
+            XMPUpdater(files).SyncXmpIptc()
             #Now let's import !
             for folder in files:
                 if os.path.isdir(folder):
@@ -1824,8 +1830,7 @@ class Window(GladeApp):
         finally:
             self.showProgress()
         sel.refresh()
-        xmp=XMPUpdater(ln)
-        xmp.UpdateXmp()
+        XMPUpdater(ln).UpdateXmp()
 
     def on_selecteur_menu_add_to_basket(self,b,sel):
         ln = sel.getSelected()
@@ -2016,8 +2021,7 @@ class Window(GladeApp):
                         i.addTags(l)
             finally:
                 self.showProgress()
-            xmp=XMPUpdater(ln)
-            xmp.UpdateXmp()
+            XMPUpdater(ln).UpdateXmp()
 
             sel.refresh()
         #~ context, x, y, selection, info, time = args

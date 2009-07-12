@@ -28,7 +28,7 @@ import gobject
 from commongtk import Img,rgb
 
 from common import cd2d
-from tools import PhotoCmd
+from tools import PhotoCmd,supportedFormats
 import os,re,sys,thread,shutil,stat,string
 
 from libs.dict4ini import DictIni
@@ -111,7 +111,7 @@ class DBPhotos:
         files = []
         for (basepath, children) in walktree(path,False):
             for child in children:
-                if child[-4:].lower() == ".jpg" and not child.startswith("."):
+                if child.split('.')[-1].lower() in supportedFormats :
                     #~ file = os.path.join(basepath, child).decode( sys.getfilesystemencoding() )
                     file = os.path.join(basepath, child)
                     files.append(file)
@@ -528,6 +528,8 @@ class Buffer:
     pbCheckExclude = Img("data/gfx/check_no.png").pixbuf
     pbCheckDisabled = Img("data/gfx/check_disabled.png").pixbuf
 
+    pixRaw = Img("data/gfx/raw.png").pixbuf
+
     #~ @staticmethod
     #~ def __thread(file,callback,callbackRefresh,item):
         #~ do_gui_operation(Buffer.__fetcher,file,callback,callbackRefresh,item)
@@ -665,6 +667,7 @@ class PhotoNode(object):
     # throw a bug in lxml ?!?! ;-(
 
     def getThumb(self):
+        """ Get thumb from exif data"""
         if self.real == "yes":  # real photo (exifdate !)
             backGroundColor=None
             pb_nothumb = Buffer.pixbufNT
@@ -689,6 +692,7 @@ class PhotoNode(object):
             traceback.print_exc(file=sys.stderr)
             print >>sys.stderr,'-'*60
             pb=pb_error
+
 
         return pb
 
@@ -896,7 +900,7 @@ class PhotoNode(object):
                 self.__node.append(nodeTag)
         if pc.comment:
             nodeComment = Element("c")
-            nodeComment.text = pc.comment
+            nodeComment.text = pc.comment.replace(u'\x00',u' ')
             self.__node.append(nodeComment)
 
         if wasInBasket:
