@@ -4,7 +4,7 @@ msgstr "Unifier les mots-clés"
 
 #: ../plugins/bulkTag/__init__.py:25
 msgid "Bulk Tag"
-msgstr "Application globale de mots-clés"
+msgstr "Application de plusieurs mots-clés"
 
 #: ../plugins/bulkTag/__init__.py:32
 msgid "Reading Tags"

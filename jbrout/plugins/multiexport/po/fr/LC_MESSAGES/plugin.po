@@ -30,7 +30,7 @@ msgstr "Envoyer par mail"
 #: ../plugins/multiexport/__init__.py:230
 #: ../plugins/multiexport/__init__.py:255
 msgid "The selected path doesn't exists !"
-msgstr "Le chemin selectionné n'existe pas"
+msgstr "Le chemin sélectionné n'existe pas"
 
 #: ../plugins/multiexport/__init__.py:224
 msgid "Export to folder"
@@ -96,7 +96,7 @@ msgid ""
 "message box and click the OK-button."
 msgstr ""
 "Quand vous avez fini de l'étape de validation de jbrout dans flickr, "
-"vouspourrez poursuivre en cliquant sur le bouton suivant"
+"vous pourrez poursuivre en cliquant sur le bouton suivant"
 
 #: ../plugins/multiexport/winexport.py:23
 msgid "Select the destination"
@@ -104,11 +104,11 @@ msgstr "Choisir la destination"
 
 #: ../tmp/winexport.glade.h:1
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../tmp/winexport.glade.h:2
 msgid "32 photos, taille 42mo (demo)"
-msgstr ""
+msgstr "32 photos, taille 42mo (demo)"
 
 #: ../tmp/winexport.glade.h:3
 msgid ""
@@ -188,7 +188,7 @@ msgid ""
 "Newer first\n"
 "Oldest first"
 msgstr ""
-"Les récentes en premières\n"
+"Les plus récentes en premières\n"
 "Les plus vielles en premières"
 
 #: ../tmp/winexport.glade.h:26

@@ -152,177 +152,177 @@ msgstr "Trimestre : Jav-Mar=1 Avr-Juin=2 Juil-Sep=3 Oct-Dec=4"
 
 #: ../plugins/download/nameBuilder.py:138
 msgid "Source folder number"
-msgstr ""
+msgstr "Numéro de dossier source"
 
 #: ../plugins/download/nameBuilder.py:139
 msgid "Source folder number & name"
-msgstr ""
+msgstr "Numéro et nom du dossier source"
 
 #: ../plugins/download/nameBuilder.py:140
 msgid "Image number"
-msgstr ""
+msgstr "Numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:141
 msgid "Last digit of image number"
-msgstr ""
+msgstr "Derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:142
 msgid "Last 2 digits of image number"
-msgstr ""
+msgstr "2 derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:143
 msgid "Last 3 digits of image number"
-msgstr ""
+msgstr "3 derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:144
 msgid "Last 4 digits of image number"
-msgstr ""
+msgstr "4 derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:145
 msgid "Last digit of folder number followed by last 4 digits of image number"
-msgstr ""
+msgstr "Derniers chiffres du numéro de dossier suivis des 4 derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:146
 msgid "First digit of folder number followed by last 4 digits of image number"
-msgstr ""
+msgstr "Premier chiffre du numéro de dossier suivi des 4 derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:147
 msgid ""
 "First digit of folder number - 1, followed by last 4 digits of image number"
-msgstr ""
+msgstr "Premier chiffre de numéro de dossier - 1, suivi des 4 derniers chiffres du numéro d'image"
 
 #: ../plugins/download/nameBuilder.py:148
 msgid "Subsecond timing (Nikon DSLR's only"
-msgstr ""
+msgstr "Temps en secondes (Nikon seulement)"
 
 #: ../plugins/download/nameBuilder.py:149
 msgid "Seconds (00 to 59)"
-msgstr ""
+msgstr "Secondes (00 à 59)"
 
 #: ../plugins/download/nameBuilder.py:150
 msgid "Time in the form HHMMSS"
-msgstr ""
+msgstr "Temps sous la forme HHMMSS"
 
 #: ../plugins/download/nameBuilder.py:151
 msgid "Camera model name starting from the first word containing digits"
-msgstr ""
+msgstr "Modèle d'appareil photos commençant par le permier mot comportant des chiffres"
 
 #: ../plugins/download/nameBuilder.py:152
 msgid "Same as %T except '-' are treated as spaces"
-msgstr ""
+msgstr "Idem à %T sauf que les caractères '-' sont remplacés par des espaces"
 
 #: ../plugins/download/nameBuilder.py:153
 msgid "Full camera model name"
-msgstr ""
+msgstr "Nom complet du modèle d'appareil photo"
 
 #: ../plugins/download/nameBuilder.py:154
 msgid "First word of camera model name containing digits"
-msgstr ""
+msgstr "Premier mot du modèle d'appareil photo qui comporte des chiffres"
 
 #: ../plugins/download/nameBuilder.py:155
 msgid "Same as %T3 except '-' are treated as spaces"
-msgstr ""
+msgstr "Comme %T3 sauf que les caractères '-' sont remplacés par des espaces"
 
 #: ../plugins/download/nameBuilder.py:156
 msgid "Last word of camera model name containing digits"
-msgstr ""
+msgstr "Dernier mot du modèle de l'appareil photos qui comporte des chiffres"
 
 #: ../plugins/download/nameBuilder.py:157
 msgid "Same as %T5 except '-' are treated as spaces"
-msgstr ""
+msgstr "Comme %T5 sauf que les caractères '-' sont remplacés par des espaces"
 
 #: ../plugins/download/nameBuilder.py:158
 #: ../plugins/download/nameBuilder.py:159
 msgid "Value defined in camera mapping (sas %T1 if undefined"
-msgstr ""
+msgstr "Valeur du mapping d'appareil photos (sera %T1 si non défini)"
 
 #: ../plugins/download/nameBuilder.py:160
 msgid "Same as %T (Compatability)"
-msgstr ""
+msgstr "Comme %T (Compatibilité)"
 
 #: ../plugins/download/nameBuilder.py:161
 msgid "Same as %T2 (Compatability)"
-msgstr ""
+msgstr "Comme %T2 (Compatibilité)"
 
 #: ../plugins/download/nameBuilder.py:162
 msgid "Week Number (00 to 53)"
-msgstr ""
+msgstr "Numéro de semaine (00 à 53)"
 
 #: ../plugins/download/nameBuilder.py:163
 msgid "Date representation for locale"
-msgstr ""
+msgstr "Représentation locale de la date"
 
 #: ../plugins/download/nameBuilder.py:164
 msgid "Time representation for locale"
-msgstr ""
+msgstr "Représentation locale de l'heure"
 
 #: ../plugins/download/nameBuilder.py:165
 msgid "Year without century"
-msgstr ""
+msgstr "Année sans les centaines"
 
 #: ../plugins/download/nameBuilder.py:166
 msgid "Year with century"
-msgstr ""
+msgstr "Année avec les centaines"
 
 #: ../plugins/download/nameBuilder.py:167
 msgid "Time zone name"
-msgstr ""
+msgstr "Nom du Timezone"
 
 #: ../plugins/download/nameBuilder.py:168
 msgid "Time zone offset wrt UTC"
-msgstr ""
+msgstr "Timezone offset par rapport au temps UTC"
 
 #: ../plugins/download/nameBuilder.py:169
 msgid "Long Date & Time"
-msgstr ""
+msgstr "Date et Heure détaillées"
 
 #: ../plugins/download/nameBuilder.py:170
 msgid "Long Date"
-msgstr ""
+msgstr "Date détaillée"
 
 #: ../plugins/download/nameBuilder.py:171
 msgid "Year 'now' with century i.e. the download date"
-msgstr ""
+msgstr "Année du fichier avec les centaines"
 
 #: ../plugins/download/nameBuilder.py:172
 msgid "Month 'now' i.e. the download date"
-msgstr ""
+msgstr "Mois du fichier"
 
 #: ../plugins/download/nameBuilder.py:173
 msgid "Day 'now' i.e. the download date"
-msgstr ""
+msgstr "Jour du fichier"
 
 #: ../plugins/download/nameBuilder.py:174
 msgid "Year 'now' without century i.e. the download date"
-msgstr ""
+msgstr "Année du fichier sans les centaines"
 
 #: ../plugins/download/nameBuilder.py:175
 msgid "Year without century less 3 hours"
-msgstr ""
+msgstr "Année sans les centaines moins trois heures"
 
 #: ../plugins/download/nameBuilder.py:176
 msgid "Month less 3 hours"
-msgstr ""
+msgstr "Mois moins trois heures"
 
 #: ../plugins/download/nameBuilder.py:177
 msgid "Day less 3 hours"
-msgstr ""
+msgstr "Jour moins trois heures"
 
 #: ../plugins/download/nameBuilder.py:180
 msgid "'Uniqueness' number or empty if filename is unique"
-msgstr ""
+msgstr "Numéro unique ou vide si le nom de fichier est unique"
 
 #: ../plugins/download/nameBuilder.py:181
 msgid "'Uniqueness' number evaluates to 1 or higher"
-msgstr ""
+msgstr "Numéro unique évalué à 1 ou plus"
 
 #: ../plugins/download/nameBuilder.py:182
 msgid "Download sequence number with no leading zeros"
-msgstr ""
+msgstr "Numéro de séquence de télé-chargement sans 0 en début"
 
 #: ../plugins/download/nameBuilder.py:183
 msgid "Date based download sequence number"
-msgstr ""
+msgstr "Numéro de séquence de télé-chargement basé sur la date"
 
 #: ../plugins/download/nameBuilder.py:312
 msgid ""
@@ -336,26 +336,26 @@ msgstr ""
 
 #: ../plugins/download/download.py:89
 msgid "Size"
-msgstr ""
+msgstr "Taille"
 
 #. Datetime object
 #: ../plugins/download/download.py:95
 msgid "Date/Time"
-msgstr ""
+msgstr "Date/Heure"
 
 #. EXIF
 #: ../plugins/download/download.py:99
 msgid "Destination"
-msgstr ""
+msgstr "Destination"
 
 #: ../plugins/download/download.py:101
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #. Short Status
 #: ../plugins/download/download.py:105
 msgid "Rotation"
-msgstr ""
+msgstr "Rotation"
 
 #: ../plugins/download/download.py:119 ../tmp/download.glade.h:23
 msgid "Download Photos From Camera"
@@ -363,24 +363,24 @@ msgstr "Récupérer des photos d'un média"
 
 #: ../plugins/download/download.py:154
 msgid "Please enter the new Job Code"
-msgstr ""
+msgstr "Entrez le nouveau numéro de traitement"
 
 #: ../plugins/download/download.py:186
 #, python-format
 msgid "Finding source files in \"%s\""
-msgstr ""
+msgstr "Fichiers sources trouvés à l'emplacement \"%s\""
 
 #: ../plugins/download/download.py:193
 #, python-format
 msgid "Reading source file information from \"%s\""
-msgstr ""
+msgstr "Lecture des fichiers source depuis \"%s\""
 
 #. Start new
 #. Build image Names
 #. Build names without seralisation
 #: ../plugins/download/download.py:243
 msgid "Building destination Names"
-msgstr ""
+msgstr "Création des noms de destination"
 
 #: ../plugins/download/download.py:261
 msgid ""
@@ -391,127 +391,127 @@ msgstr ""
 #. Check Status
 #: ../plugins/download/download.py:291
 msgid "Checking Status of Images"
-msgstr ""
+msgstr "Vérification du statut des images"
 
 #: ../plugins/download/download.py:301
 msgid "Collision with New"
-msgstr ""
+msgstr "Collision avec une nouvelle image"
 
 #: ../plugins/download/download.py:312
 msgid "Downloaded"
-msgstr ""
+msgstr "Téléchargé"
 
 #: ../plugins/download/download.py:315
 msgid "Collision with Existing"
-msgstr ""
+msgstr "Collision avec un fichier existant"
 
 #: ../plugins/download/download.py:318
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #. Check Rotation
 #: ../plugins/download/download.py:328
 msgid "Checking Rotation Required for Images"
-msgstr ""
+msgstr "Vérification des paramêtres de rotation des images"
 
 #: ../plugins/download/download.py:340
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 #: ../plugins/download/download.py:378
 msgid "Select source folder"
-msgstr ""
+msgstr "Sélectionner le dossier source"
 
 #: ../plugins/download/download.py:735
 msgid ""
 "Please enter the values to use for {T8}, {T9} and auto Tag for the selected "
 "camera:"
-msgstr ""
+msgstr "Saisir les valeurs pour {T8}, {T9} et les mots-clés automatiques pour la sélection"
 
 #: ../plugins/download/download.py:736
 msgid "Camera"
-msgstr ""
+msgstr "Appareil photos"
 
 #: ../plugins/download/download.py:738
 msgid "Serial Number"
-msgstr ""
+msgstr "Numéro de série"
 
 #: ../plugins/download/download.py:740
 msgid "Owner String"
-msgstr ""
+msgstr "Propriétaire"
 
 #: ../plugins/download/download.py:742
 msgid "User Comment"
-msgstr ""
+msgstr "Commentaire"
 
 #: ../plugins/download/download.py:798
 #, python-format
 msgid "Downloading %d of %d"
-msgstr ""
+msgstr "Téléchargement de %d sur %d"
 
 #. Load preview
 #: ../plugins/download/download.py:803
 msgid "Loading preview"
-msgstr ""
+msgstr "Chargement de la pré-visualisation"
 
 #. New item
 #. Copying file
 #: ../plugins/download/download.py:833
 msgid "Copying"
-msgstr ""
+msgstr "Copie en cours"
 
 #: ../plugins/download/download.py:842
 msgid "Performing Transformation:"
-msgstr ""
+msgstr "Transformation en cours"
 
 #: ../plugins/download/download.py:847
 msgid "Commenting"
-msgstr ""
+msgstr "Application du commentaire"
 
 #: ../plugins/download/download.py:854
 msgid "Tagging"
-msgstr ""
+msgstr "Application des mots-clés"
 
 #. Set file modification date/time stamp
 #: ../plugins/download/download.py:858
 msgid "Setting Modification Times"
-msgstr ""
+msgstr "Application des modifications d'heure"
 
 #: ../plugins/download/download.py:864
 msgid "Deleting Source"
-msgstr ""
+msgstr "Suppression des fichiers source"
 
 #: ../plugins/download/download.py:869
 msgid "Finding Related Files"
-msgstr ""
+msgstr "Recherche des fichiers corrélés"
 
 #: ../plugins/download/download.py:882
 msgid "Copying Related File"
-msgstr ""
+msgstr "Copie des fichiers corrélés"
 
 #: ../plugins/download/download.py:885
 msgid "Setting Related File Modification Time"
-msgstr ""
+msgstr "Application de l'heure de modification sur les fichiers corrélés"
 
 #: ../plugins/download/download.py:890
 msgid "Deleting Related File Source"
-msgstr ""
+msgstr "Suppression des fichiers sources corrélés"
 
 #: ../plugins/download/download.py:896
 msgid "Do you realy want to stop the download process"
-msgstr ""
+msgstr "Voulez-vous vraiment interrompre le chargement ?"
 
 #: ../plugins/download/download.py:897
 msgid "Jbrout Question"
-msgstr ""
+msgstr "Question JBrout"
 
 #: ../tmp/download.glade.h:1
 msgid "Action In Progress:"
-msgstr ""
+msgstr "Action en cours : "
 
 #: ../tmp/download.glade.h:2
 msgid "Add"
-msgstr ""
+msgstr "Ajout"
 
 #: ../tmp/download.glade.h:3
 msgid "Add Camera from File"
@@ -527,15 +527,15 @@ msgstr "Commentaire par défaut"
 
 #: ../tmp/download.glade.h:6
 msgid "Auto Tag"
-msgstr "Tag par défaut"
+msgstr "Mot-clé par défaut"
 
 #: ../tmp/download.glade.h:7
 msgid "Auto Tags To Add"
-msgstr "Tag par défaut à ajouter"
+msgstr "Mot-clé à ajouter par défaut"
 
 #: ../tmp/download.glade.h:8
 msgid "Automaticaly rotate photos on download"
-msgstr "Rotationne les photos automatiquement"
+msgstr "Rotation automatique des photos"
 
 #: ../tmp/download.glade.h:9
 msgid "Camera Mapping"
@@ -555,19 +555,19 @@ msgstr ""
 
 #: ../tmp/download.glade.h:13
 msgid "Copy Files with the same name"
-msgstr ""
+msgstr "Copier les fichiers avec le même nom"
 
 #: ../tmp/download.glade.h:14
 msgid "Copy Meta Data"
-msgstr ""
+msgstr "Copier les méta-données"
 
 #: ../tmp/download.glade.h:15
 msgid "Copy RAW file"
-msgstr ""
+msgstr "Copier les fichiers RAW"
 
 #: ../tmp/download.glade.h:16
 msgid "Current Camera:"
-msgstr ""
+msgstr "Appareil photos courant :"
 
 #: ../tmp/download.glade.h:17
 msgid "Current cameram model mappings for {T8} and {T9}"
@@ -575,7 +575,7 @@ msgstr ""
 
 #: ../tmp/download.glade.h:18
 msgid "Delete Selected"
-msgstr ""
+msgstr "Supprimer la sélection"
 
 #: ../tmp/download.glade.h:19
 msgid "Delete Source Images"
@@ -583,39 +583,39 @@ msgstr "Supprimer les images de la source"
 
 #: ../tmp/download.glade.h:20
 msgid "Destination File:"
-msgstr ""
+msgstr "Fichier destination :"
 
 #: ../tmp/download.glade.h:21
 msgid "Destination Folder:"
-msgstr ""
+msgstr "Dossier destination"
 
 #: ../tmp/download.glade.h:22
 msgid "Download Destination"
-msgstr ""
+msgstr "Destination du téléchargement"
 
 #: ../tmp/download.glade.h:24
 msgid "Download Preferences"
-msgstr ""
+msgstr "Préférences de téléchargement"
 
 #: ../tmp/download.glade.h:25
 msgid "Download Progress"
-msgstr ""
+msgstr "Progression du téléchargement"
 
 #: ../tmp/download.glade.h:26
 msgid "Downloading Photos from Camera"
-msgstr ""
+msgstr "Téléchargement des photos depuis l'appareil photos"
 
 #: ../tmp/download.glade.h:27
 msgid "Edit Selected"
-msgstr ""
+msgstr "Edition de la sélection"
 
 #: ../tmp/download.glade.h:28
 msgid "Enable Raw Conversion"
-msgstr ""
+msgstr "Activer la conversion des fichiers RAW"
 
 #: ../tmp/download.glade.h:29
 msgid "Example image name:"
-msgstr ""
+msgstr "Exemple de nom d'image :"
 
 #: ../tmp/download.glade.h:30
 msgid "File Naming"
@@ -632,7 +632,7 @@ msgstr ""
 #: ../tmp/download.glade.h:34
 #, no-c-format
 msgid "Job code (%J):"
-msgstr ""
+msgstr "Code de traitement (%J) :"
 
 #: ../tmp/download.glade.h:35
 msgid "Pattern:"
@@ -645,7 +645,7 @@ msgstr ""
 
 #: ../tmp/download.glade.h:37
 msgid "Prompt for Job Code every time Downloader is run"
-msgstr ""
+msgstr "Saisir un code de traitement à chaque chargement"
 
 #: ../tmp/download.glade.h:38
 msgid "RAW Conversion"
@@ -657,23 +657,23 @@ msgstr ""
 
 #: ../tmp/download.glade.h:40
 msgid "Source File:"
-msgstr ""
+msgstr "Fichier source :"
 
 #: ../tmp/download.glade.h:41
 msgid "Source Folder:"
-msgstr ""
+msgstr "Dossier source :"
 
 #: ../tmp/download.glade.h:42
 msgid "Tag:"
-msgstr ""
+msgstr "Mot-clé :"
 
 #: ../tmp/download.glade.h:43
 msgid "Tags not yet loaded"
-msgstr ""
+msgstr "Mots-clés pas encore chargés"
 
 #: ../tmp/download.glade.h:44
 msgid "label"
-msgstr ""
+msgstr "Libellé"
 
 #: ../tmp/download.glade.h:45
 msgid "{1} - Year now YYYY"
