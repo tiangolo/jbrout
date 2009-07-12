@@ -1,0 +1,9 @@
+#: ../plugins/syncTags/__init__.py:25 ../plugins/syncTags/__init__.py:28
+msgid "Import Tags"
+msgstr "Importer les mots-clés"
+
+#: ../plugins/syncTags/__init__.py:32 ../plugins/syncTags/__init__.py:39
+#, fuzzy
+msgid "Importing Tags"
+msgstr "Import des mots-clés en cours"
+
