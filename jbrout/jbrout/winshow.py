@@ -66,7 +66,10 @@ class WinShow(GladeApp):
     def init(self, ln,idx,showInfo=True,isModify=False,selected=[]):
         self.ln=[]+ln
         self.idx=idx
-        self.selected=selected # to be able to handle a new selection (reselect with space)
+        if len(selected)>1:
+            self.selected=selected # to be able to handle a new selection (reselect with space)
+        else:
+            self.selected=[]
         self.removed=[]  # deleted items
         self.invalidThumbs=[]
 

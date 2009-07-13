@@ -1798,13 +1798,16 @@ class Window(GladeApp):
         w.loop()
         JBrout.conf["viewertreewidth"] = int(w.hpShow.get_position())
         JBrout.conf["showInfo"]=w.needInfo and 1 or 0
-
+        self.tbl.set_focus_cell(w.idx)
+        
         if w.removed:
             sel = self.tbl.setSelected(w.removed)
             self.on_selecteur_menu_delete(None,self.tbl)
 
         if w.selected:  # perhaps a new desired selection
             sel = self.tbl.setSelected(w.selected)
+        else:
+            sel = self.tbl.setSelected([self.tbl.items[w.idx]])
 
         if w.isBasketUpdate:    #is basket updated ?
             model=self.treeviewdb.get_model()
@@ -1814,7 +1817,6 @@ class Window(GladeApp):
             for i in w.invalidThumbs:
                 Buffer.remove(i.file)
             self.tbl.refresh()
-
 
     def on_selecteur_menu_delete_tag(self,b,sel,tag):
         ln=sel.getSelected()
