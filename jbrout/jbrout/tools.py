@@ -58,8 +58,9 @@ autoTrans = {
     7: ["transverse", "Transverse"],
     8: ["rotate270", "Rotate Right"]}
 
-rawFormats=["NEF","nef"]
-supportedFormats=["JPG","jpg","JPEG","jpeg","NEF","nef"]
+rawFormats=["NEF","nef","DNG","dng"]
+#           "cr2","CR2" files are for canon RAW. Makes pyexiv2 crash 14/07/2009 works with exiv2 though
+supportedFormats=["JPG","jpg","JPEG","jpeg","NEF","nef","DNG","dng"]
 
 class CommandException(Exception):
    def __init__(self,m):
