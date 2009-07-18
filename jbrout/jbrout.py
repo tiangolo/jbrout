@@ -336,7 +336,7 @@ class ListView(ThumbnailsView):
             wx= pb.get_width()
             Buffer.pixRaw.copy_area(0, 0, 15, 13, pb2, wx-44,7)
             pb=pb2
-            
+
 
         return pb
 
@@ -839,7 +839,7 @@ class Window(GladeApp):
                 JBrout.conf["normalizeName"] = True
             else:
                 JBrout.conf["normalizeName"] = False
-        
+
         if not JBrout.conf.has_key("synchronizeXmp"):
             ret=InputQuestion(self.main_widget,
                 _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
@@ -1586,7 +1586,7 @@ class Window(GladeApp):
             newNodeFolder=None
 
             importedTags={}
-            
+
             #Now let's import !
             for folder in files:
                 if os.path.isdir(folder):
@@ -1799,7 +1799,7 @@ class Window(GladeApp):
         JBrout.conf["viewertreewidth"] = int(w.hpShow.get_position())
         JBrout.conf["showInfo"]=w.needInfo and 1 or 0
         self.tbl.set_focus_cell(w.idx)
-        
+
         if w.removed:
             sel = self.tbl.setSelected(w.removed)
             self.on_selecteur_menu_delete(None,self.tbl)
@@ -2204,8 +2204,8 @@ class Window(GladeApp):
         elif key=='menu':
             menu=self.get_menu(self.tbl,self.tbl.getSelected())
             menu.popup(None,None,None,3,0)
-        else:
-            print key
+        #else:
+        #    print key
 
     def on_window_size_allocate(self, widget, *args):
         pass
