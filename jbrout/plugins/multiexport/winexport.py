@@ -57,17 +57,17 @@ class Windowexport(GladeApp):
         for i in templateList:
             m.append( [i,] )
         self.cbTemplate.set_model(m)
-        
+
         self.cbTypeA.pack_start(cell, True)
         self.cbTypeA.add_attribute(cell, 'text',0)
-        
+
         am=gtk.ListStore( str)
         am.clear()
         am.append( ['Uncompressed tar (.tar)',] )
         am.append( ['Tar bzip2 (.tbz)',] )
         am.append( ['Tar gzip (.tgz)',] )
         am.append( ['Zip (.zip)',] )
-        
+
         self.cbTypeA.set_model(am)
 
 
@@ -80,6 +80,11 @@ class Windowexport(GladeApp):
         self.psThumbSelectFR.connect("value_changed", self.on_psThumbSelectFR_value_changed)
         self.tableFlickr.attach(self.psThumbSelectFR, 1, 2, 0, 1)
         self.psThumbSelectFR.show()
+
+        # Configure the smpt port spin button
+        self.adjPortSM = gtk.Adjustment(1, 1, 64000, 1,100,100)
+        self.spPortSM.set_adjustment(self.adjPortSM)
+        self.spPortSM.set_digits(0)
 
         self.initFromConf(conf)
 
@@ -118,7 +123,7 @@ class Windowexport(GladeApp):
             self.cbTypeA.set_active(2)
         else: # Use zip as the default/failsafe
             self.cbTypeA.set_active(3)
-        
+
         self.tbFolderF.set_text( conf["FS.folder"] )
 
         self.tbFolderH.set_text( conf["HG.folder"] )
@@ -138,9 +143,22 @@ class Windowexport(GladeApp):
         if (bool(conf["FR.same_privacy"])): self.cbSelectAllFR.set_active(1)
         else: self.cbSelectAllFR.set_active(0)
 
-        self.tbSmtp.set_text( conf["SM.smtp"] )
-        self.tbFrom.set_text( conf["SM.from"] )
+        self.tbSmtp.set_text(conf["SM.smtp"])
+        self.spPortSM.set_value(int(conf["SM.port"]))
+        if (bool(conf["SM.auth"])):
+            self.cbAuthSM.set_active(True)
+            self.tbUserSM.set_sensitive(True)
+            self.tbPasswordSM.set_sensitive(True)
+        else:
+            self.cbAuthSM.set_active(False)
+            self.tbUserSM.set_sensitive(False)
+            self.tbPasswordSM.set_sensitive(False)
+        self.tbUserSM.set_text(conf["SM.username"])
+        self.tbPasswordSM.set_text(uncrypt(conf["SM.password"]))
+        self.cbSecurity.set_active(int(conf["SM.security"]))
         self.tbTo.set_text( conf["SM.to"] )
+        self.tbFrom.set_text( conf["SM.from"] )
+        self.tbSubject.set_text( conf["SM.subject"] )
         self.tbMessage.set_text( conf["SM.message"] )
 
         self.tbFtp.set_text( conf["FT.ftp"] )
@@ -193,8 +211,15 @@ class Windowexport(GladeApp):
             self.__conf["FR.family"]=int(self.cbFamilyFR.get_active())
         elif type == "SM":
             self.__conf["SM.smtp"]=self.tbSmtp.get_text(  )
-            self.__conf["SM.from"]=self.tbFrom.get_text(  )
+            self.__conf["SM.port"]=self.spPortSM.get_value_as_int()
+            self.__conf["SM.auth"]=int(self.cbAuthSM.get_active())
+            if self.cbAuthSM.get_active():
+                self.__conf["SM.username"]=self.tbUserSM.get_text()
+                self.__conf["SM.password"]=crypt(self.tbPasswordSM.get_text())
+            self.__conf["SM.security"]=self.cbSecurity.get_active()
             self.__conf["SM.to"]=self.tbTo.get_text(  )
+            self.__conf["SM.from"]=self.tbFrom.get_text(  )
+            self.__conf["SM.subject"]=self.tbSubject.get_text(  )
             self.__conf["SM.message"]=self.tbMessage.get_text( )
         elif type == "FT":
             self.__conf["FT.ftp"]=self.tbFtp.get_text(  )
@@ -314,4 +339,24 @@ class Windowexport(GladeApp):
 
     def getPrivacyFR(self, photo):
         return self.privacyFR[photo]
+
+    def on_cbAuthSM_toggled(self, widget, *args):
+        '''
+        Handles toggling of the email authentication check box and
+        enables/disables the username and password fields
+        '''
+        if widget.get_active():
+            self.tbUserSM.set_sensitive(True)
+            self.tbPasswordSM.set_sensitive(True)
+        else:
+            self.tbUserSM.set_sensitive(False)
+            self.tbPasswordSM.set_sensitive(False)
+
+    def on_cbSecurity_changed(self, widget, *args):
+        if widget.get_active() == 1:
+            if self.spPortSM.get_value_as_int() == 25:
+                self.spPortSM.set_value(465)
+        else:
+            if self.spPortSM.get_value_as_int() == 465:
+                self.spPortSM.set_value(25)
 

@@ -7,9 +7,16 @@ from email.Utils import COMMASPACE, formatdate
 from email import Encoders
 import os
 
-def sendMail(fro, to, subject, text, files=[],server="localhost"):
+def sendMail(fro="", to="", subject="", text="", files=[],server="localhost",
+                security="none",port=25,auth=False,username="",password="" ):
     assert type(to)==list
     assert type(files)==list
+    #print "Server is:   ", server
+    #print "Port is:     ", port
+    #print "Security is: ", security
+    #print "Auth is:     ", auth
+    #print "Username is: ", username
+    #print "Password is: ", password
 
     msg = MIMEMultipart()
     msg['From'] = fro
@@ -27,7 +34,17 @@ def sendMail(fro, to, subject, text, files=[],server="localhost"):
                        % os.path.basename(file))
         msg.attach(part)
 
-    smtp = smtplib.SMTP(server)
+    if security == "ssl":
+        smtp = smtplib.SMTP_SSL(server, port)
+        #smtp.set_debuglevel(1)
+        smtp.connect()
+    else:
+        smtp = smtplib.SMTP(server, port)
+        #smtp.set_debuglevel(1)
+    if security == 'start tls':
+        smtp.starttls()
+    if auth:
+        smtp.login(username, password)
     smtp.sendmail(fro, to, msg.as_string() )
     smtp.close()
 

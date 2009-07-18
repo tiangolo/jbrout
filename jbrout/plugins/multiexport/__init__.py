@@ -111,8 +111,14 @@ class ExportConf(object):
         # Mail conf
         # ===================
         "SM.smtp":"",
-        "SM.from":"",
+        "SM.auth":0,
+        "SM.username":"",
+        "SM.password":"",
+        "SM.security":0,
+        "SM.port":25,
         "SM.to":"",
+        "SM.from":"",
+        "SM.subject":"",
         "SM.message":"",
 
             "SM.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
@@ -219,7 +225,7 @@ class Plugin(JPlugin):
                 else:
                     self.MessageBox(_("The selected path doesn't exists !"))
                     return False
-                
+
             elif type == "FS":
                 msg = _("Export to folder")
                 #==================================================================
@@ -408,10 +414,17 @@ class Plugin(JPlugin):
                             to = [ ec["SM.to"], ]
 
                         text = ec["SM.message"]
-                        subject = ec["SM.message"]
+                        subject = ec["SM.subject"]
                         server = ec["SM.smtp"]
+                        secTypes = ['none', 'ssl', 'start tls']
+                        security = secTypes[int(ec["SM.security"])]
+                        port = int(ec["SM.port"])
+                        auth = bool(ec["SM.auth"])
+                        username = ec["SM.username"].encode("utf_8")
+                        password = uncrypt(ec["SM.password"]).encode("utf_8")
 
-                        sendMail(fro, to, subject, text, filesToSend,server)
+                        sendMail(fro, to, subject, text, filesToSend,server,
+                        security, port, auth, username, password)
                     elif type=="FT":
                         ftp.quit()
 
