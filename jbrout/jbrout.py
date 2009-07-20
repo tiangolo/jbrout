@@ -131,12 +131,13 @@ class JStyle:
     BACKGROUND = colorToString(style.base[gtk.STATE_NORMAL])
 
 
-
+from plugins import Entry
 #========================================================
 class JPlugin:
 #========================================================
     # JPlugin.parent : parent win (init at the start)
-
+    Entry = Entry
+    
     def __init__(self,id,path):
         self.id=id
         self.path=path

@@ -39,7 +39,7 @@ import StringIO
 
 import string,re
 from subprocess import Popen,PIPE,call
-import db 
+import db
 
 def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
    if f:
@@ -96,7 +96,7 @@ class _Command:
 
       if not os.path.isfile(_jpegtran):
           err+="jpegtran is not present in 'tools'\n"
-      
+
       _exiftool = os.path.join(__path,"exiftool.exe")
       if not os.path.isfile(_exiftool):
           err+="exiftool is not present in 'tools'\n"
@@ -185,11 +185,11 @@ class PhotoCmd(object):
     def __init__(self,file,needAutoRename=False,needAutoRotation=False):
         assert type(file)==unicode
         assert os.path.isfile(file)
-        
+
 
         self.__file = file
         self.__readonly = not os.access( self.__file, os.W_OK)
-        
+
         # pre-read
 
         self.__info = pyexiv2.Image(self.__file)
@@ -502,7 +502,7 @@ isreal : %s""" % (
 
         # and rebuild exif
         np.rebuildExifTB()
-        
+
         return np
 
     def rebuildExifTB(self):
@@ -530,7 +530,7 @@ isreal : %s""" % (
     def __majTags(self):
         self.__info["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in self.__tags]
         self.__maj()
-        
+
     def __maj(self):
         try:
             self.__info.writeMetadata()
@@ -705,13 +705,13 @@ class XMPUpdater():
     def __init__(self,photo_list):
         """XMPUpdater is in charge of manipulating XMP data.
         It might disapear when pyexiv2 will have XMP support"""
-        
+
         # Do we synchronize automatically ?
         self.synchronizeXmp=db.JBrout.conf["synchronizeXmp"]
-        
+
         # List of pictures
         self.list=photo_list
-        
+
         # List of pictures' name
         if len(self.list)>0:
             if type(self.list[0]) in [str,unicode]:
@@ -726,7 +726,7 @@ class XMPUpdater():
         if not self.synchronizeXmp:
             return 1
         self.DoMergeXmpIptc()
-        
+
     def UpdateXmp(self):
         """Save tags to XMP subjects if option is on"""
         if not self.synchronizeXmp:
@@ -752,13 +752,13 @@ class XMPUpdater():
         #add pictures list
         command.extend(self.pictures)
         ret= _Command._run( command )
-        
+
         #initialize command
         command=[_Command._exiftool]
         #copy keywords to subect
         command.extend(["-r", "-overwrite_original", "-subject< keywords"])
         command.extend(self.pictures)
-        ret= _Command._run(command) 
+        ret= _Command._run(command)
 
     def DoSaveXmp(self):
         """Save tags to XMP subjects"""
@@ -767,7 +767,7 @@ class XMPUpdater():
         command=[_Command._exiftool]
         command.extend(["-r", "-overwrite_original", "-subject< keywords"])
         command.extend(self.pictures)
-        ret= _Command._run(command) 
+        ret= _Command._run(command)
 
 if __name__=="__main__":
 

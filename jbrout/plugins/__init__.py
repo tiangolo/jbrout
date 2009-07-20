@@ -15,7 +15,7 @@
 ## URL : http://jbrout.python-hosting.com/wiki
 
 
-import os,sys,traceback
+import os,sys,traceback,re
 
 """
 
@@ -28,8 +28,80 @@ class JPlugin:
         self.path=path
 """
 import gtk
-from libs.i18n import createGetText
-#~ from datetime import datetime
+
+
+class Entry(object):
+    definitions={}
+
+    @classmethod
+    def _saveMenu(cls,method,n,v):
+        k=("PhotosProcess",method.__name__)
+        if k in cls.definitions:
+            cls.definitions[k][n]=v
+        else:
+            cls.definitions[k]={n:v}
+        return method
+
+    @classmethod
+    def _saveAlbum(cls,method,n,v):
+        k=("AlbumProcess",method.__name__)
+        if k in cls.definitions:
+            cls.definitions[k][n]=v
+        else:
+            cls.definitions[k]={n:v}
+        return method
+
+
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    # decorators specifique pour les plugins "photos"
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    @classmethod
+    def PhotosProcess(cls,lbl,icon=None,order=1000):
+        def _m(method):
+            cls._saveMenu(method,"order",order)
+            cls._saveMenu(method,"alter",True) # default option
+            cls._saveMenu(method,"icon",icon)
+            return cls._saveMenu(method,"label",lbl)
+        return _m
+
+
+    @classmethod
+    def PhotosProcessDontAlter(cls,method):         # OPTIONNEL
+        return cls._saveMenu(method,"alter",False)
+
+
+
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    # decorators specifique pour les plugins "album"
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    @classmethod
+    def AlbumProcess(cls,lbl,order=1000):
+        def _m(method):
+            cls._saveAlbum(method,"order",order)
+            cls._saveAlbum(method,"alter",True) # default option
+            return cls._saveAlbum(method,"label",lbl)
+        return _m
+
+    @classmethod
+    def AlbumProcessDontAlter(cls,method):         # OPTIONNEL
+        return cls._saveAlbum(method,"alter",False)
+
+try:
+    from libs.i18n import createGetText
+except:
+    # run from here
+    # so we mock the needed object/path
+    sys.path.append("..")
+    createGetText = lambda a,b : lambda x:x
+    __builtins__.__dict__["_"] =createGetText("","")
+    runWith=lambda x:x
+    class JPlugin :
+        Entry=Entry
+        def __init__(self,i,p):
+            self.id=i
+            self.path=p
+
+
 
 class JPlugins:
     path = "plugins"
@@ -50,8 +122,16 @@ class JPlugins:
                     path = folder+"/"+id
                     if id[0]!="." and os.path.isdir(path):
                         namespace = path.replace("/",".")
-
+                        
+                        #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- to be run from here ;-)
+                        namespace= re.sub("\.\.+","",namespace)
+                        #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- manatlan
+                        
                         try:
+                            #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- reset the Entry def
+                            Entry.definitions={}
+                            #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+                            
                             # import the module plugin
                             module=__import__(namespace,[],[],["Plugin"])
 
@@ -62,7 +142,8 @@ class JPlugins:
                             instance = module.Plugin(id,path)
 
                             #add to the list
-                            self.__plugins.append(instance)
+                            self.__plugins[instance]=Entry.definitions.copy()
+                            
                         except:
                             self.__plugError("in creation of '%s'"%(id,))
 
@@ -75,6 +156,10 @@ class JPlugins:
                 if id[0]!="." and os.path.isdir(path):
 
                     try:
+                        #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- reset the Entry def
+                        Entry.definitions={}
+                        #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+                        
                         # import the module plugin
                         module=__import__(id,[],[],["Plugin"])  # IMPORT ID !!!!!!!!!!!!
 
@@ -85,17 +170,22 @@ class JPlugins:
                         instance = module.Plugin(id,path)
 
                         #add to the list
-                        self.__plugins.append(instance)
+                        self.__plugins[instance]=Entry.definitions.copy()
+
                     except:
                         self.__plugError("in creation of '%s'"%(id,))
 
-        self.__plugins = []
+       
+        self.__plugins = {}
         fillPluginsFrom(JPlugins.path)  # feed with the traditional plugins
 
         if homePath:
             homePlugins = os.path.join(homePath,JPlugins.path)
             if os.path.isdir(homePlugins):
                 fillPluginsFrom2(homePlugins)  # feed with home plugins
+
+
+
 
     def __plugError(self,m=""):
         print >>sys.stderr,"PLUGIN ERROR : %s" % m
@@ -129,7 +219,7 @@ class JPlugins:
         """
         # get all the menuentries of plugins in --> a
         a=[]
-        for instance in self.__plugins:
+        for instance,newDef in self.__plugins.items():
             try:
                 if hasattr(instance,"menuEntries"):
                     menus = instance.menuEntries(l)
@@ -142,7 +232,14 @@ class JPlugins:
             for ordre,label,alter,callback,img in menus:
                 a.append( (ordre,label,alter,callback,img,instance) )
 
-
+            #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new plugins system
+            for k,v in newDef.items():
+                typ,methodName = k
+                if typ=="PhotosProcess":
+                    callback = getattr(instance,methodName)
+                    a.append( (v["order"],v["label"],v["alter"],callback,v["icon"],instance) )
+            #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        
         # sort them, according the "order" value
         a.sort( cmp=lambda a,b: cmp(a[0],b[0]) )
 
@@ -162,7 +259,7 @@ class JPlugins:
         """
         # get all the albumentries of plugins in --> a
         a=[]
-        for instance in self.__plugins:
+        for instance,newDef in self.__plugins.items():
             try:
                 if hasattr(instance,"albumEntries"):
                     menus = instance.albumEntries(node)
@@ -174,6 +271,14 @@ class JPlugins:
 
             for ordre,label,alter,callback in menus:
                 a.append( (ordre,label,alter,callback,instance) )
+
+            #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new plugins system
+            for k,v in newDef.items():
+                typ,methodName = k
+                if typ=="AlbumProcess":
+                    callback = getattr(instance,methodName)
+                    a.append( (v["order"],v["label"],v["alter"],callback,instance) )
+            #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
         # sort them, according the "order" value
         a.sort( cmp=lambda a,b: cmp(a[0],b[0]) )
@@ -209,11 +314,15 @@ class JPlugins:
 
     def __repr__(self):
         m="Plugins : %d\n" % len(self.__plugins)
-        for i in self.__plugins:
-            m+= "\tPlugin '%s %s' from %s: %s \n" % (i.id,i.__version__,i.__author__,i.__doc__)
+        for i,d in self.__plugins.items():
+            m+= "\tPlugin '%s %s' from %s: %s (new:%s)\n" % (i.id,i.__version__,i.__author__,i.__doc__,str(d))
         return m
 
 if __name__=="__main__":
+    JPlugins.path="."
     j=JPlugins()
-    for id,nom,alter,callback in j.menuEntries():
-        print ">>>>>>>>>>> %d. '%s' (mod:%s)" % (id,nom,alter), callback
+    print j
+    for ord,id,nom,alter,callback,img in j.menuEntries():
+        print ">>>>>Photos >>> %s. '%s' (mod:%s)" % (id,nom,alter), callback,img
+    for ord,id,nom,alter,callback in j.albumEntries(None):
+        print ">>>>>Album >>>> %s. '%s' (mod:%s)" % (id,nom,alter), callback
