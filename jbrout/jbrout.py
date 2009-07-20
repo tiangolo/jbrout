@@ -2976,6 +2976,12 @@ http://jbrout.googlecode.com""" % ("%prog",__version__)
 
 if __name__ == "__main__":
     try:
+        import psyco
+        psyco.profile()
+    except:
+        print "The psyco module does not seem to be installed. It is not necessary, however it can speed up performance."
+    
+    try:
         parser = optparse.OptionParser(usage=USAGE, version=("JBrout "+__version__))
         parser.add_option("-v","--view",action="store_true",dest="view",
                             help="run in view mode only")
