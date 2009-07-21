@@ -66,8 +66,8 @@ except:
 
 
 from jbrout.common import cd2rd,cd2d,format_file_size_for_display,runWith,openURL,dnd_args_to_dir_list,xpathquoter # for selecteur
-from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString
-from jbrout.db import JBrout,Buffer,Conf
+from jbrout.commongtk import AlbumCommenter,InputBox,MessageBox,InputQuestion,Img,WinKeyTag,colorToString,Buffer
+from jbrout.conf import JBrout,Conf
 from jbrout.winshow import WinShow
 from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
@@ -2958,6 +2958,8 @@ def main(canModify=True):
         try:
             sys.excepthook = myExceptHook
             JBrout.init(canModify)
+            
+            Buffer.size = JBrout.conf["thumbsize"]
 
             gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
             window = Window()

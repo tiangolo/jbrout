@@ -421,6 +421,68 @@ class PictureSelector(gtk.VBox):
 gobject.signal_new("value_changed", PictureSelector, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
 
 
+
+class Buffer:
+    size = None
+    
+    images={}
+    #~ pixbufRefresh = gtk.gdk.pixbuf_new_from_file( "data/gfx/refresh.png" )
+    pixbufRefresh = Img("data/gfx/refresh.png").pixbuf
+
+    pbFolder = Img("data/gfx/folder.png").pixbuf
+    pbBasket = Img("data/gfx/basket.png").pixbuf
+
+    pbReadOnly = Img("data/gfx/check_no.png").pixbuf
+
+    pbCheckEmpty = Img("data/gfx/check_false.png").pixbuf
+    pbCheckInclude = Img("data/gfx/check_true.png").pixbuf
+    pbCheckExclude = Img("data/gfx/check_no.png").pixbuf
+    pbCheckDisabled = Img("data/gfx/check_disabled.png").pixbuf
+
+    pixRaw = Img("data/gfx/raw.png").pixbuf
+
+    #~ @staticmethod
+    #~ def __thread(file,callback,callbackRefresh,item):
+        #~ do_gui_operation(Buffer.__fetcher,file,callback,callbackRefresh,item)
+
+
+    #~ @staticmethod
+    #~ def __fetcher(file,callback,callbackRefresh,item):
+        #~ Buffer.images[file] = callback()
+        #~ if callbackRefresh and item>=0:
+            #~ callbackRefresh(item)
+
+    #~ @staticmethod
+    #~ def get(file,callback,callbackRefresh=None,item=None):
+        #~ """
+        #~ send a signal "refreshItem"(item) to object
+        #~ """
+        #~ if file in Buffer.images:
+            #~ return Buffer.images[file]
+        #~ else:
+            #~ thread.start_new_thread(Buffer.__thread, (file,callback,callbackRefresh,item) )
+            #~ return Buffer.pixbufRefresh
+
+    @staticmethod
+    def remove(file):
+        if file in Buffer.images:
+            del(Buffer.images[file])
+            return True
+        else:
+            return False
+    @staticmethod
+    def clear():
+        size = Buffer.size or 160
+        Buffer.images={}
+        Buffer.pixbufNF = Img("data/gfx/imgNotFound.png").resizeC(size).pixbuf
+        Buffer.pixbufNFNE = Img("data/gfx/imgNotFound.png").resizeC(size, rgb(255,0,0) ).pixbuf
+
+        Buffer.pixbufNT = Img("data/gfx/imgNoThumb.png").resizeC(size).pixbuf
+        Buffer.pixbufNTNE = Img("data/gfx/imgNoThumb.png").resizeC(size,rgb(255,0,0)).pixbuf
+
+        Buffer.pixbufERR = Img("data/gfx/imgError.png").resizeC(size).pixbuf
+        Buffer.pixbufERRNE = Img("data/gfx/imgError.png").resizeC(size,rgb(255,0,0)).pixbuf
+
 if __name__ == "__main__":
     l=[('ana', 'potes'),('Anna', 'voisin'),('beer', 'drinks')]
     w=WinKeyTag("apply this tag","",l)
