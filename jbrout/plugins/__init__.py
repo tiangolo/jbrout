@@ -209,7 +209,7 @@ class JPlugins:
             traceback.print_exc(file=sys.stderr)
             print >>sys.stderr,'-'*60
 
-    def request(self,kind, isAlter=None, isKey=None):
+    def request(self,kind, isAlter=None, isKey=None, isIcon=None):
         """ request plugins """
         l=[]
         for instance,liste in self.__plugins.items():
@@ -220,6 +220,13 @@ class JPlugins:
         
         if isAlter is not None:
             l = [(i,c,p) for i,c,p in l if p.get("alter","")==isAlter]
+            
+        if isIcon is not None:
+            if isIcon:
+                l = [(i,c,p) for i,c,p in l if p.get("icon",None) is not None]
+            else:
+                l = [(i,c,p) for i,c,p in l if p.get("icon",None) is None]
+
 
         if isKey is not None:
             if isKey:
@@ -229,32 +236,6 @@ class JPlugins:
         
         l.sort( cmp=lambda a,b: cmp(a[2]["order"],b[2]["order"]))
         return l
-
-#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-# stay here for compatibilities purpose
-# (til jbrout calls directly Jplugins.request())
-#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-    def menuEntries(self,foo=None):
-        """ will return a ordered list of "menu entries" of plugins
-            [ ( order, id, label, alter, callback, IMAGE ),  ... ]
-        """
-        l=self.request("PhotosProcess")
-        # remakes the order (from 0), and place callback of callback, from a --> b
-        b=[]
-        for instance,callback,props in l:
-            b.append( (len(b),instance.id,props["label"],props["alter"],callback,props["icon"] ))
-        return b
-    def albumEntries(self,foo):
-        """ will return a ordered list of "album entries" of plugins
-            [ ( order, id, label, alter, callback ),  ... ]
-        """
-        l=self.request("AlbumProcess")
-        # remakes the order (from 0), and place callback of callback, from a --> b
-        b=[]
-        for instance,callback,props in l:
-            b.append( (len(b),instance.id,props["label"],props["alter"],callback ))
-        return b
-#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 
     def __caller(self,callback,instance):

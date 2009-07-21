@@ -903,26 +903,22 @@ class Window(GladeApp):
 
         # build the "plugins buttons"
         self.tooltips = gtk.Tooltips()
-        canModify = JBrout.modify
-        for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries():
-            if img:
-                # try to detect if plugin are enable or not
-                if canModify:
-                    enableMenu = True
-                else:
-                    # jbrout doesn't allow modification
-                    # so, only plugins not alter'able are enabled
-                    enableMenu = not alter
-                if enableMenu:
-                    image=gtk.Image()
-                    image.set_from_file(img)
-                    image.show()
+        
+        if JBrout.modify:
+            l=JBrout.plugins.request("PhotosProcess",isIcon=True)
+        else:
+            l=JBrout.plugins.request("PhotosProcess",isIcon=True,isAlter=False)
 
-                    bb = gtk.ToolButton(image)
-                    bb.set_tooltip(self.tooltips, text)
-                    bb.connect("clicked", self.on_selecteur_menu_select_plugin,table,id,callback)
-                    self.toolbar.insert(bb, 3)
-                    bb.show()
+        for instance,callback,props in l:
+            image=gtk.Image()
+            image.set_from_file(props["icon"])
+            image.show()
+
+            bb = gtk.ToolButton(image)
+            bb.set_tooltip(self.tooltips, props["label"])
+            bb.connect("clicked", self.on_selecteur_menu_select_plugin,table,instance.id,callback)
+            self.toolbar.insert(bb, 3)
+            bb.show()
 
         # build the status bar
         frame_default = self.statusbar.get_children()[0]
@@ -1710,31 +1706,26 @@ class Window(GladeApp):
             menu.append( makeItem(_("View Metadata"), self.on_selecteur_menu_metadata,widget ))
 
             menu2 = gtk.Menu()
-            isEntries = False
-            for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries(ln):
-                # try to detect if plugin are enable or not
-                if canModify:
-                    enableMenu = True
-                else:
-                    # jbrout doesn't allow modification
-                    # so, only plugins not alter'able are enabled
-                    enableMenu = not alter
+            
+            if canModify:
+                l=JBrout.plugins.request("PhotosProcess")
+            else:
+                l=JBrout.plugins.request("PhotosProcess",isAlter=False)
+            
+            for instance,callback,props in l:
+                item = gtk.ImageMenuItem( props["label"] )
 
-                if enableMenu:
-                    item = gtk.ImageMenuItem( text )
+                if props["icon"]:
+                    ii=gtk.Image()
+                    ii.set_from_file(props["icon"])
+                    ii.show()
+                    item.set_image(ii)
 
-                    if img:
-                        ii=gtk.Image()
-                        ii.set_from_file(img)
-                        ii.show()
-                        item.set_image(ii)
+                menu2.append(item)
+                item.connect("activate",self.on_selecteur_menu_select_plugin,widget,instance.id,callback)
+                isEntries = True
 
-                    menu2.append(item)
-                    item.connect("activate",self.on_selecteur_menu_select_plugin,widget,id,callback)
-                    isEntries = True
-
-
-            if isEntries:
+            if len(menu2)>0:
                 smenu2=gtk.ImageMenuItem(_("Operations"))
                 smenu2.set_submenu(menu2)
                 smenu2.show_all()
@@ -2421,28 +2412,23 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     # new album plugin
                     #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
                     menu2 = gtk.Menu()
-                    isEntries = False
-                    for ord,id,text,alter,callback in JBrout.plugins.albumEntries(node):
-                        # try to detect if plugin are enable or not
-                        if JBrout.modify:
-                            enableMenu = True
-                        else:
-                            # jbrout doesn't allow modification
-                            # so, only plugins not alter'able are enabled
-                            enableMenu = not alter
 
-                        if enableMenu:
-                            item = gtk.ImageMenuItem( text )
-                            item.connect("activate",self.on_album_menu_select_plugin,widget,callback)
-                            menu2.append(item)
-                            isEntries = True
+                    if JBrout.modify:
+                        l=JBrout.plugins.request("AlbumProcess")    
+                    else:
+                        l=JBrout.plugins.request("AlbumProcess",isAlter=False)
+                        
+                    for instance,callback,props in l:
+                        item = gtk.ImageMenuItem( props["label"] )
+                        item.connect("activate",self.on_album_menu_select_plugin,widget,callback)
+                        menu2.append(item)
 
-                    if isEntries:
+                    if len(menu2)>0:
                         smenu2=gtk.ImageMenuItem(_("Operations"))
                         smenu2.set_submenu(menu2)
                         smenu2.show_all()
                         menu.append(smenu2)
-                    #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+                    #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\                    
                     menu.popup(None,None,None,event.button,event.time)
                     return 1
                 elif event.button==2:
