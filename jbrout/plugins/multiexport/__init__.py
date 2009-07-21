@@ -179,8 +179,7 @@ class Plugin(JPlugin):
     #def menuEntries(self,l):
     #    return [(3000,_("Export to"),False,self.export,None)]
 
-    @JPlugin.Entry.PhotosProcess( _("Export to"), order=3000 )
-    @JPlugin.Entry.PhotosProcessDontAlter
+    @JPlugin.Entry.PhotosProcess( _("Export to"), order=3000, alter=False )
     def export(self,list):
         from winexport import Windowexport
 

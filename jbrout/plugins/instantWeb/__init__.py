@@ -29,8 +29,7 @@ class Plugin(JPlugin):
     #    return [(3200,_("Web Share"),False,self.share,None)]
 
 
-    @JPlugin.Entry.PhotosProcess( _("Web Share"), order=3200 )
-    @JPlugin.Entry.PhotosProcessDontAlter
+    @JPlugin.Entry.PhotosProcess( _("Web Share"), order=3200,alter=False )
     def share(self,list):
         from instantweb import Winweb
 

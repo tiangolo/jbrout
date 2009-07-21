@@ -32,14 +32,12 @@ class Plugin(JPlugin):
     #def albumEntries(self,n):
     #    return [(90,_("Open in explorer"),False,self.openFromAlbum)]
 
-    @JPlugin.Entry.AlbumProcess( _("Open in explorer"),order=90 )
-    @JPlugin.Entry.AlbumProcessDontAlter    # this method is available in view only mode, because it doesn't alter db/photos
+    @JPlugin.Entry.AlbumProcess( _("Open in explorer"),order=90,alter=False )
     def openFromAlbum(self,node):
         runWith(["xdg-open","nautilus","rox","konqueror","explorer.exe"],unicode(node.file))    # path of folder
         return False    # no visual modif
         
-    @JPlugin.Entry.PhotosProcess( _("Open in explorer"),order=90 )
-    @JPlugin.Entry.PhotosProcessDontAlter    # this method is available in view only mode, because it doesn't alter db/photos
+    @JPlugin.Entry.PhotosProcess( _("Open in explorer"),order=90,alter=False )
     def open(self,list):
         path = os.path.dirname(list[0].file)
         #~ path = path.encode(sys.getfilesystemencoding())

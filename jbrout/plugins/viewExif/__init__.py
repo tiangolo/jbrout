@@ -18,8 +18,7 @@ class Plugin(JPlugin):
     __author__ = "Rob Wallace"
     __version__ = "0.0.3"
 
-    @JPlugin.Entry.PhotosProcess( _("Display Meta Data"),order=5000 )
-    @JPlugin.Entry.PhotosProcessDontAlter
+    @JPlugin.Entry.PhotosProcess( _("Display Meta Data"),order=5000,alter=False )
     def viewExif(self,list):
         from viewExif import WinViewExif
 
