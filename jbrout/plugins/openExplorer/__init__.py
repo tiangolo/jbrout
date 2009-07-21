@@ -23,19 +23,23 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "1.0"
 
-    def menuEntries(self,l):
-        if len(l)==1:
-            return [(1010,_("Open in explorer"),False,self.open,None)]
-        else:
-            return []
-        
-    def albumEntries(self,n):
-        return [(90,_("Open in explorer"),False,self.openFromAlbum)]
+    #def menuEntries(self,l):
+    #    if len(l)==1:
+    #        return [(1010,_("Open in explorer"),False,self.open,None)]
+    #    else:
+    #        return []
+    #    
+    #def albumEntries(self,n):
+    #    return [(90,_("Open in explorer"),False,self.openFromAlbum)]
 
+    @JPlugin.Entry.AlbumProcess( _("Open in explorer"),order=90 )
+    @JPlugin.Entry.AlbumProcessDontAlter    # this method is available in view only mode, because it doesn't alter db/photos
     def openFromAlbum(self,node):
         runWith(["xdg-open","nautilus","rox","konqueror","explorer.exe"],unicode(node.file))    # path of folder
         return False    # no visual modif
         
+    @JPlugin.Entry.PhotosProcess( _("Open in explorer"),order=90 )
+    @JPlugin.Entry.PhotosProcessDontAlter    # this method is available in view only mode, because it doesn't alter db/photos
     def open(self,list):
         path = os.path.dirname(list[0].file)
         #~ path = path.encode(sys.getfilesystemencoding())

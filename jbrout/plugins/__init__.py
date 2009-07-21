@@ -127,13 +127,17 @@ class JPlugins:
                         namespace= re.sub("\.\.+","",namespace)
                         #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- manatlan
                         
+                        old=__builtins__["_"]   # save the jbrout _()
+
                         try:
+                            __builtins__["_"] = createGetText("plugin",os.path.join(path,"po"))
+
                             #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- reset the Entry def
                             Entry.definitions={}
                             #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
                             
                             # import the module plugin
-                            module=__import__(namespace,[],[],["Plugin"])
+                            module=__import__(namespace,[_],[_],["Plugin"])
 
                             # create the _() for __init__ plugins
                             module.__dict__["_"] = createGetText("plugin",os.path.join(path,"po"))
@@ -146,43 +150,46 @@ class JPlugins:
                             
                         except:
                             self.__plugError("in creation of '%s'"%(id,))
+                        finally:
+                            __builtins__["_"] = old
+                            
 
-        def fillPluginsFrom2(folder):
-            """ new home plugin importer """
-            sys.path.append(folder)             # CHANGE SYS.PATH !!!!!!
-
-            for id in os.listdir(folder):
-                path = folder+"/"+id
-                if id[0]!="." and os.path.isdir(path):
-
-                    try:
-                        #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- reset the Entry def
-                        Entry.definitions={}
-                        #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-                        
-                        # import the module plugin
-                        module=__import__(id,[],[],["Plugin"])  # IMPORT ID !!!!!!!!!!!!
-
-                        # create the _() for __init__ plugins
-                        module.__dict__["_"] = createGetText("plugin",os.path.join(path,"po"))
-
-                        # create an instance
-                        instance = module.Plugin(id,path)
-
-                        #add to the list
-                        self.__plugins[instance]=Entry.definitions.copy()
-
-                    except:
-                        self.__plugError("in creation of '%s'"%(id,))
+        #def fillPluginsFrom2(folder):
+        #    """ new home plugin importer """
+        #    sys.path.append(folder)             # CHANGE SYS.PATH !!!!!!
+        #
+        #    for id in os.listdir(folder):
+        #        path = folder+"/"+id
+        #        if id[0]!="." and os.path.isdir(path):
+        #
+        #            try:
+        #                #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- reset the Entry def
+        #                Entry.definitions={}
+        #                #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        #                
+        #                # import the module plugin
+        #                module=__import__(id,[],[],["Plugin"])  # IMPORT ID !!!!!!!!!!!!
+        #
+        #                # create the _() for __init__ plugins
+        #                module.__dict__["_"] = createGetText("plugin",os.path.join(path,"po"))
+        #
+        #                # create an instance
+        #                instance = module.Plugin(id,path)
+        #
+        #                #add to the list
+        #                self.__plugins[instance]=Entry.definitions.copy()
+        #
+        #            except:
+        #                self.__plugError("in creation of '%s'"%(id,))
 
        
         self.__plugins = {}
         fillPluginsFrom(JPlugins.path)  # feed with the traditional plugins
 
-        if homePath:
-            homePlugins = os.path.join(homePath,JPlugins.path)
-            if os.path.isdir(homePlugins):
-                fillPluginsFrom2(homePlugins)  # feed with home plugins
+        #if homePath:
+        #    homePlugins = os.path.join(homePath,JPlugins.path)
+        #    if os.path.isdir(homePlugins):
+        #        fillPluginsFrom2(homePlugins)  # feed with home plugins
 
 
 

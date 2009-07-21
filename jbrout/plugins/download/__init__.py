@@ -65,9 +65,10 @@ class Plugin(JPlugin):
     __author__ = "Rob Wallace"
     __version__ = "0.0.1"
 
-    def albumEntries(self,l):
-        return [ (900,_("Download"),True,self.download), ]
+    #def albumEntries(self,l):
+    #    return [ (900,_("Download"),True,self.download), ]
 
+    @JPlugin.Entry.AlbumProcess( _("Download"),order=900 )
     def download(self,nodeFolder):
         from download import WinDownload,WinDownloadExecute
 

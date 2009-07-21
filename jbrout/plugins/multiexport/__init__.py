@@ -176,9 +176,11 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "0.9"
 
-    def menuEntries(self,l):
-        return [(3000,_("Export to"),False,self.export,None)]
+    #def menuEntries(self,l):
+    #    return [(3000,_("Export to"),False,self.export,None)]
 
+    @JPlugin.Entry.PhotosProcess( _("Export to"), order=3000 )
+    @JPlugin.Entry.PhotosProcessDontAlter
     def export(self,list):
         from winexport import Windowexport
 

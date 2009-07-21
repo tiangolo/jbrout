@@ -26,9 +26,10 @@ class Plugin(JPlugin):
     __version__ = "1.1"
 
 
-    def menuEntries(self,l):
-        return [(2500,_("Change Datetime"),True,self.redate,None)]
+    #def menuEntries(self,l):
+    #    return [(2500,_("Change Datetime"),True,self.redate,None)]
 
+    @JPlugin.Entry.PhotosProcess( _("Change Datetime"), order=2500 )
     def redate(self,list):
         from redate import Winredate
 

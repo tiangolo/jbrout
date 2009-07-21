@@ -23,48 +23,51 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "1.1"
 
-    def menuEntries(self,l):
+    #def menuEntries(self,l):
         
         # I had commented theses new operations
         # I think we will let them available when we will have a preference dialog
         # which will let the user choose what entries he wants ... no ?
         # because it "bloats" the contectual menu now ... no ?
         
-        return [
-                (1000,_("Auto Rotate"),True,self.auto,None),
-                (1001,_("Rotate Right 90"),True,self.rotate90,"gfx/rotate-right.png"),
-                #(1002,_("Rotate Right 180"),True,self.rotate180,None),
-                (1003,_("Rotate Left 90"),True,self.rotate270,"gfx/rotate-left.png"),
-                #(1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
-                #(1005,_("Flip Vertical"),True,self.flipVertical,None),
-                #(1006,_("Transpose"),True,self.transpose,None),
-                #(1007,_("Transverse"),True,self.transverse,None),
-                (1008,_("Rebuild thumbnail"),True,self.rebuildThumb,None)
-               ]
+        #return [
+        #        (1000,_("Auto Rotate"),True,self.auto,None),
+        #        (1001,_("Rotate Right 90"),True,self.rotate90,"gfx/rotate-right.png"),
+        #        #(1002,_("Rotate Right 180"),True,self.rotate180,None),
+        #        (1003,_("Rotate Left 90"),True,self.rotate270,"gfx/rotate-left.png"),
+        #        #(1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
+        #        #(1005,_("Flip Vertical"),True,self.flipVertical,None),
+        #        #(1006,_("Transpose"),True,self.transpose,None),
+        #        #(1007,_("Transverse"),True,self.transverse,None),
+        #        (1008,_("Rebuild thumbnail"),True,self.rebuildThumb,None)
+        #       ]
 
+    @JPlugin.Entry.PhotosProcess( _("Auto Rotate"), order=1000 )
     def auto(self,l):
         return self.__transform(l,"auto")
     
+    @JPlugin.Entry.PhotosProcess( _("Rotate Right 90"), order=1001, icon="gfx/rotate-right.png" )
     def rotate90(self,l):
         return self.__transform(l,"rotate90")
 
-    def rotate180(self,l):
-        return self.__transform(l,"rotate180")
+    #def rotate180(self,l):
+    #    return self.__transform(l,"rotate180")
     
+    @JPlugin.Entry.PhotosProcess( _("Rotate Left 90"), order=1003, icon="gfx/rotate-left.png" )
     def rotate270(self,l):
         return self.__transform(l,"rotate270")
     
-    def flipHorizontal(self,l):
-        return self.__transform(l,"flipHorizontal")
-    
-    def flipVertical(self,l):
-        return self.__transform(l,"flipVertical")
-    
-    def transpose(self,l):
-        return self.__transform(l,"transpose")
-    
-    def transverse(self,l):
-        return self.__transform(l,"transverse")
+    #def flipHorizontal(self,l):
+    #    return self.__transform(l,"flipHorizontal")
+    #
+    #def flipVertical(self,l):
+    #    return self.__transform(l,"flipVertical")
+    #
+    #def transpose(self,l):
+    #    return self.__transform(l,"transpose")
+    #
+    #def transverse(self,l):
+    #    return self.__transform(l,"transverse")
 
     def __transform(self,list,sens):
         try:
@@ -75,6 +78,7 @@ class Plugin(JPlugin):
             self.showProgress()
         return True
 
+    @JPlugin.Entry.PhotosProcess( _("Rebuild thumbnail"), order=1008 )
     def rebuildThumb(self,list):
         try:
             for i in list:

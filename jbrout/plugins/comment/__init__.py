@@ -20,10 +20,11 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "1.0"
 
-    def menuEntries(self,l):
-        return [(2000,_("Comment"),True,self.comment,"gfx/gtk-edit.png")]
+    #def menuEntries(self,l):
+    #    return [(2000,_("Comment"),True,self.comment,"gfx/gtk-edit.png")]
 
 
+    @JPlugin.Entry.PhotosProcess( _("Do nothing on photos"), order=2000, icon="gfx/gtk-edit.png" )
     def comment(self,list):
         from comment import Wincomment
 

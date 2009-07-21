@@ -20,9 +20,9 @@ class Plugin(JPlugin):
     __author__ = "Rob Wallace"
     __version__ = "0.1"
 
-    def menuEntries(self,l):
-        return [(8000,_("Unify Tags"),True,self.unifyTags,None),
-                (8001,_("Bulk Tag"),True,self.bulkTag,None)]
+    #def menuEntries(self,l):
+    #    return [(8000,_("Unify Tags"),True,self.unifyTags,None),
+    #            (8001,_("Bulk Tag"),True,self.bulkTag,None)]
 
 
     def readTags(self,imgList):
@@ -43,6 +43,7 @@ class Plugin(JPlugin):
             i.addTags(tags)
         self.showProgress()
 
+    @JPlugin.Entry.PhotosProcess( _("Unify Tags"), order=8000 )
     def unifyTags(self,list):
         """Unifys tags between the selected list of photos (makes the Tags all the same)"""
         tags = self.readTags(list)
@@ -57,6 +58,7 @@ class Plugin(JPlugin):
             ret = False
         return ret
 
+    @JPlugin.Entry.PhotosProcess( _("Bulk Tag"), order=8001 )
     def bulkTag(self,list):
         """Tool for tagging a number of images with a set of tags"""
         from bulkTag import WinBulkTag

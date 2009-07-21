@@ -14,9 +14,10 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "1.0"
 
-    def albumEntries(self,l):
-        return [ (100,_("Create folders by dates"),True,self.createSubFolder), ]
+    #def albumEntries(self,l):
+    #    return [ (100,_("Create folders by dates"),True,self.createSubFolder), ]
 
+    @JPlugin.Entry.AlbumProcess( _("Create folders by dates"),order=100 )
     def createSubFolder(self,nodeFolder):
         l=nodeFolder.getPhotos()
         fold={}

@@ -18,9 +18,8 @@ class Plugin(JPlugin):
     __author__ = "Rob Wallace"
     __version__ = "0.0.3"
 
-    def menuEntries(self,list):
-        return [ (5000,_("Display Meta Data"),False,self.viewExif,None), ]
-
+    @JPlugin.Entry.PhotosProcess( _("Display Meta Data"),order=5000 )
+    @JPlugin.Entry.PhotosProcessDontAlter
     def viewExif(self,list):
         from viewExif import WinViewExif
 

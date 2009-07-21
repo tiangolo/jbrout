@@ -24,10 +24,13 @@ class Plugin(JPlugin):
 
     __author__ = "manatlan"
     __version__ = "1.1"
+    #
+    #def menuEntries(self,l):
+    #    return [(3200,_("Web Share"),False,self.share,None)]
 
-    def menuEntries(self,l):
-        return [(3200,_("Web Share"),False,self.share,None)]
 
+    @JPlugin.Entry.PhotosProcess( _("Web Share"), order=3200 )
+    @JPlugin.Entry.PhotosProcessDontAlter
     def share(self,list):
         from instantweb import Winweb
 
