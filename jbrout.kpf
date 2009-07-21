@@ -6,7 +6,7 @@
 komodo.assertMacroVersion(2);
 if (komodo.view) { komodo.view.setFocus() };
 komodo.doCommand('cmd_save')
-Run_RunEncodedCommand(window, 'python -u %p/jbrout/jbrout.py');
+Run_RunEncodedCommand(window, 'python2.5 -u %p/jbrout/jbrout.py');
 if (komodo.view) { komodo.view.setFocus() };</macro>
 <command cwd="%p" doNotOpenOutputWindow="0" env="" icon="chrome://famfamfamsilk/skin/icons/application_tile_horizontal.png" id="86d020f9-6a34-4d7f-8107-512350368247" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" insertOutput="0" keyboard_shortcut="" name="glade" operateOnSelection="0" parseOutput="0" parseRegex="" runIn="no-console" showParsedOutputList="0">
 glade-3 jbrout/data/jbrout.glade</command>
@@ -56,8 +56,24 @@ if __name__ == "__main__":
     w=Window()
     w.loop()</snippet>
 <snippet id="d959280f-0ffb-4485-aeba-172dee9644c1" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="" name="jbrout plugin" set_selection="true">
+# -*- coding: UTF-8 -*-
+
+##
+##    Copyright (C) 2009 manatlan manatlan[at]gmail(dot)com
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published
+## by the Free Software Foundation; version 2 only.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+
 """ PLUGIN DOC :
-self.id     : the id of the plugin (folder name)
+
+!@#_currentPos!@#_anchorself.id     : the id of the plugin (folder name)
 self.path   : contain the path to the plugin
 self.conf   : (dict) configuration persistence
 self.parent : the main window
@@ -70,27 +86,32 @@ def showProgress(self,c=None,m=None,msg=None):
 def getGeneralConfItem(self,n):
 
 use _() for translations strings
+
 """
+
 from __main__ import JPlugin
 
+
+
 class Plugin(JPlugin):
+    """Plugin nouveau format """
+
     __author__ = "manatlan"
-    __version__ = "1.0"
+    __version__ = "0.1"
 
-    def menuEntries(self,l):
-        return [ (1,"!@#_anchorsay hello!@#_currentPos",False,self.sayHello,None), ]
+    @JPlugin.Entry.AlbumProcess( _("Do nothing on album"),order=999999 )
+    @JPlugin.Entry.AlbumProcessDontAlter    # this method is available in view only mode, because it doesn't alter db/photos
+    def justDoThis(self,folderNode):
+        print "this is the album", folderNode
+        return False # dont redraw anything (nothing has changed)
 
-    def sayHello(self,photoNodeList):
-        self.MessageBox("%d photos are selected" % len(photoNodeList))
-        return False
+    @JPlugin.Entry.PhotosProcess( _("Do nothing on photos"), order=999999 )
+    @JPlugin.Entry.PhotosProcessDontAlter
+    def justDoThat(self,photoNodes): # this method is available in view only mode, because it doesn't alter db/photos
+        print "this is the list of photos", photoNodes
+        return False # dont redraw anything (nothing has changed)
 
 
-    def albumEntries(self,l):
-        return [ (100,_("album hello"),False,self.sayAlbumHello), ]
-
-    def sayAlbumHello(self,nodeFolder):
-        self.MessageBox("album %s" % nodeFolder.name)
-        return False
 </snippet>
 <preference-set idref="476791dc-18d0-4a49-8021-f04a7f9f22ea">
   <boolean id="import_live">1</boolean>
