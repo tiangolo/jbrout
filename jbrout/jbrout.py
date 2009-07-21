@@ -133,7 +133,7 @@ class JStyle:
 
 from plugins import Entry
 #========================================================
-class JPlugin:
+class JPlugin:  # imported by plugins to create the base (to communicate with core)
 #========================================================
     # JPlugin.parent : parent win (init at the start)
     Entry = Entry
@@ -2958,7 +2958,8 @@ def main(canModify=True):
         try:
             sys.excepthook = myExceptHook
             JBrout.init(canModify)
-            
+
+            # set the thumbsize of the Buffer, from conf            
             Buffer.size = JBrout.conf["thumbsize"]
 
             gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
