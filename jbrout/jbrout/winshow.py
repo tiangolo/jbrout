@@ -151,55 +151,68 @@ class WinShow(GladeApp):
 
     def on_WinShow_key_press_event(self, widget, b):
         key= gtk.gdk.keyval_name(b.keyval).lower()
-        if (key == "page_up") or (key == "up") or (key == "left"):
-            self.idx-=1
-            self.draw()
-        elif (key == "page_down") or (key == "down") or (key == "right"):
-            self.idx+=1
-            self.draw()
-        elif key=="home":
-            self.idx=0
-            self.draw()
-        elif key=="end":
-            self.idx=len(self.ln) -1
-            self.draw()
-        elif key=="escape":
-            self.quit();
-
-        elif key=="space":
-            # add/remove this photo to selection
-            node=self.ln[self.idx]
-            if node in self.selected:
-                self.selected.remove(node)
-            else:
-                self.selected.append(node)
-            self.draw()
-        elif key == "f11":
-            self.on_zoom_toggled()
-        elif key=="backspace":
-            # clear selection
-            self.selected=[]
-            self.draw()
-        elif key=="delete":
-            # delete
-            self.on_delete_clicked(None)    # and call draw
-        elif key=="insert" or key=="f9":
-            self.needInfo = not self.needInfo
-            self.draw()
-        else:
-            # print key
-            currentNode = self.ln[self.idx]
+        isCtrl = b.state & gtk.gdk.CONTROL_MASK
+        if isCtrl:
+            currentNode = self.ln[self.idx]            
             if self.isModify and not currentNode.isReadOnly:
-                if b.keyval<255 and b.string.strip()!="":
-                    wk=WinKeyTag(_("Apply to this photo"),b.string,JBrout.tags.getAllTags())
-                    ret=wk.loop()
-                    self.main_widget.fullscreen()
-                    if ret:
-                        tag = ret[0]
-                        currentNode.addTag(tag)
-                        self.draw()
-
-            return 0
+                pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True)
+            else:
+                pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True,isAlter=False)
+            
+            for instance,callback,props in pluginsWithKey:
+                if props["key"]==key:
+                    self.on_selecteur_menu_select_plugin("?!?",callback)   #TODO: what's ib ? see "?!?"
+                    return 1
+        else:
+            if (key == "page_up") or (key == "up") or (key == "left"):
+                self.idx-=1
+                self.draw()
+            elif (key == "page_down") or (key == "down") or (key == "right"):
+                self.idx+=1
+                self.draw()
+            elif key=="home":
+                self.idx=0
+                self.draw()
+            elif key=="end":
+                self.idx=len(self.ln) -1
+                self.draw()
+            elif key=="escape":
+                self.quit();
+    
+            elif key=="space":
+                # add/remove this photo to selection
+                node=self.ln[self.idx]
+                if node in self.selected:
+                    self.selected.remove(node)
+                else:
+                    self.selected.append(node)
+                self.draw()
+            elif key == "f11":
+                self.on_zoom_toggled()
+            elif key=="backspace":
+                # clear selection
+                self.selected=[]
+                self.draw()
+            elif key=="delete":
+                # delete
+                self.on_delete_clicked(None)    # and call draw
+            elif key=="insert" or key=="f9":
+                self.needInfo = not self.needInfo
+                self.draw()
+            else:
+                # print key
+                currentNode = self.ln[self.idx]
+                if self.isModify and not currentNode.isReadOnly:
+                    if b.keyval<255 and b.string.strip()!="":
+                        wk=WinKeyTag(_("Apply to this photo"),b.string,JBrout.tags.getAllTags())
+                        ret=wk.loop()
+                        self.main_widget.fullscreen()
+                        if ret:
+                            tag = ret[0]
+                            currentNode.addTag(tag)
+                            self.draw()
+    
+                return 0
 
     def draw(self,forceReload=False):
         """
