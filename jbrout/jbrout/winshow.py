@@ -115,7 +115,9 @@ class WinShow(GladeApp):
             image.show()
 
             bb = gtk.ToolButton(image)
-            bb.set_tooltip(self.tooltips, props["label"])
+            txt = props["label"]
+            if props["key"]: txt+=" (ctrl + %s)"%props["key"]            
+            bb.set_tooltip(self.tooltips, txt)
             bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
             self.toolbar1.insert(bb, 3)
             bb.show()
