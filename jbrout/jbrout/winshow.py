@@ -104,26 +104,21 @@ class WinShow(GladeApp):
         # put real plugins
         #=======================================================================
         self.tooltips = gtk.Tooltips()
-        canModify = isModify
-        for ord,id,text,alter,callback,img in JBrout.plugins.menuEntries():
-            if img:
-                # try to detect if plugin are enable or not
-                if canModify:
-                    enableMenu = True
-                else:
-                    # jbrout doesn't allow modification
-                    # so, only plugins not alter'able are enabled
-                    enableMenu = not alter
-                if enableMenu:
-                    image=gtk.Image()
-                    image.set_from_file(img)
-                    image.show()
+        if isModify:
+            l=JBrout.plugins.request("PhotosProcess",isIcon=True)
+        else:
+            l=JBrout.plugins.request("PhotosProcess",isIcon=True,isAlter=False)
 
-                    bb = gtk.ToolButton(image)
-                    bb.set_tooltip(self.tooltips, text)
-                    bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
-                    self.toolbar1.insert(bb, 3)
-                    bb.show()
+        for instance,callback,props in l:
+            image=gtk.Image()
+            image.set_from_file(props["icon"])
+            image.show()
+
+            bb = gtk.ToolButton(image)
+            bb.set_tooltip(self.tooltips, props["label"])
+            bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
+            self.toolbar1.insert(bb, 3)
+            bb.show()
         #=======================================================================
 
 

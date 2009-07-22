@@ -46,14 +46,14 @@ class Plugin(JPlugin):
     def auto(self,l):
         return self.__transform(l,"auto")
     
-    @JPlugin.Entry.PhotosProcess( _("Rotate Right 90"), order=1001, icon="gfx/rotate-right.png" )
+    @JPlugin.Entry.PhotosProcess( _("Rotate Right 90"), order=1001, icon="gfx/rotate-right.png",key="r" )
     def rotate90(self,l):
         return self.__transform(l,"rotate90")
 
     #def rotate180(self,l):
     #    return self.__transform(l,"rotate180")
     
-    @JPlugin.Entry.PhotosProcess( _("Rotate Left 90"), order=1003, icon="gfx/rotate-left.png" )
+    @JPlugin.Entry.PhotosProcess( _("Rotate Left 90"), order=1003, icon="gfx/rotate-left.png", key="l" )
     def rotate270(self,l):
         return self.__transform(l,"rotate270")
     
