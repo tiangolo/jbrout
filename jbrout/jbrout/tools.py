@@ -39,7 +39,7 @@ import StringIO
 
 import string,re
 from subprocess import Popen,PIPE,call
-import db
+
 
 def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
    if f:
@@ -702,12 +702,11 @@ isreal : %s""" % (
     #        return file
 
 class XMPUpdater():
+    #synchronizeXmp = None
+    
     def __init__(self,photo_list):
         """XMPUpdater is in charge of manipulating XMP data.
         It might disapear when pyexiv2 will have XMP support"""
-
-        # Do we synchronize automatically ?
-        self.synchronizeXmp=db.JBrout.conf["synchronizeXmp"]
 
         # List of pictures
         self.list=photo_list

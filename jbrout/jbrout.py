@@ -2936,6 +2936,7 @@ def main(canModify=True):
 
             # set the thumbsize of the Buffer, from conf            
             Buffer.size = JBrout.conf["thumbsize"]
+            XMPUpdater.synchronizeXmp=JBrout.conf["synchronizeXmp"]  # Do we synchronize automatically ?
 
             gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
             window = Window()
