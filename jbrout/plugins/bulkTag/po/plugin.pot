@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-12 23:20+0200\n"
+"POT-Creation-Date: 2009-07-23 00:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,20 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/bulkTag/__init__.py:24 ../plugins/bulkTag/__init__.py:51
-msgid "Unify Tags"
-msgstr ""
-
-#: ../plugins/bulkTag/__init__.py:25
-msgid "Bulk Tag"
-msgstr ""
-
 #: ../plugins/bulkTag/__init__.py:32
 msgid "Reading Tags"
 msgstr ""
 
 #: ../plugins/bulkTag/__init__.py:42
 msgid "Tagging"
+msgstr ""
+
+#: ../plugins/bulkTag/__init__.py:46 ../plugins/bulkTag/__init__.py:52
+msgid "Unify Tags"
+msgstr ""
+
+#: ../plugins/bulkTag/__init__.py:61
+msgid "Bulk Tag"
 msgstr ""
 
 #: ../tmp/bulkTag.glade.h:1

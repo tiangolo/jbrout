@@ -174,7 +174,7 @@ class JBrout:
         #======================================================================
         jbroutHomePath = JBrout.getHomeDir("jbrout")
 
-        JBrout.plugins = JPlugins(jbroutHomePath)
+        JBrout.plugins = JPlugins(jbroutHomePath,JBrout.conf)
 
 if __name__ == "__main__":
     #~ doc = lxml.etree.fromstring("<foo>fd<bar>kk</bar>oi</foo>")

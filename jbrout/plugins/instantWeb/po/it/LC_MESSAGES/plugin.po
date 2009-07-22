@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-27 14:22+0200\n"
+"POT-Creation-Date: 2009-07-23 00:05+0200\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -10,7 +10,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/instantWeb/__init__.py:29
+#.
+#. def menuEntries(self,l):
+#. return [(3200,_("Web Share"),False,self.share,None)]
+#: ../plugins/instantWeb/__init__.py:32
 msgid "Web Share"
 msgstr "Condividi sul Web"
 
@@ -29,4 +32,3 @@ msgstr "etichetta"
 #: ../tmp/instantweb.glade.h:4
 msgid "view as albums"
 msgstr "vedi come album"
-

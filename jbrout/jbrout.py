@@ -72,6 +72,7 @@ from jbrout.winshow import WinShow
 from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
 from jbrout.winbookmarks import WinBookmark
+from jbrout.winpref import WinPref
 from jbrout.tools import XMPUpdater, rawFormats
 
 import tempfile,shutil
@@ -850,7 +851,8 @@ class Window(GladeApp):
         if not JBrout.conf.has_key("orderAscending"):    # key not present
             JBrout.conf["orderAscending"] = False        # set default
 
-
+        if not JBrout.conf.has_key("plugins"):
+            JBrout.conf["plugins"] = ["%s.%s"%(i.id,p["method"]) for i,c,p in JBrout.plugins.request("AlbumProcess",all=True)+JBrout.plugins.request("PhotosProcess",all=True)]
 
         Buffer.size = JBrout.conf["thumbsize"]
         XMPUpdater.synchronizeXmp=JBrout.conf["synchronizeXmp"]  # Do we synchronize automatically ?
@@ -2205,22 +2207,12 @@ class Window(GladeApp):
 
     def on_editOptions_activate(self,*args):
         """edit jBrout options"""
-        confFile=JBrout.getConfFile("jbrout.conf")
-        if not os.path.isfile(confFile):
-            ExternalTools.generate(confFile)
-        runWith(["notepad.exe","leafpad","scite","gedit","kate","gvim"],unicode(confFile))
-        JBrout.conf = Conf( JBrout.getConfFile("jbrout.conf") )
-
-    #def on_search_activate(self, widget, *args):
-    #    win_search = Winsearch( TreeTags(), self.main_widget )
-    #    win_search.loop()
-    #
-    #    if win_search.xpath:
-    #        libl,xpath = win_search.xpath
-    #        ln = JBrout.db.select(xpath)
-    #        self.SetSelection(libl,xpath,ln,Window.MODETAG)
-
-
+        l=JBrout.conf["plugins"] or []
+        w=WinPref(JBrout.plugins,l)
+        ret=w.loop()[0]
+        if ret is not None:
+            JBrout.conf["plugins"] = ret
+            #TODO: reload toolbar for plugin icons
 
     def on_quitter_activate(self, widget, *args):
         self.on_window_delete_event(widget,*args)

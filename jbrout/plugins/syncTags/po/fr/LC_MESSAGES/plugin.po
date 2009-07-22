@@ -1,9 +1,12 @@
-#: ../plugins/syncTags/__init__.py:25 ../plugins/syncTags/__init__.py:28
+#. def menuEntries(self,l):
+#. return [(8100,_("Import Tags"),True,self.importTags,None)]
+#. def albumEntries(self,l):
+#. return [(300,_("Import Tags"),True,self.importAlbumTags)]
+#: ../plugins/syncTags/__init__.py:30 ../plugins/syncTags/__init__.py:38
 msgid "Import Tags"
-msgstr "Importer les mots-clés"
+msgstr "Importer les mots-cls"
 
-#: ../plugins/syncTags/__init__.py:32 ../plugins/syncTags/__init__.py:39
+#: ../plugins/syncTags/__init__.py:33 ../plugins/syncTags/__init__.py:41
 #, fuzzy
 msgid "Importing Tags"
-msgstr "Import des mots-clés en cours"
-
+msgstr "Import des mots-cls en cours"

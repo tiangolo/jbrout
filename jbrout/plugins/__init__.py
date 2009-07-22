@@ -58,6 +58,9 @@ class Entry(object):
     @classmethod
     def PhotosProcess(cls,lbl,icon=None,order=1000,alter=True,key=None):
         def _m(method):
+            cls._saveMenu(method,"method",method.__name__)
+            cls._saveMenu(method,"doc",method.__doc__)
+            
             cls._saveMenu(method,"order",order)
             cls._saveMenu(method,"alter",alter)
             cls._saveMenu(method,"icon",icon)
@@ -73,6 +76,9 @@ class Entry(object):
     @classmethod
     def AlbumProcess(cls,lbl,order=1000,alter=True,key=None):
         def _m(method):
+            cls._saveAlbum(method,"method",method.__name__)
+            cls._saveAlbum(method,"doc",method.__doc__)
+            
             cls._saveAlbum(method,"order",order)
             cls._saveAlbum(method,"alter",alter)
             cls._saveAlbum(method,"key",key)
@@ -101,14 +107,15 @@ class JPlugins:
     path = "plugins"
     outputFullError=True
 
-    def __init__(self,homePath=None):
+    def __init__(self,homePath,conf):
         """ Initialize the plugins ...
             will create a list of instance in self.__plugins, from
             the plugins which sit in the current path
 
             if homePath is defined, it will try to import plugins from homePath
         """
-
+        self.__conf = conf
+        
         def fillPluginsFrom(folder):
             """ good old plugins importer """
             for id in os.listdir(folder):
@@ -209,14 +216,21 @@ class JPlugins:
             traceback.print_exc(file=sys.stderr)
             print >>sys.stderr,'-'*60
 
-    def request(self,kind, isAlter=None, isKey=None, isIcon=None):
-        """ request plugins """
+    def request(self,kind, isAlter=None, isKey=None, isIcon=None, all=False):
+        """ request plugins
+        
+            WARNING : 'all'(bool) bypass config about plugin enabled/disabled
+        """
         l=[]
         for instance,liste in self.__plugins.items():
             for typ,callback,properties in liste:
                 if kind == typ:
                     l.append( (instance, callback, properties) )
         if not l: raise Exception("jPlugins.request() bad call, kind exists ?="+kind)
+        
+        if not all:
+            ps=self.__conf["plugins"] or []
+            l = [(i,c,p) for i,c,p in l if "%s.%s"%(i.id,p["method"]) in ps]
         
         if isAlter is not None:
             l = [(i,c,p) for i,c,p in l if p.get("alter","")==isAlter]

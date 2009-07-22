@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-27 14:22+0200\n"
+"POT-Creation-Date: 2009-07-23 00:05+0200\n"
 "PO-Revision-Date: 2007-07-06 10:00+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -10,8 +10,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../plugins/openExplorer/__init__.py:28
-#: ../plugins/openExplorer/__init__.py:33
+#. def menuEntries(self,l):
+#. if len(l)==1:
+#. return [(1010,_("Open in explorer"),False,self.open,None)]
+#. else:
+#. return []
+#.
+#. def albumEntries(self,n):
+#. return [(90,_("Open in explorer"),False,self.openFromAlbum)]
+#. path of folder
+#. no visual modif
+#: ../plugins/openExplorer/__init__.py:35
+#: ../plugins/openExplorer/__init__.py:40
 msgid "Open in explorer"
 msgstr "Apri in explorer"
-

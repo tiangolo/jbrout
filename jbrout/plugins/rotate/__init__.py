@@ -50,24 +50,29 @@ class Plugin(JPlugin):
     def rotate90(self,l):
         return self.__transform(l,"rotate90")
 
-    #def rotate180(self,l):
-    #    return self.__transform(l,"rotate180")
+    @JPlugin.Entry.PhotosProcess( _("Rotate Right 180"), order=1002 )
+    def rotate180(self,l):
+        return self.__transform(l,"rotate180")
     
     @JPlugin.Entry.PhotosProcess( _("Rotate Left 90"), order=1003, icon="gfx/rotate-left.png", key="l" )
     def rotate270(self,l):
         return self.__transform(l,"rotate270")
     
-    #def flipHorizontal(self,l):
-    #    return self.__transform(l,"flipHorizontal")
-    #
-    #def flipVertical(self,l):
-    #    return self.__transform(l,"flipVertical")
-    #
-    #def transpose(self,l):
-    #    return self.__transform(l,"transpose")
-    #
-    #def transverse(self,l):
-    #    return self.__transform(l,"transverse")
+    @JPlugin.Entry.PhotosProcess( _("Flip Horizontal"), order=1004 )
+    def flipHorizontal(self,l):
+        return self.__transform(l,"flipHorizontal")
+
+    @JPlugin.Entry.PhotosProcess( _("Flip Vertical"), order=1005 )
+    def flipVertical(self,l):
+        return self.__transform(l,"flipVertical")
+
+    @JPlugin.Entry.PhotosProcess( _("Transpose"), order=1006 )
+    def transpose(self,l):
+        return self.__transform(l,"transpose")
+        
+    @JPlugin.Entry.PhotosProcess( _("Transverse"), order=1007 )
+    def transverse(self,l):
+        return self.__transform(l,"transverse")
 
     def __transform(self,list,sens):
         try:

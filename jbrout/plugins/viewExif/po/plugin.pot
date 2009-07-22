@@ -16,25 +16,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. def menuEntries(self,l):
-#. return [(2000,_("Comment"),True,self.comment,"gfx/gtk-edit.png")]
-#: ../plugins/comment/__init__.py:27 ../tmp/comment.glade.h:2
-msgid "Comment"
+#: ../plugins/viewExif/viewExif.py:55
+msgid "Tag"
 msgstr ""
 
-#: ../plugins/comment/__init__.py:42 ../plugins/comment/__init__.py:47
-msgid "Commenting"
+#: ../plugins/viewExif/viewExif.py:56
+msgid "Value"
 msgstr ""
 
-#: ../plugins/comment/comment.py:52
-#, python-format
-msgid "%d photo(s)"
+#: ../plugins/viewExif/viewExif.py:89
+msgid "JPEG Comment"
 msgstr ""
 
-#: ../tmp/comment.glade.h:1
-msgid "All Selection"
+#: ../plugins/viewExif/viewExif.py:108
+msgid "No Displayable Meta Data found in file!"
 msgstr ""
 
-#: ../tmp/comment.glade.h:3
-msgid "One by One"
+#: ../plugins/viewExif/viewExif.py:110
+msgid "Can not open file!"
+msgstr ""
+
+#: ../plugins/viewExif/__init__.py:21
+msgid "Display Meta Data"
+msgstr ""
+
+#: ../tmp/viewExif.glade.h:1
+msgid "Meta Data Information"
 msgstr ""
