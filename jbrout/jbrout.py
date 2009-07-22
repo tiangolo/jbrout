@@ -89,26 +89,6 @@ def myExceptHook(type, value, tb):
 def beep(m):
     print >>sys.stdout,m
 
-#class WinGetKey(GladeApp):
-#    glade=os.path.join(os.path.dirname(__file__), 'jbrout.glade')
-#    window="WinGetKey"
-#    def init(self,k):
-#        self.main_widget.set_modal(True)
-#        self.main_widget.set_position(gtk.WIN_POS_CENTER)
-#        if k: self.label.set_text(k)
-#    def on_WinGetKey_key_press_event(self,w,e):
-#        if e.keyval<1000:  # no big keys (return, arrows, alt, ctrl, shift ..)
-#            key=gtk.gdk.keyval_name(e.keyval).lower()
-#            self.label.set_text(key)
-#    def on_btnCancel_clicked(self,*args):
-#        self.quit(False)
-#    def on_btnUndo_clicked(self,*args):
-#        self.quit("")
-#    def on_btnOk_clicked(self,*args):
-#        self.quit(self.label.get_text())
-#    def on_WinGetKey_delete_event(self,*a):
-#        self.quit(False)
-
 
 class JStyle:
     """ static class to handle jbrout colors """
@@ -194,7 +174,7 @@ class ListView(ThumbnailsView):
                         tag = ret[0]
                         self.parentWin.setTagsOnSelected(self,[tag,])
             self.grab_focus()
-
+        
         #if JBrout.modify:
             #if self.parentWin.cbxUseTagKey.get_active():
             #    key=gtk.gdk.keyval_name(event.keyval).lower()
@@ -2188,16 +2168,30 @@ class Window(GladeApp):
     def on_window_key_press_event(self, widget, b, *args):
         """User pressed a key"""
         key= gtk.gdk.keyval_name(b.keyval).lower()
-        if key in ['f11','kp_enter','return'] :
-            self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
-        elif key=="escape":
-            self.on_window_delete_event(self, widget)
-            self.quit()
-        elif key=='menu':
-            menu=self.get_menu(self.tbl,self.tbl.getSelected())
-            menu.popup(None,None,None,3,0)
-        #else:
-        #    print key
+        isCtrl = b.state & gtk.gdk.CONTROL_MASK
+        if isCtrl:
+            if JBrout.modify:
+                pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True)
+            else:
+                pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True,isAlter=False)
+            
+            key=gtk.gdk.keyval_name(b.keyval).lower()
+            
+            for instance,callback,props in pluginsWithKey:
+                if props["key"]==key:
+                    self.on_selecteur_menu_select_plugin("?!?",self.tbl,instance.id,callback)   #TODO: what's ib ? see "?!?"
+                    return 1                
+        else:
+            if key in ['f11','kp_enter','return'] :
+                self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
+            elif key=="escape":
+                self.on_window_delete_event(self, widget)
+                self.quit()
+            elif key=='menu':
+                menu=self.get_menu(self.tbl,self.tbl.getSelected())
+                menu.popup(None,None,None,3,0)
+
+                    
 
     def on_window_size_allocate(self, widget, *args):
         pass
