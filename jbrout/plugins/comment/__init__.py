@@ -24,7 +24,7 @@ class Plugin(JPlugin):
     #    return [(2000,_("Comment"),True,self.comment,"gfx/gtk-edit.png")]
 
 
-    @JPlugin.Entry.PhotosProcess( _("Do nothing on photos"), order=2000, icon="gfx/gtk-edit.png" )
+    @JPlugin.Entry.PhotosProcess( _("Comment"), order=2000, icon="gfx/gtk-edit.png" )
     def comment(self,list):
         from comment import Wincomment
 

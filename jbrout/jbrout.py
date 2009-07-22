@@ -895,7 +895,9 @@ class Window(GladeApp):
             image.show()
 
             bb = gtk.ToolButton(image)
-            bb.set_tooltip(self.tooltips, props["label"])
+            txt = props["label"]
+            if props["key"]: txt+=" (ctrl + %s)"%props["key"]
+            bb.set_tooltip(self.tooltips, txt)
             bb.connect("clicked", self.on_selecteur_menu_select_plugin,table,instance.id,callback)
             self.toolbar.insert(bb, 3)
             bb.show()
@@ -1693,7 +1695,9 @@ class Window(GladeApp):
                 l=JBrout.plugins.request("PhotosProcess",isAlter=False)
             
             for instance,callback,props in l:
-                item = gtk.ImageMenuItem( props["label"] )
+                txt = props["label"]
+                if props["key"]: txt+=" (ctrl + %s)"%props["key"]
+                item = gtk.ImageMenuItem( txt )
 
                 if props["icon"]:
                     ii=gtk.Image()
