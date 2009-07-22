@@ -1685,8 +1685,6 @@ class Window(GladeApp):
                 menu.append( makeItem(_("Select this folder"), self.on_selecteur_menu_select_folder,widget ))
                 menu.append( makeItem(_("Select this time"), self.on_selecteur_menu_select_time,widget ))
 
-            menu.append( makeItem(_("View Metadata"), self.on_selecteur_menu_metadata,widget ))
-
             menu2 = gtk.Menu()
             
             if canModify:
@@ -1895,14 +1893,6 @@ class Window(GladeApp):
             sel.refresh()
 
             sel.reSelectFocus()
-
-    def on_selecteur_menu_metadata(self,b,sel):
-        l = sel.getSelected()
-        from jbrout.viewMetaData import WinViewMetaData
-
-        win = WinViewMetaData(l)
-
-        win.loop()
 
     def on_selecteur_menu_select_plugin(self,ib,listview,id,callback):
         l = listview.getSelected()
