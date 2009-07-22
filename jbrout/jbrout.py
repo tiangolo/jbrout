@@ -820,7 +820,7 @@ class Window(GladeApp):
                 JBrout.conf["normalizeName"] = True
             else:
                 JBrout.conf["normalizeName"] = False
-
+        
         if not JBrout.conf.has_key("synchronizeXmp"):
             ret=InputQuestion(self.main_widget,
                 _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
@@ -851,6 +851,9 @@ class Window(GladeApp):
             JBrout.conf["orderAscending"] = False        # set default
 
 
+
+        Buffer.size = JBrout.conf["thumbsize"]
+        XMPUpdater.synchronizeXmp=JBrout.conf["synchronizeXmp"]  # Do we synchronize automatically ?
 
         JBrout.db.setNormalizeName( JBrout.conf["normalizeName"] )
         JBrout.db.setNormalizeNameFormat( str(JBrout.conf["normalizeNameFormat"]) )
@@ -2933,10 +2936,6 @@ def main(canModify=True):
         try:
             sys.excepthook = myExceptHook
             JBrout.init(canModify)
-
-            # set the thumbsize of the Buffer, from conf            
-            Buffer.size = JBrout.conf["thumbsize"]
-            XMPUpdater.synchronizeXmp=JBrout.conf["synchronizeXmp"]  # Do we synchronize automatically ?
 
             gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
             window = Window()
