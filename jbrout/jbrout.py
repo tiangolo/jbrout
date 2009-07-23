@@ -2179,8 +2179,8 @@ class Window(GladeApp):
             for instance,callback,props in pluginsWithKey:
                 if props["key"]==key:
                     self.on_selecteur_menu_select_plugin("?!?",self.tbl,instance.id,callback)   #TODO: what's ib ? see "?!?"
-            self.tbl.grab_focus()
-            return 1
+                    self.tbl.grab_focus()
+                    return 1    # event consumed
         else:
             if key in ['f11','kp_enter','return'] :
                 self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
