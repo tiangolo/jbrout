@@ -19,7 +19,7 @@ import common
 import sys
 #~ from __main__ import _
 from libs.gladeapp import GladeApp
-#_=lambda x:x                        # TODO : delete this line !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+from subprocess import Popen, PIPE
 
 def colorToString(color):
     """
@@ -263,15 +263,20 @@ class Img(object):
             except IOError:
                 raise IOError #"Img() : file not found"
         elif thumb:
+            extension = thumb.split('.')[-1].lower()
             try:
                 #~ fid = open(thumb, 'rb')
                 #~ jo = exif.process_file(fid)
                 #~ fid.close()
                 #~ data = jo["JPEGThumbnail"]
-
+                
                 img = pyexiv2.Image(thumb)
                 img.readMetadata()
-                data=img.getThumbnailData()[1]
+                # XXX external call while pyexiv2 can't handle it
+                if extension == 'nef':
+                    data=Popen(["exiftool","-b","-PreviewImage","%s"%thumb],stdout=PIPE).communicate()[0]
+                else:
+                    data=img.getThumbnailData()[1]
 
                 loader = gtk.gdk.PixbufLoader ('jpeg')
 

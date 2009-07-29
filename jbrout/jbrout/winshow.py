@@ -17,6 +17,7 @@ from commongtk import WinKeyTag
 from common import cd2rd,format_file_size_for_display
 from jbrout.externaltools import ExternalTools
 from jbrout.tools import XMPUpdater
+from subprocess import Popen,PIPE
 #TODO: add ops : add/del from basket
 #TODO: add ops : external tools
 
@@ -494,15 +495,27 @@ class PixbufCache(object):
             PixbufCache._file = file
             if os.path.isfile(file):
                 try:
-                    PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
+                    PixbufCache._cache=self.pixbufFromFile(file)
                 except Exception,m:
                     print "*WARNING* can't load this file : ",(file,),m
                     PixbufCache._cache=None
             else:
                 PixbufCache._cache=None
-
-
         return PixbufCache._cache
+
+    def pixbufFromFile(self,file):
+        # XXX external call while pyexiv2 can't handle it
+        extension=file.split('.')[-1].lower()
+        if extension == 'nef':
+            data=Popen(["exiftool","-b","-JpgFromRaw","%s"%file],stdout=PIPE).communicate()[0]
+            loader = gtk.gdk.PixbufLoader ('jpeg')
+            loader.write (data, len (data))
+            im = loader.get_pixbuf ()
+            loader.close ()
+            return im
+        else:
+            return gtk.gdk.pixbuf_new_from_file(file)
+
 
 #class WinComment(GladeApp):
 #    """ Creates and handles the dialog for Editing photo comments """
