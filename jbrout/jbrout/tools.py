@@ -605,8 +605,11 @@ isreal : %s""" % (
         if not(sens == "none"):
             if _Command.isWin:
                     ret= _Command._run( [_Command._jpegtran]+jpegtranOpt+['-copy','all',self.__file,self.__file] )
-                    # rebuild the exif thumb, because jpegtran doesn't do it on windows
+                    # rebuild the exif thumb and reset the orientation tag,
+                    # because jpegtran doesn't do it on windows
                     self.rebuildExifTB()
+                    self.__info['Exif.Image.Orientation']=1
+                    self.__maj()
             else:
                 ret= _Command._run( [_Command._exiftran,exiftranOpt,'-i',self.__file] ) # exiftran rotate internal exif thumb
 
@@ -703,7 +706,7 @@ isreal : %s""" % (
 
 class XMPUpdater():
     #synchronizeXmp = None
-    
+
     def __init__(self,photo_list):
         """XMPUpdater is in charge of manipulating XMP data.
         It might disapear when pyexiv2 will have XMP support"""
