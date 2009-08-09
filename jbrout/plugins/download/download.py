@@ -81,7 +81,7 @@ class WinDownload(GladeApp):
             gtk.DEST_DEFAULT_ALL,
             [( 'text/uri-list', 0, 1 ),('text/plain', 0, 1)], # drag from os
             gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
-        
+
         txtRdr = gtk.CellRendererText()
 
         columns = ((_('Source'),      [(txtRdr, gobject.TYPE_STRING)],
@@ -389,16 +389,16 @@ class WinDownload(GladeApp):
                 self.invalidSource = True
                 self.entSourceFolder.set_text(self.srcFolder)
         dialog.destroy()
-    
+
     def on_btnSourceFolder_drag_data_received(self, widget, *args):
-        
+
         list = dnd_args_to_dir_list(args)
-        
+
         if list:
             self.srcFolder = list[0]
             self.invalidSource = True
-            self.entSourceFolder.set_text(self.srcFolder) 
-        
+            self.entSourceFolder.set_text(self.srcFolder)
+
     def on_btnPreferences_clicked(self, widget, *args):
         """Handles the Preferences button, loads the preferences dialog and
         initiates the update of the download list"""
@@ -504,7 +504,7 @@ class WinDownloadPreferences(GladeApp):
         self.updateExample()
         # Init Auto Tag page
         self.ltags = eval('%s' % self.__conf['autoTag'])
-        
+
         def filename(column, cell, model, iter):
             cell.set_property('text', model.get_value(iter, 0))
             cell.set_property('foreground', model.get_value(iter, 2))
@@ -533,7 +533,7 @@ class WinDownloadPreferences(GladeApp):
         column.pack_start(cell, True)
         column.set_cell_data_func(cellpb, pixbuf)
         column.set_cell_data_func(cell, filename)
-        
+
         self.tvTags.append_column(column)
         treeselection = self.tvTags.get_selection()
         treeselection.set_mode(gtk.SELECTION_NONE)
@@ -542,7 +542,7 @@ class WinDownloadPreferences(GladeApp):
         self.tvTags.set_model( storeTags )
         self.tvTags.set_enable_search(False)
         self.tvTags.set_state(gtk.CAN_FOCUS)
-        
+
         storeTags.expander(self.tvTags)
         storeTags.cleanSelections()
         storeTags.setSelected(self.ltags)
@@ -635,7 +635,7 @@ class WinDownloadPreferences(GladeApp):
                     self.exExif,
                     self.exDate,
                     self.entJobCode.get_text())))
-    
+
     ## Auto Tag Tab Handlers
     def on_tvTags_button_press_event(self, widget, *args):
         """Handles button presses in the AutoTag list"""
@@ -678,7 +678,7 @@ class WinDownloadPreferences(GladeApp):
         model, iter0 = treeselection.get_selected()
         if iter0:
             model.switch(iter0)
-    
+
     ## Conversion Tab Handlers
     def on_chkDcraw_toggled(self, widget, *args):
         """handles toggling of the dcraw tick-box and en/disables the
@@ -695,8 +695,8 @@ class WinDownloadPreferences(GladeApp):
             self.chkDcrawCopyRaw.unset_flags(gtk.CAN_FOCUS)
             self.chkDcrawCopyRaw.unset_flags(gtk.SENSITIVE)
             self.chkDcrawCopyRaw.set_active(False)
-    
-    
+
+
     ## Camera mapping Tab Handlers
     def on_btnMappingAdd_clicked(self,*args):
         """Handles the Add Mapping button and adds a new camera mapping from
@@ -802,29 +802,35 @@ class WinDownloadExecute(GladeApp):
                 # Load preview
                 self.lblAction.set_label(_('Loading preview'))
                 yield True
+                noThumb = False
                 if item[dc.C_EXIF].getThumbnailData():
-                    thumbJpeg = item[dc.C_EXIF].getThumbnailData()[1]
-                    loader = gtk.gdk.PixbufLoader ('jpeg')
-                    loader.write (thumbJpeg, len(thumbJpeg))
-                    thumbIm = loader.get_pixbuf ()
-                    loader.close ()
-                    if item[dc.C_RS] == "flipHorizontal":
-                        thumbIm = thumbIm.flip(True)
-                    elif item[dc.C_RS] == "rotate180":
-                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_UPSIDEDOWN)
-                    elif item[dc.C_RS] == "flipVertical":
-                        thumbIm = thumbIm.flip(False)
-                    elif item[dc.C_RS] == "transpose":
-                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
-                        thumbIm = thumbIm.flip(False)
-                    elif item[dc.C_RS] == "rotate90":
-                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
-                    elif item[dc.C_RS] == "transverse":
-                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
-                        thumbIm = thumbIm.flip(True)
-                    elif item[dc.C_RS] == "rotate270":
-                        thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
+                    try:
+                        thumbJpeg = item[dc.C_EXIF].getThumbnailData()[1]
+                        loader = gtk.gdk.PixbufLoader ('jpeg')
+                        loader.write (thumbJpeg, len(thumbJpeg))
+                        thumbIm = loader.get_pixbuf ()
+                        loader.close ()
+                        if item[dc.C_RS] == "flipHorizontal":
+                            thumbIm = thumbIm.flip(True)
+                        elif item[dc.C_RS] == "rotate180":
+                            thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_UPSIDEDOWN)
+                        elif item[dc.C_RS] == "flipVertical":
+                            thumbIm = thumbIm.flip(False)
+                        elif item[dc.C_RS] == "transpose":
+                            thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+                            thumbIm = thumbIm.flip(False)
+                        elif item[dc.C_RS] == "rotate90":
+                            thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+                        elif item[dc.C_RS] == "transverse":
+                            thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
+                            thumbIm = thumbIm.flip(True)
+                        elif item[dc.C_RS] == "rotate270":
+                            thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
+                    except:
+                        noThumb = True
                 else:
+                    noThumb = True
+                if noThumb:
                     thumbIm = gtk.gdk.pixbuf_new_from_file(
                         os.path.join('data','gfx','imgNoThumb.png'))
                 self.imgPreview.set_from_pixbuf(thumbIm)
@@ -842,6 +848,11 @@ class WinDownloadExecute(GladeApp):
                         '%s %s' % (_('Performing Transformation:'),item[dc.C_ROT]))
                     yield True
                     pc.transform(item[dc.C_RS])
+                # Build thumb if broken or non existant
+                if noThumb:
+                    self.lblAction.set_label(_('Building Thumbnail'))
+                    yield True
+                    pc.rebuildExifTB()
                 # Auto comment if enabled
                 if len(self.conf['autoComment']) > 0:
                     self.lblAction.set_label(_('Commenting'))
@@ -903,7 +914,7 @@ class WinDownloadExecute(GladeApp):
                     self.quitNow = False
         self.quit(True)
         yield False
-    
+
     def _delete(self, file):
         """Simple function to delete the passed in file"""
         try:
@@ -927,4 +938,3 @@ class WinDownloadExecute(GladeApp):
             print "need to touch ;-("
             stime = time.strftime("%Y%m%d%H%M.%S",time.localtime(timeStamp) )
             _Command._run( ["touch",'-t',stime,file] )
-            
