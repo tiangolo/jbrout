@@ -38,6 +38,8 @@ gnome-terminal</command>
 ##
 !@#_currentPos!@#_anchor
 </snippet>
+<snippet id="743d9f2e-b4a6-4353-a359-4b0bd5dc59e8" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="Meta+P" name="pdb" set_selection="false">
+import pdb; pdb.set_trace()!@#_currentPos!@#_anchor</snippet>
 <snippet id="b0d9f3c2-af62-4b77-8eed-6f4f8c78c0fa" idref="c799512d-37cb-4c2a-b5db-1511831116b0" indent_relative="false" keyboard_shortcut="" name="a gladeapp" set_selection="true">
 import os
 from libs.gladeapp import GladeApp
