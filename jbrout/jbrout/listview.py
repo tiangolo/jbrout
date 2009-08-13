@@ -776,22 +776,6 @@ class ImageFile(object):
         """ constructor of a ImageFile """
         self.__file=file
 
-    def getThumb(self):
-        """ return the thumbnail """
-        #try:
-        #    data= exif.process_file(open(self.__file,"rb"))
-        #except IOError:
-        #    return None
-        #data = data['JPEGThumbnail']
-        img = pyexiv2.Image(self.__file)
-        img.readMetadata()
-        data=img.getThumbnailData()[1]
-        
-        loader = gtk.gdk.PixbufLoader()
-        loader.write(data, len(data))
-        loader.close()
-        return loader.get_pixbuf()
-
     @staticmethod
     def load(path):
         """ constructor of a list of ImageFile """

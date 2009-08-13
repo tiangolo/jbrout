@@ -33,6 +33,8 @@ import os,re,sys,thread,shutil,stat,string
 from libs.dict4ini import DictIni
 from commongtk import Buffer,rgb,Img
 
+from subprocess import Popen,PIPE
+
 def walktree (top = ".", depthfirst = True):
     try:
         names = os.listdir(top)
@@ -58,6 +60,8 @@ def dec(s): # ensure that a return from etree is in utf-8
 
 
 class DBPhotos:
+    """
+    """
     normalizeName = False
     autorotAtImport = False
 
@@ -281,6 +285,7 @@ class DBPhotos:
 
 
 class FolderNode(object):
+    """ A folder node containing photo nodes"""
     commentFile="album.txt"
 
     def __init__(self,n):
@@ -538,7 +543,6 @@ class FolderNode(object):
 
 
 class PhotoNode(object):
-
     """
       Class PhotoNode
       to manipulate a node photo in the dom of album.xml.
@@ -639,7 +643,18 @@ class PhotoNode(object):
         return pb
 
     def getImage(self):
-        return gtk.gdk.pixbuf_new_from_file(self.file)
+        file = self.file
+        # XXX external call while pyexiv2 can't handle it
+        extension=file.split('.')[-1].lower()
+        if extension == 'nef':
+            data=Popen(["exiftool","-b","-JpgFromRaw","%s"%file],stdout=PIPE).communicate()[0]
+            loader = gtk.gdk.PixbufLoader ('jpeg')
+            loader.write (data, len (data))
+            im = loader.get_pixbuf ()
+            loader.close ()
+            return im
+        else:
+            return gtk.gdk.pixbuf_new_from_file(file)
 
 
     def moveToFolder(self,nodeFolder):
@@ -892,58 +907,58 @@ class PhotoNode(object):
 
 # ============================================================================================
 class DBTags:
-# ============================================================================================
-   def __init__(self,file):
+    """ Class to manage tags tree """
+    def __init__(self,file):
         if os.path.isfile(file):
             self.root = ElementTree(file=file).getroot()
         else:
             self.root = Element("tags")
         self.file = file
 
-   def getAllTags(self):
+    def getAllTags(self):
         """ return list of tuples (tag, parent catg)"""
         l=[(n.text,n.getparent().get("name")) for n in self.root.xpath("//tag")]
         l.sort(cmp= lambda x,y: cmp(x[0].lower(),y[0].lower()))
         return l
 
-   def save(self):
+    def save(self):
         fid = open(self.file,"w")
         fid.write("""<?xml version="1.0" encoding="UTF-8"?>""")
         ElementTree(self.root).write(fid,encoding="utf-8")
         fid.close()
 
-   #def getTagForKey(self,key):
-   #    """ return the tag as utf_8 for the key 'key' """
-   #    ln=self.root.xpath("//tag[@key='%s']"%key)
-   #    if ln:
-   #        assert len(ln)==1
-   #        return dec(ln[0].text)
-
-   #~ def update(self, tg):
-      #~ nc = self.dom.selectSingleNode("//catg[@name='IMPORTEDTAGS']")
-      #~ if not nc:
-         #~ nc=self.dom.createElement("catg")
-         #~ nc.setAttribute( "name","IMPORTEDTAGS")
-
-      #~ newtags=False
-      #~ st = self.getTags()
-      #~ for i in tg:
-         #~ if i in st:
-            #~ pass
-         #~ else:
-            #~ n=self.dom.createElement("tag")
-            #~ n.setAttribute( "name",i)
-            #~ nc.appendChild(n)
-            #~ newtags = True
-
-      #~ if newtags:
-         #~ self.dom.documentElement.appendChild(nc)
-         #~ self.win.treeTags.init()
-         #~ msgBox(_("There are New Imported Tags"))
-   def getRootTag(self):
+    #def getTagForKey(self,key):
+    #    """ return the tag as utf_8 for the key 'key' """
+    #    ln=self.root.xpath("//tag[@key='%s']"%key)
+    #    if ln:
+    #        assert len(ln)==1
+    #        return dec(ln[0].text)
+ 
+    #~ def update(self, tg):
+       #~ nc = self.dom.selectSingleNode("//catg[@name='IMPORTEDTAGS']")
+       #~ if not nc:
+          #~ nc=self.dom.createElement("catg")
+          #~ nc.setAttribute( "name","IMPORTEDTAGS")
+ 
+       #~ newtags=False
+       #~ st = self.getTags()
+       #~ for i in tg:
+          #~ if i in st:
+             #~ pass
+          #~ else:
+             #~ n=self.dom.createElement("tag")
+             #~ n.setAttribute( "name",i)
+             #~ nc.appendChild(n)
+             #~ newtags = True
+ 
+       #~ if newtags:
+          #~ self.dom.documentElement.appendChild(nc)
+          #~ self.win.treeTags.init()
+          #~ msgBox(_("There are New Imported Tags"))
+    def getRootTag(self):
         return CatgNode(self.root)
 
-   def updateImportedTags( self, importedTags ):
+    def updateImportedTags( self, importedTags ):
         assert type(importedTags)==list
 
         r = self.getRootTag()
@@ -972,6 +987,7 @@ class DBTags:
         return len(newTags)
 
 class TagNode(object):
+    """ """
     def __init__(self,n):
         assert n.tag == "tag"
         self.__node = n
@@ -993,6 +1009,7 @@ class TagNode(object):
 
 
 class CatgNode(object):
+    """ """
     def __init__(self,n):
         assert n.tag == "tags"
         self.__node = n

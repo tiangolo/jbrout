@@ -17,7 +17,6 @@ from commongtk import WinKeyTag
 from common import cd2rd,format_file_size_for_display
 from jbrout.externaltools import ExternalTools
 from jbrout.tools import XMPUpdater
-from subprocess import Popen,PIPE
 #TODO: add ops : add/del from basket
 #TODO: add ops : external tools
 
@@ -60,8 +59,11 @@ class TagList(gtk.VBox):
 
 
 class WinShow(GladeApp):
+    """ a window that displays an image in full screen
+        it may switch to next/previous image
+        WinShow receives a set of jbrout.db.PhotoNodes
+    """
     glade=os.path.join(os.path.dirname(os.path.dirname(__file__)),'data','jbrout.glade')
-    #glade='data/jbrout.glade'
     window="WinShow"
 
     def init(self, ln,idx,showInfo=True,isModify=False,selected=[]):
@@ -287,9 +289,9 @@ TAGS :
         d=Display()
         d.node = node
         if forceReload:
-            d.image = PixbufCache().get(node.file,forceReload)
+            d.image = PixbufCache().get(node,forceReload)
         else:
-            d.image = PixbufCache().get(node.file)
+            d.image = PixbufCache().get(node)
         d.title = "%d/%d"%(self.idx+1,len(self.ln))
         try:
             self.lbl_info.set_text(msg)
@@ -486,35 +488,22 @@ class PixbufCache(object):
     """ class to cache pixbuf by filename"""
     _cache=None
     _file=None
-    def get(self,file,forceReload=False):
-
+    def get(self,node,forceReload=False):
+        file = node.file
         if file == PixbufCache._file :
             if forceReload:
-                PixbufCache._cache=gtk.gdk.pixbuf_new_from_file(file)
+                PixbufCache._cache=node.getImage()
         else:
             PixbufCache._file = file
             if os.path.isfile(file):
                 try:
-                    PixbufCache._cache=self.pixbufFromFile(file)
+                    PixbufCache._cache=node.getImage()
                 except Exception,m:
                     print "*WARNING* can't load this file : ",(file,),m
                     PixbufCache._cache=None
             else:
                 PixbufCache._cache=None
         return PixbufCache._cache
-
-    def pixbufFromFile(self,file):
-        # XXX external call while pyexiv2 can't handle it
-        extension=file.split('.')[-1].lower()
-        if extension == 'nef':
-            data=Popen(["exiftool","-b","-JpgFromRaw","%s"%file],stdout=PIPE).communicate()[0]
-            loader = gtk.gdk.PixbufLoader ('jpeg')
-            loader.write (data, len (data))
-            im = loader.get_pixbuf ()
-            loader.close ()
-            return im
-        else:
-            return gtk.gdk.pixbuf_new_from_file(file)
 
 
 #class WinComment(GladeApp):
