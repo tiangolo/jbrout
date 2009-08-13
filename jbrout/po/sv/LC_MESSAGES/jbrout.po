@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout-0.3.174\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-23 00:05+0200\n"
+"POT-Creation-Date: 2009-08-13 20:20+0200\n"
 "PO-Revision-Date: 2009-02-23 17:30+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -21,47 +21,46 @@ msgstr ""
 msgid "Jbrout Error"
 msgstr "jbrout-fel"
 
-#. ========================================================
-#: ../jbrout.py:149 ../tmp/jbrout.glade.h:22
+#: ../jbrout.py:155 ../tmp/jbrout.glade.h:24
 msgid "Tags"
 msgstr "Taggar"
 
-#: ../jbrout.py:149
+#: ../jbrout.py:155
 msgid "Comment"
 msgstr "Kommentar"
 
-#: ../jbrout.py:149
+#: ../jbrout.py:155
 msgid "Album"
 msgstr "Album"
 
-#: ../jbrout.py:149
+#: ../jbrout.py:155 ../tmp/jbrout.glade.h:8
 msgid "Date"
 msgstr "Datum"
 
-#: ../jbrout.py:149
+#: ../jbrout.py:155
 msgid "Name"
 msgstr "Namn"
 
-#: ../jbrout.py:172
+#: ../jbrout.py:180
 #, python-format
 msgid "Apply to %d photo(s)"
 msgstr "Verkställ till %d fotografi(er)"
 
-#: ../jbrout.py:214
+#: ../jbrout.py:222
 #, python-format
 msgid "%d/%d selected"
 msgstr "%d/%d markerade"
 
-#: ../jbrout.py:436
+#: ../jbrout.py:450
 #, python-format
 msgid "Year %s"
 msgstr "År %s"
 
-#: ../jbrout.py:626 ../jbrout.py:1378
+#: ../jbrout.py:640 ../jbrout.py:1398
 msgid "Basket"
 msgstr "Korg"
 
-#: ../jbrout.py:817
+#: ../jbrout.py:836
 msgid ""
 "Do you want JBrout to rename your imported photos according to their create "
 "timestamp (Recommended) ?"
@@ -69,11 +68,11 @@ msgstr ""
 "Vill du att JBrout ska döpa om dina importerade fotografier i enlighet med "
 "deras tidsstämpel för då de skapades(rekommenderat) ?"
 
-#: ../jbrout.py:827
+#: ../jbrout.py:846
 msgid "Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?"
 msgstr ""
 
-#: ../jbrout.py:840
+#: ../jbrout.py:859
 msgid ""
 "Do you want JBrout to auto-rotate your imported photos according to their "
 "orientation tag (Recommended) ?"
@@ -81,45 +80,45 @@ msgstr ""
 "Vill du att JBrout automatiskt ska rotera dina importerade fotografier i "
 "enlighet med deras orienteringstagg (rekommenderat) ?"
 
-#: ../jbrout.py:1183
+#: ../jbrout.py:1202
 msgid "Any"
 msgstr ""
 
-#: ../jbrout.py:1183
+#: ../jbrout.py:1202
 msgid "Landscape"
 msgstr "Landskap"
 
-#: ../jbrout.py:1183
+#: ../jbrout.py:1202
 msgid "Portrait"
 msgstr "Porträtt"
 
-#: ../jbrout.py:1244
+#: ../jbrout.py:1264
 #, python-format
 msgid "Display (%s)"
 msgstr "Visa (%s)"
 
-#: ../jbrout.py:1312
+#: ../jbrout.py:1332
 #, python-format
 msgid "%s (%d photo(s))"
 msgstr "%s (%d fotografi(er))"
 
-#: ../jbrout.py:1397
+#: ../jbrout.py:1417
 msgid "Enter a bookmark Name"
 msgstr "Skriv in ett namn på bokmärke"
 
-#: ../jbrout.py:1447
+#: ../jbrout.py:1467
 msgid "Rename folder"
 msgstr "Döp om mapp"
 
-#: ../jbrout.py:1465 ../jbrout.py:2390
+#: ../jbrout.py:1485 ../jbrout.py:2411
 msgid "New folder"
 msgstr "Ny mapp"
 
-#: ../jbrout.py:1512
+#: ../jbrout.py:1532
 msgid "Are you sure to delete this folder ?"
 msgstr "Är du säker på att du vill ta bort denna mapp?"
 
-#: ../jbrout.py:1514
+#: ../jbrout.py:1534
 #, python-format
 msgid ""
 "Are you sure to delete this folder ?\n"
@@ -128,240 +127,437 @@ msgstr ""
 "Är du säker på att du vill ta bort denna mapp?\n"
 "(Denna mapp innehåller %d fil(er))"
 
-#: ../jbrout.py:1581
+#: ../jbrout.py:1601
 #, python-format
 msgid "Importing %d/%d"
 msgstr "Importerar %d/%d"
 
-#: ../jbrout.py:1593
+#: ../jbrout.py:1613
 #, python-format
 msgid "%d tag(s) were added !"
 msgstr "%d tagg(ar) lades till !"
 
 #. drag from a real folder
-#: ../jbrout.py:1617
+#: ../jbrout.py:1637
 msgid "Are you sure to move this folder here ?"
 msgstr "Är du säker på att du vill flytta denna mapp hit?"
 
 #. drag from the basket
-#: ../jbrout.py:1629
+#: ../jbrout.py:1649
 msgid "Can't drag the basket to a folder"
 msgstr "Kan inte dra korgen till en mapp"
 
 #. there are pictures which could be added to basket
-#: ../jbrout.py:1685
+#: ../jbrout.py:1705
 msgid "Add to Basket"
 msgstr "Lägg till i korg"
 
 #. there are pictures which could be removed basket
-#: ../jbrout.py:1687
+#: ../jbrout.py:1707
 msgid "Remove From Basket"
 msgstr "Ta bort från korg"
 
 #. there is only one selected picture
-#: ../jbrout.py:1690
+#: ../jbrout.py:1710
 msgid "Select this folder"
 msgstr "Markera denna mapp"
 
-#: ../jbrout.py:1691
+#: ../jbrout.py:1711
 msgid "Select this time"
 msgstr "Välj denna tid"
 
-#: ../jbrout.py:1716 ../jbrout.py:2411
+#: ../jbrout.py:1736 ../jbrout.py:2432
 msgid "Operations"
 msgstr "Åtgärder"
 
-#: ../jbrout.py:1738
+#: ../jbrout.py:1758
 msgid "External Tools"
 msgstr "Externa verktyg"
 
-#: ../jbrout.py:1760
+#: ../jbrout.py:1780
 msgid "** ALL **"
 msgstr "** ALLA **"
 
-#: ../jbrout.py:1763
+#: ../jbrout.py:1783
 msgid "Delete tag"
 msgstr "Ta bort tagg"
 
 #. if node.__class__.__name__ == "TagNode":
 #. menu.append( makeItem(_("Set keyboard shortcut"),self.on_menu_set_key) )
-#: ../jbrout.py:1768 ../jbrout.py:2687
+#: ../jbrout.py:1788 ../jbrout.py:2708
 msgid "Delete"
 msgstr "Ta bort"
 
-#: ../jbrout.py:1804
+#: ../jbrout.py:1824
 msgid "Deleting tags"
 msgstr "Tar bort taggar"
 
-#: ../jbrout.py:1872
+#: ../jbrout.py:1892
 #, python-format
 msgid "Delete %d photo(s) are you sure ?"
 msgstr "Ta bort %d fotografi(er). Är du säker?"
 
-#: ../jbrout.py:1988
+#: ../jbrout.py:2008
 msgid "Adding tags"
 msgstr "Lägger till taggar"
 
-#: ../jbrout.py:1990
+#: ../jbrout.py:2010
 msgid "can't add tag to a readonly picture"
 msgstr "kan inte lägg till tagg till en skrivskyddad bild"
 
-#: ../jbrout.py:2037
+#: ../jbrout.py:2057
 msgid "New tag"
 msgstr "Ny tagg"
 
-#: ../jbrout.py:2048
+#: ../jbrout.py:2068
 msgid "Tag already exists"
 msgstr "Tagg finns redan"
 
-#: ../jbrout.py:2058
+#: ../jbrout.py:2078
 msgid "New category"
 msgstr "Ny kategori"
 
-#: ../jbrout.py:2069 ../jbrout.py:2085
+#: ../jbrout.py:2089 ../jbrout.py:2105
 msgid "Category already exists"
 msgstr "Kategori finns redan"
 
-#: ../jbrout.py:2078
+#: ../jbrout.py:2098
 #, fuzzy
 msgid "Rename category"
 msgstr "Ny kategori"
 
-#: ../jbrout.py:2120
+#: ../jbrout.py:2140
 msgid "This tag is in use"
 msgstr "Denna tagg används"
 
-#: ../jbrout.py:2131
+#: ../jbrout.py:2151
 msgid "Category is not empty"
 msgstr "Kategori är inte tom"
 
-#: ../jbrout.py:2322
+#: ../jbrout.py:2343
 msgid "Don't drop parents to a child"
 msgstr "Släpp inte föräldrar till ett barn"
 
-#: ../jbrout.py:2324 ../jbrout.py:2657
+#: ../jbrout.py:2345 ../jbrout.py:2678
 msgid "Drop in space"
 msgstr "Släpp i utrymme"
 
-#: ../jbrout.py:2326 ../jbrout.py:2655
+#: ../jbrout.py:2347 ../jbrout.py:2676
 msgid "Nothing was dragged"
 msgstr "Ingenting drogs"
 
-#: ../jbrout.py:2336
+#: ../jbrout.py:2357
 msgid "Drop from nowhere"
 msgstr "Släpp från ingenstans"
 
-#: ../jbrout.py:2387
+#: ../jbrout.py:2408
 msgid "Select only"
 msgstr "Markera bara"
 
-#: ../jbrout.py:2389
+#: ../jbrout.py:2410
 msgid "Rename"
 msgstr "Döp om"
 
-#: ../jbrout.py:2391
+#: ../jbrout.py:2412
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: ../jbrout.py:2392
+#: ../jbrout.py:2413
 msgid "Remove from db"
 msgstr "Ta bort från db"
 
-#: ../jbrout.py:2393
+#: ../jbrout.py:2414
 msgid "Delete from disk"
 msgstr "Ta bort från skiva"
 
-#: ../jbrout.py:2437
+#: ../jbrout.py:2458
 msgid "Remove"
 msgstr "Ta bort"
 
-#: ../jbrout.py:2466
+#: ../jbrout.py:2487
 msgid "Add Folder"
 msgstr "Lägg till mapp"
 
-#: ../jbrout.py:2562
+#: ../jbrout.py:2583
 #, python-format
 msgid "Tag %s"
 msgstr "Tagg %s"
 
-#: ../jbrout.py:2567
+#: ../jbrout.py:2588
 msgid "Tags "
 msgstr "Taggar"
 
-#: ../jbrout.py:2628
+#: ../jbrout.py:2649
 msgid "Don't drop tags on a tag"
 msgstr "Släpp inte taggar på en tagg"
 
-#: ../jbrout.py:2648
+#: ../jbrout.py:2669
 msgid "Tag/catg couldn't be a parent of the destination"
 msgstr "Tagg/kateg kunde inte vara en förälder till destinationen"
 
-#: ../jbrout.py:2682
+#: ../jbrout.py:2703
 msgid "Add Tag"
 msgstr "Lägg till tagg"
 
-#: ../jbrout.py:2683
+#: ../jbrout.py:2704
 msgid "Add Category"
 msgstr "Lägg till kategori"
 
-#: ../jbrout.py:2684
+#: ../jbrout.py:2705
 #, fuzzy
 msgid "Rename Category"
 msgstr "Ny kategori"
 
-#: ../jbrout.py:2795
+#: ../jbrout.py:2816
 msgid "To %m/%d/%Y %A"
 msgstr "Till %m/%d/%Y %A"
 
-#: ../jbrout.py:2802
+#: ../jbrout.py:2823
 msgid "From %m/%d/%Y %A"
 msgstr "Från %m/%d/%Y %A"
 
-#: ../jbrout.py:2855
+#: ../jbrout.py:2876
 #, python-format
 msgid "NOT %s"
 msgstr "INTE %s"
 
-#: ../jbrout.py:2875
+#: ../jbrout.py:2896
 msgid "Format:Landscape"
 msgstr "Format:Landskap"
 
-#: ../jbrout.py:2878
+#: ../jbrout.py:2899
 msgid "Format:Portrait"
 msgstr "Format:Porträtt"
 
-#: ../jbrout.py:2883
+#: ../jbrout.py:2904
 #, python-format
 msgid "comment(%s)"
 msgstr "kommentar(%s)"
 
-#: ../jbrout.py:2883 ../jbrout.py:2887
+#: ../jbrout.py:2904 ../jbrout.py:2908
 msgid " and "
 msgstr " och"
 
-#: ../jbrout.py:2887
+#: ../jbrout.py:2908
 #, python-format
 msgid "album(%s)"
 msgstr "album(%s)"
 
-#: ../jbrout.py:2901 ../jbrout.py:2909
+#: ../jbrout.py:2922 ../jbrout.py:2930
 #, python-format
 msgid "NOT '%s'"
 msgstr "INTE '%s'"
 
-#: ../jbrout.py:2914
+#: ../jbrout.py:2935
 msgid "ALL"
 msgstr "ALLA"
 
-#: ../jbrout.py:2923
+#: ../jbrout.py:2944
 msgid ""
 "jBrout appears to already be running are you sure you wish to run another "
 "copy"
 msgstr ""
 
-#: ../jbrout.py:2924
+#: ../jbrout.py:2945
 msgid "jBrout Already Running"
 msgstr ""
+
+#.
+#: ../tmp/jbrout.glade.h:1
+msgid "-"
+msgstr "-"
+
+#: ../tmp/jbrout.glade.h:2
+msgid "Add Bookmark"
+msgstr "Lägg till bokmärke"
+
+#: ../tmp/jbrout.glade.h:3
+msgid "Add folder"
+msgstr "Lägg till mapp"
+
+#: ../tmp/jbrout.glade.h:4
+msgid "Album / comment"
+msgstr "Album / kommentar"
+
+#: ../tmp/jbrout.glade.h:5 ../jbrout/winpref.py:44
+msgid "Albums"
+msgstr "Album"
+
+#: ../tmp/jbrout.glade.h:6
+msgid "Ascending"
+msgstr "Stigande"
+
+#: ../tmp/jbrout.glade.h:7
+msgid "Bookmarks"
+msgstr "Bokmärken"
+
+#: ../tmp/jbrout.glade.h:9
+msgid "Descending"
+msgstr "Fallande"
+
+#: ../tmp/jbrout.glade.h:10
+msgid "Edit Bookmarks"
+msgstr "Redigera bokmärken"
+
+#: ../tmp/jbrout.glade.h:11
+msgid "Enter New Comment"
+msgstr "Skriv in ny kommentar"
+
+#: ../tmp/jbrout.glade.h:12
+#, fuzzy
+msgid "Filename"
+msgstr "Döp om"
+
+#: ../tmp/jbrout.glade.h:13
+msgid "Format"
+msgstr "Format"
+
+#: ../tmp/jbrout.glade.h:14
+msgid "JBrout"
+msgstr "JBrout"
+
+#: ../tmp/jbrout.glade.h:15
+msgid "Mark this picture to be removed"
+msgstr "Markera denna bild för borttagning"
+
+#: ../tmp/jbrout.glade.h:16
+msgid "Period from"
+msgstr "Period från"
+
+#: ../tmp/jbrout.glade.h:17
+msgid "Photo comment"
+msgstr "Fotografikommentar"
+
+#: ../tmp/jbrout.glade.h:18
+msgid "Plugins"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:19
+msgid "Preferences"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:20
+msgid "Press a key"
+msgstr "Tryck en tangent"
+
+#: ../tmp/jbrout.glade.h:21
+msgid "Put this picture in the basket"
+msgstr "Placera denna bild i korgen"
+
+#: ../tmp/jbrout.glade.h:22
+msgid "Search"
+msgstr "Sök"
+
+#: ../tmp/jbrout.glade.h:23
+msgid "Selection's filter"
+msgstr "Markeringens filter"
+
+#: ../tmp/jbrout.glade.h:25
+msgid "Time"
+msgstr "Tid"
+
+#: ../tmp/jbrout.glade.h:26
+msgid "_Bookmarks"
+msgstr "_Bokmärken"
+
+#: ../tmp/jbrout.glade.h:28
+#, no-c-format
+msgid "_Display (%s)"
+msgstr "_Visa (%s)"
+
+#: ../tmp/jbrout.glade.h:29
+msgid "_Edit external tools"
+msgstr "_Redigera externa verktyg"
+
+#: ../tmp/jbrout.glade.h:30
+msgid "_File"
+msgstr "_Arkiv"
+
+#: ../tmp/jbrout.glade.h:31
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: ../tmp/jbrout.glade.h:32
+msgid "_Order"
+msgstr "_Ordning"
+
+#: ../tmp/jbrout.glade.h:33
+msgid "_Preferences"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:34
+msgid "coming soon"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:35
+msgid "filter"
+msgstr "filter"
+
+#: ../tmp/jbrout.glade.h:36 ../tmp/folderselect.glade.h:3
+msgid "gtk-cancel"
+msgstr "gtk-avbryt"
+
+#: ../tmp/jbrout.glade.h:37
+msgid "gtk-clear"
+msgstr "gtk-töm"
+
+#: ../tmp/jbrout.glade.h:38
+msgid "gtk-close"
+msgstr "gtk-stäng"
+
+#: ../tmp/jbrout.glade.h:39
+msgid "gtk-ok"
+msgstr "gtk-ok"
+
+#: ../tmp/jbrout.glade.h:40
+msgid "gtk-remove"
+msgstr "gtk-ta bort"
+
+#: ../tmp/jbrout.glade.h:41
+msgid "info"
+msgstr ""
+
+#: ../tmp/jbrout.glade.h:42
+msgid "jBrout Full Screen Display"
+msgstr "Visa jBrout i helskärmsläge"
+
+#: ../tmp/jbrout.glade.h:43
+msgid "jbrout"
+msgstr "jbrout"
+
+#: ../tmp/jbrout.glade.h:44
+msgid "label"
+msgstr "etikett"
+
+#: ../tmp/jbrout.glade.h:45
+msgid "to"
+msgstr "till"
+
+#: ../tmp/folderselect.glade.h:1
+#, fuzzy
+msgid "Select Folder"
+msgstr "Markera denna mapp"
+
+#: ../tmp/folderselect.glade.h:2
+msgid "Show Hidden"
+msgstr ""
+
+#: ../tmp/folderselect.glade.h:4
+#, fuzzy
+msgid "gtk-open"
+msgstr "gtk-ok"
+
+#: ../jbrout/commongtk.py:132
+msgid "Jbrout Input"
+msgstr "Jbrout-indata"
+
+#: ../jbrout/commongtk.py:173
+msgid "Jbrout Message"
+msgstr "Jbrout-meddelande"
+
+#: ../jbrout/commongtk.py:203
+msgid "Jbrout Question"
+msgstr "Jbrout-fråga"
 
 #: ../jbrout/common.py:47
 #, python-format
@@ -383,23 +579,11 @@ msgstr "%.1f MB"
 msgid "%.1f GB"
 msgstr "%.1f GB"
 
-#: ../jbrout/commongtk.py:132
-msgid "Jbrout Input"
-msgstr "Jbrout-indata"
-
-#: ../jbrout/commongtk.py:173
-msgid "Jbrout Message"
-msgstr "Jbrout-meddelande"
-
-#: ../jbrout/commongtk.py:203
-msgid "Jbrout Question"
-msgstr "Jbrout-fråga"
-
-#: ../jbrout/winshow.py:209
+#: ../jbrout/winshow.py:212
 msgid "Apply to this photo"
 msgstr "Verkställ till detta fotografi"
 
-#: ../jbrout/winshow.py:251
+#: ../jbrout/winshow.py:254
 #, python-format
 msgid ""
 "\n"
@@ -428,193 +612,14 @@ msgstr ""
 "\n"
 "TAGS :\n"
 
-#: ../jbrout/winshow.py:407
+#: ../jbrout/winshow.py:410
 #, python-format
 msgid "(%d selected)"
 msgstr "(%d markerad(e))"
 
-#: ../jbrout/winpref.py:69
+#: ../jbrout/winpref.py:43
 msgid "Photos"
 msgstr ""
-
-#: ../jbrout/winpref.py:70 ../tmp/jbrout.glade.h:5
-msgid "Albums"
-msgstr "Album"
-
-#: ../tmp/folderselect.glade.h:1
-#, fuzzy
-msgid "Select Folder"
-msgstr "Markera denna mapp"
-
-#: ../tmp/folderselect.glade.h:2
-msgid "Show Hidden"
-msgstr ""
-
-#: ../tmp/folderselect.glade.h:3 ../tmp/jbrout.glade.h:34
-msgid "gtk-cancel"
-msgstr "gtk-avbryt"
-
-#: ../tmp/folderselect.glade.h:4
-#, fuzzy
-msgid "gtk-open"
-msgstr "gtk-ok"
-
-#: ../tmp/jbrout.glade.h:1
-msgid "-"
-msgstr "-"
-
-#: ../tmp/jbrout.glade.h:2
-msgid "Add Bookmark"
-msgstr "Lägg till bokmärke"
-
-#: ../tmp/jbrout.glade.h:3
-msgid "Add folder"
-msgstr "Lägg till mapp"
-
-#: ../tmp/jbrout.glade.h:4
-msgid "Album / comment"
-msgstr "Album / kommentar"
-
-#: ../tmp/jbrout.glade.h:6
-msgid "Ascending"
-msgstr "Stigande"
-
-#: ../tmp/jbrout.glade.h:7
-msgid "Bookmarks"
-msgstr "Bokmärken"
-
-#: ../tmp/jbrout.glade.h:8
-msgid "Descending"
-msgstr "Fallande"
-
-#: ../tmp/jbrout.glade.h:9
-msgid "Edit Bookmarks"
-msgstr "Redigera bokmärken"
-
-#: ../tmp/jbrout.glade.h:10
-msgid "Enter New Comment"
-msgstr "Skriv in ny kommentar"
-
-#: ../tmp/jbrout.glade.h:11
-msgid "Format"
-msgstr "Format"
-
-#: ../tmp/jbrout.glade.h:12
-msgid "JBrout"
-msgstr "JBrout"
-
-#: ../tmp/jbrout.glade.h:13
-msgid "Mark this picture to be removed"
-msgstr "Markera denna bild för borttagning"
-
-#: ../tmp/jbrout.glade.h:14
-msgid "Period from"
-msgstr "Period från"
-
-#: ../tmp/jbrout.glade.h:15
-msgid "Photo comment"
-msgstr "Fotografikommentar"
-
-#: ../tmp/jbrout.glade.h:16
-msgid "Plugins"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:17
-msgid "Preferences"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:18
-msgid "Press a key"
-msgstr "Tryck en tangent"
-
-#: ../tmp/jbrout.glade.h:19
-msgid "Put this picture in the basket"
-msgstr "Placera denna bild i korgen"
-
-#: ../tmp/jbrout.glade.h:20
-msgid "Search"
-msgstr "Sök"
-
-#: ../tmp/jbrout.glade.h:21
-msgid "Selection's filter"
-msgstr "Markeringens filter"
-
-#: ../tmp/jbrout.glade.h:23
-msgid "Time"
-msgstr "Tid"
-
-#: ../tmp/jbrout.glade.h:24
-msgid "_Bookmarks"
-msgstr "_Bokmärken"
-
-#: ../tmp/jbrout.glade.h:26
-#, no-c-format
-msgid "_Display (%s)"
-msgstr "_Visa (%s)"
-
-#: ../tmp/jbrout.glade.h:27
-msgid "_Edit external tools"
-msgstr "_Redigera externa verktyg"
-
-#: ../tmp/jbrout.glade.h:28
-msgid "_File"
-msgstr "_Arkiv"
-
-#: ../tmp/jbrout.glade.h:29
-msgid "_Help"
-msgstr "_Hjälp"
-
-#: ../tmp/jbrout.glade.h:30
-msgid "_Order"
-msgstr "_Ordning"
-
-#: ../tmp/jbrout.glade.h:31
-msgid "_Preferences"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:32
-msgid "coming soon"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:33
-msgid "filter"
-msgstr "filter"
-
-#: ../tmp/jbrout.glade.h:35
-msgid "gtk-clear"
-msgstr "gtk-töm"
-
-#: ../tmp/jbrout.glade.h:36
-msgid "gtk-close"
-msgstr "gtk-stäng"
-
-#: ../tmp/jbrout.glade.h:37
-msgid "gtk-ok"
-msgstr "gtk-ok"
-
-#: ../tmp/jbrout.glade.h:38
-msgid "gtk-remove"
-msgstr "gtk-ta bort"
-
-#: ../tmp/jbrout.glade.h:39
-msgid "info"
-msgstr ""
-
-#: ../tmp/jbrout.glade.h:40
-msgid "jBrout Full Screen Display"
-msgstr "Visa jBrout i helskärmsläge"
-
-#: ../tmp/jbrout.glade.h:41
-msgid "jbrout"
-msgstr "jbrout"
-
-#: ../tmp/jbrout.glade.h:42
-msgid "label"
-msgstr "etikett"
-
-#: ../tmp/jbrout.glade.h:43
-msgid "to"
-msgstr "till"
 
 #, fuzzy
 #~ msgid "Tag"

@@ -12,7 +12,7 @@
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
-##
+##load
 ## URL : http://jbrout.googlecode.com
 
 #TODO : code to load/save bookmarks ;-)
@@ -248,16 +248,22 @@ class ListView(ThumbnailsView):
         if self.focus_cell < len(self.items) and self.items:
             self.setSelected( [self.items[self.focus_cell],] )
 
-    def init(self,l,orderAscending=0):
+    def init(self,l,orderAscending=0, orderBy="Date"):
         """ initialize list view with real content (photonodes) """
         sclwin=self.get_parent()
         ss=sclwin.get_vscrollbar()
         ss.set_value(0)
 
-        if orderAscending:
-            l.sort( cmp=lambda x,y: cmp(x.date,y.date))
-        else:
-            l.sort( cmp=lambda x,y: -cmp(x.date,y.date))
+        if orderBy == "Date": # order by date
+            if orderAscending:
+                l.sort( cmp=lambda x,y: cmp(x.date,y.date))
+            else:
+                l.sort( cmp=lambda x,y: -cmp(x.date,y.date))
+        elif orderBy == "File": # order by file
+            if orderAscending:
+                l.sort( cmp=lambda x,y: cmp(x.file,y.file))
+            else:
+                l.sort( cmp=lambda x,y: -cmp(x.file,y.file))
         self.set_photos(l)
 
     def remove(self,n):
@@ -870,6 +876,9 @@ class Window(GladeApp):
         if not JBrout.conf.has_key("orderAscending"):    # key not present
             JBrout.conf["orderAscending"] = False        # set default
 
+        if not JBrout.conf.has_key("orderBy"):    # key not present
+            JBrout.conf["orderBy"] = "Date"       # set default
+            
         if not JBrout.conf.has_key("plugins"):
             JBrout.conf["plugins"] = ["%s.%s"%(i.id,p["method"]) for i,c,p in JBrout.plugins.request("AlbumProcess",all=True)+JBrout.plugins.request("PhotosProcess",all=True)]
 
@@ -1141,6 +1150,11 @@ class Window(GladeApp):
 
         # get order from config
         self.menuAscending.set_active( JBrout.conf["orderAscending"] and 1 or 0)
+        if JBrout.conf["orderBy"] == "Date":
+            self.menuOrderBy.set_active(1)
+        elif JBrout.conf["orderBy"] == "File":
+            print "set file active"
+            self.menuOrderByFile.set_active(1)
 
         self.tvFilteredTags.connect("row_activated",self.on_treeviewtags_row_activated)
         self.tvFilteredAlbums.connect("row_activated",self.on_treeviewdb_row_activated)
@@ -1251,9 +1265,13 @@ class Window(GladeApp):
     def on_order_changed(self,*args):
         """change display order ascending/descending (menu)"""
         JBrout.conf["orderAscending"] = (self.menuAscending.get_active()==1)
+        if self.menuOrderBy.get_active():
+            JBrout.conf["orderBy"] = "Date"
+        else:
+            JBrout.conf["orderBy"] = "File"
 
         # live change
-        self.tbl.init(self.tbl.items,JBrout.conf["orderAscending"])
+        self.tbl.init(self.tbl.items,JBrout.conf["orderAscending"],JBrout.conf["orderBy"])
 
     def on_affichage_select(self,widget,idx):
         """select display (menu)"""
