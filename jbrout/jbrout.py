@@ -114,8 +114,11 @@ class JStyle:
 
 from plugins import Entry
 #========================================================
-class JPlugin:  # imported by plugins to create the base (to communicate with core)
-#========================================================
+class JPlugin:
+    """ base class for plugins
+        imported by plugins to create the base (to communicate with core)
+    """
+    
     # JPlugin.parent : parent win (init at the start)
     Entry = Entry
     
@@ -144,11 +147,15 @@ class JPlugin:  # imported by plugins to create the base (to communicate with co
 
 #========================================================
 class ListView(ThumbnailsView):
-#========================================================
+    """ Display photos in a list view
+        ordered using user preferences
+        using jbrout.listview
+    """
 
     choix = [_("Tags"),_("Comment"),_("Album"),_("Date"),_("Name")]
 
     def __init__(self, parent,allow_dragndrop):
+        """ initialize display when JBrout starts """
         ThumbnailsView.__init__(self)
         self.parentWin = parent
 
@@ -165,6 +172,7 @@ class ListView(ThumbnailsView):
             self.connect("drag_data_received",self.on_drag_data_received_data)
 
     def on_key_press_for_tag(self,widget,event):
+        """ Add tags to photos """
         if JBrout.modify:
             nbSelected = len(self.selection)
             if nbSelected>0:
@@ -221,9 +229,11 @@ class ListView(ThumbnailsView):
             pass
 
     def getSelected(self):
+        """ retrieve selection """
         return [self.items[i] for i in self.selection.real_selection if i<len(self.items)]
 
     def setSelected(self,ln):
+        """ select photos """
         if ln:
             lf=[i.file for i in self.items]     #build the list of filenames
             ls = [lf.index(i.file) for i in ln] #build the list of index
@@ -239,6 +249,7 @@ class ListView(ThumbnailsView):
             self.setSelected( [self.items[self.focus_cell],] )
 
     def init(self,l,orderAscending=0):
+        """ initialize list view with real content (photonodes) """
         sclwin=self.get_parent()
         ss=sclwin.get_vscrollbar()
         ss.set_value(0)
@@ -297,6 +308,9 @@ class ListView(ThumbnailsView):
         return node.file in Buffer.images
 
     def get_thumb(self,idx):
+        """ create a PixBuf containing the image's thumb and flags images (basket, read-only, raw)
+            the image's full path is used as buffer's key
+        """
         node = self.items[idx]
         if not self.is_thumb(idx):
             Buffer.images[node.file]=node.getThumb()
@@ -807,10 +821,15 @@ class TreeTags(gtk.TreeStore):
 #=============================================================================
 
 class Window(GladeApp):
+    """Main JBrout window"""
     glade=os.path.join(os.path.dirname(__file__), 'data/jbrout.glade')
     window="window"
 
     def init(self):
+        """ Initialization of JBrout environment
+            Read preferences
+            Activate plugins
+        """
         #=============================================================================
         if not JBrout.conf.has_key("normalizeName"):
             ret=InputQuestion(self.main_widget,
@@ -1230,6 +1249,7 @@ class Window(GladeApp):
 
 
     def on_order_changed(self,*args):
+        """change display order ascending/descending (menu)"""
         JBrout.conf["orderAscending"] = (self.menuAscending.get_active()==1)
 
         # live change
@@ -2946,8 +2966,9 @@ http://jbrout.googlecode.com""" % ("%prog",__version__)
 
 if __name__ == "__main__":
     try:
-        import psyco
+        #import psyco
         psyco.profile()
+        psyco.full()
     except:
         print "The psyco module does not seem to be installed. It is not necessary, however it can speed up performance."
     
