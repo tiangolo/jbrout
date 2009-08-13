@@ -2203,7 +2203,8 @@ class Window(GladeApp):
                     return 1    # event consumed
         else:
             if key in ['f11','kp_enter','return'] :
-                self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
+                if len(self.tbl.getSelected())>0:
+                    self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
             elif key=="escape":
                 self.on_window_delete_event(self, widget)
                 self.quit()
