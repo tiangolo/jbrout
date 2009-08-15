@@ -471,12 +471,14 @@ def render(pb,maxw,maxh,zoom=1,pointer_position=(0,0,0,0)):
         mouse_y=max(mouse_y-(maxh-image_y)/2.0, 0)
         if mouse_y>dwy:
             mouse_y=dwy
-        #print "mouse_x:%s mouse_y:%s" % (mouse_x, mouse_y)
 
         ratiox=1.0*(mouse_x/image_x)
         ratioy=1.0*(mouse_y/image_y)
-    x,y=(maxw - dwx)*ratiox,(maxh - dwy)*ratioy
-    #print "maxw:%s dwx:%s maxh:%s dwy:%s x:%s y:%s wx:%s wy:%s pointer_position:%s ratiox:%s ratioy:%s" %(maxw, dwx, maxh, dwy, x, y, wx, wy, pointer_position, ratiox, ratioy)
+    if zoom:
+        x,y=maxw/2 - min(wx-maxw/2, max(maxw/2,dwx*ratiox)), maxh/2 - min(wy-maxh/2, max(maxh/2, dwy*ratioy))
+    else:
+        x,y=(maxw - dwx)*ratiox,(maxh - dwy)*ratioy
+    
     return pb,x,y
 
 class Display(object):
