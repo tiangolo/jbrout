@@ -1153,7 +1153,6 @@ class Window(GladeApp):
         if JBrout.conf["orderBy"] == "Date":
             self.menuOrderBy.set_active(1)
         elif JBrout.conf["orderBy"] == "File":
-            print "set file active"
             self.menuOrderByFile.set_active(1)
 
         self.tvFilteredTags.connect("row_activated",self.on_treeviewtags_row_activated)
