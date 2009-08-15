@@ -4,9 +4,9 @@
 #. return [(300,_("Import Tags"),True,self.importAlbumTags)]
 #: ../plugins/syncTags/__init__.py:30 ../plugins/syncTags/__init__.py:38
 msgid "Import Tags"
-msgstr "Importer les mots-cls"
+msgstr "Importer les mots-clés"
 
 #: ../plugins/syncTags/__init__.py:33 ../plugins/syncTags/__init__.py:41
 #, fuzzy
 msgid "Importing Tags"
-msgstr "Import des mots-cls en cours"
+msgstr "Import des mots-clés en cours"
