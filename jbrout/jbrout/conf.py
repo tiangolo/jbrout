@@ -18,7 +18,7 @@ from libs.dict4ini import DictIni
 from plugins import JPlugins
 import sys,os
 from db import DBPhotos,DBTags
-
+import socket
 
 # ============================================================================================
 class Conf(object):
@@ -52,25 +52,36 @@ class Conf(object):
         self.__ini.save()
 
 class JBrout:
-    __lockFile = "jbrout.lock"
+    #~ __lockFile = "jbrout.lock"
+    __lockSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    @staticmethod
-    def lockOn():
-        """ create the lock file, return True if it can"""
-        file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
-        if os.path.isfile(file):
-            print file
+    #~ @staticmethod
+    #~ def lockOn():
+        #~ """ create the lock file, return True if it can"""
+        #~ file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
+        #~ if os.path.isfile(file):
+            #~ print file
+            #~ return False
+        #~ else:
+            #~ open(file,"w").write("")
+            #~ return True
+
+    #~ @staticmethod
+    #~ def lockOff():
+        #~ """ delete the lockfile """
+        #~ file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
+        #~ if os.path.isfile(file):
+            #~ os.unlink(file)
+
+
+    @classmethod
+    def isRunning(cls,p=64738): # "sys 64738" nostaligc ;-)
+        try:
+            JBrout.__lockSocket.bind(("localhost", p))
+            JBrout.__lockSocket.listen(1)
             return False
-        else:
-            open(file,"w").write("")
+        except:
             return True
-
-    @staticmethod
-    def lockOff():
-        """ delete the lockfile """
-        file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
-        if os.path.isfile(file):
-            os.unlink(file)
 
     @staticmethod
     def getHomeDir(mkdir=None):

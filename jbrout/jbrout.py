@@ -118,10 +118,10 @@ class JPlugin:
     """ base class for plugins
         imported by plugins to create the base (to communicate with core)
     """
-    
+
     # JPlugin.parent : parent win (init at the start)
     Entry = Entry
-    
+
     def __init__(self,id,path):
         self.id=id
         self.path=path
@@ -183,7 +183,7 @@ class ListView(ThumbnailsView):
                         tag = ret[0]
                         self.parentWin.setTagsOnSelected(self,[tag,])
             self.grab_focus()
-        
+
         #if JBrout.modify:
             #if self.parentWin.cbxUseTagKey.get_active():
             #    key=gtk.gdk.keyval_name(event.keyval).lower()
@@ -846,7 +846,7 @@ class Window(GladeApp):
                 JBrout.conf["normalizeName"] = True
             else:
                 JBrout.conf["normalizeName"] = False
-        
+
         if not JBrout.conf.has_key("synchronizeXmp"):
             ret=InputQuestion(self.main_widget,
                 _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
@@ -878,7 +878,7 @@ class Window(GladeApp):
 
         if not JBrout.conf.has_key("orderBy"):    # key not present
             JBrout.conf["orderBy"] = "Date"       # set default
-            
+
         if not JBrout.conf.has_key("plugins"):
             JBrout.conf["plugins"] = ["%s.%s"%(i.id,p["method"]) for i,c,p in JBrout.plugins.request("AlbumProcess",all=True)+JBrout.plugins.request("PhotosProcess",all=True)]
 
@@ -916,7 +916,7 @@ class Window(GladeApp):
 
         # build the "plugins buttons"
         self.tooltips = gtk.Tooltips()
-        
+
         if JBrout.modify:
             l=JBrout.plugins.request("PhotosProcess",isIcon=True)
         else:
@@ -1728,12 +1728,12 @@ class Window(GladeApp):
                 menu.append( makeItem(_("Select this time"), self.on_selecteur_menu_select_time,widget ))
 
             menu2 = gtk.Menu()
-            
+
             if canModify:
                 l=JBrout.plugins.request("PhotosProcess")
             else:
                 l=JBrout.plugins.request("PhotosProcess",isAlter=False)
-            
+
             for instance,callback,props in l:
                 txt = props["label"]
                 if props["key"]: txt+=" (ctrl + %s)"%props["key"]
@@ -2210,9 +2210,9 @@ class Window(GladeApp):
                 pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True)
             else:
                 pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True,isAlter=False)
-            
+
             key=gtk.gdk.keyval_name(b.keyval).lower()
-            
+
             for instance,callback,props in pluginsWithKey:
                 if props["key"]==key:
                     self.on_selecteur_menu_select_plugin("?!?",self.tbl,instance.id,callback)   #TODO: what's ib ? see "?!?"
@@ -2229,7 +2229,7 @@ class Window(GladeApp):
                 menu=self.get_menu(self.tbl,self.tbl.getSelected())
                 menu.popup(None,None,None,3,0)
 
-                    
+
 
     def on_window_size_allocate(self, widget, *args):
         pass
@@ -2436,10 +2436,10 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     menu2 = gtk.Menu()
 
                     if JBrout.modify:
-                        l=JBrout.plugins.request("AlbumProcess")    
+                        l=JBrout.plugins.request("AlbumProcess")
                     else:
                         l=JBrout.plugins.request("AlbumProcess",isAlter=False)
-                        
+
                     for instance,callback,props in l:
                         item = gtk.ImageMenuItem( props["label"] )
                         item.connect("activate",self.on_album_menu_select_plugin,widget,callback)
@@ -2450,7 +2450,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                         smenu2.set_submenu(menu2)
                         smenu2.show_all()
                         menu.append(smenu2)
-                    #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\                    
+                    #/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
                     menu.popup(None,None,None,event.button,event.time)
                     return 1
                 elif event.button==2:
@@ -2955,28 +2955,25 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         self.SetSelection(libl,xpath,ln,self.mode)
 
 def main(canModify=True):
-    locked = not JBrout.lockOn()
-    if locked:
-        if InputQuestion(None,
-                _("jBrout appears to already be running are you sure you wish to run another copy"),
-                _("jBrout Already Running"),
-                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK) ):
-            locked = False
-    if not locked:
-        try:
-            sys.excepthook = myExceptHook
-            JBrout.init(canModify)
-
-            gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
-            window = Window()
-
-            JPlugin.parent = window
-            window.loop()
-        finally:
-            JBrout.lockOff()
-    else:
-        print "jBrout is already running if not delete the file (~/.jbrout/jbrout.lock)"
+    #~ locked = not JBrout.lockOn()
+    #~ if locked:
+        #~ if InputQuestion(None,
+                #~ _("jBrout appears to already be running are you sure you wish to run another copy"),
+                #~ _("jBrout Already Running"),
+                #~ buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK) ):
+            #~ locked = False
+    if JBrout.isRunning():
+        print "jBrout is already running"
         sys.exit(1)
+    else:
+        sys.excepthook = myExceptHook
+        JBrout.init(canModify)
+
+        gtk.window_set_default_icon_from_file("data/gfx/jbrout.ico")
+        window = Window()
+
+        JPlugin.parent = window
+        window.loop()
 
 USAGE = """%s [options]
 JBrout %s by Marc Lentz (c)2003-2009, Licence GPL2
@@ -2989,7 +2986,7 @@ if __name__ == "__main__":
         psyco.full()
     except:
         print "The psyco module does not seem to be installed. It is not necessary, however it can speed up performance."
-    
+
     try:
         parser = optparse.OptionParser(usage=USAGE, version=("JBrout "+__version__))
         parser.add_option("-v","--view",action="store_true",dest="view",

@@ -137,12 +137,21 @@ def dnd_args_to_dir_list(args):
             list.append(path)
     return list
 
+import unicodedata
+
+def removeAccentedChars(s):
+    """ unicode -> unicode """
+    return unicodedata.normalize('NFKD',s).encode('ascii','ignore').decode("ascii")
+
+
 
 if __name__ == "__main__":
     #~ print JBrout.home
     #~ JBrout.conf["jo"] = "hack"
     #~ print JBrout.conf["jo"]
     #~ JBrout.conf.save()
-    runWith(["StaRT","geany"],u"toto",False)
-    pass
+    #~ runWith(["StaRT","geany"],u"toto",False)
+    #~ pass
+    assert removeAccentedChars(u"aaàöÜ")==u"aaaoU"
+
 
