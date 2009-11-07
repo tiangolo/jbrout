@@ -150,6 +150,7 @@ def InputBox(parent,label,data,title=_("Jbrout Input")):
 
     label = gtk.Label(label)
     label.set_use_underline(True)
+    label.set_line_wrap(True)
     table.attach(label, 0, 2, 0, 1)
     local_entry1 = gtk.Entry()
     local_entry1.set_text(data)
@@ -192,6 +193,7 @@ def MessageBox(parent,data,title=_("Jbrout Message")):
 
     label = gtk.Label(data)
     label.set_selectable(True)
+    label.set_line_wrap(True)
     table.attach(label, 0, 2, 0, 1)
 
     dialog.show_all()
@@ -221,6 +223,7 @@ def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK
 
     label = gtk.Label(label)
     label.set_use_underline(True)
+    label.set_line_wrap(True)
     table.attach(label, 0, 2, 0, 1)
     #~ local_entry1 = gtk.Entry()
     #~ local_entry1.set_text(data)
