@@ -814,7 +814,15 @@ class PhotoNode(object):
         pc = PhotoCmd(self.file)
         pc.redate(w,d,h,m,s)
         self.updateInfo(pc)
+        self.updateName()
+        
+    def setDate(self, date):
+        pc = PhotoCmd(self.file)
+        pc.setDate(date)
+        self.updateInfo(pc)
+        self.updateName()
 
+    def updateName(self):
         #photo has been redated
         #it should be renamed if in config ...
         if DBPhotos.normalizeName:

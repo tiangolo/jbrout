@@ -374,14 +374,19 @@ isreal : %s""" % (
         """
         redate jpeg file from offset : weeks, days, hours, minutes,seconds
         """
-        if self.__readonly: return False
 
         #TODO:attention au fichier sans EXIF ici !!!!
 
         #fd=self.__info["Exif.Image.DateTime"]
         fd=self.__info["Exif.Photo.DateTimeOriginal"]
         fd+=timedelta(weeks=w, days=d,hours=h,minutes=m,seconds=s)
-
+        return self.setDate(fd)
+        
+    def setDate(self,fd):
+        """
+        set absolute date of jpeg file.
+        """
+        if self.__readonly: return False
         self.__info["Exif.Image.DateTime"]=fd
         self.__info["Exif.Photo.DateTimeOriginal"]=fd
         self.__info["Exif.Photo.DateTimeDigitized"]=fd

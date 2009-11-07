@@ -31,6 +31,12 @@ class Winredate(GladeApp):
         except:
             self.d = datetime.now() # just for self run
         self.recalc()
+        self.hour.set_value(self.d.hour)
+        self.minute.set_value(self.d.minute)
+        self.second.set_value(self.d.second)
+        self.date.select_month(self.d.month-1, self.d.year)
+        self.date.select_day(self.d.day)
+        print self.d
 
 
     def recalc(self):
@@ -77,7 +83,17 @@ class Winredate(GladeApp):
         self.quit(False)
 
     def on_btn_appliquer_clicked(self, widget, *args):
-        rep=self.vals
+        if self.notebook.get_current_page() == 0:
+            if self.vals == None:
+                rep = None
+            else:
+                rep=('relative',self.vals)
+        else:
+            [ny,nm,nd]=self.date.get_date()
+            ndt=datetime(ny,nm+1,nd,int(self.hour.get_value()),
+                         int(self.minute.get_value()),
+                         int(self.second.get_value()))
+            rep=('absolute',ndt)
         self.quit(rep)
 
 

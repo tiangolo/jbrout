@@ -23,7 +23,7 @@ class Plugin(JPlugin):
     """to change the datetime of a photo"""
 
     __author__ = "manatlan"
-    __version__ = "1.1"
+    __version__ = "2.0"
 
 
     #def menuEntries(self,l):
@@ -38,11 +38,16 @@ class Plugin(JPlugin):
 
         ret=win.loop()[0]
         if ret:
-            vw,vd,vh,vi,vs = ret
+            method,value = ret
+            if method == 'relative':
+                vw,vd,vh,vi,vs = value
             try:
                 for i in list:
                     self.showProgress( list.index(i), len(list) , _("Redating") )
-                    i.redate(vw,vd,vh,vi,vs)
+                    if method == 'relative':
+                        i.redate(vw,vd,vh,vi,vs)
+                    else:
+                        i.setDate(value)
             finally:
                 self.showProgress()
 
