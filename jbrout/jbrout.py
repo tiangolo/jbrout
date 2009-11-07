@@ -1579,7 +1579,11 @@ class Window(GladeApp):
         self.tbl.hide()
         if node:
             # drop photos on a real folder
+            total = len(self.tbl.getSelected())
+            nb = 0
             for i in self.tbl.getSelected():
+                nb+=1
+                self.showProgress(nb,total,_("Moving %d/%d")%(nb,total))
                 nodeFolderParent = i.getParent()
                 if nodeFolderParent.file != node.file: # don't move from the same folder ;-)
                     if i.moveToFolder(node):
@@ -1589,6 +1593,7 @@ class Window(GladeApp):
                         iterFolderParent = model.find( nodeFolderParent)
                         model.set(iterFolderParent,nodeFolderParent)
             # to set the counter to dest
+            self.showProgress()
             model.set(iter0,node)
         else:
             # drop photos on the basket
