@@ -1796,7 +1796,7 @@ class Window(GladeApp):
                     d.sort()
                     menu3 = gtk.Menu()
                     for tag in d:
-                        item = gtk.ImageMenuItem( tag )
+                        item = gtk.MenuItem( tag, use_underline=False)
                         item.connect("activate",self.on_selecteur_menu_delete_tag,widget,tag)
                         menu3.append(item)
                     item = gtk.ImageMenuItem( _("** ALL **") )
