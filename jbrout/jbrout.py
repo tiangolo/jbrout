@@ -1160,6 +1160,11 @@ class Window(GladeApp):
         self.tvFilteredTime.connect("row_activated",self.on_selectDate_row_activated)
 
         w,h=JBrout.conf["width"] or 800,JBrout.conf["height"] or 600
+        x,y=JBrout.conf["x_pos"] or 0,JBrout.conf["y_pos"] or 0
+        
+        
+        self.main_widget.set_gravity(gtk.gdk.GRAVITY_NORTH_WEST)
+        self.main_widget.move(x,y)
 
         if sys.platform[:3].lower()=="win":
             # work arround for bug in pygtk/gtk 2.10.6 on windows set default size
@@ -2199,6 +2204,7 @@ class Window(GladeApp):
 
         JBrout.conf["hpaned"] = self.hpaned1.get_position()
         JBrout.conf["width"],JBrout.conf["height"] = self.main_widget.get_size()
+        JBrout.conf["x_pos"],JBrout.conf["y_pos"] = self.main_widget.get_position()
         JBrout.conf["bookmarkNames"] = [n for n,x in self.__bookmarks]
         JBrout.conf["bookmarkXpaths"]= [x for n,x in self.__bookmarks]
         JBrout.db.save()
