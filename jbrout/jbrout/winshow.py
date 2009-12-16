@@ -244,6 +244,7 @@ class WinShow(GladeApp):
             info = node.getInfo()
             ltags=info["tags"]
             folder=node.folderName
+            filename=os.path.basename(node.file)
             resolution=info["resolution"]
 
             comment=info["comment"]
@@ -255,6 +256,9 @@ class WinShow(GladeApp):
 %(exifdate)s
 
 %(resolution)s, %(filesize)s
+
+FILENAME :
+%(filename)s
 
 ALBUM :
 %(folder)s
