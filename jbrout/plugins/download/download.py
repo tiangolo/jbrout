@@ -920,7 +920,7 @@ class WinDownloadExecute(GladeApp):
         try:
             os.unlink(unicode(file))
         except os.error, detail:
-            raise detail
+            raise Exception(detail)
 
     def _touch(self, file, timeStamp):
         """

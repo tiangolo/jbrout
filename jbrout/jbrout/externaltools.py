@@ -182,7 +182,7 @@ class ExternalTools(list):
             ExternalTools.file = "FAKE_TEXT"   # to replace $x
             f=file
         else:
-            raise "ExternalTools() : bad constructor"
+            raise Exception("ExternalTools() : bad constructor")
 
 
         for line in f:

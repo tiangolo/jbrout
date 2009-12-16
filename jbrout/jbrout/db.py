@@ -409,7 +409,7 @@ class FolderNode(object):
                 shutil.move( oldname, newname )
                 moved = True
             except os.error, detail:
-                raise detail
+                raise Exception(detail)
                 moved = False
 
             if moved:
@@ -444,7 +444,7 @@ class FolderNode(object):
                        os.mkdir( newname )
                        created = True
                     except os.error, detail:
-                       raise detail
+                       raise Exception(detail)
                        created = False
 
                 if created:
@@ -465,7 +465,7 @@ class FolderNode(object):
                shutil.rmtree( self.file )
                deleted = True
             except os.error, detail:
-               raise detail
+               raise Exception(detail)
                deleted = False
         else:
             deleted=True
@@ -485,7 +485,7 @@ class FolderNode(object):
                 shutil.move( oldname, newname )
                 moved = True
             except os.error, detail:
-                raise detail
+                raise Exception(detail)
                 moved = False
 
             if moved:
@@ -668,7 +668,7 @@ class PhotoNode(object):
             shutil.move( self.file, os.path.join(nodeFolder.file,name) )
             moved=True
         except os.error, detail:
-            raise detail
+            raise Exception(detail)
             moved=False
 
         if moved:
@@ -903,7 +903,7 @@ class PhotoNode(object):
            os.unlink( self.file )
            deleted = True
         except os.error, detail:
-           raise detail
+           raise Exception(detail)
            deleted = False
 
         if deleted:

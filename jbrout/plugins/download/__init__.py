@@ -46,14 +46,14 @@ class ExportConf(object):
         if key in self.__attrs:
             return self.__attrs[key]
         else:
-            raise "key doesn't exist : "+key
+            raise Exception("key doesn't exist : "+key)
 
     def __setitem__(self,key,value):
         if key not in ["__conf","__attrs"]:
             if key in self.__attrs:
                 self.__attrs[key] = value
             else:
-                raise "key doesn't exist : "+key
+                raise Exception("key doesn't exist : "+key)
 
     def save(self):
         for i in self.__attrs.keys():

@@ -64,9 +64,9 @@ supportedFormats=["JPG","jpg","JPEG","jpeg","NEF","nef","DNG","dng","cr2","CR2"]
 
 class CommandException(Exception):
    def __init__(self,m):
-      self.message=m
+      self.args=[m]
    def __str__(self):
-      return self.message
+      return self.args[0]
 
 
 def decode(s, encodings=['ascii', 'utf8', 'latin1',] ):
@@ -114,7 +114,7 @@ class _Command:
           err+="exiftool is not present, please install 'exiftool'\n"
 
    if err:
-      raise CommandException(err)
+      raise Exception(err)
 
 
 
