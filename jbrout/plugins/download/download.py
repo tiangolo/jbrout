@@ -40,6 +40,15 @@ from nameBuilder import NameBuilder,WinNameBuilderTokens
 
 from __main__ import Buffer,TreeTags
 
+SUP_EXT = ('jpg', 'raw', 'cr2','nef')
+
+def sup_ext():
+    ret = []
+    for ext in SUP_EXT:
+        ret.append('.' + ext)
+        ret.append('.' + ext.upper())
+    return ret
+
 class dc():
     """Class to contain column download constants"""
     (
@@ -364,8 +373,7 @@ class WinDownload(GladeApp):
             path = os.path.join(dir, name)
             if (
             os.path.isfile( path) and
-            os.path.splitext( name )[1] in
-                ('.jpg', '.JPG', '.raw', '.RAW', '.cr2', '.CR2')
+            os.path.splitext( name )[1] in sup_ext()
             ):
                 fileList +=[path]
             elif (os.path.isdir(path)):
