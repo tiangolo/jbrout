@@ -365,7 +365,7 @@ class WinDownload(GladeApp):
             if (
             os.path.isfile( path) and
             os.path.splitext( name )[1] in
-                ('.jpg', '.JPG')
+                ('.jpg', '.JPG', '.raw', '.RAW', '.cr2', '.CR2')
             ):
                 fileList +=[path]
             elif (os.path.isdir(path)):

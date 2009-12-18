@@ -1,0 +1,26 @@
+# -*- coding: latin-1 -*-
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Paul Dorn <lomex13@googlemail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. def menuEntries(self,l):
+#. return [(8100,_("Import Tags"),True,self.importTags,None)]
+#. def albumEntries(self,l):
+#. return [(300,_("Import Tags"),True,self.importAlbumTags)]
+#: ../plugins/syncTags/__init__.py:30
+#: ../plugins/syncTags/__init__.py:38
+msgid "Import Tags"
+msgstr "Schlagwörter Importieren"
+
+#: ../plugins/syncTags/__init__.py:33
+#: ../plugins/syncTags/__init__.py:41
+msgid "Importing Tags"
+msgstr "Importiere Schlagwörter"
+

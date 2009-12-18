@@ -1,3 +1,7 @@
+#: ../tmp/bulkTag.glade.h:1
+msgid "Tags Not Yet Loaded"
+msgstr "Les mots-cls n'ont pas t chargs"
+
 #: ../plugins/bulkTag/__init__.py:32
 msgid "Reading Tags"
 msgstr "Lecture des mots-cls"
@@ -13,7 +17,3 @@ msgstr "Unifier les mots-cls"
 #: ../plugins/bulkTag/__init__.py:61
 msgid "Bulk Tag"
 msgstr "Application de plusieurs mots-cls"
-
-#: ../tmp/bulkTag.glade.h:1
-msgid "Tags Not Yet Loaded"
-msgstr "Les mots-cls n'ont pas t chargs"

@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-07-23 00:05+0200\n"
+"PO-Revision-Date: 2009-12-16 18:01+0100\n"
+"Last-Translator: Paul Dorn <lomex13@googlemail.com>\n"
+"Language-Team: German <lomex13@googlemail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. def menuEntries(self,l):
+#. I had commented theses new operations
+#. I think we will let them available when we will have a preference dialog
+#. which will let the user choose what entries he wants ... no ?
+#. because it "bloats" the contectual menu now ... no ?
+#. return [
+#. (1000,_("Auto Rotate"),True,self.auto,None),
+#. (1001,_("Rotate Right 90"),True,self.rotate90,"gfx/rotate-right.png"),
+#. #(1002,_("Rotate Right 180"),True,self.rotate180,None),
+#. (1003,_("Rotate Left 90"),True,self.rotate270,"gfx/rotate-left.png"),
+#. #(1004,_("Flip Horizontal"),True,self.flipHorizontal,None),
+#. #(1005,_("Flip Vertical"),True,self.flipVertical,None),
+#. #(1006,_("Transpose"),True,self.transpose,None),
+#. #(1007,_("Transverse"),True,self.transverse,None),
+#. (1008,_("Rebuild thumbnail"),True,self.rebuildThumb,None)
+#. ]
+#: ../plugins/rotate/__init__.py:45
+msgid "Auto Rotate"
+msgstr "Automatisch Rotieren"
+
+#: ../plugins/rotate/__init__.py:49
+msgid "Rotate Right 90"
+msgstr "90 Grad linksherum Drehen"
+
+#: ../plugins/rotate/__init__.py:53
+msgid "Rotate Right 180"
+msgstr "180 Grad drehen"
+
+#: ../plugins/rotate/__init__.py:57
+msgid "Rotate Left 90"
+msgstr "90 Grad rechtsherum Drehen"
+
+#: ../plugins/rotate/__init__.py:61
+msgid "Flip Horizontal"
+msgstr "Horizontal Spiegeln"
+
+#: ../plugins/rotate/__init__.py:65
+msgid "Flip Vertical"
+msgstr "Vertikal Spiegeln"
+
+#: ../plugins/rotate/__init__.py:69
+#, fuzzy
+msgid "Transpose"
+msgstr "Transposition"
+
+#: ../plugins/rotate/__init__.py:73
+#, fuzzy
+msgid "Transverse"
+msgstr "Transposition"
+
+#: ../plugins/rotate/__init__.py:80
+msgid "Transforming Image"
+msgstr "Transformation"
+
+#: ../plugins/rotate/__init__.py:86
+#: ../plugins/rotate/__init__.py:90
+msgid "Rebuild thumbnail"
+msgstr "Vorschaubild neu erstellen"
+

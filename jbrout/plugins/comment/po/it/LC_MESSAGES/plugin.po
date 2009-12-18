@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jbrout VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-23 00:05+0200\n"
+"POT-Creation-Date: 2009-12-18 17:09+1300\n"
 "PO-Revision-Date: 2007-07-06 09:59+0100\n"
 "Last-Translator: Igor Neri <igor@cimice.net>\n"
 "Language-Team: Italian <igor@cimice.net>\n"
@@ -15,25 +15,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../tmp/comment.glade.h:1
+msgid "All Selection"
+msgstr "Tutta la selezione"
+
 #. def menuEntries(self,l):
 #. return [(2000,_("Comment"),True,self.comment,"gfx/gtk-edit.png")]
-#: ../plugins/comment/__init__.py:27 ../tmp/comment.glade.h:2
+#: ../tmp/comment.glade.h:2 ../plugins/comment/__init__.py:27
 msgid "Comment"
 msgstr "Commento"
 
-#: ../plugins/comment/__init__.py:42 ../plugins/comment/__init__.py:47
-msgid "Commenting"
-msgstr "Sto commentando"
+#: ../tmp/comment.glade.h:3
+msgid "One by One"
+msgstr "Una per una"
 
 #: ../plugins/comment/comment.py:52
 #, python-format
 msgid "%d photo(s)"
 msgstr "%d foto"
 
-#: ../tmp/comment.glade.h:1
-msgid "All Selection"
-msgstr "Tutta la selezione"
-
-#: ../tmp/comment.glade.h:3
-msgid "One by One"
-msgstr "Una per una"
+#: ../plugins/comment/__init__.py:42 ../plugins/comment/__init__.py:47
+msgid "Commenting"
+msgstr "Sto commentando"

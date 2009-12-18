@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-12-18 17:09+1300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Paul Dorn <lomex13@googlemail.com>\n"
+"Language-Team: German <lomex13@googlemail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../tmp/bulkTag.glade.h:1
+msgid "Tags Not Yet Loaded"
+msgstr "Noch nicht geladene Schlagwörter"
+
+#: ../plugins/bulkTag/__init__.py:32
+msgid "Reading Tags"
+msgstr "Lese Schlagwörter"
+
+#: ../plugins/bulkTag/__init__.py:42
+msgid "Tagging"
+msgstr "Speichere Schlagwörter"
+
+#: ../plugins/bulkTag/__init__.py:46 ../plugins/bulkTag/__init__.py:52
+msgid "Unify Tags"
+msgstr "Schlagwörter vereinheitlichen"
+
+#: ../plugins/bulkTag/__init__.py:61
+msgid "Bulk Tag"
+msgstr "Meheren Bildern Schlagwörter geben"

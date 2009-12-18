@@ -1,0 +1,810 @@
+# -*- coding: latin-1 -*-
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: jbroutPluginDownload VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-07-23 00:06+0200\n"
+"PO-Revision-Date: 2009-12-16 17:07+0100\n"
+"Last-Translator: Paul Dorn <lomex13@googlemail.com>\n"
+"Language-Team: German <lomex13@googlemail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. def albumEntries(self,l):
+#. return [ (900,_("Download"),True,self.download), ]
+#: ../plugins/download/__init__.py:71
+msgid "Download"
+msgstr "Récupérer des photos d'un média"
+
+#: ../plugins/download/download.py:87
+msgid "Source"
+msgstr ""
+
+#: ../plugins/download/download.py:89
+msgid "Size"
+msgstr "Taille"
+
+#. Datetime object
+#: ../plugins/download/download.py:95
+msgid "Date/Time"
+msgstr "Date/Heure"
+
+#. EXIF
+#: ../plugins/download/download.py:99
+msgid "Destination"
+msgstr "Destination"
+
+#: ../plugins/download/download.py:101
+msgid "Status"
+msgstr "Statut"
+
+#. Short Status
+#: ../plugins/download/download.py:105
+msgid "Rotation"
+msgstr "Rotation"
+
+#: ../plugins/download/download.py:119 ../tmp/download.glade.h:23
+msgid "Download Photos From Camera"
+msgstr "Récupérer des photos d'un média"
+
+#: ../plugins/download/download.py:154
+msgid "Please enter the new Job Code"
+msgstr "Entrez le nouveau numéro de traitement"
+
+#: ../plugins/download/download.py:186
+#, python-format
+msgid "Finding source files in \"%s\""
+msgstr "Fichiers sources trouvés à l'emplacement \"%s\""
+
+#: ../plugins/download/download.py:193
+#, python-format
+msgid "Reading source file information from \"%s\""
+msgstr "Lecture des fichiers source depuis \"%s\""
+
+#. Start new
+#. Build image Names
+#. Build names without seralisation
+#: ../plugins/download/download.py:243
+msgid "Building destination Names"
+msgstr "Création des noms de destination"
+
+#: ../plugins/download/download.py:261
+msgid ""
+"More than one serialisation tag used please use preferencess to remove from "
+"File Naming > Parttern"
+msgstr ""
+
+#. Check Status
+#: ../plugins/download/download.py:291
+msgid "Checking Status of Images"
+msgstr "Vérification du statut des images"
+
+#: ../plugins/download/download.py:301
+msgid "Collision with New"
+msgstr "Collision avec une nouvelle image"
+
+#: ../plugins/download/download.py:312
+msgid "Downloaded"
+msgstr "Téléchargé"
+
+#: ../plugins/download/download.py:315
+msgid "Collision with Existing"
+msgstr "Collision avec un fichier existant"
+
+#: ../plugins/download/download.py:318
+msgid "New"
+msgstr "Nouveau"
+
+#. Check Rotation
+#: ../plugins/download/download.py:328
+msgid "Checking Rotation Required for Images"
+msgstr "Vérification des paramêtres de rotation des images"
+
+#: ../plugins/download/download.py:340
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: ../plugins/download/download.py:378
+msgid "Select source folder"
+msgstr "Sélectionner le dossier source"
+
+#: ../plugins/download/download.py:735
+msgid ""
+"Please enter the values to use for {T8}, {T9} and auto Tag for the selected "
+"camera:"
+msgstr ""
+"Saisir les valeurs pour {T8}, {T9} et les mots-clés automatiques pour la "
+"sélection"
+
+#: ../plugins/download/download.py:736
+msgid "Camera"
+msgstr "Appareil photos"
+
+#: ../plugins/download/download.py:738
+msgid "Serial Number"
+msgstr "Numéro de série"
+
+#: ../plugins/download/download.py:740
+msgid "Owner String"
+msgstr "Propriétaire"
+
+#: ../plugins/download/download.py:742
+msgid "User Comment"
+msgstr "Commentaire"
+
+#: ../plugins/download/download.py:798
+#, python-format
+msgid "Downloading %d of %d"
+msgstr "Téléchargement de %d sur %d"
+
+#. Load preview
+#: ../plugins/download/download.py:803
+msgid "Loading preview"
+msgstr "Chargement de la pré-visualisation"
+
+#. New item
+#. Copying file
+#: ../plugins/download/download.py:833
+msgid "Copying"
+msgstr "Copie en cours"
+
+#: ../plugins/download/download.py:842
+msgid "Performing Transformation:"
+msgstr "Transformation en cours"
+
+#: ../plugins/download/download.py:847
+msgid "Commenting"
+msgstr "Application du commentaire"
+
+#: ../plugins/download/download.py:854
+msgid "Tagging"
+msgstr "Application des mots-clés"
+
+#. Set file modification date/time stamp
+#: ../plugins/download/download.py:858
+msgid "Setting Modification Times"
+msgstr "Application des modifications d'heure"
+
+#: ../plugins/download/download.py:864
+msgid "Deleting Source"
+msgstr "Suppression des fichiers source"
+
+#: ../plugins/download/download.py:869
+msgid "Finding Related Files"
+msgstr "Recherche des fichiers corrélés"
+
+#: ../plugins/download/download.py:882
+msgid "Copying Related File"
+msgstr "Copie des fichiers corrélés"
+
+#: ../plugins/download/download.py:885
+msgid "Setting Related File Modification Time"
+msgstr "Application de l'heure de modification sur les fichiers corrélés"
+
+#: ../plugins/download/download.py:890
+msgid "Deleting Related File Source"
+msgstr "Suppression des fichiers sources corrélés"
+
+#: ../plugins/download/download.py:896
+msgid "Do you realy want to stop the download process"
+msgstr "Voulez-vous vraiment interrompre le chargement ?"
+
+#: ../plugins/download/download.py:897
+msgid "Jbrout Question"
+msgstr "Question JBrout"
+
+#: ../plugins/download/nameBuilder.py:73
+msgid ""
+"Image Information\n"
+"_________________"
+msgstr ""
+"Information sur l'Image\n"
+"_______________________"
+
+#: ../plugins/download/nameBuilder.py:83
+msgid ""
+"Serial Numbering\n"
+"________________"
+msgstr ""
+"Noméro de série\n"
+"_______________"
+
+#: ../plugins/download/nameBuilder.py:86
+msgid ""
+"use only one of these. \n"
+"Add a number after the letter in the braces to pad with\n"
+"zeros out to x digits"
+msgstr ""
+
+#: ../plugins/download/nameBuilder.py:111
+msgid "Abbreviated weekday name"
+msgstr "Jour abrégé"
+
+#: ../plugins/download/nameBuilder.py:112
+msgid "full weekday name"
+msgstr "Jour long"
+
+#: ../plugins/download/nameBuilder.py:113
+msgid "Abbreviated month name"
+msgstr "Mois abrégé"
+
+#: ../plugins/download/nameBuilder.py:114
+msgid "Full month name"
+msgstr "Mois long"
+
+#: ../plugins/download/nameBuilder.py:115
+msgid "Camera serial number (Canon only)"
+msgstr "Numéro de série de l'appareil photos (Canon seulement)"
+
+#: ../plugins/download/nameBuilder.py:116
+msgid "Date in the form YYMMDD"
+msgstr "Date au format AAMMJJ"
+
+#: ../plugins/download/nameBuilder.py:117
+msgid "Day of the month (01 to 31)"
+msgstr "Numéro de jour (01 à 31)"
+
+#: ../plugins/download/nameBuilder.py:118
+msgid "File extension without the '.'"
+msgstr "Extension de fichier sans le '.'"
+
+#: ../plugins/download/nameBuilder.py:119
+msgid "File type: 'JPG' or 'RAW'"
+msgstr "Type de fichier : 'JPG' ou 'RAW'"
+
+#: ../plugins/download/nameBuilder.py:120
+msgid "File type: empty or 'RAW'"
+msgstr "Type de fichier : vide ou 'RAW'"
+
+#: ../plugins/download/nameBuilder.py:121
+msgid "File type: 'JPG' or empty"
+msgstr "Type de fichier : vide ou 'JPG'"
+
+#: ../plugins/download/nameBuilder.py:122
+msgid "First 3 characters of image name"
+msgstr "Trois premiers caractères du nom d'image"
+
+#: ../plugins/download/nameBuilder.py:123
+msgid "Hour (00 to 23)"
+msgstr "Heure (00 à 23)"
+
+#: ../plugins/download/nameBuilder.py:124
+msgid "ISO"
+msgstr "ISO"
+
+#: ../plugins/download/nameBuilder.py:125
+msgid "Hour (01 to 12)"
+msgstr "Heure (01 à 12)"
+
+#: ../plugins/download/nameBuilder.py:126
+msgid "Day of the year (001 to 366)"
+msgstr "Jour de l'année (001 à 366)"
+
+#: ../plugins/download/nameBuilder.py:127
+msgid "Job Code"
+msgstr "Code de tâche"
+
+#: ../plugins/download/nameBuilder.py:128
+#, python-format
+msgid "ISO (same as %i except 0 is returned as 'Auto')"
+msgstr "ISO (identique à %i ; 0 correspond à 'Automatique'"
+
+#: ../plugins/download/nameBuilder.py:129
+msgid "Focal length in mm"
+msgstr "Distance focale en mm"
+
+#: ../plugins/download/nameBuilder.py:130
+msgid "Aperture"
+msgstr "Ouverture"
+
+#: ../plugins/download/nameBuilder.py:131
+msgid "Shutter speed e.g. 125 for 1/125 sec"
+msgstr "Vitesse d'obturation ie: 125 pour 1/125 sec"
+
+#: ../plugins/download/nameBuilder.py:132
+msgid "Month (0 to 12)"
+msgstr "Mois (0 à 12)"
+
+#: ../plugins/download/nameBuilder.py:133
+msgid "Minutes (00 to 59)"
+msgstr "Minutes (00 à 59)"
+
+#: ../plugins/download/nameBuilder.py:134
+msgid "Origional file name"
+msgstr "Nom de fichier original"
+
+#: ../plugins/download/nameBuilder.py:135
+msgid "Owner string (Canon only)"
+msgstr "Propriétaire (Canon seulement)"
+
+#: ../plugins/download/nameBuilder.py:136
+msgid "am/pm indicator"
+msgstr "Indicateur am/pm"
+
+#: ../plugins/download/nameBuilder.py:137
+msgid "Quarter: Jan-Mar=1, Apr-Jun=2, Jul-Sep=3, Oct-Dec=4"
+msgstr "Trimestre : Jav-Mar=1 Avr-Juin=2 Juil-Sep=3 Oct-Dec=4"
+
+#: ../plugins/download/nameBuilder.py:138
+msgid "Source folder number"
+msgstr "Numéro de dossier source"
+
+#: ../plugins/download/nameBuilder.py:139
+msgid "Source folder number & name"
+msgstr "Numéro et nom du dossier source"
+
+#: ../plugins/download/nameBuilder.py:140
+msgid "Image number"
+msgstr "Numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:141
+msgid "Last digit of image number"
+msgstr "Derniers chiffres du numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:142
+msgid "Last 2 digits of image number"
+msgstr "2 derniers chiffres du numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:143
+msgid "Last 3 digits of image number"
+msgstr "3 derniers chiffres du numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:144
+msgid "Last 4 digits of image number"
+msgstr "4 derniers chiffres du numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:145
+msgid "Last digit of folder number followed by last 4 digits of image number"
+msgstr ""
+"Derniers chiffres du numéro de dossier suivis des 4 derniers chiffres du "
+"numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:146
+msgid "First digit of folder number followed by last 4 digits of image number"
+msgstr ""
+"Premier chiffre du numéro de dossier suivi des 4 derniers chiffres du numéro "
+"d'image"
+
+#: ../plugins/download/nameBuilder.py:147
+msgid ""
+"First digit of folder number - 1, followed by last 4 digits of image number"
+msgstr ""
+"Premier chiffre de numéro de dossier - 1, suivi des 4 derniers chiffres du "
+"numéro d'image"
+
+#: ../plugins/download/nameBuilder.py:148
+msgid "Subsecond timing (Nikon DSLR's only"
+msgstr "Temps en secondes (Nikon seulement)"
+
+#: ../plugins/download/nameBuilder.py:149
+msgid "Seconds (00 to 59)"
+msgstr "Secondes (00 à 59)"
+
+#: ../plugins/download/nameBuilder.py:150
+msgid "Time in the form HHMMSS"
+msgstr "Temps sous la forme HHMMSS"
+
+#: ../plugins/download/nameBuilder.py:151
+msgid "Camera model name starting from the first word containing digits"
+msgstr ""
+"Modèle d'appareil photos commençant par le permier mot comportant des "
+"chiffres"
+
+#: ../plugins/download/nameBuilder.py:152
+msgid "Same as %T except '-' are treated as spaces"
+msgstr "Idem à %T sauf que les caractères '-' sont remplacés par des espaces"
+
+#: ../plugins/download/nameBuilder.py:153
+msgid "Full camera model name"
+msgstr "Nom complet du modèle d'appareil photo"
+
+#: ../plugins/download/nameBuilder.py:154
+msgid "First word of camera model name containing digits"
+msgstr "Premier mot du modèle d'appareil photo qui comporte des chiffres"
+
+#: ../plugins/download/nameBuilder.py:155
+msgid "Same as %T3 except '-' are treated as spaces"
+msgstr "Comme %T3 sauf que les caractères '-' sont remplacés par des espaces"
+
+#: ../plugins/download/nameBuilder.py:156
+msgid "Last word of camera model name containing digits"
+msgstr "Dernier mot du modèle de l'appareil photos qui comporte des chiffres"
+
+#: ../plugins/download/nameBuilder.py:157
+msgid "Same as %T5 except '-' are treated as spaces"
+msgstr "Comme %T5 sauf que les caractères '-' sont remplacés par des espaces"
+
+#: ../plugins/download/nameBuilder.py:158
+#: ../plugins/download/nameBuilder.py:159
+msgid "Value defined in camera mapping (sas %T1 if undefined"
+msgstr "Valeur du mapping d'appareil photos (sera %T1 si non défini)"
+
+#: ../plugins/download/nameBuilder.py:160
+msgid "Same as %T (Compatability)"
+msgstr "Comme %T (Compatibilité)"
+
+#: ../plugins/download/nameBuilder.py:161
+msgid "Same as %T2 (Compatability)"
+msgstr "Comme %T2 (Compatibilité)"
+
+#: ../plugins/download/nameBuilder.py:162
+msgid "Week Number (00 to 53)"
+msgstr "Numéro de semaine (00 à 53)"
+
+#: ../plugins/download/nameBuilder.py:163
+msgid "Date representation for locale"
+msgstr "Représentation locale de la date"
+
+#: ../plugins/download/nameBuilder.py:164
+msgid "Time representation for locale"
+msgstr "Représentation locale de l'heure"
+
+#: ../plugins/download/nameBuilder.py:165
+msgid "Year without century"
+msgstr "Année sans les centaines"
+
+#: ../plugins/download/nameBuilder.py:166
+msgid "Year with century"
+msgstr "Année avec les centaines"
+
+#: ../plugins/download/nameBuilder.py:167
+msgid "Time zone name"
+msgstr "Nom du Timezone"
+
+#: ../plugins/download/nameBuilder.py:168
+msgid "Time zone offset wrt UTC"
+msgstr "Timezone offset par rapport au temps UTC"
+
+#: ../plugins/download/nameBuilder.py:169
+msgid "Long Date & Time"
+msgstr "Date et Heure détaillées"
+
+#: ../plugins/download/nameBuilder.py:170
+msgid "Long Date"
+msgstr "Date détaillée"
+
+#: ../plugins/download/nameBuilder.py:171
+msgid "Year 'now' with century i.e. the download date"
+msgstr "Année du fichier avec les centaines"
+
+#: ../plugins/download/nameBuilder.py:172
+msgid "Month 'now' i.e. the download date"
+msgstr "Mois du fichier"
+
+#: ../plugins/download/nameBuilder.py:173
+msgid "Day 'now' i.e. the download date"
+msgstr "Jour du fichier"
+
+#: ../plugins/download/nameBuilder.py:174
+msgid "Year 'now' without century i.e. the download date"
+msgstr "Année du fichier sans les centaines"
+
+#: ../plugins/download/nameBuilder.py:175
+msgid "Year without century less 3 hours"
+msgstr "Année sans les centaines moins trois heures"
+
+#: ../plugins/download/nameBuilder.py:176
+msgid "Month less 3 hours"
+msgstr "Mois moins trois heures"
+
+#: ../plugins/download/nameBuilder.py:177
+msgid "Day less 3 hours"
+msgstr "Jour moins trois heures"
+
+#: ../plugins/download/nameBuilder.py:180
+msgid "'Uniqueness' number or empty if filename is unique"
+msgstr "Numéro unique ou vide si le nom de fichier est unique"
+
+#: ../plugins/download/nameBuilder.py:181
+msgid "'Uniqueness' number evaluates to 1 or higher"
+msgstr "Numéro unique évalué à 1 ou plus"
+
+#: ../plugins/download/nameBuilder.py:182
+msgid "Download sequence number with no leading zeros"
+msgstr "Numéro de séquence de télé-chargement sans 0 en début"
+
+#: ../plugins/download/nameBuilder.py:183
+msgid "Date based download sequence number"
+msgstr "Numéro de séquence de télé-chargement basé sur la date"
+
+#: ../plugins/download/nameBuilder.py:312
+msgid ""
+"More than one serialisation tag used please remove extras from File Naming > "
+"Pattern "
+msgstr ""
+
+#: ../tmp/download.glade.h:1
+msgid "Action In Progress:"
+msgstr "Action en cours : "
+
+#: ../tmp/download.glade.h:2
+msgid "Add"
+msgstr "Ajout"
+
+#: ../tmp/download.glade.h:3
+msgid "Add Camera from File"
+msgstr ""
+
+#: ../tmp/download.glade.h:4
+msgid "Add Comment to all downloaded photos"
+msgstr "Ajouter un commentaire par défaut"
+
+#: ../tmp/download.glade.h:5
+msgid "Auto Comment"
+msgstr "Commentaire par défaut"
+
+#: ../tmp/download.glade.h:6
+msgid "Auto Tag"
+msgstr "Mot-clé par défaut"
+
+#: ../tmp/download.glade.h:7
+msgid "Auto Tags To Add"
+msgstr "Mot-clé à ajouter par défaut"
+
+#: ../tmp/download.glade.h:8
+msgid "Automaticaly rotate photos on download"
+msgstr "Rotation automatique des photos"
+
+#: ../tmp/download.glade.h:9
+msgid "Camera Mapping"
+msgstr ""
+
+#: ../tmp/download.glade.h:10
+msgid "Camera Model Mapping"
+msgstr ""
+
+#: ../tmp/download.glade.h:11
+msgid "Comment to add"
+msgstr "Commentaire à ajouter"
+
+#: ../tmp/download.glade.h:12
+msgid "Conversion"
+msgstr ""
+
+#: ../tmp/download.glade.h:13
+msgid "Copy Files with the same name"
+msgstr "Copier les fichiers avec le même nom"
+
+#: ../tmp/download.glade.h:14
+msgid "Copy Meta Data"
+msgstr "Copier les méta-données"
+
+#: ../tmp/download.glade.h:15
+msgid "Copy RAW file"
+msgstr "Copier les fichiers RAW"
+
+#: ../tmp/download.glade.h:16
+msgid "Current Camera:"
+msgstr "Appareil photos courant :"
+
+#: ../tmp/download.glade.h:17
+msgid "Current cameram model mappings for {T8} and {T9}"
+msgstr ""
+
+#: ../tmp/download.glade.h:18
+msgid "Delete Selected"
+msgstr "Supprimer la sélection"
+
+#: ../tmp/download.glade.h:19
+msgid "Delete Source Images"
+msgstr "Supprimer les images de la source"
+
+#: ../tmp/download.glade.h:20
+msgid "Destination File:"
+msgstr "Fichier destination :"
+
+#: ../tmp/download.glade.h:21
+msgid "Destination Folder:"
+msgstr "Dossier destination"
+
+#: ../tmp/download.glade.h:22
+msgid "Download Destination"
+msgstr "Destination du téléchargement"
+
+#: ../tmp/download.glade.h:24
+msgid "Download Preferences"
+msgstr "Préférences de téléchargement"
+
+#: ../tmp/download.glade.h:25
+msgid "Download Progress"
+msgstr "Progression du téléchargement"
+
+#: ../tmp/download.glade.h:26
+msgid "Downloading Photos from Camera"
+msgstr "Téléchargement des photos depuis l'appareil photos"
+
+#: ../tmp/download.glade.h:27
+msgid "Edit Selected"
+msgstr "Edition de la sélection"
+
+#: ../tmp/download.glade.h:28
+msgid "Enable Raw Conversion"
+msgstr "Activer la conversion des fichiers RAW"
+
+#: ../tmp/download.glade.h:29
+msgid "Example image name:"
+msgstr "Exemple de nom d'image :"
+
+#: ../tmp/download.glade.h:30
+msgid "File Naming"
+msgstr "Renommer"
+
+#: ../tmp/download.glade.h:31
+msgid "General"
+msgstr "Général"
+
+#: ../tmp/download.glade.h:32
+msgid "Identify camera using serial number, owner string  or user comment"
+msgstr ""
+
+#: ../tmp/download.glade.h:34
+#, no-c-format
+msgid "Job code (%J):"
+msgstr "Code de traitement (%J) :"
+
+#: ../tmp/download.glade.h:35
+msgid "Pattern:"
+msgstr ""
+
+#: ../tmp/download.glade.h:36
+msgid ""
+"Please enter the values to use for {T8}, {T9} and Tag for the selected camera"
+msgstr ""
+
+#: ../tmp/download.glade.h:37
+msgid "Prompt for Job Code every time Downloader is run"
+msgstr "Saisir un code de traitement à chaque chargement"
+
+#: ../tmp/download.glade.h:38
+msgid "RAW Conversion"
+msgstr ""
+
+#: ../tmp/download.glade.h:39
+msgid "Show All Tokens"
+msgstr ""
+
+#: ../tmp/download.glade.h:40
+msgid "Source File:"
+msgstr "Fichier source :"
+
+#: ../tmp/download.glade.h:41
+msgid "Source Folder:"
+msgstr "Dossier source :"
+
+#: ../tmp/download.glade.h:42
+msgid "Tag:"
+msgstr "Mot-clé :"
+
+#: ../tmp/download.glade.h:43
+msgid "Tags not yet loaded"
+msgstr "Mots-clés pas encore chargés"
+
+#: ../tmp/download.glade.h:44
+msgid "label"
+msgstr "Libellé"
+
+#: ../tmp/download.glade.h:45
+msgid "{1} - Year now YYYY"
+msgstr ""
+
+#: ../tmp/download.glade.h:46
+msgid "{2} - Month now (01-12)"
+msgstr ""
+
+#: ../tmp/download.glade.h:47
+msgid "{3} - Day now (01-31)"
+msgstr ""
+
+#: ../tmp/download.glade.h:48
+msgid "{A} - Full weekday name"
+msgstr ""
+
+#: ../tmp/download.glade.h:49
+msgid "{B} - Full month name"
+msgstr ""
+
+#: ../tmp/download.glade.h:50
+msgid "{D} - Day of month"
+msgstr ""
+
+#: ../tmp/download.glade.h:51
+msgid "{H} - Hour (01-23)"
+msgstr ""
+
+#: ../tmp/download.glade.h:52
+msgid "{I} - Hour (01-12)"
+msgstr ""
+
+#: ../tmp/download.glade.h:53
+msgid "{J} - Job code"
+msgstr ""
+
+#: ../tmp/download.glade.h:54
+msgid "{M} - Minutes"
+msgstr ""
+
+#: ../tmp/download.glade.h:55
+msgid "{O} - Owner string"
+msgstr ""
+
+#: ../tmp/download.glade.h:56
+msgid "{S} - Seconds"
+msgstr ""
+
+#: ../tmp/download.glade.h:57
+msgid "{T8}:"
+msgstr ""
+
+#: ../tmp/download.glade.h:58
+msgid "{T9}:"
+msgstr ""
+
+#: ../tmp/download.glade.h:59
+msgid "{T} - camera model"
+msgstr ""
+
+#: ../tmp/download.glade.h:60
+msgid "{W} - week number"
+msgstr ""
+
+#: ../tmp/download.glade.h:61
+msgid "{Y} - 4 digit year"
+msgstr ""
+
+#: ../tmp/download.glade.h:62
+msgid "{a} - Weekday name"
+msgstr ""
+
+#: ../tmp/download.glade.h:63
+msgid "{b} - Month name"
+msgstr ""
+
+#: ../tmp/download.glade.h:64
+msgid "{c} - Camera serial #"
+msgstr ""
+
+#: ../tmp/download.glade.h:65
+msgid "{d} - date YYMMDD"
+msgstr ""
+
+#: ../tmp/download.glade.h:66
+msgid "{f} - Filename prefix"
+msgstr ""
+
+#: ../tmp/download.glade.h:67
+msgid "{i} - ISO"
+msgstr ""
+
+#: ../tmp/download.glade.h:68
+msgid "{m} - Month (01-12)"
+msgstr ""
+
+#: ../tmp/download.glade.h:69
+msgid "{o} - Origional name"
+msgstr ""
+
+#: ../tmp/download.glade.h:70
+msgid "{q} - Folder Number"
+msgstr ""
+
+#: ../tmp/download.glade.h:71
+msgid "{r} - Image number"
+msgstr ""
+
+#: ../tmp/download.glade.h:72
+msgid "{t} - Time HHMMSS"
+msgstr ""
+
+#: ../tmp/download.glade.h:73
+msgid "{y} - 2 digit year"
+msgstr ""
+
+#: ../tmp/nameBuilder.glade.h:1
+msgid "Filename Tokens"
+msgstr ""
