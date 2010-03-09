@@ -164,12 +164,17 @@ class ListView(ThumbnailsView):
         if allow_dragndrop:
             # allow drag
             self.drag_source_set(gtk.gdk.BUTTON1_MASK | gtk.gdk.BUTTON2_MASK,
-                  [('to_albums', 0, 111),], gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
+                  [('to_albums', 0, 111),('text/uri-list',0,0)], gtk.gdk.ACTION_COPY )  # copy only !
+            self.connect("drag_data_get",self.on_drag_data_get_data)
 
             # allow drop
             self.drag_dest_set(gtk.DEST_DEFAULT_ALL, [('from_tags', 0, 111),('from_ftags', 0, 112),],
                 gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
             self.connect("drag_data_received",self.on_drag_data_received_data)
+
+    def on_drag_data_get_data(self, listview, context, selection, target_id, etime):
+           data = ["file://localhost"+i.file+"\r\n" for i in listview.getSelected()]
+           selection.set(selection.target, 8, "".join(data))
 
     def on_key_press_for_tag(self,widget,event):
         """ Add tags to photos """
@@ -1161,8 +1166,8 @@ class Window(GladeApp):
 
         w,h=JBrout.conf["width"] or 800,JBrout.conf["height"] or 600
         x,y=JBrout.conf["x_pos"] or 0,JBrout.conf["y_pos"] or 0
-        
-        
+
+
         self.main_widget.set_gravity(gtk.gdk.GRAVITY_NORTH_WEST)
         self.main_widget.move(x,y)
 
