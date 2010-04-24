@@ -941,8 +941,11 @@ class Window(GladeApp):
             bb.show()
 
         # build the status bar
-        frame_default = self.statusbar.get_children()[0]
-        self.label_image_infos= frame_default.get_children()[0]
+        try:
+            self.label_image_infos= self.statusbar.get_children()[0].get_children()[0].get_children()[0]
+        except:
+            self.label_image_infos= self.statusbar.get_children()[0].get_children()[0]
+
         self.label_image_infos.set_text("welcome")
 
         progress_info_frame = gtk.Frame()
