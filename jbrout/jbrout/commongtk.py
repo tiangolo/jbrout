@@ -63,7 +63,7 @@ class WinKeyTag(GladeApp):
     #    for t,c in self.liste:
     #        if t.lower().startswith(s):
     #            l.append( (t,"(%s)"%c) )
-    
+
     def feed(self,l,s): # filter with begginning of 't'
         l.clear()
         s=unicode(s).upper()
@@ -248,11 +248,8 @@ def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK
 ##############################################################################
 
 from StringIO import StringIO
-try:
-    import pyexiv2
-except:
-    print "You should install pyexiv2 (>=0.1.2)"
-    sys.exit(-1)
+import pyexiv
+
 import os
 
 def rgb(r,g,b,a=00):
@@ -272,10 +269,10 @@ class Img(object):
                 #~ jo = exif.process_file(fid)
                 #~ fid.close()
                 #~ data = jo["JPEGThumbnail"]
-                
-                img = pyexiv2.Image(thumb)
+
+                img = pyexiv.Image(thumb)
                 img.readMetadata()
-                # XXX external call while pyexiv2 can't handle it
+                # XXX external call while pyexiv can't handle it
                 if extension == 'nef':
                     data=Popen(["exiftool","-b","-PreviewImage","%s"%thumb],stdout=PIPE).communicate()[0]
                 else:
@@ -432,7 +429,7 @@ gobject.signal_new("value_changed", PictureSelector, gobject.SIGNAL_RUN_LAST, go
 
 class Buffer:
     size = None
-    
+
     images={}
     #~ pixbufRefresh = gtk.gdk.pixbuf_new_from_file( "data/gfx/refresh.png" )
     pixbufRefresh = Img("data/gfx/refresh.png").pixbuf

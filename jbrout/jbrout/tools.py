@@ -26,11 +26,7 @@ MAJOR CHANGES :
   - addition of transfrom command (rotate is now depricated)
 """
 import os,sys
-try:
-    import pyexiv2
-except:
-    print "You should install pyexiv2 (>=0.1.2)"
-    sys.exit(-1)
+import pyexiv
 
 import time
 from datetime import datetime,timedelta
@@ -192,7 +188,7 @@ class PhotoCmd(object):
 
         # pre-read
 
-        self.__info = pyexiv2.Image(self.__file)
+        self.__info = pyexiv.Image(self.__file)
         self.__info.readMetadata()
 
         if self.readonly:
@@ -263,7 +259,7 @@ class PhotoCmd(object):
         self.__refresh()
 
     def __refresh(self):
-        self.__info = pyexiv2.Image(self.__file)
+        self.__info = pyexiv.Image(self.__file)
         self.__info.readMetadata()
 
         try:
@@ -381,7 +377,7 @@ isreal : %s""" % (
         fd=self.__info["Exif.Photo.DateTimeOriginal"]
         fd+=timedelta(weeks=w, days=d,hours=h,minutes=m,seconds=s)
         return self.setDate(fd)
-        
+
     def setDate(self,fd):
         """
         set absolute date of jpeg file.

@@ -25,7 +25,6 @@ import time
 import re
 
 from libs import extListview
-import pyexiv2
 from libs.gladeapp import GladeApp
 
 from jbrout.common import ed2d,caseFreeCmp

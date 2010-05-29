@@ -762,8 +762,6 @@ class Cache:
             Cache.__buf[item.file]=item.getThumb()
         return Cache.__buf[item.file]
 
-import pyexiv2
-
 class ImageFile(object):
 
     def __getAff(self): return os.path.basename(self.__file)

@@ -21,7 +21,7 @@ import gtk
 from jbrout.commongtk import PictureSelector
 
 from libs.gladeapp import GladeApp
-import pyexiv2
+from jbrout import pyexiv
 
 import re
 
@@ -83,7 +83,7 @@ class WinViewExif(GladeApp):
     def setPhoto(self,i):
         self.exifList.clear()
         if os.path.isfile(self.nodes[i].file):
-            image=pyexiv2.Image(self.nodes[i].file)
+            image=pyexiv.Image(self.nodes[i].file)
             image.readMetadata()
             try:
                 self.exifList.append([_('JPEG Comment'),image.getComment().decode("utf_8","replace")])
