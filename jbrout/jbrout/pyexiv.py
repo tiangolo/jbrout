@@ -58,7 +58,10 @@ class ExivMetadata(object):
 
     def getThumbnailData(self):
         l=[i.data for i in self._md.previews]
-        return [None,l[-1]]
+        if l:
+            return [None,l[-1]] # to be able to get the item 1
+        else:
+            return []
 
     def setThumbnailData(self,o):
         #TODO: finnish here
@@ -84,6 +87,7 @@ class ExivMetadata(object):
 def Image(f):
     if hasattr(pyexiv2,"ImageMetadata"):
         # pyexiv2 >= 0.2
+        print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support well this newer version ! not fully tested ! some things are not implemented !!!)"
         return ExivMetadata(pyexiv2.ImageMetadata(f))
     else:
         # pyexiv2 < 0.2
