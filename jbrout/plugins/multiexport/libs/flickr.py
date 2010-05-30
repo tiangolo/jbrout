@@ -166,7 +166,10 @@ class FlickrAPI:
     sig_str = self.secret
     for key in keys:
       sig_str += key + str(args[key])
-    return hashlib.md5.new(sig_str).hexdigest()
+    try:
+      return hashlib.md5.new(sig_str).hexdigest()
+    except:
+      return hashlib.md5(sig_str).hexdigest()
 
 class FlickrUploader:
   def __init__(self, conf,showAuthWin):
