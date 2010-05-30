@@ -30,7 +30,12 @@ except:
     print "You should install pyexiv2 (>=0.1.2)"
     sys.exit(-1)
 
+
+
+
+###############################################################################
 class Exiv2Metadata(object):
+###############################################################################
     """ pyexiv2 > 0.2 """
     def __init__(self,md):
         self._md=md
@@ -92,7 +97,52 @@ class Exiv2Metadata(object):
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
     def xmpKeys(self):
         return self._md.xmp_keys
+
+
+    def getTags(self):
+        """ return a list of merged tags (xmp+iptc) (list of str)"""
+        try:
+            li=[str(i.strip("\x00")) for i in self._md["Iptc.Application2.Keywords"].values]    #digikam patch
+            # assume UTF8
+        except KeyError:
+            li=[]
+        try:
+            lx=[i.encode("utf_8") for i in self._md["Xmp.dc.subject"].value]
+        except KeyError:
+            lx=[]
+        ll=list(set(li+lx))
+        ll.sort()
+        return ll
+
+
+    def setTags(self,l):
+        for i in l:
+            assert type(i)==unicode
+
+        self._md["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in l]
+        self._md["Xmp.dc.subject"]=l
+
+
+    def clearTags(self):
+        try:
+            del self._md["Iptc.Application2.Keywords"]
+        except:
+            pass
+        try:
+            del self._md["Xmp.dc.subject"]
+        except:
+            pass
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+
+
+
+
+
+
+
+
 
 
 if not hasattr(pyexiv2,"Image"):    # Only here to make the following code
@@ -101,7 +151,9 @@ if not hasattr(pyexiv2,"Image"):    # Only here to make the following code
             pass                    # else it can't compile ;-)
     pyexiv2.Image=Fake
 
+###############################################################################
 class Exiv1Metadata(pyexiv2.Image):
+###############################################################################
     """ pyexiv2 < 0.2 """
     def __init__(self,f):
         pyexiv2.Image.__init__(self,f)
@@ -109,18 +161,62 @@ class Exiv1Metadata(pyexiv2.Image):
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
     def xmpKeys(self):
         return []
+
+    def getTags(self):
+        try:
+            l=self["Iptc.Application2.Keywords"]
+            if type(l) == tuple:
+                ll = [i.strip("\x00") for i in l] # strip("\x00") = digikam patch
+                ll.sort()
+            else:
+                ll = [l.strip("\x00"),]
+        except KeyError:
+            ll = []
+        return ll   # many case = list of utf8 strings
+
+    def setTags(self,l):
+        for i in l:
+            assert type(i)==unicode
+
+        self["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in l]
+
+    def clearTags(self):
+        try:
+            prec = self["Iptc.Application2.Keywords"] #TODO: to bypass a bug in pyexiv2
+            self["Iptc.Application2.Keywords"] = []
+        except:
+            pass
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 
 
 def Image(f):
     if hasattr(pyexiv2,"ImageMetadata"):
         # pyexiv2 >= 0.2
-        print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support well this newer version ! not fully tested ! some things are not implemented !!!)"
+        print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support very well this new version ! not fully tested ! some things are not implemented !!!)"
         return Exiv2Metadata(pyexiv2.ImageMetadata(f))
     else:
         # pyexiv2 < 0.2
         return Exiv1Metadata(f)
 
 if __name__ == "__main__":
-    t=Image("/home/manatlan/Desktop/125138833516000039526280822.jpg")
-    print dir(t)
+    #~ t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202 (copie).jpg")
+    t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202.jpg")
+    #~ t=Image("/home/manatlan/Desktop/fotaux/autorot/p20020115_173654(1).jpg")
+    t.readMetadata()
+    print "REAP IPTC",t._md["Iptc.Application2.Keywords"].values
+    print "REAL XMP",t._md["Xmp.dc.subject"].value
+    #~ print [u"stéphanie"]
+    #~ print "=",[ unicode(u"stéphanie".encode("utf_8"),"utf_8")]
+    #~ print [u"stéphanie".encode("latin1")]
+    #~ L=t.getTags()
+    #~ print "===",L
+    #~ for i in L:
+        #~ print i
+    #~ l= [u'h\xe9l\xe8ne', 'h\xc3\xa9l\xc3\xa8ne']
+    #~ print (l[0].encode("utf_8"),)
+    #~ print (l[1],)
+
+
+    #~ del t._md["Xmp.dc.subject"]
+    #~ t.writeMetadata()

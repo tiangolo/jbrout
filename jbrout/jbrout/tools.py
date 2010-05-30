@@ -67,13 +67,16 @@ class CommandException(Exception):
 
 def decode(s, encodings=['ascii', 'utf8', 'latin1',] ):
     """ method to decode text (tag or comment) to unicode """
-    for encoding in encodings:
-        try:
-            return s.decode(encoding)
-        except UnicodeDecodeError:
-            pass
-    print " *WARNING* : no valid decoding for string '%s'"%(str([s]))
-    return s.decode('utf8', 'replace')
+    if type(s)!=unicode:
+        for encoding in encodings:
+            try:
+                return s.decode(encoding)
+            except UnicodeDecodeError:
+                pass
+        print " *WARNING* : no valid decoding for string '%s'"%(str([s]))
+        return s.decode('utf8', 'replace')
+    else:
+        return s
 
 
 # ##############################################################################################
@@ -316,15 +319,7 @@ class PhotoCmd(object):
 
         self.__comment = decode(self.__info.getComment())
 
-        try:
-            l=self.__info["Iptc.Application2.Keywords"]
-            if type(l) == tuple:
-                self.__tags = [decode(i.strip("\x00")) for i in l] # strip("\x00") = digikam patch
-                self.__tags.sort()
-            else:
-                self.__tags = [decode(l.strip("\x00"))]
-        except KeyError:
-            self.__tags = []
+        self.__tags = [decode(i) for i in self.__info.getTags()]
 
 
     def __saveTB(self,f):   # not used
@@ -389,11 +384,7 @@ isreal : %s""" % (
 
     def clear(self):
         if self.__readonly: return False
-        try:
-            prec = self.__info["Iptc.Application2.Keywords"] #TODO: to bypass a bug in pyexiv2
-            self.__info["Iptc.Application2.Keywords"] = []
-        except:
-            pass
+        self.__info.clearTags()
         self.__maj()
         return True
 
@@ -454,7 +445,7 @@ isreal : %s""" % (
         if self.__readonly: return False
 
         # delete EXIF and IPTC tags :
-        l=self.__info.exifKeys() + self.__info.iptcKeys()
+        l=self.__info.exifKeys() + self.__info.iptcKeys()  + self.__info.xmpKeys()
         for i in l:
             try:
                 del self.__info[i]
@@ -480,7 +471,7 @@ isreal : %s""" % (
         np.destroyInfo()
 
         # copy all exif/iptc info
-        l=self.__info.exifKeys() + self.__info.iptcKeys()
+        l=self.__info.exifKeys() + self.__info.iptcKeys() + self.__info.xmpKeys()
         for i in l:
             if i not in ["Exif.Photo.UserComment",]: # key "Exif.Photo.UserComment" bugs always ?!
                 if not i.startswith("Exif.Thumbnail"):  # don't need exif.thumb things because it's rebuilded after
@@ -525,7 +516,7 @@ isreal : %s""" % (
             return False
 
     def __majTags(self):
-        self.__info["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in self.__tags]
+        self.__info.setTags(self.__tags)
         self.__maj()
 
     def __maj(self):
