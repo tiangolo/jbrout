@@ -151,7 +151,7 @@ defaultContent=u"""# -*- coding: utf-8 -*-
 #  1|Write Comment on the picture| montage -geometry +0+0 -background white -label "$c" -pointsize 40 $f $f
 #  0|Slideshow|qiv -s -d 3 -f -i $*
 #  0|File Date from EXIF| exiv2 -T mv $*
-
+#  0|Send...|nautilus-sendto $*
 
 """
 
