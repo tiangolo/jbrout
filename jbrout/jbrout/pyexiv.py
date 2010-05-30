@@ -30,9 +30,11 @@ except:
     print "You should install pyexiv2 (>=0.1.2)"
     sys.exit(-1)
 
-class ExivMetadata(object):
+class Exiv2Metadata(object):
+    """ pyexiv2 > 0.2 """
     def __init__(self,md):
         self._md=md
+    #============================================== V 0.1 api
     def readMetadata(self):
         return self._md.read()
     def writeMetadata(self):
@@ -75,23 +77,50 @@ class ExivMetadata(object):
     def iptcKeys(self):
         return self._md.iptc_keys
 
-    def tagDetails(self,v):               # see viewexif plugin
-        #TODO: finnish here
-        print "***WARNING*** : not implemented : tagDetails"
-        return None
-    def interpretedExifValue(self,v):   # see viewexif plugin
-        #TODO: finnish here
-        print "***WARNING*** : not implemented : interpretedExifValue"
-        return None
+    def tagDetails(self,k):               # see viewexif plugin
+        md=self._md[k]
+        if hasattr(md,"label"):
+            lbl=getattr(md,"label")
+        elif hasattr(md,"title"):
+            lbl=getattr(md,"title")
+        return [lbl,md.description,]
+
+    def interpretedExifValue(self,k):   # see viewexif plugin
+        return self._md[k].human_value
+    #==============================================
+
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
+    def xmpKeys(self):
+        return self._md.xmp_keys
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+if not hasattr(pyexiv2,"Image"):    # Only here to make the following code
+    class Fake(object):             # compliant with old objects from 0.1
+        def __init__(self,f):       # when using 0.2 version
+            pass                    # else it can't compile ;-)
+    pyexiv2.Image=Fake
+
+class Exiv1Metadata(pyexiv2.Image):
+    """ pyexiv2 < 0.2 """
+    def __init__(self,f):
+        pyexiv2.Image.__init__(self,f)
+
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
+    def xmpKeys(self):
+        return []
+    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 
 def Image(f):
     if hasattr(pyexiv2,"ImageMetadata"):
         # pyexiv2 >= 0.2
         print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support well this newer version ! not fully tested ! some things are not implemented !!!)"
-        return ExivMetadata(pyexiv2.ImageMetadata(f))
+        return Exiv2Metadata(pyexiv2.ImageMetadata(f))
     else:
         # pyexiv2 < 0.2
-        return pyexiv2.Image(f)
+        return Exiv1Metadata(f)
 
 if __name__ == "__main__":
-    pass
+    t=Image("/home/manatlan/Desktop/125138833516000039526280822.jpg")
+    print dir(t)
