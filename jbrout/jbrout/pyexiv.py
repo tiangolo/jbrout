@@ -200,23 +200,16 @@ def Image(f):
         return Exiv1Metadata(f)
 
 if __name__ == "__main__":
-    #~ t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202 (copie).jpg")
-    t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202.jpg")
+    t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202 (copie).jpg")
+    #~ t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202.jpg")
     #~ t=Image("/home/manatlan/Desktop/fotaux/autorot/p20020115_173654(1).jpg")
     t.readMetadata()
-    print "REAP IPTC",t._md["Iptc.Application2.Keywords"].values
-    print "REAL XMP",t._md["Xmp.dc.subject"].value
-    #~ print [u"stéphanie"]
-    #~ print "=",[ unicode(u"stéphanie".encode("utf_8"),"utf_8")]
-    #~ print [u"stéphanie".encode("latin1")]
-    #~ L=t.getTags()
-    #~ print "===",L
-    #~ for i in L:
-        #~ print i
-    #~ l= [u'h\xe9l\xe8ne', 'h\xc3\xa9l\xc3\xa8ne']
-    #~ print (l[0].encode("utf_8"),)
-    #~ print (l[1],)
 
+    #----
+    aa=t._md["Xmp.dc.subject"].raw_value[0]
+    import chardet; print chardet.detect(aa) # in fact, it's latin1 encoded as utf8
+    print aa.decode("utf_8").encode("latin1")
+    #----
 
-    #~ del t._md["Xmp.dc.subject"]
-    #~ t.writeMetadata()
+    L=t.getTags()
+    print "===>",L

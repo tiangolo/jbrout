@@ -338,7 +338,7 @@ class ListView(ThumbnailsView):
             Buffer.pbReadOnly.copy_area(0, 0, 15, 13, pb2, wx-22,7)
             pb=pb2
 
-        if node.name.split('.')[-1] in rawFormats:
+        if node.name.split('.')[-1].lower() in rawFormats:
             pb2 = pb.copy()
             wx= pb.get_width()
             Buffer.pixRaw.copy_area(0, 0, 15, 13, pb2, wx-44,7)

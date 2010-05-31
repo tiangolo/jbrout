@@ -54,9 +54,11 @@ autoTrans = {
     7: ["transverse", "Transverse"],
     8: ["rotate270", "Rotate Right"]}
 
-rawFormats=["NEF","nef","DNG","dng","cr2","CR2"]
-#           "cr2","CR2" files are for canon RAW. Makes pyexiv2 crash 14/07/2009 works with exiv2 though
-supportedFormats=["JPG","jpg","JPEG","jpeg","NEF","nef","DNG","dng","cr2","CR2"]
+# videoFormats=["avi","mov"]  # not used yet (marc)
+
+rawFormats=["nef","dng","cr2"]
+#           "cr2" files are for canon RAW. Makes pyexiv2 crash 14/07/2009 works with exiv2 though
+supportedFormats=["jpg","jpeg"] + rawFormats
 
 class CommandException(Exception):
    def __init__(self,m):
@@ -288,22 +290,6 @@ class PhotoCmd(object):
         except IOError:
             w,h=0,0 # XXX not recognized yetwith exiv2
         self.__resolution = "%d x %d" % (w,h) # REAL SIZE !
-
-            #~ 0x9209: ('Flash', {0:  'No',
-                               #~ 1:  'Fired',
-                               #~ 5:  'Fired (?)', # no return sensed
-                               #~ 7:  'Fired (!)', # return sensed
-                               #~ 9:  'Fill Fired',
-                               #~ 13: 'Fill Fired (?)',
-                               #~ 15: 'Fill Fired (!)',
-                               #~ 16: 'Off',
-                               #~ 24: 'Auto Off',
-                               #~ 25: 'Auto Fired',
-                               #~ 29: 'Auto Fired (?)',
-                               #~ 31: 'Auto Fired (!)',
-                               #~ 32: 'Not Available'}),
-
-                               # 89 : Yes, auto, red-eye reduction
 
         try:
             v=self.__info.interpretedExifValue("Exif.Photo.Flash")
