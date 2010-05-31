@@ -104,8 +104,6 @@ class WinViewExif(GladeApp):
                         self.exifList.append(["Iptc: "+tag_details[0], image[key]])
                     except:
                         print "Error on tag " + key
-            if len(self.exifList)==0:
-                self.exifList.append([_('No Displayable Meta Data found in file!'), ''])
             for key in image.xmpKeys():
                 if re.match(self.ignoredTags, key) == None:
                     tag_details = image.tagDetails(key)
@@ -113,6 +111,8 @@ class WinViewExif(GladeApp):
                         self.exifList.append(["Xmp: "+tag_details[0], image[key]])
                     except:
                         print "Error on tag " + key
+            if len(self.exifList)==0:
+                self.exifList.append([_('No Displayable Meta Data found in file!'), ''])
 
         else:
             self.exifList.append([_('Can not open file!'), ''])
