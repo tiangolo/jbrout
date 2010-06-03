@@ -114,22 +114,51 @@ class DBPhotos:
 
         files = []
         for (basepath, children) in walktree(path,False):
+            dir=basepath
+            try:
+                nodeDir = self.root.xpath(u"""//folder[@name="%s"]""" % dir)[0]
+            except:
+                nodeDir=None
+
+            if nodeDir is None:
+                rep=[]
+                while True:
+                    rep.append(dir)
+                    dir,n = os.path.split(dir)
+                    if not n: break
+                rep.reverse()
+
+                node = self.root
+                for r in rep:
+                    try:
+                        nodeDir = node.xpath(u"""folder[@name="%s"]""" % r)[0]
+                    except:
+                        nodeDir = Element("folder", name=r)
+                        node.append( nodeDir )
+
+                        FolderNode(nodeDir)._updateInfo() # read comments
+
+                    node = nodeDir
+                nodeDir=node
+
             for child in children:
                 if child.split('.')[-1].lower() in supportedFormats :
                     #~ file = os.path.join(basepath, child).decode( sys.getfilesystemencoding() )
                     file = os.path.join(basepath, child)
-                    files.append(file)
+                    files.append((file,nodeDir))
 
         yield len(files)   # first yield is the total number of files
 
-        for file in files:
-            yield files.index(file)
+        i=0
+        for (file,nodeDir) in files:
+            yield i
+            i+=1
             #OLD TOOLS:
             #file = PhotoCmd.prepareFile(file,
             #                needRename=DBPhotos.normalizeName,
             #                needAutoRot=DBPhotos.autorotAtImport,
             #                )
-            self.__addPhoto( file ,tags,filesInBasket)
+            self.__addPhoto( nodeDir,file ,tags,filesInBasket)
 
         ln = self.root.xpath(u"""//folder[@name="%s"]""" % path)
         if ln:
@@ -137,36 +166,9 @@ class DBPhotos:
         else:
             yield None
 
-    def __addPhoto(self,file,tags,filesInBasket):
+    def __addPhoto(self,nodeDir,file,tags,filesInBasket):
         assert type(file)==unicode
         dir,name= os.path.split(file)
-
-        try:
-            nodeDir = self.root.xpath(u"""//folder[@name="%s"]""" % dir)[0]
-        except:
-            nodeDir=None
-
-        if nodeDir is None:
-            rep=[]
-            while 1:
-                rep.append(dir)
-                dir,n = os.path.split(dir)
-                if not n: break
-            rep.reverse()
-
-            node = self.root
-            for r in rep:
-                try:
-                    nodeDir = node.xpath(u"""folder[@name="%s"]""" % r)[0]
-                except:
-                    nodeDir = Element("folder", name=r)
-                    node.append( nodeDir )
-
-                    FolderNode(nodeDir)._updateInfo() # read comments
-
-                node = nodeDir
-            nodeDir=node
-
 
         newNode = Element("photo")
         nodeDir.append( newNode )
@@ -815,7 +817,7 @@ class PhotoNode(object):
         pc.redate(w,d,h,m,s)
         self.updateInfo(pc)
         self.updateName()
-        
+
     def setDate(self, date):
         pc = PhotoCmd(self.file)
         pc.setDate(date)
@@ -941,13 +943,13 @@ class DBTags:
     #    if ln:
     #        assert len(ln)==1
     #        return dec(ln[0].text)
- 
+
     #~ def update(self, tg):
        #~ nc = self.dom.selectSingleNode("//catg[@name='IMPORTEDTAGS']")
        #~ if not nc:
           #~ nc=self.dom.createElement("catg")
           #~ nc.setAttribute( "name","IMPORTEDTAGS")
- 
+
        #~ newtags=False
        #~ st = self.getTags()
        #~ for i in tg:
@@ -958,7 +960,7 @@ class DBTags:
              #~ n.setAttribute( "name",i)
              #~ nc.appendChild(n)
              #~ newtags = True
- 
+
        #~ if newtags:
           #~ self.dom.documentElement.appendChild(nc)
           #~ self.win.treeTags.init()
