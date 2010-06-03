@@ -1296,7 +1296,8 @@ class Window(GladeApp):
         JBrout.conf["viewSelection"]=idx
         return True
 
-    def showProgress(self,cur=None,max=None,msg=None):
+    old_percent = -1
+    def showProgress(self,cur=None,max=None,msg=None,r=200):
         """
             to show a current process is pending ... 3 types of call:
             - showProgress(True) : block principal window (no msg, no win)
@@ -1331,27 +1332,32 @@ class Window(GladeApp):
         if cur is None and max is None:
             self.tbl.start()#restart background process of listview
             off()
+            if self.old_percent != -1:
+                self.old_percent = -1
         else:
             if max is None:
                 self.tbl.start()#restart background process of listview
                 off()
             else:
                 self.tbl.stop() #stop background process of listview
-                on()
                 if cur <= 0:
                     cur = 0.01
                 elif cur >= max:
                     cur = max
                 percent = float(cur)/max
 
-                self.progress_bar.set_fraction(percent)
-                self.label_progress_infos.set_text(msg)
+                if int(percent * r) != int(self.old_percent * r):
+                    on()
+                    self.progress_bar.set_fraction(percent)
+                    self.label_progress_infos.set_text(msg)
 
-                # in the future:
-                # http://www.async.com.br/faq/pygtk/index.py?req=show&file=faq23.020.htp
-                while gtk.events_pending():      # *!*
-                    gtk.main_iteration(False)
+                    # in the future:
+                    # http://www.async.com.br/faq/pygtk/index.py?req=show&file=faq23.020.htp
+                    while gtk.events_pending():      # *!*
+                        gtk.main_iteration(False)
 
+                    # the display is refreshed r times during the processing.
+                    self.old_percent = percent
 
 
 
