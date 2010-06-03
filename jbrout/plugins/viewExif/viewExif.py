@@ -39,7 +39,8 @@ class WinViewExif(GladeApp):
 
         self.nodes = nodes
 
-        self.ignoredTags = '.*0x.*'
+        self.ignoredPattern = '.*0x.*'
+        self.ignoredKeys = ['Exif.Photo.MakerNote']
 
         ## Set-up the Picture selector
         self.selector = PictureSelector(self.nodes)
@@ -90,7 +91,7 @@ class WinViewExif(GladeApp):
             except:
                 print "Error reafing JPEG comment"
             for key in image.exifKeys():
-                if re.match(self.ignoredTags, key) == None:
+                if re.match(self.ignoredPattern, key) == None and key not in self.ignoredKeys:
                     tag_details = image.tagDetails(key)
                     try:
                         self.exifList.append(["Exif: "+tag_details[0],
@@ -98,14 +99,14 @@ class WinViewExif(GladeApp):
                     except:
                         print "Error on tag " + key
             for key in image.iptcKeys():
-                if re.match(self.ignoredTags, key) == None:
+                if re.match(self.ignoredPattern, key) == None and key not in self.ignoredKeys:
                     tag_details = image.tagDetails(key)
                     try:
                         self.exifList.append(["Iptc: "+tag_details[0], image[key]])
                     except:
                         print "Error on tag " + key
             for key in image.xmpKeys():
-                if re.match(self.ignoredTags, key) == None:
+                if re.match(self.ignoredPattern, key) == None and key not in self.ignoredKeys:
                     tag_details = image.tagDetails(key)
                     try:
                         self.exifList.append(["Xmp: "+tag_details[0], image[key]])
