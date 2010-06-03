@@ -539,10 +539,10 @@ isreal : %s""" % (
             exiftranOpt = "-2"
         elif sens=="flipHorizontal":
             jpegtranOpt = ["-flip", "horizontal"]
-            exiftranOpt = "-f"
+            exiftranOpt = "-F"
         elif sens=="flipVertical":
             jpegtranOpt = ["-flip", "vertical"]
-            exiftranOpt = "-F"
+            exiftranOpt = "-f"
         elif sens=="transpose":
             jpegtranOpt = ["-transpose"]
             exiftranOpt = "-t"
