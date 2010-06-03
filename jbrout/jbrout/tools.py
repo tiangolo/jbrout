@@ -561,7 +561,7 @@ isreal : %s""" % (
             else:
                 ret= _Command._run( [_Command._exiftran,exiftranOpt,'-i',self.__file] ) # exiftran rotate internal exif thumb
 
-        self.__refresh()
+            self.__refresh()
 
 
      #~ def rotates(self):           # NO ROTATE LOSS LESS ;-(
