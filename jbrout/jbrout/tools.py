@@ -38,10 +38,10 @@ from subprocess import Popen,PIPE,call
 
 
 def ed2cd(f): #yyyy/mm/dd hh:ii:ss -> yyyymmddhhiiss
-   if f:
-      return f[:4]+f[5:7]+f[8:10]+f[11:13]+f[14:16]+f[17:19]
-   else:
-      return f
+    if f:
+        return f[:4]+f[5:7]+f[8:10]+f[11:13]+f[14:16]+f[17:19]
+    else:
+        return f
 
 # the second argument provides a string when using this code to provide rotation to plugins
 autoTrans = {
@@ -61,10 +61,10 @@ rawFormats=["nef","dng","cr2"]
 supportedFormats=["jpg","jpeg"] + rawFormats
 
 class CommandException(Exception):
-   def __init__(self,m):
-      self.args=[m]
-   def __str__(self):
-      return self.args[0]
+    def __init__(self,m):
+        self.args=[m]
+    def __str__(self):
+        return self.args[0]
 
 
 def decode(s, encodings=['ascii', 'utf8', 'latin1',] ):
@@ -84,43 +84,43 @@ def decode(s, encodings=['ascii', 'utf8', 'latin1',] ):
 # ##############################################################################################
 class _Command:
 # ##############################################################################################
-   """ low-level access (wrapper) to external tools used in jbrout
-   """
-   isWin=(sys.platform[:3] == "win")
-   __path =os.path.join(os.getcwdu(),u"data",u"tools")
+    """ low-level access (wrapper) to external tools used in jbrout
+    """
+    isWin=(sys.platform[:3] == "win")
+    __path =os.path.join(os.getcwdu(),u"data",u"tools")
 
-   err=""
-   if isWin:
-      # set windows path
-      _exiftran = None
-      _jpegtran = os.path.join(__path,"jpegtran.exe")
+    err=""
+    if isWin:
+        # set windows path
+        _exiftran = None
+        _jpegtran = os.path.join(__path,"jpegtran.exe")
 
-      if not os.path.isfile(_jpegtran):
-          err+="jpegtran is not present in 'tools'\n"
+        if not os.path.isfile(_jpegtran):
+            err+="jpegtran is not present in 'tools'\n"
 
-      _exiftool = os.path.join(__path,"exiftool.exe")
-      if not os.path.isfile(_exiftool):
-          err+="exiftool is not present in 'tools'\n"
+        _exiftool = os.path.join(__path,"exiftool.exe")
+        if not os.path.isfile(_exiftool):
+            err+="exiftool is not present in 'tools'\n"
 
-   else:
-      # set "non windows" path (needs 'which')
-      _exiftran = u"".join(os.popen("which exiftran").readlines()).strip()
-      _jpegtran = None
-      _exiftool = u"".join(os.popen("which exiftool").readlines()).strip()
+    else:
+        # set "non windows" path (needs 'which')
+        _exiftran = u"".join(os.popen("which exiftran").readlines()).strip()
+        _jpegtran = None
+        _exiftool = u"".join(os.popen("which exiftool").readlines()).strip()
 
-      if not os.path.isfile(_exiftran):
-          err+="exiftran is not present, please install 'exiftran'(fbida)\n"
+        if not os.path.isfile(_exiftran):
+            err+="exiftran is not present, please install 'exiftran'(fbida)\n"
 
-      if not os.path.isfile(_exiftool):
-          err+="exiftool is not present, please install 'exiftool'\n"
+        if not os.path.isfile(_exiftool):
+            err+="exiftool is not present, please install 'exiftool'\n"
 
-   if err:
-      raise Exception(err)
+    if err:
+        raise Exception(err)
 
 
 
-   @staticmethod
-   def _run(cmds):
+    @staticmethod
+    def _run(cmds):
         #~ print cmds
         cmdline = str( [" ".join(cmds)] ) # to output easily (with strange chars)
         try:
@@ -137,29 +137,26 @@ class _Command:
             if "processing" in outerr:
                 # exiftran output process in stderr ;-(
                 outerr=""
-        if "exiftool" in cmdline:
-            if "Warning" in outerr:
-                #exiftool warning that has no impact on result
-                outerr=""
+                if "exiftool" in cmdline:
+                    if "Warning" in outerr:
+                        #exiftool warning that has no impact on result
+                        outerr=""
 
         if outerr:
-           raise CommandException( cmdline +"\n OUTPUT ERROR:"+outerr)
+            raise CommandException( cmdline +"\n OUTPUT ERROR:"+outerr)
         else:
-           try:
-              out = out.decode("utf_8") # recupere les infos en UTF_8
-           except:
-              try:
-                  out = out.decode("latin_1")  # recupere les anciens infos (en latin_1)
-              except UnicodeDecodeError:
-                  try:
-                      out = out.decode(sys.getfilesystemencoding())
-                  except UnicodeDecodeError:
-                      raise CommandException( cmdline +"\n decoding trouble")
+            try:
+                out = out.decode("utf_8") # recupere les infos en UTF_8
+            except:
+                try:
+                    out = out.decode("latin_1")  # recupere les anciens infos (en latin_1)
+                except UnicodeDecodeError:
+                    try:
+                        out = out.decode(sys.getfilesystemencoding())
+                    except UnicodeDecodeError:
+                        raise CommandException( cmdline +"\n decoding trouble")
 
-           return out #unicode
-
-
-
+            return out #unicode
 
 
 class NotImplemented(Exception): pass
@@ -181,7 +178,6 @@ class PhotoCmd(object):
 
     def debug(self,m):
         print m
-        #pass
 
     def __init__(self,file,needAutoRename=False,needAutoRotation=False):
         assert type(file)==unicode
@@ -333,15 +329,15 @@ filedate : %s
 exifdate : %s
 thumb : %d
 isreal : %s""" % (
-            self.__file,
-            self.__readonly,
-            self.__isflash,
-            self.__resolution,
-            self.__filedate,
-            self.__exifdate,
-            len(self.__getThumbnail()),
-            self.__isreal,
-            )
+                  self.__file,
+                  self.__readonly,
+                  self.__isflash,
+                  self.__resolution,
+                  self.__filedate,
+                  self.__exifdate,
+                  len(self.__getThumbnail()),
+                  self.__isreal,
+               )
 
     def redate(self,w,d,h,m,s):
         """
@@ -453,31 +449,9 @@ isreal : %s""" % (
         assert type(file2)==unicode
         assert os.path.isfile(file2)
 
-        np = PhotoCmd(file2)
-        np.destroyInfo()
+        self.__info.copyToFile(file2)
 
-        # copy all exif/iptc info
-        l=self.__info.exifKeys() + self.__info.iptcKeys() + self.__info.xmpKeys()
-        for i in l:
-            if i not in ["Exif.Photo.UserComment",]: # key "Exif.Photo.UserComment" bugs always ?!
-                if not i.startswith("Exif.Thumbnail"):  # don't need exif.thumb things because it's rebuilded after
-                    if len(re.findall('0x0',i))==0: # Work around to fix error in pyev2 with most unknown makernoite tags
-                        # TODO: fix nasty bodge to get around pyexiv2 issues with multi part exif fields
-                        # known not to copy the following:
-                        #   - unknown maker not fields
-                        #   - lens data for canon
-                        try:
-                            np.__info[i] =self.__info[i]
-                        except:
-                            print "Problems copying %s keyword" %i
-
-        # copy comment
-        np.addComment( self.comment )
-
-        # and rebuild exif
-        np.rebuildExifTB()
-
-        return np
+        return PhotoCmd(file2)
 
     def rebuildExifTB(self):
         if self.__readonly: return False

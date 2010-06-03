@@ -22,6 +22,7 @@ pyexiv2 wrapper
 map old methods/objects from pyexiv2(<2), to be able to work with versions 1 & 2
 
 """
+import re
 import sys
 
 try:
@@ -74,7 +75,8 @@ class Exiv2Metadata(object):
         #TODO: finnish here
         print "***WARNING*** : not implemented : setThumbnailData"
     def deleteThumbnail(self):
-        self._md.previews=[]
+        #TODO: finnish here
+        print "***WARNING*** : not implemented : deleteThumbnail"
 
 
     def exifKeys(self):
@@ -132,16 +134,15 @@ class Exiv2Metadata(object):
             del self._md["Xmp.dc.subject"]
         except:
             pass
+
+
+    def copyToFile(self, destFilename, exif=True, iptc=True, xmp=True, comment=True):
+        dest = pyexiv2.imageMetadata(destFilename)
+        dest.read()
+        self._md.copy(dest, exif, iptc, xmp, comment)
+        dest.write()
+
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -186,6 +187,48 @@ class Exiv1Metadata(pyexiv2.Image):
             self["Iptc.Application2.Keywords"] = []
         except:
             pass
+
+
+    def copyToFile(self, destFilename, exif=True, iptc=True, xmp=True, comment=True):
+        dest = pyexiv2.Image(destFilename)
+        dest.readMetadata()
+        # delete all tags :
+        for i in (dest.exifKeys() + dest.iptcKeys()):
+            try:
+                del dest[i]
+            except KeyError: # 'tag not set'
+                # the tag seems not to be here, so
+                # we don't need to clear it, no ?
+                pass
+
+        dest.deleteThumbnail()   # seems not needed !
+        dest.clearComment()
+
+        # copy all exif/iptc/xmp/comment info as directed
+        l = []
+        if exif: l= l+self.exifKeys()
+        if exif: l= l+self.iptcKeys()
+        for i in l:
+            if i not in ["Exif.Photo.UserComment",]: # key "Exif.Photo.UserComment" bugs always ?!
+                if not i.startswith("Exif.Thumbnail"):  # don't need exif.thumb things because it's copied after
+                    if len(re.findall('0x0',i))==0: # Work around to fix error in pyev2 with most unknown makernoite tags
+                        # TODO: fix nasty bodge to get around pyexiv2 issues with multi part exif fields
+                        # known not to copy the following:
+                        #   - unknown maker not fields
+                        #   - lens data for canon
+                        try:
+                            dest[i] =self[i]
+                        except:
+                            print "Problems copying %s keyword" %i
+
+        # copy comment
+        if comment:
+            dest.setComment( self.getComment() )
+
+        # copy exif thumbnail
+        if exif:
+            dest.setThumbnailData(self.getThumbnailData()[1])
+        dest.writeMetadata()
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
@@ -206,7 +249,7 @@ if __name__ == "__main__":
     t.readMetadata()
 
     #----
-    aa=t._md["Xmp.dc.subject"].raw_value[0]
+    aa=t._image["Xmp.dc.subject"].raw_value[0]
     import chardet; print chardet.detect(aa) # in fact, it's latin1 encoded as utf8
     print aa.decode("utf_8").encode("latin1")
     #----
