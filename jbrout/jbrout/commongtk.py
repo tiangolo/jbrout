@@ -17,6 +17,7 @@ pygtk.require('2.0')
 import gtk,os,gobject
 import common
 import sys
+import re
 #~ from __main__ import _
 from libs.gladeapp import GladeApp
 from subprocess import Popen, PIPE
@@ -68,13 +69,34 @@ class WinKeyTag(GladeApp):
         l.clear()
         s=unicode(s).upper()
         s=unicodedata.normalize('NFD',s)
-        s=s.encode('ascii','ignore')
+
+        use_regexp=0
+        if s.find("*") > -1 or s.endswith("$"):
+            # Convert s into a regexp
+            use_regexp=1
+            s=re.escape(s)
+            s=s.replace("\*",".*")
+            if s.endswith("\$"):
+                s=s[0:len(s)-2]+"$"
+
         for t,c in self.liste:
             u=unicode(t).upper()
             u=unicodedata.normalize('NFD',u)
             u=u.encode('ascii','ignore')
-            if u.upper().startswith(s):
-                l.append( (t,"(%s)"%c) )
+            if use_regexp:
+                if re.match(s, u.upper()):
+                    l.append( (t,"(%s)"%c) )
+            else:
+                if u.upper().startswith(s):
+                    l.append( (t,"(%s)"%c) )
+
+        #~ s=s.encode('ascii','ignore')
+        #~ for t,c in self.liste:
+            #~ u=unicode(t).upper()
+            #~ u=unicodedata.normalize('NFD',u)
+            #~ u=u.encode('ascii','ignore')
+            #~ if u.upper().startswith(s):
+                #~ l.append( (t,"(%s)"%c) )
 
     def on_text_changed(self,w):
         t=w.get_text().strip()
