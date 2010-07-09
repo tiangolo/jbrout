@@ -119,7 +119,7 @@ class WinShow(GladeApp):
 
             bb = gtk.ToolButton(image)
             txt = props["label"]
-            if props["key"]: txt+=" (ctrl + %s)"%props["key"]            
+            if props["key"]: txt+=" (ctrl + %s)"%props["key"]
             bb.set_tooltip(self.tooltips, txt)
             bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
             self.toolbar1.insert(bb, 3)
@@ -147,7 +147,7 @@ class WinShow(GladeApp):
             #TODO: if plugin "redate" is called, we'll need to redraw "time tab"
 
     def on_eb_scroll_event(self,widget,b):
-        print "eb scroll event !"
+        #print "eb scroll event !"
         if int(b.direction)==1:
             self.idx+=1
         else:
@@ -158,12 +158,12 @@ class WinShow(GladeApp):
         key= gtk.gdk.keyval_name(b.keyval).lower()
         isCtrl = b.state & gtk.gdk.CONTROL_MASK
         if isCtrl:
-            currentNode = self.ln[self.idx]            
+            currentNode = self.ln[self.idx]
             if self.isModify and not currentNode.isReadOnly:
                 pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True)
             else:
                 pluginsWithKey = JBrout.plugins.request("PhotosProcess",isKey=True,isAlter=False)
-            
+
             for instance,callback,props in pluginsWithKey:
                 if props["key"]==key:
                     self.on_selecteur_menu_select_plugin("?!?",callback)   #TODO: what's ib ? see "?!?"
@@ -183,7 +183,7 @@ class WinShow(GladeApp):
                 self.draw()
             elif key=="escape":
                 self.quit();
-    
+
             elif key=="space":
                 # add/remove this photo to selection
                 node=self.ln[self.idx]
@@ -216,7 +216,7 @@ class WinShow(GladeApp):
                             tag = ret[0]
                             currentNode.addTag(tag)
                             self.draw()
-    
+
                 return 0
 
     def draw(self,forceReload=False):
@@ -482,7 +482,7 @@ def render(pb,maxw,maxh,zoom=1,pointer_position=(0,0,0,0)):
         x,y=maxw/2 - min(wx-maxw/2, max(maxw/2,dwx*ratiox)), maxh/2 - min(wy-maxh/2, max(maxh/2, dwy*ratioy))
     else:
         x,y=(maxw - dwx)*ratiox,(maxh - dwy)*ratioy
-    
+
     return pb,x,y
 
 class Display(object):
