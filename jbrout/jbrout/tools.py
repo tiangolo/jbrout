@@ -26,7 +26,7 @@ MAJOR CHANGES :
   - addition of transfrom command (rotate is now depricated)
 """
 import os,sys
-import pyexiv
+from jbrout import pyexiv
 
 import time
 from datetime import datetime,timedelta

@@ -270,7 +270,7 @@ def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK
 ##############################################################################
 
 from StringIO import StringIO
-import pyexiv
+from jbrout import pyexiv
 
 import os
 

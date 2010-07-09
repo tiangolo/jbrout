@@ -29,7 +29,7 @@ import re
 import shutil
 
 from libs import extListview
-import pyexiv
+from jbrout import pyexiv
 from libs.gladeapp import GladeApp
 
 from jbrout.common import format_file_size_for_display,ed2d,dnd_args_to_dir_list
