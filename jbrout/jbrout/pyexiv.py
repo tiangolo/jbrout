@@ -137,7 +137,7 @@ class Exiv2Metadata(object):
 
 
     def copyToFile(self, destFilename, exif=True, iptc=True, xmp=True, comment=True):
-        dest = pyexiv2.imageMetadata(destFilename)
+        dest = pyexiv2.ImageMetadata(destFilename)
         dest.read()
         self._md.copy(dest, exif, iptc, xmp, comment)
         dest.write()
