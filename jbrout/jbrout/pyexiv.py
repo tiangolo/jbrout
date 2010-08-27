@@ -44,7 +44,7 @@ class Exiv2Metadata(object):
     def readMetadata(self):
         return self._md.read()
     def writeMetadata(self):
-        self._md["Iptc.Envelope.CharacterSet"] = '\x1b%G' # set Charset as UTF8
+        self._md["Iptc.Envelope.CharacterSet"] = ['\x1b%G',] # set Charset as UTF8
         return self._md.write()
     def __getitem__(self,k):
         v=self._md[k]
@@ -163,7 +163,7 @@ class Exiv1Metadata(pyexiv2.Image):
 
 
     def writeMetadata(self):
-        self["Iptc.Envelope.CharacterSet"] = '\x1b%G'   # set Charset as UTF8
+        self["Iptc.Envelope.CharacterSet"] = ['\x1b%G',]   # set Charset as UTF8
         return pyexiv2.Image.writeMetadata(self)
 
 
