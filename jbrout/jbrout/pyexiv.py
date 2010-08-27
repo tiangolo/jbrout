@@ -44,6 +44,7 @@ class Exiv2Metadata(object):
     def readMetadata(self):
         return self._md.read()
     def writeMetadata(self):
+        self._md["Iptc.Envelope.CharacterSet"] = '\x1b%G' # set Charset as UTF8
         return self._md.write()
     def __getitem__(self,k):
         v=self._md[k]
@@ -103,6 +104,7 @@ class Exiv2Metadata(object):
 
     def getTags(self):
         """ return a list of merged tags (xmp+iptc) (list of str)"""
+        
         try:
             li=[str(i.strip("\x00")) for i in self._md["Iptc.Application2.Keywords"].values]    #digikam patch
             # assume UTF8
@@ -158,6 +160,12 @@ class Exiv1Metadata(pyexiv2.Image):
     """ pyexiv2 < 0.2 """
     def __init__(self,f):
         pyexiv2.Image.__init__(self,f)
+
+
+    def writeMetadata(self):
+        self["Iptc.Envelope.CharacterSet"] = '\x1b%G'   # set Charset as UTF8
+        return pyexiv2.Image.writeMetadata(self)
+
 
     #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
     def xmpKeys(self):
