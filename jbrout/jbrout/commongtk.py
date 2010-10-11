@@ -69,7 +69,7 @@ class WinKeyTag(GladeApp):
         l.clear()
         s=unicode(s).upper()
         s=unicodedata.normalize('NFD',s)
-        #~ s=s.encode('ascii','ignore')
+        s=s.encode('ascii','ignore')
 
         use_regexp=0
         if s.find("*") > -1 or s.endswith("$"):

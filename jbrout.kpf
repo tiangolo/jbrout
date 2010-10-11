@@ -6,7 +6,7 @@
 komodo.assertMacroVersion(2);
 if (komodo.view) { komodo.view.setFocus() };
 komodo.doCommand('cmd_save')
-Run_RunEncodedCommand(window, 'python2.5 -u %p/jbrout/jbrout.py');
+Run_RunEncodedCommand(window, 'python2.6 -u %p/jbrout/jbrout.py');
 if (komodo.view) { komodo.view.setFocus() };</macro>
 <command cwd="%p" doNotOpenOutputWindow="0" env="" icon="chrome://famfamfamsilk/skin/icons/application_tile_horizontal.png" id="86d020f9-6a34-4d7f-8107-512350368247" idref="328dcabd-3f49-400e-93ca-0118c869dc4d" insertOutput="0" keyboard_shortcut="" name="glade" operateOnSelection="0" parseOutput="0" parseRegex="" runIn="no-console" showParsedOutputList="0">
 glade-3 jbrout/data/jbrout.glade</command>
