@@ -143,9 +143,9 @@ class DBPhotos:
 
             for child in children:
                 if child.split('.')[-1].lower() in supportedFormats :
-                    #~ file = os.path.join(basepath, child).decode( sys.getfilesystemencoding() )
                     file = os.path.join(basepath, child)
-                    files.append((file,nodeDir))
+                    if os.path.isfile(file):
+                        files.append((file,nodeDir))
 
         yield len(files)   # first yield is the total number of files
 
