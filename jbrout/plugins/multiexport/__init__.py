@@ -359,8 +359,8 @@ class Plugin(JPlugin):
                             nodeAlbum.append(nodeImg)
 
                         elif type == "PW":
-                            # album.uploadPhoto(file,photo.comment) (pycasaweb)
-                            album.uploadPhoto(file)
+                            album.uploadPhoto(file,photo.comment) # (pycasaweb)
+                            #album.uploadPhoto(file)
                         elif type == "FR":
                             err=flickr_uploader.upload(file,photo.comment,photo.tags,window_export.getPrivacyFR(photo))
                             if err: raise Exception(err)

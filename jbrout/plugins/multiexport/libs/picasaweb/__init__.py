@@ -32,11 +32,11 @@ class PicasaWeb(gdata.service.GDataService):
         try:
             self.ProgrammaticLogin()
         except gdata.service.CaptchaRequired:
-            raise 'Required Captcha'
+            raise Exception('Required Captcha')
         except gdata.service.BadAuthentication:
-            raise 'Bad Authentication'
+            raise Exception('Bad Authentication')
         except gdata.service.Error:
-            raise 'Login Error'
+            raise Exception('Login Error')
 
     def getAlbums(self):
         try:
@@ -47,7 +47,7 @@ class PicasaWeb(gdata.service.GDataService):
                     )
             return [PicasaAlbum(self,a) for a in albums.entry]
         except:
-            raise "GetAlbums() error ?!"
+            raise Exception("GetAlbums() error ?!")
 
 
     def createAlbum(self,folderName,public=True):
@@ -77,13 +77,19 @@ class PicasaAlbum(object):
         self.__gd=gd
         self.__ae=album_entry
 
-    def uploadPhoto(self,file):
+    def uploadPhoto(self,file, description=""):
         ms = gdata.MediaSource()
 
         try:
             ms.setFile(file, 'image/jpeg')
+            metadata_entry = gdata.GDataEntry()
+            name = os.path.basename(file)
+            metadata_entry.title = atom.Title(text=name)
+            metadata_entry.summary = atom.Summary(text=description)
+            metadata_entry.category.append(atom.Category(scheme = 'http://schemas.google.com/g/2005#kind', term = 'http://schemas.google.com/photos/2007#photo'))
+
             link = self.__ae.link[0].href # self.__ae.GetFeedLink().href on created album
-            media_entry = self.__gd.Post(None,link, media_source = ms)
+            media_entry = self.__gd.Post(metadata_entry,link, media_source = ms)
             return True
         except gdata.service.RequestError:
             return False
