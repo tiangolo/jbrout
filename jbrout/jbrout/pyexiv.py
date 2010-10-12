@@ -104,15 +104,14 @@ class Exiv2Metadata(object):
 
     def getTags(self):
         """ return a list of merged tags (xmp+iptc) (list of str)"""
-        
-        try:
+        if "Iptc.Application2.Keywords" in self._md.iptc_keys:
             li=[str(i.strip("\x00")) for i in self._md["Iptc.Application2.Keywords"].values]    #digikam patch
             # assume UTF8
-        except KeyError:
+        else:
             li=[]
-        try:
+        if "Xmp.dc.subject" in self._md.xmp_keys:
             lx=[i.encode("utf_8") for i in self._md["Xmp.dc.subject"].value]
-        except KeyError:
+        else:
             lx=[]
         ll=list(set(li+lx))
         ll.sort()
@@ -128,14 +127,10 @@ class Exiv2Metadata(object):
 
 
     def clearTags(self):
-        try:
+        if "Iptc.Application2.Keywords" in self._md.iptc_keys:
             del self._md["Iptc.Application2.Keywords"]
-        except:
-            pass
-        try:
+        if "Xmp.dc.subject" in self._md.xmp_keys:
             del self._md["Xmp.dc.subject"]
-        except:
-            pass
 
 
     def copyToFile(self, destFilename, exif=True, iptc=True, xmp=True, comment=True):
