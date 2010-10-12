@@ -170,6 +170,7 @@ class PhotoCmd(object):
     isflash = property(lambda self:self.__isflash)
     resolution = property(lambda self:self.__resolution)
     comment = property(lambda self:self.__comment)
+    rating = property(lambda self:self.__rating)
     tags = property(lambda self:self.__tags)
     isreal = property(lambda self:self.__isreal)
 
@@ -300,6 +301,23 @@ class PhotoCmd(object):
             self.__isflash    =""
 
         self.__comment = decode(self.__info.getComment())
+
+        try:
+           # Read the RatingPercent key first
+           r = int(self.__info["Exif.Image.RatingPercent"])
+           if r>=99:  r=5
+           elif r>1:  r=1+r/25
+           elif r<=0: r=0
+           self.__rating = r
+        except KeyError:
+          try:
+           # Fallback to Rating if RatingPercent is not available
+           r = int(self.__info["Exif.Image.Rating"])
+           if   r<0: r=0
+           elif r>5: r=5
+           self.__rating = r
+          except KeyError:
+           self.__rating = None # dont touch if no rating tag was set before
 
         self.__tags = [decode(i) for i in self.__info.getTags()]
 
@@ -499,6 +517,17 @@ isreal : %s""" % (
         self.__maj()
         return True
 
+    def addRating(self,r):
+    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+        assert type(r)==int
+        self.__info["Exif.Image.Rating"]=r # short, but libexiv2 should convert this
+        if r>=5:   r=99
+        elif r>1:  r=(r-1)*25
+        elif r<=0: r=0
+        self.__info["Exif.Image.RatingPercent"]=r # short, but libexiv2 should convert this
+        self.__maj() # save it
+        return True
+
     def rotate(self,sens):
     # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         """ rotate LOSSLESS the picture 'file', and its internal thumbnail according 'sens' (R/L)"""
@@ -683,6 +712,12 @@ class XMPUpdater():
             return 1
         self.DoSaveXmp()
 
+    def UpdateXmpRating(self):
+        """Save Rating to XMP if option is on"""
+        if not self.synchronizeXmp:
+            return 1
+        self.DoSaveXmpRating()
+
     def DoMergeXmpIptc(self):
         """Import XMP subjects, merge with IPTC keywords and save to both"""
         if not self.synchronizeXmp:
@@ -716,6 +751,15 @@ class XMPUpdater():
             return 1
         command=[_Command._exiftool]
         command.extend(["-r", "-overwrite_original", "-subject< keywords"])
+        command.extend(self.pictures)
+        ret= _Command._run(command)
+
+    def DoSaveXmpRating(self):
+        """Save rating to XMP"""
+        if not self.synchronizeXmp:
+            return 1
+        command=[_Command._exiftool]
+        command.extend(["-r", "-overwrite_original", "-XMP:Rating< EXIF:Rating", "-XMP:RatingPercent< EXIF:RatingPercent"])
         command.extend(self.pictures)
         ret= _Command._run(command)
 

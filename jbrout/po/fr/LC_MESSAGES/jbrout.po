@@ -17,6 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "can't add rating to a readonly picture"
+msgstr "Impossible d'attribuer une note à une photo protégée en écriture"
+msgid "Rating"
+msgstr "Notation"
+msgid "Rating:%s"
+msgstr "Notation:%s"
+msgid "_Rating"
+msgstr "_Notation"
+msgid "Rate this"
+msgstr "Attribuer une note"
+
 #: ../jbrout.py:88
 msgid "Jbrout Error"
 msgstr "Jbrout erreur"

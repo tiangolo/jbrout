@@ -577,6 +577,14 @@ class PhotoNode(object):
             return ""
     comment = property(__getComment)
 
+    def __getRating(self): # 0x4746 18246 IFD0 Exif.Image.Rating Short
+            ln = self.__node.xpath("r") # saved decimal like <r>5</r>
+            if ln:
+                return int(ln[0].text)
+            else:
+                return 0
+    rating = property(__getRating)
+
     def __getDate(self): return self.__node.attrib["date"]  # if exif -> exifdate else filedate
     date = property(__getDate)
 
@@ -699,6 +707,13 @@ class PhotoNode(object):
 
         pc = PhotoCmd(self.file)
         if pc.addComment(txt):
+            self.updateInfo(pc)
+
+    def setRating(self,val):
+        assert type(val)==int
+
+        pc = PhotoCmd(self.file)
+        if pc.addRating(val): # always true
             self.updateInfo(pc)
 
     def addTag(self,tag):
@@ -869,6 +884,10 @@ class PhotoNode(object):
             nodeComment = Element("c")
             nodeComment.text = pc.comment.replace(u'\x00',u' ')
             self.__node.append(nodeComment)
+        if pc.rating:
+            nodeRating = Element("r")
+            nodeRating.text = str(pc.rating)
+            self.__node.append(nodeRating)
 
         if wasInBasket:
             self.addToBasket()
@@ -884,6 +903,7 @@ class PhotoNode(object):
         info["tags"] = pc.tags
         info["comment"] = pc.comment
         info["exifdate"] = pc.exifdate
+        info["rating"] = pc.rating # huh, did i use that?
         info["filedate"] = pc.filedate
         info["resolution"] = pc.resolution
         info["readonly"] = pc.readonly

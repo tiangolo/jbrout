@@ -152,7 +152,7 @@ class ListView(ThumbnailsView):
         using jbrout.listview
     """
 
-    choix = [_("Tags"),_("Comment"),_("Album"),_("Date"),_("Name")]
+    choix = [_("Tags"),_("Comment"),_("Album"),_("Date"),_("Name"),_("Rating")] # for the display menu
 
     def __init__(self, parent,allow_dragndrop):
         """ initialize display when JBrout starts """
@@ -187,6 +187,9 @@ class ListView(ThumbnailsView):
                     if ret:
                         tag = ret[0]
                         self.parentWin.setTagsOnSelected(self,[tag,])
+                elif event.string>='0' and event.string<='5':
+                    # capture keypad 0-5 for rating
+                    self.parentWin.setRatingOnSelected(self, int(event.string))
             self.grab_focus()
 
         #if JBrout.modify:
@@ -220,7 +223,8 @@ class ListView(ThumbnailsView):
             try:
                 photo_node = self.items[focusedItem]
                 #info_text = photo_node.name+" - "+photo_node.resolution+" - "+cd2d(photo_node.date).strftime('%d %B %Y %H:%M')+ " - " + ", ".join(photo_node.tags)
-                info_text = "%d/%d" % (focusedItem+1,len(self.items) )+" - "+photo_node.name+" - "+photo_node.resolution+" - "+cd2d(photo_node.date).strftime('%d %B %Y %H:%M')+ " - " + ", ".join(photo_node.tags)
+                #info_text = "%d/%d" % (focusedItem+1,len(self.items) )+" - "+photo_node.name+" - "+photo_node.resolution+" - "+cd2d(photo_node.date).strftime('%d %B %Y %H:%M')+ " - " + ", ".join(photo_node.tags)
+                info_text = "%d/%d" % (focusedItem+1,len(self.items) )+" - "+photo_node.name+" - "+photo_node.resolution+" - "+cd2d(photo_node.date).strftime('%d %B %Y %H:%M')+ " - [%s/5]" % photo_node.rating + " - " + ", ".join(photo_node.tags)
             except:
                 info_text=""
         elif nbSelected>0:
@@ -269,6 +273,11 @@ class ListView(ThumbnailsView):
                 l.sort( cmp=lambda x,y: cmp(x.file,y.file))
             else:
                 l.sort( cmp=lambda x,y: -cmp(x.file,y.file))
+        elif orderBy == "Rating": # order by rating
+            if orderAscending:
+                l.sort( cmp=lambda x,y: cmp(x.rating,y.rating))
+            else:
+                l.sort( cmp=lambda x,y: -cmp(x.rating,y.rating))
         self.set_photos(l)
 
     def remove(self,n):
@@ -301,6 +310,7 @@ class ListView(ThumbnailsView):
         #~ self.update_layout()
         self.invalidate_view()
 
+    rating_stars = [i*'*' + (5-i)*'-' for i in range (0,6)] # constant to optimize display
     def get_text(self, idx):               # override !
         node = self.items[idx]
 
@@ -309,7 +319,8 @@ class ListView(ThumbnailsView):
             node.comment,
             node.folderName,
             cd2rd(node.date),
-            node.name
+            node.name,
+            '[' + self.rating_stars[node.rating] + ']'
         ] [self.select]
 
         return a
@@ -326,25 +337,31 @@ class ListView(ThumbnailsView):
         if not self.is_thumb(idx):
             Buffer.images[node.file]=node.getThumb()
         pb=Buffer.images[node.file]
+        pb2=0
 
         if node.isInBasket:
-            pb2 = pb.copy()
+            if pb2==0: pb2 = pb.copy()
             Buffer.pbBasket.copy_area(0, 0, 15, 13, pb2, 7, 7)
-            pb=pb2
 
         if node.isReadOnly:
-            pb2 = pb.copy()
+            if pb2==0: pb2 = pb.copy()
             wx= pb.get_width()
             Buffer.pbReadOnly.copy_area(0, 0, 15, 13, pb2, wx-22,7)
-            pb=pb2
 
         if node.name.split('.')[-1].lower() in rawFormats:
-            pb2 = pb.copy()
+            if pb2==0: pb2 = pb.copy()
             wx= pb.get_width()
             Buffer.pixRaw.copy_area(0, 0, 15, 13, pb2, wx-44,7)
-            pb=pb2
 
+        if node.rating:
+            if pb2==0: pb2 = pb.copy()
+            i=0
+            while i<node.rating:
+                Buffer.pbReadOnly.copy_area(5, 4, 5, 5, pb2, 25+7*i,11)
+                i += 1
 
+        if pb2<>0: pb = pb2 
+            
         return pb
 
 
@@ -1162,6 +1179,8 @@ class Window(GladeApp):
             self.menuOrderBy.set_active(1)
         elif JBrout.conf["orderBy"] == "File":
             self.menuOrderByFile.set_active(1)
+        elif JBrout.conf["orderBy"] == "Rating":
+            self.menuOrderByRating.set_active(1)
 
         self.tvFilteredTags.connect("row_activated",self.on_treeviewtags_row_activated)
         self.tvFilteredAlbums.connect("row_activated",self.on_treeviewdb_row_activated)
@@ -1227,6 +1246,12 @@ class Window(GladeApp):
 
         self.setSearchCombo(self.cb_format,[_("Any"),_("Landscape"),_("Portrait")],0)
 
+        # rating search list button
+        cell = gtk.CellRendererText()
+        self.cb_rating.pack_start(cell, True)
+        self.cb_rating.add_attribute(cell, 'text',0)
+        self.setSearchCombo(self.cb_rating,[_("Any")] + [">=%s" % i for i in range(1,6)] + ["=%s" % i for i in range(0,6)] + ["<%s" % i for i in range(1,6)], 0)
+
         ###################
         def filename(column, cell, model, iter):
             cell.set_property('text', model.get_value(iter, 0))
@@ -1274,13 +1299,25 @@ class Window(GladeApp):
         #=============================================================================
 
 
+    def on_orderby_changed(self,checkmenuitem,*args):
+        """change display order by (menu)"""
+        # there are 3 items in this group, all of them connected to this handler
+        # -> only handle activation (ignore the related deactivation)
+        if not(checkmenuitem.get_active()): return
+
+        if self.menuOrderBy.get_active():
+            JBrout.conf["orderBy"] = "Date"
+        elif self.menuOrderByFile.get_active():
+            JBrout.conf["orderBy"] = "File"
+        elif self.menuOrderByRating.get_active():
+            JBrout.conf["orderBy"] = "Rating"
+
+        # live change
+        self.tbl.init(self.tbl.items,JBrout.conf["orderAscending"],JBrout.conf["orderBy"])
+
     def on_order_changed(self,*args):
         """change display order ascending/descending (menu)"""
         JBrout.conf["orderAscending"] = (self.menuAscending.get_active()==1)
-        if self.menuOrderBy.get_active():
-            JBrout.conf["orderBy"] = "Date"
-        else:
-            JBrout.conf["orderBy"] = "File"
 
         # live change
         self.tbl.init(self.tbl.items,JBrout.conf["orderAscending"],JBrout.conf["orderBy"])
@@ -1366,7 +1403,7 @@ class Window(GladeApp):
         self.__saveSelection = (title,xpath)
         self.mode = mode
         self.main_widget.set_title(_("%s (%d photo(s))") % (title,len(ln)))
-        self.tbl.init(ln,JBrout.conf["orderAscending"])
+        self.tbl.init(ln,JBrout.conf["orderAscending"],JBrout.conf["orderBy"])
         if mode != Window.MODEFOLDER:
             self.comment.hide()
 
@@ -1751,6 +1788,20 @@ class Window(GladeApp):
                 menu.append( makeItem(_("Select this folder"), self.on_selecteur_menu_select_folder,widget ))
                 menu.append( makeItem(_("Select this time"), self.on_selecteur_menu_select_time,widget ))
 
+            rmenu = gtk.Menu() # build the set rating context menu
+            for points in range(0,6):
+                val = points
+                txt = str(points)+"/5"
+                item = gtk.ImageMenuItem( txt )
+                item.value = val
+                rmenu.append(item)
+                item.connect("activate",self.on_selecteur_menu_select_rate,widget, widget)
+
+            smenur=gtk.ImageMenuItem(_("Rate this"))
+            smenur.set_submenu(rmenu)
+            smenur.show_all()
+            menu.append(smenur) # add the reting submenu to the context menu
+
             menu2 = gtk.Menu()
 
             if canModify:
@@ -1891,6 +1942,11 @@ class Window(GladeApp):
         model=self.treeviewdb.get_model()
         model.activeBasket()
         sel.refresh()
+
+    # set rating context menu handler
+    def on_selecteur_menu_select_rate(self,b,sel,id):
+        self.setRatingOnSelected(sel,b.value)
+        pass
 
     def on_selecteur_menu_select_folder(self,b,sel):
         ln = sel.getSelected()
@@ -2059,6 +2115,22 @@ class Window(GladeApp):
         #~ context, x, y, selection, info, time = args
         #~ dragFrom =context.get_source_widget().__class__.__name__
         #~ print dragFrom
+
+    def setRatingOnSelected(self,sel,r):
+        if r>=0 and r<=5:
+            ln = sel.getSelected()
+            try:
+                for i in ln:
+                    self.showProgress(ln.index(i),len(ln),_("Rating"))
+                    if i.isReadOnly:
+                        beep(_("can't add rating to a readonly picture"))
+                    else:
+                        i.setRating(r)
+            finally:
+                self.showProgress()
+            XMPUpdater(ln).UpdateXmpRating()
+
+            sel.refresh()
 
 
     ###################################################################################
@@ -2879,6 +2951,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         model = self.tvSearch.get_model()
         model.cleanSelections()
         self.cb_format.set_active(0)
+        self.cb_rating.set_active(0)
         self.e_pcom.set_text("")
         self.e_acom.set_text("")
         self.hs_from.set_value(0)
@@ -2939,6 +3012,16 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         if self.cb_format.get_active()==2: # portrait
             ops.append( u"substring-before(@resolution, 'x')<substring-after(@resolution, 'x')" )
             tops.append(_("Format:Portrait"))
+
+	if self.cb_rating.get_active():
+            t=self.cb_rating.get_active_text()
+            # find rating in the db <r> tag
+            op = u"r%s" % t
+            if t.find("=0")>-1 or t.find("<")>-1:
+                # to find rating zero, include missing db <r> tag
+                op = u"not(r) or " + op
+            ops.append( op )
+            tops.append( _(u"Rating:%s") % t )
 
         tcom,op = string2ops(self.e_pcom.get_text(), mkpcom)
         if op:

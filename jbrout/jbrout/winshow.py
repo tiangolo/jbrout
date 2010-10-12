@@ -216,6 +216,11 @@ class WinShow(GladeApp):
                             tag = ret[0]
                             currentNode.addTag(tag)
                             self.draw()
+                    elif b.string>='0' and b.string<='5':
+                        # capture keypad 0-5 for rating
+                        currentNode.setRating(int(b.string))
+                        self.draw()
+                        XMPUpdater([currentNode]).UpdateXmpRating()
 
                 return 0
 
@@ -252,6 +257,8 @@ class WinShow(GladeApp):
     #        filedate=cd2rd(info["filedate"])
             filesize=format_file_size_for_display(info["filesize"])
 
+            rating=info["rating"]
+
             msg = _("""
 %(exifdate)s
 
@@ -262,6 +269,8 @@ FILENAME :
 
 ALBUM :
 %(folder)s
+
+RATING : %(rating)s/5
 
 COMMENT :
 %(comment)s
@@ -304,6 +313,7 @@ TAGS :
             print "*ERROR* bad characters in jpeg info : ",m
         d.isSelected = (node in self.selected)
         d.nbSelected = len(self.selected)
+        d.rating = rating
         self.viewer.show( d,self.zoom,self.pointer_position )
         gc.collect()
 
@@ -412,6 +422,12 @@ class ImageShow(gtk.DrawingArea):
                     context.rel_move_to(5,0)
                     context.set_font_size(12)
                     context.show_text(_("(%d selected)") % self.display.nbSelected)
+                    
+                if self.display.rating:
+                    context.move_to(rect.width-35, 20)
+                    context.set_source_rgb(1,1,1)
+                    context.set_font_size(12)
+                    context.show_text((self.display.rating*"*")+((5-self.display.rating)*"-"))
 
             #if self.display.info:
             #    wx=200
