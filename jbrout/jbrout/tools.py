@@ -302,22 +302,21 @@ class PhotoCmd(object):
 
         self.__comment = decode(self.__info.getComment())
 
-        try:
-           # Read the RatingPercent key first
-           r = int(self.__info["Exif.Image.RatingPercent"])
-           if r>=99:  r=5
-           elif r>1:  r=1+r/25
-           elif r<=0: r=0
-           self.__rating = r
-        except KeyError:
-          try:
-           # Fallback to Rating if RatingPercent is not available
-           r = int(self.__info["Exif.Image.Rating"])
-           if   r<0: r=0
-           elif r>5: r=5
-           self.__rating = r
-          except KeyError:
-           self.__rating = None # dont touch if no rating tag was set before
+        if "Exif.Image.RatingPercent" in self.__info.exifKeys():
+            # Read the RatingPercent key first
+            r = int(self.__info["Exif.Image.RatingPercent"])
+            if r>=99:  r=5
+            elif r>1:  r=1+r/25
+            elif r<=0: r=0
+            self.__rating = r
+        elif "Exif.Image.Rating" in self.__info.exifKeys():
+            # Fallback to Rating if RatingPercent is not available
+            r = int(self.__info["Exif.Image.Rating"])
+            if   r<0: r=0
+            elif r>5: r=5
+            self.__rating = r
+        else:
+            self.__rating = None # dont touch if no rating tag was set before
 
         self.__tags = [decode(i) for i in self.__info.getTags()]
 
