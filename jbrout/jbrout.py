@@ -1168,7 +1168,7 @@ class Window(GladeApp):
         self.tvFilteredTime.connect("row_activated",self.on_selectDate_row_activated)
 
         w,h=JBrout.conf["width"] or 800,JBrout.conf["height"] or 600
-        x,y=JBrout.conf["x_pos"] or 0,JBrout.conf["y_pos"] or 0
+        x,y=int(JBrout.conf["x_pos"] or 0), int(JBrout.conf["y_pos"] or 0)
 
 
         self.main_widget.set_gravity(gtk.gdk.GRAVITY_NORTH_WEST)
