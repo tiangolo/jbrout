@@ -182,6 +182,11 @@ class DBPhotos:
                             needAutoRename=DBPhotos.normalizeName,
                             needAutoRotation=DBPhotos.autorotAtImport,
                            )
+            if iii.exifdate=="":
+                # exif is not present, and photocmd can't reach
+                # to recreate minimal exif tags (because it's readonly ?)
+                # we can't continue to import this photo
+                raise Exception("Exif couldn't be set in this picture (readonly?)")
         except:
             # getback the stack trace exception
             import traceback
