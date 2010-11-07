@@ -59,7 +59,7 @@ import gobject
 
 try:
     __version__ = open(os.path.join(os.path.dirname(__file__),
-        "data","version.txt")).read().strip()
+                                    "data","version.txt")).read().strip()
 except:
     __version__ = "src"
 
@@ -164,17 +164,20 @@ class ListView(ThumbnailsView):
         if allow_dragndrop:
             # allow drag
             self.drag_source_set(gtk.gdk.BUTTON1_MASK | gtk.gdk.BUTTON2_MASK,
-                  [('to_albums', 0, 111),('text/uri-list',0,0)], gtk.gdk.ACTION_COPY )  # copy only !
+                                 [('to_albums', 0, 111),('text/uri-list',0,0)],
+                                 gtk.gdk.ACTION_COPY )  # copy only !
             self.connect("drag_data_get",self.on_drag_data_get_data)
 
             # allow drop
-            self.drag_dest_set(gtk.DEST_DEFAULT_ALL, [('from_tags', 0, 111),('from_ftags', 0, 112),],
-                gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
+            self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
+                               [('from_tags', 0, 111),
+                                ('from_ftags', 0, 112),],
+                               gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
             self.connect("drag_data_received",self.on_drag_data_received_data)
 
     def on_drag_data_get_data(self, listview, context, selection, target_id, etime):
-           data = ["file://localhost"+i.file+"\r\n" for i in listview.getSelected()]
-           selection.set(selection.target, 8, "".join(data))
+        data = ["file://localhost"+i.file+"\r\n" for i in listview.getSelected()]
+        selection.set(selection.target, 8, "".join(data))
 
     def on_key_press_for_tag(self,widget,event):
         """ Add tags to photos """
@@ -321,7 +324,7 @@ class ListView(ThumbnailsView):
             cd2rd(node.date),
             node.name,
             '[' + self.rating_stars[node.rating] + ']'
-        ] [self.select]
+            ] [self.select]
 
         return a
 
@@ -360,8 +363,8 @@ class ListView(ThumbnailsView):
                 Buffer.pbReadOnly.copy_area(5, 4, 5, 5, pb2, 25+7*i,11)
                 i += 1
 
-        if pb2<>0: pb = pb2 
-            
+        if pb2<>0: pb = pb2
+
         return pb
 
 
@@ -861,9 +864,9 @@ class Window(GladeApp):
         #=============================================================================
         if not JBrout.conf.has_key("normalizeName"):
             ret=InputQuestion(self.main_widget,
-                _('Do you want JBrout to rename your imported photos according to their create timestamp (Recommended) ?'),
-                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
-             )
+                              _('Do you want JBrout to rename your imported photos according to their create timestamp (Recommended) ?'),
+                              buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
+                              )
             if ret:
                 JBrout.conf["normalizeName"] = True
             else:
@@ -871,9 +874,9 @@ class Window(GladeApp):
 
         if not JBrout.conf.has_key("synchronizeXmp"):
             ret=InputQuestion(self.main_widget,
-                _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
-                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
-             )
+                              _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
+                              buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
+                              )
             if ret:
                 JBrout.conf["synchronizeXmp"] = True
             else:
@@ -884,9 +887,9 @@ class Window(GladeApp):
 
         if not JBrout.conf.has_key("autorotAtImport"):    # key not present
             ret=InputQuestion(self.main_widget,
-                _('Do you want JBrout to auto-rotate your imported photos according to their orientation tag (Recommended) ?'),
-                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
-             )
+                              _('Do you want JBrout to auto-rotate your imported photos according to their orientation tag (Recommended) ?'),
+                              buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
+                              )
             if ret:
                 JBrout.conf["autorotAtImport"] = True
             else:
@@ -1011,34 +1014,32 @@ class Window(GladeApp):
         self.main_widget.set_title("JBrout "+__version__)
 
         if JBrout.modify:
-            TARGETS = [
-            ('MY_TREE_MODEL_ROW', gtk.TARGET_SAME_WIDGET, 0),
-            #~ ('text/plain', 0, 1),
-            ('TEXT', 0, 2),
-            ('STRING', 0, 3),
-            ]
-            self.treeviewdb.enable_model_drag_source( gtk.gdk.BUTTON1_MASK,
-                                                    [TARGETS[0]],
-                                                    gtk.gdk.ACTION_DEFAULT|
-                                                    gtk.gdk.ACTION_COPY)
+            TARGETS = [('MY_TREE_MODEL_ROW', gtk.TARGET_SAME_WIDGET, 0),
+                       #~ ('text/plain', 0, 1),
+                       ('TEXT', 0, 2),
+                       ('STRING', 0, 3),]
+            self.treeviewdb.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
+                                                     [TARGETS[0]],
+                                                     gtk.gdk.ACTION_DEFAULT|
+                                                     gtk.gdk.ACTION_COPY)
             self.treeviewdb.enable_model_drag_dest([TARGETS[0]]+[("to_albums",0,0)],                 # can receive from self and selecteur
-                                                 gtk.gdk.ACTION_DEFAULT)
+                                                   gtk.gdk.ACTION_DEFAULT)
 
 
             self.btn_addFolder.drag_dest_set(gtk.DEST_DEFAULT_ALL, [( 'text/uri-list', 0, 1 ),('text/plain', 0, 1)], # drag from os
-                                            gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
+                                             gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
 
 
-            self.treeviewtags.enable_model_drag_source( gtk.gdk.BUTTON1_MASK|gtk.gdk.BUTTON2_MASK,
-                                                    [TARGETS[0]]+[("from_tags",0,0)],               # drag on self and listview
-                                                    gtk.gdk.ACTION_DEFAULT|
-                                                    gtk.gdk.ACTION_COPY)
-            self.tvFilteredTags.enable_model_drag_source( gtk.gdk.BUTTON1_MASK|gtk.gdk.BUTTON2_MASK,
-                                                    [("from_ftags",0,0)],                            # drag on listview only !!
-                                                    gtk.gdk.ACTION_DEFAULT|
-                                                    gtk.gdk.ACTION_COPY)
+            self.treeviewtags.enable_model_drag_source(gtk.gdk.BUTTON1_MASK|gtk.gdk.BUTTON2_MASK,
+                                                       [TARGETS[0]]+[("from_tags",0,0)],               # drag on self and listview
+                                                       gtk.gdk.ACTION_DEFAULT|
+                                                       gtk.gdk.ACTION_COPY)
+            self.tvFilteredTags.enable_model_drag_source(gtk.gdk.BUTTON1_MASK|gtk.gdk.BUTTON2_MASK,
+                                                         [("from_ftags",0,0)],                            # drag on listview only !!
+                                                         gtk.gdk.ACTION_DEFAULT|
+                                                         gtk.gdk.ACTION_COPY)
             self.treeviewtags.enable_model_drag_dest([TARGETS[0]],          # can receive from self only
-                                                 gtk.gdk.ACTION_DEFAULT)
+                                                     gtk.gdk.ACTION_DEFAULT)
 
             self.treeviewtags.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
             self.tvFilteredTags.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
@@ -1755,131 +1756,148 @@ class Window(GladeApp):
             return 1
 
     def get_menu(self,widget,ln):
-            def makeItem(nom,callback,selecteur):
-                item = gtk.ImageMenuItem(nom)
-                item.connect("activate",callback,selecteur)
-                item.show()
-                return item
+        def makeItem(nom,callback,selecteur):
+            item = gtk.ImageMenuItem(nom)
+            item.connect("activate",callback,selecteur)
+            item.show()
+            return item
 
-            # control if we can add/remove selected photos from basket -> can*
-            # control if there is a readOnly file
-            canBasketRemove=False
-            canBasketAdd=False
-            isThereAReadOnlyFile = False
-            for node in ln:
-                if node.isInBasket:
-                    canBasketRemove = True
-                else:
-                    canBasketAdd = True
-
-                if node.isReadOnly:
-                    isThereAReadOnlyFile = True
-
-            #detect if modification are allowed
-            canModify = JBrout.modify and (not isThereAReadOnlyFile)
-
-            menu = gtk.Menu()
-            if canBasketAdd: # there are pictures which could be added to basket
-                menu.append( makeItem(_("Add to Basket"), self.on_selecteur_menu_add_to_basket,widget) )
-            if canBasketRemove: # there are pictures which could be removed basket
-                menu.append( makeItem(_("Remove From Basket"), self.on_selecteur_menu_remove_from_basket,widget) )
-
-            if len(ln)==1: # there is only one selected picture
-                menu.append( makeItem(_("Select this folder"), self.on_selecteur_menu_select_folder,widget ))
-                menu.append( makeItem(_("Select this time"), self.on_selecteur_menu_select_time,widget ))
-
-            rmenu = gtk.Menu() # build the set rating context menu
-            for points in range(0,6):
-                val = points
-                txt = str(points)+"/5"
-                item = gtk.ImageMenuItem( txt )
-                item.value = val
-                rmenu.append(item)
-                item.connect("activate",self.on_selecteur_menu_select_rate,widget, widget)
-
-            smenur=gtk.ImageMenuItem(_("Rate this"))
-            smenur.set_submenu(rmenu)
-            smenur.show_all()
-            menu.append(smenur) # add the reting submenu to the context menu
-
-            menu2 = gtk.Menu()
-
-            if canModify:
-                l=JBrout.plugins.request("PhotosProcess")
+        # control if we can add/remove selected photos from basket -> can*
+        # control if there is a readOnly file
+        canBasketRemove=False
+        canBasketAdd=False
+        isThereAReadOnlyFile = False
+        for node in ln:
+            if node.isInBasket:
+                canBasketRemove = True
             else:
-                l=JBrout.plugins.request("PhotosProcess",isAlter=False)
+                canBasketAdd = True
 
-            for instance,callback,props in l:
-                txt = props["label"]
-                if props["key"]: txt+=" (ctrl + %s)"%props["key"]
-                item = gtk.ImageMenuItem( txt )
+            if node.isReadOnly:
+                isThereAReadOnlyFile = True
 
-                if props["icon"]:
-                    ii=gtk.Image()
-                    ii.set_from_file(props["icon"])
-                    ii.show()
-                    item.set_image(ii)
+        #detect if modification are allowed
+        canModify = JBrout.modify and (not isThereAReadOnlyFile)
 
-                menu2.append(item)
-                item.connect("activate",self.on_selecteur_menu_select_plugin,widget,instance.id,callback)
-                isEntries = True
+        menu = gtk.Menu()
+        if canBasketAdd: # there are pictures which could be added to basket
+            menu.append( makeItem(_("Add to Basket"),
+                                  self.on_selecteur_menu_add_to_basket,widget) )
+        if canBasketRemove: # there are pictures which could be removed basket
+            menu.append( makeItem(_("Remove From Basket"),
+                                  self.on_selecteur_menu_remove_from_basket,widget) )
 
-            if len(menu2)>0:
-                smenu2=gtk.ImageMenuItem(_("Operations"))
-                smenu2.set_submenu(menu2)
-                smenu2.show_all()
-                menu.append(smenu2)
+        if len(ln)==1: # there is only one selected picture
+            menu.append( makeItem(_("Select this folder"),
+                                  self.on_selecteur_menu_select_folder,widget ))
+            menu.append( makeItem(_("Select this time"),
+                                  self.on_selecteur_menu_select_time,widget ))
 
-            # create menu entries for external tools
-            menuET = gtk.Menu()
-            isEntries=False
-            listET = ExternalTools(JBrout.toolsFile)
-            for et in listET:
-                if canModify:
-                    enableItem=True
-                else:
-                    enableItem=not et.canModify
+        rmenu = gtk.Menu() # build the set rating context menu
+        for points in range(0,6):
+            val = points
+            txt = str(points)+"/5"
+            item = gtk.ImageMenuItem( txt )
+            item.value = val
+            rmenu.append(item)
+            item.connect("activate",
+                         self.on_selecteur_menu_select_rate,widget,
+                         widget)
 
-                if enableItem:
-                    item = gtk.ImageMenuItem( et.label )
-                    menuET.append(item)
-                    item.connect("activate",self.on_selecteur_menu_select_external_tool,widget,et)
-                    isEntries=True
+        smenur=gtk.ImageMenuItem(_("Rate this"))
+        smenur.set_submenu(rmenu)
+        smenur.show_all()
+        menu.append(smenur) # add the reting submenu to the context menu
 
-            if isEntries:
-                smenuET=gtk.ImageMenuItem(_("External Tools"))
-                smenuET.set_submenu(menuET)
-                smenuET.show_all()
-                menu.append(smenuET)
+        menu2 = gtk.Menu()
 
+        if canModify:
+            l=JBrout.plugins.request("PhotosProcess")
+        else:
+            l=JBrout.plugins.request("PhotosProcess",isAlter=False)
 
-            # build the "delete tags" sub menu
+        for instance,callback,props in l:
+            txt = props["label"]
+            if props["key"]: txt+=" (ctrl + %s)"%props["key"]
+            item = gtk.ImageMenuItem( txt )
+
+            if props["icon"]:
+                ii=gtk.Image()
+                ii.set_from_file(props["icon"])
+                ii.show()
+                item.set_image(ii)
+
+            menu2.append(item)
+            item.connect("activate",
+                         self.on_selecteur_menu_select_plugin,
+                         widget,instance.id,
+                         callback)
+            isEntries = True
+
+        if len(menu2)>0:
+            smenu2=gtk.ImageMenuItem(_("Operations"))
+            smenu2.set_submenu(menu2)
+            smenu2.show_all()
+            menu.append(smenu2)
+
+        # create menu entries for external tools
+        menuET = gtk.Menu()
+        isEntries=False
+        listET = ExternalTools(JBrout.toolsFile)
+        for et in listET:
             if canModify:
-                # search all tags from selection, to present the delete tags menu
-                d=[]
-                for pnode in ln:
-                    for t in pnode.tags:
-                        if t not in d:
-                            d.append(t)
+                enableItem=True
+            else:
+                enableItem=not et.canModify
 
-                if d:
-                    d.sort()
-                    menu3 = gtk.Menu()
-                    for tag in d:
-                        item = gtk.MenuItem( tag, use_underline=False)
-                        item.connect("activate",self.on_selecteur_menu_delete_tag,widget,tag)
-                        menu3.append(item)
-                    item = gtk.ImageMenuItem( _("** ALL **") )
-                    item.connect("activate",self.on_selecteur_menu_delete_tag,widget,"*")
+            if enableItem:
+                item = gtk.ImageMenuItem( et.label )
+                menuET.append(item)
+                item.connect("activate",
+                             self.on_selecteur_menu_select_external_tool,
+                             widget,et)
+                isEntries=True
+
+        if isEntries:
+            smenuET=gtk.ImageMenuItem(_("External Tools"))
+            smenuET.set_submenu(menuET)
+            smenuET.show_all()
+            menu.append(smenuET)
+
+
+        # build the "delete tags" sub menu
+        if canModify:
+            # search all tags from selection, to present the delete tags menu
+            d=[]
+            for pnode in ln:
+                for t in pnode.tags:
+                    if t not in d:
+                        d.append(t)
+
+            if d:
+                d.sort()
+                menu3 = gtk.Menu()
+                for tag in d:
+                    item = gtk.MenuItem( tag, use_underline=False)
+                    item.connect("activate",
+                                 self.on_selecteur_menu_delete_tag,
+                                 widget,tag)
                     menu3.append(item)
-                    smenu3=gtk.ImageMenuItem(_("Delete tag"))
-                    smenu3.set_submenu(menu3)
-                    smenu3.show_all()
-                    menu.append(smenu3)
+                item = gtk.ImageMenuItem( _("** ALL **") )
+                item.connect("activate",
+                             self.on_selecteur_menu_delete_tag,widget,
+                             "*")
+                menu3.append(item)
+                smenu3=gtk.ImageMenuItem(_("Delete tag"))
+                smenu3.set_submenu(menu3)
+                smenu3.show_all()
+                menu.append(smenu3)
 
-                menu.append( makeItem(_("Delete"), self.on_selecteur_menu_delete,widget ))
+            menu.append( makeItem(_("Delete"),
+                                  self.on_selecteur_menu_delete,
+                                  widget ))
 
-            return menu
+        return menu
 
     def call_winshow(self,l,i,selected=[]):
         isInfo = JBrout.conf["showInfo"]==1 and True or False
@@ -2081,9 +2099,9 @@ class Window(GladeApp):
 
 
         try:
-           shutil.rmtree(destination)
+            shutil.rmtree(destination)
         except:
-           pass
+            pass
 
         for i in l:
             Buffer.remove(i.file)
@@ -2599,9 +2617,9 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
 
     def on_btn_addFolder_clicked(self, widget, *args):
         dialog = gtk.FileChooserDialog (_("Add Folder"),
-             None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-             (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
-              gtk.RESPONSE_OK))
+                                        None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
+                                         gtk.RESPONSE_OK))
         dialog.set_default_response (gtk.RESPONSE_OK)
         dialog.set_transient_for (self.main_widget)
 
@@ -3013,7 +3031,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             ops.append( u"substring-before(@resolution, 'x')<substring-after(@resolution, 'x')" )
             tops.append(_("Format:Portrait"))
 
-	if self.cb_rating.get_active():
+        if self.cb_rating.get_active():
             t=self.cb_rating.get_active_text()
             # find rating in the db <r> tag
             op = u"r%s" % t
@@ -3097,8 +3115,10 @@ if __name__ == "__main__":
 
     try:
         parser = optparse.OptionParser(usage=USAGE, version=("JBrout "+__version__))
-        parser.add_option("-v","--view",action="store_true",dest="view",
-                            help="run in view mode only")
+        parser.add_option("-v","--view",
+                          action="store_true",
+                          dest="view",
+                          help="run in view mode only")
 
         (options, args) = parser.parse_args()
 
