@@ -40,6 +40,7 @@ pygtk.require('2.0')
 
 import gtk
 import locale
+locale.setlocale(locale.LC_ALL, '.'.join(locale.getdefaultlocale()))
 
 from libs.gladeapp import GladeApp
 from libs.i18n import createGetText
@@ -273,9 +274,9 @@ class ListView(ThumbnailsView):
                 l.sort( cmp=lambda x,y: -cmp(x.date,y.date))
         elif orderBy == "File": # order by file
             if orderAscending:
-                l.sort( cmp=lambda x,y: cmp(x.file,y.file))
+                l.sort( cmp=lambda x,y: locale.strcoll(x.file,y.file))
             else:
-                l.sort( cmp=lambda x,y: -cmp(x.file,y.file))
+                l.sort( cmp=lambda x,y: -locale.strcoll(x.file,y.file))
         elif orderBy == "Rating": # order by rating
             if orderAscending:
                 l.sort( cmp=lambda x,y: cmp(x.rating,y.rating))
