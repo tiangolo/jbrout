@@ -274,6 +274,11 @@ class ListView(ThumbnailsView):
                 l.sort( cmp=lambda x,y: -cmp(x.date,y.date))
         elif orderBy == "File": # order by file
             if orderAscending:
+                l.sort( cmp=lambda x,y: locale.strcoll(os.path.basename(x.file),os.path.basename(y.file)))
+            else:
+                l.sort( cmp=lambda x,y: -locale.strcoll(os.path.basename(x.file),os.path.basename(y.file)))
+        elif orderBy == "Path": # order by file
+            if orderAscending:
                 l.sort( cmp=lambda x,y: locale.strcoll(x.file,y.file))
             else:
                 l.sort( cmp=lambda x,y: -locale.strcoll(x.file,y.file))
@@ -1311,6 +1316,8 @@ class Window(GladeApp):
             JBrout.conf["orderBy"] = "Date"
         elif self.menuOrderByFile.get_active():
             JBrout.conf["orderBy"] = "File"
+        elif self.menuOrderByPath.get_active():
+            JBrout.conf["orderBy"] = "Path"
         elif self.menuOrderByRating.get_active():
             JBrout.conf["orderBy"] = "Rating"
 

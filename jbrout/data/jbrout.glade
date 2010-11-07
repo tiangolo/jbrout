@@ -101,6 +101,16 @@
                               </widget>
                             </child>
                             <child>
+                              <widget class="GtkRadioMenuItem" id="menuOrderByPath">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">File + _Path</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_as_radio">True</property>
+                                <property name="group">menuOrderBy</property>
+                                <signal name="toggled" handler="on_orderby_changed"/>
+                              </widget>
+                            </child>
+                            <child>
                               <widget class="GtkRadioMenuItem" id="menuOrderByRating">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">_Rating</property>
