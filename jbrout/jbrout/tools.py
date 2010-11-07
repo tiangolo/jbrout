@@ -201,13 +201,14 @@ class PhotoCmd(object):
             #-----------------------------------------------------------
             # if no exifdate ---> put the filedate in exifdate
             # SO exifdate=filedate FOR ALL
-            try:
-                #self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
-                self.__info["Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
-                isDateExifOk=True
-            except KeyError:        # tag exif datetime not present
-                isDateExifOk=False
-            except AttributeError:  # content of tag exif datetime is not a datetime
+            if "Exif.Photo.DateTimeOriginal" in self.__info.exifKeys():
+                try:
+                    #self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+                    self.__info["Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
+                    isDateExifOk=True
+                except AttributeError:  # content of tag exif DateTimeOriginal is not a datetime
+                    isDateExifOk=False
+            else:                       # tag exif DateTimeOriginal not present
                 isDateExifOk=False
 
             if not isDateExifOk:
@@ -264,21 +265,20 @@ class PhotoCmd(object):
         self.__info = pyexiv.Image(self.__file)
         self.__info.readMetadata()
 
-        try:
+        if "Exif.Image.Make" in self.__info.exifKeys():
             self.__isreal   = (self.__info["Exif.Image.Make"]!="jBrout")    # except if a cam maker is named jBrout (currently, it doesn't exist ;-)
-        except:
-            # can only be here after a destroyInfo()
+        else:
+            # can only be here after a destroyInfo() or file has no exif data
             self.__isreal = False
 
-        try:
+        if "Exif.Photo.DateTimeOriginal" in self.__info.exifKeys():
             #self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
             self.__exifdate = self.__info["Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
-        except:
-            try:
-                self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
-            except:
-                # can only be here after a destroyInfo()
-                self.__exifdate=""
+        elif "Exif.Image.DateTime" in self.__info.exifKeys():
+            self.__exifdate = self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
+        else:
+            # can only be here after a destroyInfo() or if file has no exif info
+            self.__exifdate=""
 
         self.__filedate = self.__exifdate
 
@@ -288,7 +288,7 @@ class PhotoCmd(object):
             w,h=0,0 # XXX not recognized yetwith exiv2
         self.__resolution = "%d x %d" % (w,h) # REAL SIZE !
 
-        try:
+        if "Exif.Photo.Flash" in self.__info.exifKeys():
             v=self.__info.interpretedExifValue("Exif.Photo.Flash")
             if v:
                 if v[:2].lower() in ["fi","ye"]:    # fired, yes, ...
@@ -297,7 +297,7 @@ class PhotoCmd(object):
                     self.__isflash      = "No"
             else:
                 self.__isflash      = ""
-        except KeyError:
+        else:
             self.__isflash    =""
 
         self.__comment = decode(self.__info.getComment())
@@ -552,9 +552,9 @@ isreal : %s""" % (
         thumbnail according 'sens'
          """
         if sens=="auto":
-            try:
+            if 'Exif.Image.Orientation' in self.__info.exifKeys():
                 sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
-            except KeyError:
+            else:
                 sens = autoTrans[1][0]
         if sens=="rotate90":
             jpegtranOpt = ["-rotate", "90"]
