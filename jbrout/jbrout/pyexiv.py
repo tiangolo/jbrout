@@ -40,6 +40,7 @@ class Exiv2Metadata(object):
     """ pyexiv2 > 0.2 """
     def __init__(self,md):
         self._md=md
+        
     #============================================== V 0.1 api
     def readMetadata(self):
         return self._md.read()
@@ -73,12 +74,15 @@ class Exiv2Metadata(object):
             return []
 
     def setThumbnailData(self,o):
-        #TODO: finnish here
-        print "***WARNING*** : not implemented : setThumbnailData"
+        if pyexiv2.version_info >= (0,2,2):
+            self._md.exif_thumbnail.data = o
+        else:
+            print "***WARNING*** : not implemented : setThumbnailData (you need pyexiv2>=0.2.2)"
     def deleteThumbnail(self):
-        #TODO: finnish here
-        print "***WARNING*** : not implemented : deleteThumbnail"
-
+        if pyexiv2.version_info >= (0,2,2):
+            self._md.exif_thumbnail.erase()
+        else:
+            print "***WARNING*** : not implemented : deleteThumbnail (you need pyexiv2>=0.2.2)"
 
     def exifKeys(self):
         return self._md.exif_keys
@@ -240,6 +244,7 @@ def Image(f):
     if hasattr(pyexiv2,"ImageMetadata"):
         # pyexiv2 >= 0.2
         print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support very well this new version ! not fully tested ! some things are not implemented !!!)"
+        
         return Exiv2Metadata(pyexiv2.ImageMetadata(f))
     else:
         # pyexiv2 < 0.2
@@ -251,11 +256,18 @@ if __name__ == "__main__":
     #~ t=Image("/home/manatlan/Desktop/fotaux/autorot/p20020115_173654(1).jpg")
     t.readMetadata()
 
-    #----
-    aa=t._image["Xmp.dc.subject"].raw_value[0]
-    import chardet; print chardet.detect(aa) # in fact, it's latin1 encoded as utf8
-    print aa.decode("utf_8").encode("latin1")
-    #----
+    ##----
+    #aa=t._image["Xmp.dc.subject"].raw_value[0]
+    #import chardet; print chardet.detect(aa) # in fact, it's latin1 encoded as utf8
+    #print aa.decode("utf_8").encode("latin1")
+    ##----
+
+    #t.setThumbnailData("")
 
     L=t.getTags()
     print "===>",L
+
+    #t=Image("/home/manatlan/Desktop/fotaux/autorot/jpg/p20090319_061423.jpg")
+    #t.readMetadata()
+    #t.deleteThumbnail()
+    #t.writeMetadata()
