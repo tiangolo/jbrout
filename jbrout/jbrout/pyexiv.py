@@ -40,7 +40,7 @@ class Exiv2Metadata(object):
     """ pyexiv2 > 0.2 """
     def __init__(self,md):
         self._md=md
-        
+
     #============================================== V 0.1 api
     def readMetadata(self):
         return self._md.read()
@@ -74,12 +74,12 @@ class Exiv2Metadata(object):
             return []
 
     def setThumbnailData(self,o):
-        if pyexiv2.version_info >= (0,2,2):
+        if pyexiv2.version_info > (0,2,2):
             self._md.exif_thumbnail.data = o
         else:
             print "***WARNING*** : not implemented : setThumbnailData (you need pyexiv2>=0.2.2)"
     def deleteThumbnail(self):
-        if pyexiv2.version_info >= (0,2,2):
+        if pyexiv2.version_info > (0,2,2):
             self._md.exif_thumbnail.erase()
         else:
             print "***WARNING*** : not implemented : deleteThumbnail (you need pyexiv2>=0.2.2)"
@@ -244,7 +244,7 @@ def Image(f):
     if hasattr(pyexiv2,"ImageMetadata"):
         # pyexiv2 >= 0.2
         print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support very well this new version ! not fully tested ! some things are not implemented !!!)"
-        
+
         return Exiv2Metadata(pyexiv2.ImageMetadata(f))
     else:
         # pyexiv2 < 0.2
