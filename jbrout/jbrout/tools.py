@@ -553,7 +553,10 @@ isreal : %s""" % (
          """
         if sens=="auto":
             if 'Exif.Image.Orientation' in self.__info.exifKeys():
-                sens = autoTrans[int(self.__info['Exif.Image.Orientation'])][0]
+                exifSens = int(self.__info['Exif.Image.Orientation'])
+                if exifSens not in autoTrans.keys():
+                    exifSens = 1
+                sens = autoTrans[exifSens][0]
             else:
                 sens = autoTrans[1][0]
         if sens=="rotate90":
