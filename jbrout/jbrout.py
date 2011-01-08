@@ -1755,12 +1755,11 @@ class Window(GladeApp):
             menu.popup(None,None,None,event.button,event.time)
             return 1
 
-        elif event.button==1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        elif event.button==1 and\
+             event.type == gtk.gdk._2BUTTON_PRESS and\
+             len(self.tbl.getSelected()) != 0:
             # call the winshow
-
-            #l,i = widget.items,widget.focus_cell
             self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
-
             return 1
 
     def get_menu(self,widget,ln):
