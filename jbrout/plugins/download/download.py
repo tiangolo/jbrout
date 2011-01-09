@@ -811,8 +811,8 @@ class WinDownloadExecute(GladeApp):
                 self.lblAction.set_label(_('Loading preview'))
                 yield True
                 noThumb = False
-                if item[dc.C_EXIF].getThumbnailData():
-                    try:
+                try:
+                    if item[dc.C_EXIF].getThumbnailData():
                         thumbJpeg = item[dc.C_EXIF].getThumbnailData()[1]
                         loader = gtk.gdk.PixbufLoader ('jpeg')
                         loader.write (thumbJpeg, len(thumbJpeg))
@@ -834,10 +834,11 @@ class WinDownloadExecute(GladeApp):
                             thumbIm = thumbIm.flip(True)
                         elif item[dc.C_RS] == "rotate270":
                             thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
-                    except:
+                    else:
                         noThumb = True
-                else:
+                except:
                     noThumb = True
+
                 if noThumb:
                     thumbIm = gtk.gdk.pixbuf_new_from_file(
                         os.path.join('data','gfx','imgNoThumb.png'))
