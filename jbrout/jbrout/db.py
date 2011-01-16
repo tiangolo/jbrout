@@ -648,11 +648,8 @@ class PhotoNode(object):
         except KeyError: # no exif
             pb= pb_nothumb
         except:
-            # big error in "exif.py"
-            print >>sys.stderr,'-'*60
-            traceback.print_exc(file=sys.stderr)
-            print >>sys.stderr,'-'*60
             pb=pb_error
+            raise
 
 
         return pb

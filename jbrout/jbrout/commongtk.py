@@ -298,7 +298,11 @@ class Img(object):
                 if extension == 'nef':
                     data=Popen(["exiftool","-b","-PreviewImage","%s"%thumb],stdout=PIPE).communicate()[0]
                 else:
-                    data=img.getThumbnailData()[1]
+                    thumbnailData=img.getThumbnailData()
+                    if len(thumbnailData) > 0:
+                        data = thumbnailData[1]
+                    else:
+                        raise KeyError
 
                 loader = gtk.gdk.PixbufLoader ('jpeg')
 
