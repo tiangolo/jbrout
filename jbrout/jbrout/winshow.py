@@ -129,6 +129,7 @@ class WinShow(GladeApp):
 
         self.main_widget.show_all()
         self.main_widget.fullscreen()
+        self.main_widget.maximize()
 
         self.draw()
 
@@ -422,7 +423,7 @@ class ImageShow(gtk.DrawingArea):
                     context.rel_move_to(5,0)
                     context.set_font_size(12)
                     context.show_text(_("(%d selected)") % self.display.nbSelected)
-                    
+
                 if self.display.rating:
                     context.move_to(rect.width-35, 20)
                     context.set_source_rgb(1,1,1)
