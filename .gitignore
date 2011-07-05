@@ -6,6 +6,8 @@
 *.pyc
 *.rej
 *.swp
+*.wpr
+*.wpu
 
 # Installer and Launcher
 jBrout*.exe
