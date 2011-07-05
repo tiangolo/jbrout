@@ -69,20 +69,20 @@ class Exiv2Metadata(object):
     def getThumbnailData(self):
         l=[i.data for i in self._md.previews]
         if l:
-            return [None,l[-1]] # to be able to get the item 1
+            return [None,l[0]]
         else:
             return []
 
     def setThumbnailData(self,o):
-        if pyexiv2.version_info >= (0,2,2):
+        if pyexiv2.version_info > (0,2,2):
             self._md.exif_thumbnail.data = o
         else:
-            print "***WARNING*** : not implemented : setThumbnailData (you need pyexiv2>=0.2.2)"
+            print "***WARNING*** : not implemented : setThumbnailData (you need pyexiv2>0.2.2)"
     def deleteThumbnail(self):
-        if pyexiv2.version_info >= (0,2,2):
+        if pyexiv2.version_info > (0,2,2):
             self._md.exif_thumbnail.erase()
         else:
-            print "***WARNING*** : not implemented : deleteThumbnail (you need pyexiv2>=0.2.2)"
+            print "***WARNING*** : not implemented : deleteThumbnail (you need pyexiv2>0.2.2)"
 
     def exifKeys(self):
         return self._md.exif_keys
