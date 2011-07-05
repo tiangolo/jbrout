@@ -12,13 +12,14 @@
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
-import os,re,sys,thread,shutil,stat,string
+import re, sys, thread, shutil, stat, string
 
 from libs.dict4ini import DictIni
 from plugins import JPlugins
-import sys,os
+import os, os.path
 from db import DBPhotos,DBTags
 import socket
+import glib
 
 # ============================================================================================
 class Conf(object):
@@ -91,54 +92,61 @@ class JBrout:
         and will append to it (the newfolder can begins with a "." or not))
         """
         maskDir=False
-        try:
-            #windows NT,2k,XP,etc. fallback
-            home = os.environ['APPDATA']
-            if not os.path.isdir(home): raise
-            maskDir=False
-        except:
-            try:
-                #all user-based OSes
-                home = os.path.expanduser("~")
-                if home == "~": raise
-                if not os.path.isdir(home): raise
-                maskDir=True
-            except:
-                try:
-                    # freedesktop *nix ?
-                    home = os.environ['XDG_CONFIG_HOME']
-                    if not os.path.isdir(home): raise
-                    maskDir=False
-                except:
-                    try:
-                        #*nix fallback
-                        home = os.environ['HOME']
-                        if os.path.isdir(home):
-                            conf = os.path.join(home,".config")
-                            if os.path.isdir(conf):
-                                home = conf
-                                maskDir=False
-                            else:
-                                # keep home
-                                maskDir=True
-                        else:
-                            raise
-                    except:
-                        #What os are people using?
-                        home = None
+        glibConfDir = glib.get_user_data_dir()
 
-        if home:
+        # Find legacy home dir
+        #windows NT,2k,XP,etc.
+        if (os.name == "nt") and ("APPDATA" in os.environ):
+            home = os.environ['APPDATA']
+            if not os.path.isdir(home):
+                raise OSError("Missing %APPDATA% directory")
+            maskDir=False
+        elif ("XDG_CONFIG_HOME" in os.environ):
+            home = os.environ['XDG_CONFIG_HOME']
+            if not os.path.isdir(home):
+                raise OSError("Missing $XDG_CONFIG_HOME directory")
+            maskDir = False
+        elif (os.path.expanduser("~") != "~"):
+            home = os.path.expanduser("~")
+            if not os.path.isdir(home):
+                raise OSError("Missing ~ directory. Weird.")
+            maskDir=True
+        elif ("HOME" in os.environ):
+            home = os.environ["HOME"]
+            if os.path.isdir(home):
+                conf = os.path.join(home,".config")
+                if os.path.isdir(conf):
+                    home = conf
+                    maskDir=False
+                else:
+                    # keep home
+                    maskDir=True
+            else:
+                raise OSError("Missing $HOME directory.")
+        else:
+            #What os are people using?
+            home = None
+
+        if glibConfDir:
             if mkdir:
                 if maskDir:
-                    newDir = "."+mkdir
+                    newDir = "." + mkdir
                 else:
                     newDir = mkdir
 
-                home = os.path.join(home,newDir)
-                if not os.path.isdir(home):
-                    os.mkdir(home)
+                confDir = os.path.join(glibConfDir, mkdir)
+                oldConfDir = os.path.join(home, newDir)
+                if not os.path.isdir(confDir):
+                    # copy old data if we have them
+                    if os.path.isdir(oldConfDir):
+                        print "Copying %s to %s" % (oldConfDir, confDir)
+                        shutil.copytree(oldConfDir, confDir,
+                            symlinks=True)
+                    else:
+                        print "Creating new dir %s" % confDir
+                        os.mkdir(confDir)
 
-            return home
+        return confDir
 
 
     @staticmethod
