@@ -243,12 +243,15 @@ class Exiv1Metadata(pyexiv2.Image):
 def Image(f):
     if hasattr(pyexiv2,"ImageMetadata"):
         # pyexiv2 >= 0.2
-        print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support very well this new version ! not fully tested ! some things are not implemented !!!)"
-
         return Exiv2Metadata(pyexiv2.ImageMetadata(f))
     else:
         # pyexiv2 < 0.2
         return Exiv1Metadata(f)
+
+def Check():
+    if hasattr(pyexiv2,"ImageMetadata"):
+        # pyexiv2 >= 0.2
+        print "***WARNING*** : YOU ARE USING pyexiv2>0.2 (jbrout doesn't support very well this new version ! not fully tested ! some things are not implemented !!!)"
 
 if __name__ == "__main__":
     t=Image("/home/manatlan/Documents/python/tests_libs_python/TestJPG/p20030830_130202 (copie).jpg")

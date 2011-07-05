@@ -3119,6 +3119,9 @@ if __name__ == "__main__":
         psyco.full()
     except:
         print "The psyco module does not seem to be installed. It is not necessary, however it can speed up performance."
+    # Print pyexiv2-0.2+ warning if necessary
+    from jbrout.pyexiv import Check
+    Check()
 
     try:
         parser = optparse.OptionParser(usage=USAGE, version=("JBrout "+__version__))
