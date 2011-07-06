@@ -98,21 +98,13 @@ class _Command:
         if not os.path.isfile(_jpegtran):
             err+="jpegtran is not present in 'tools'\n"
 
-        _exiftool = os.path.join(__path,"exiftool.exe")
-        if not os.path.isfile(_exiftool):
-            err+="exiftool is not present in 'tools'\n"
-
     else:
         # set "non windows" path (needs 'which')
         _exiftran = u"".join(os.popen("which exiftran").readlines()).strip()
         _jpegtran = None
-        _exiftool = u"".join(os.popen("which exiftool").readlines()).strip()
 
         if not os.path.isfile(_exiftran):
             err+="exiftran is not present, please install 'exiftran'(fbida)\n"
-
-        if not os.path.isfile(_exiftool):
-            err+="exiftool is not present, please install 'exiftool'\n"
 
     if err:
         raise Exception(err)
@@ -137,10 +129,6 @@ class _Command:
             if "processing" in outerr:
                 # exiftran output process in stderr ;-(
                 outerr=""
-                if "exiftool" in cmdline:
-                    if "Warning" in outerr:
-                        #exiftool warning that has no impact on result
-                        outerr=""
 
         if outerr:
             raise CommandException( cmdline +"\n OUTPUT ERROR:"+outerr)
@@ -157,9 +145,6 @@ class _Command:
                         raise CommandException( cmdline +"\n decoding trouble")
 
             return out #unicode
-
-
-class NotImplemented(Exception): pass
 
 class PhotoCmd(object):
 
@@ -498,9 +483,9 @@ isreal : %s""" % (
 
     def __maj(self):
         try:
+            # TODO Why do we catch this exception? Shouldn't it just fail?
             self.__info.writeMetadata()
         except IOError:
-            # XXX not recognized yet by pyexiv2. Another option to save infos ?
             pass
         self.__refresh()
 
@@ -682,88 +667,6 @@ isreal : %s""" % (
     #        return PhotoCmd.normalizeName(file)
     #    else:
     #        return file
-
-class XMPUpdater():
-    #synchronizeXmp = None
-
-    def __init__(self,photo_list):
-        """XMPUpdater is in charge of manipulating XMP data.
-        It might disapear when pyexiv2 will have XMP support"""
-
-        # List of pictures
-        self.list=photo_list
-
-        # List of pictures' name
-        if len(self.list)>0:
-            if type(self.list[0]) in [str,unicode]:
-                self.pictures=self.list
-            else:
-                self.pictures=[]
-                for picture in self.list:
-                    self.pictures.append(picture.file.encode('utf-8'))
-
-    def SyncXmpIptc(self):
-        """Merge XMP and IPTC if option is on"""
-        if not self.synchronizeXmp:
-            return 1
-        self.DoMergeXmpIptc()
-
-    def UpdateXmp(self):
-        """Save tags to XMP subjects if option is on"""
-        if not self.synchronizeXmp:
-            return 1
-        self.DoSaveXmp()
-
-    def UpdateXmpRating(self):
-        """Save Rating to XMP if option is on"""
-        if not self.synchronizeXmp:
-            return 1
-        self.DoSaveXmpRating()
-
-    def DoMergeXmpIptc(self):
-        """Import XMP subjects, merge with IPTC keywords and save to both"""
-        if not self.synchronizeXmp:
-            return 1
-        #initialize command
-        command=[_Command._exiftool]
-        #remove subject from keywords to avoid duplicates
-        command.extend(["-r", "-overwrite_original", "-addtagsfromfile@", "-keywords-<subject"])
-        #add pictures list
-        command.extend(self.pictures)
-        ret= _Command._run( command )
-
-        #initialize command
-        command=[_Command._exiftool]
-        #add subject to keywords
-        command.extend(["-r", "-overwrite_original", "-addtagsfromfile@", "-keywords+<subject"])
-        #add pictures list
-        command.extend(self.pictures)
-        ret= _Command._run( command )
-
-        #initialize command
-        command=[_Command._exiftool]
-        #copy keywords to subect
-        command.extend(["-r", "-overwrite_original", "-subject< keywords"])
-        command.extend(self.pictures)
-        ret= _Command._run(command)
-
-    def DoSaveXmp(self):
-        """Save tags to XMP subjects"""
-        if not self.synchronizeXmp:
-            return 1
-        command=[_Command._exiftool]
-        command.extend(["-r", "-overwrite_original", "-subject< keywords"])
-        command.extend(self.pictures)
-        ret= _Command._run(command)
-
-    def DoSaveXmpRating(self):
-        """Save rating to XMP"""
-        if not self.synchronizeXmp:
-            return 1
-        command=[_Command._exiftool]
-        command.extend(["-r", "-overwrite_original", "-XMP:Rating< EXIF:Rating", "-XMP:RatingPercent< EXIF:RatingPercent"])
-        command.extend(self.pictures)
-        ret= _Command._run(command)
 
 if __name__=="__main__":
 

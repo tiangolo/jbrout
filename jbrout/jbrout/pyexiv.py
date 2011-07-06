@@ -108,16 +108,29 @@ class Exiv2Metadata(object):
 
     def getTags(self):
         """ return a list of merged tags (xmp+iptc) (list of str)"""
+        # Authoritative reference
+        # http://www.iptc.org/std/Iptc4xmpCore/1.0/documentation/Iptc4xmpCore_1.0-doc-CpanelsUserGuide_13.pdf
+        # however
+        # http://metadataworkinggroup.com/pdf/mwg_guidance.pdf says on page 35 that
+        ## IPTC Keywords is mapped to XMP (dc:subject)
+        # It seems that the latter is true ... at least according to
+        # http://trac.yorba.org/wiki/PhotoTags
+
+        li=[]
         if "Iptc.Application2.Keywords" in self._md.iptc_keys:
-            li=[str(i.strip("\x00")) for i in self._md["Iptc.Application2.Keywords"].values]    #digikam patch
+            li=[str(i.strip("\x00")) for i in self._md["Iptc.Application2.Keywords"].value]    #digikam patch
             # assume UTF8
-        else:
-            li=[]
+        lk = []
+        if "Xmp.iptc.Keywords" in self._md.xmp_keys:
+            for xel in self._md["Xmp.iptc.Keywords"].value:
+                lk.extend([x.strip() for x in xel.encode("utf-8").split(",")])
+            # assume UTF8
+        lx = []
         if "Xmp.dc.subject" in self._md.xmp_keys:
-            lx=[i.encode("utf_8") for i in self._md["Xmp.dc.subject"].value]
-        else:
-            lx=[]
-        ll=list(set(li+lx))
+            for xel in self._md["Xmp.dc.subject"].value:
+                lx.extend([x.strip() for x in xel.encode("utf-8").split(",")])
+
+        ll=list(set(li+lx+lk))
         ll.sort()
         return ll
 
@@ -126,8 +139,14 @@ class Exiv2Metadata(object):
         for i in l:
             assert type(i)==unicode
 
-        self._md["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in l]
-        self._md["Xmp.dc.subject"]=l
+        if l:
+            self._md["Iptc.Application2.Keywords"] = [i.encode("utf_8") for i in l]
+            self._md["Xmp.dc.subject"] = [",".join(l)]
+        else:
+            del self._md["Iptc.Application2.Keywords"]
+            del self._md["Xmp.dc.subject"]
+        if 'Xmp.iptc.Keywords' in self._md.xmp_keys:
+            del self._md['Xmp.iptc.Keywords']
 
 
     def clearTags(self):
@@ -135,6 +154,8 @@ class Exiv2Metadata(object):
             del self._md["Iptc.Application2.Keywords"]
         if "Xmp.dc.subject" in self._md.xmp_keys:
             del self._md["Xmp.dc.subject"]
+        if 'Xmp.iptc.Keywords' in self._md.xmp_keys:
+            del self._md['Xmp.iptc.Keywords']
 
 
     def copyToFile(self, destFilename, exif=True, iptc=True, xmp=True, comment=True):

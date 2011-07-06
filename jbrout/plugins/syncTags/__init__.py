@@ -13,7 +13,6 @@
 ##
 
 from __main__ import JPlugin
-from jbrout.tools import XMPUpdater
 
 class Plugin(JPlugin):
     """Plugin to perform mass tagging changes"""
@@ -27,11 +26,15 @@ class Plugin(JPlugin):
     #def albumEntries(self,l):
     #    return [(300,_("Import Tags"),True,self.importAlbumTags)]
 
+    def __SyncXmpIptc(self):
+        # synchronize XMP and IPTC tags
+        raise NotImplementedError
+
     @JPlugin.Entry.PhotosProcess( _("Import Tags"), order=8100 )
     def importTags(self,imgList):
         """Import tags used in the given image list (IPTC and XMP) and merge them together"""
         self.showProgress( 0, 1 , _("Importing Tags") )
-        XMPUpdater(imgList).SyncXmpIptc()
+        self.__SyncXmpIptc()
         self.showProgress()
         return True
 
@@ -39,6 +42,7 @@ class Plugin(JPlugin):
     def importAlbumTags(self,nodeAlbum):
         """Import tags used in the given image list (IPTC and XMP) and merge them together"""
         self.showProgress( 0, 1 , _("Importing Tags") )
-        XMPUpdater([nodeAlbum.file]).SyncXmpIptc()
+        #XMPUpdater([nodeAlbum.file]).SyncXmpIptc() needs to be rewritten
+        raise NotImplementedError
         self.showProgress()
         return True

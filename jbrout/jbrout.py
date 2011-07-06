@@ -74,7 +74,7 @@ from jbrout.listview import ThumbnailsView
 from jbrout.externaltools import ExternalTools
 from jbrout.winbookmarks import WinBookmark
 from jbrout.winpref import WinPref
-from jbrout.tools import XMPUpdater, rawFormats
+from jbrout.tools import rawFormats
 
 import tempfile,shutil
 
@@ -878,6 +878,8 @@ class Window(GladeApp):
             else:
                 JBrout.conf["normalizeName"] = False
 
+        # FIXME not used anywhere currently, although synchronization of tags could be useful.
+        # most likely should be reimplemented in plugins/syncTags/__init__.py
         if not JBrout.conf.has_key("synchronizeXmp"):
             ret=InputQuestion(self.main_widget,
                               _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
@@ -914,7 +916,6 @@ class Window(GladeApp):
             JBrout.conf["plugins"] = ["%s.%s"%(i.id,p["method"]) for i,c,p in JBrout.plugins.request("AlbumProcess",all=True)+JBrout.plugins.request("PhotosProcess",all=True)]
 
         Buffer.size = JBrout.conf["thumbsize"]
-        XMPUpdater.synchronizeXmp=JBrout.conf["synchronizeXmp"]  # Do we synchronize automatically ?
 
         JBrout.db.setNormalizeName( JBrout.conf["normalizeName"] )
         JBrout.db.setNormalizeNameFormat( str(JBrout.conf["normalizeNameFormat"]) )
@@ -1946,7 +1947,6 @@ class Window(GladeApp):
         finally:
             self.showProgress()
         sel.refresh()
-        XMPUpdater(ln).UpdateXmp()
 
     def on_selecteur_menu_add_to_basket(self,b,sel):
         ln = sel.getSelected()
@@ -2134,7 +2134,6 @@ class Window(GladeApp):
                         i.addTags(l)
             finally:
                 self.showProgress()
-            XMPUpdater(ln).UpdateXmp()
 
             sel.refresh()
         #~ context, x, y, selection, info, time = args
@@ -2153,7 +2152,6 @@ class Window(GladeApp):
                         i.setRating(r)
             finally:
                 self.showProgress()
-            XMPUpdater(ln).UpdateXmpRating()
 
             sel.refresh()
 
