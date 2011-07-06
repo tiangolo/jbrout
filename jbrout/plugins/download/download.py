@@ -201,6 +201,10 @@ class WinDownload(GladeApp):
         self.statusBar.push(self.cidStatusBar,
             _('Reading source file information from "%s"') % self.srcFolder)
         yield True
+
+        model = self.imLst.get_model()
+        self.imLst.set_model(None)
+
         if self.invalidSource or self.quitNow:
             self.statusBar.pop(self.cidStatusBar)
             self.buildListRunning = False
@@ -234,6 +238,8 @@ class WinDownload(GladeApp):
                 yield False
             yield True
 
+        self.imLst.set_model(model)
+
         self.buildListRunning = False
         self.statusBar.pop(self.cidStatusBar)
         yield False
@@ -246,6 +252,10 @@ class WinDownload(GladeApp):
         if self.imLst.getCount() == 0:
             self.buildListRunning = False
             yield False
+
+        model = self.imLst.get_model()
+        self.imLst.set_model(None)
+
         # Start new
         # Build image Names
         # Build names without seralisation
@@ -355,6 +365,9 @@ class WinDownload(GladeApp):
             self.imLst.setItem(rowIdx, dc.C_ROT, rotL)
             yield True
         self.statusBar.pop(self.cidStatusBar)
+
+        self.imLst.set_model(model)
+
         # Completed exiting
         self.btnExecute.set_sensitive(True)
         self.buildListRunning = False
