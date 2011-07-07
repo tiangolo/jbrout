@@ -749,7 +749,7 @@ class PhotoNode(object):
         pc.rebuildExifTB()
         self.updateInfo(pc)
 
-    def copyTo(self,path,resize=None, keepInfo=True):
+    def copyTo(self,path,resize=None, keepInfo=True, delTags=False, delCom=False):
         """ copy self to the path "path", and return its newfilename or none
             by default, it keeps IPTC/THUMB/EXIF, but it can be removed by setting
             keepInfo at False. In all case, new file keep its filedate system
@@ -805,6 +805,11 @@ class PhotoNode(object):
             if not keepInfo:
                 # we must destroy info
                 PhotoCmd(dest).destroyInfo()
+        if keepInfo:
+            if delCom:
+                PhotoCmd(dest).addComment(u"")
+            if delTags:
+                PhotoCmd(dest).clear()
 
         return dest
 

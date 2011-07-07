@@ -233,6 +233,7 @@ class Windowexport(GladeApp):
         self.__conf[type+".quality"]=self.hsQuality.get_value()
         self.__conf[type+".maxside"]=self.eMaxSide.get_text()
         self.__conf[type+".order"]=self.cbOrder.get_active()
+        self.__conf[type+".metadata"]=self.cbMetadata.get_active()
 
         self.quit(type)
 
@@ -268,6 +269,7 @@ class Windowexport(GladeApp):
         self.hsQuality.set_value(float(self.__conf[tp+".quality"]))
         self.eMaxSide.set_text(str(self.__conf[tp+".maxside"]))    #combobox
         self.cbOrder.set_active(int(self.__conf[tp+".order"]))
+        self.cbMetadata.set_active(int(self.__conf[tp+".metadata"]))
 
     def on_btnFolderA_clicked(self,*args):
         ret=chooseFolder(self.tbFolderA.get_text())

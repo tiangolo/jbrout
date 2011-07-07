@@ -52,23 +52,25 @@ class ExportConf(object):
         # ===================
         "CA.folder": "",
 
-            "CA.type":'zip',  # tar. tbz, tgz or zip
-            "CA.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "CA.percent":80,
-            "CA.maxside":1600,
-            "CA.quality":80,
-            "CA.order":0,
+        "CA.type":'zip',  # tar. tbz, tgz or zip
+        "CA.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "CA.percent":80,
+        "CA.maxside":1600,
+        "CA.quality":80,
+        "CA.order":0,
+        "CA.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
 
         # FileSystem conf
         # ===================
         "FS.folder": "",
 
-            "FS.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "FS.percent":80,
-            "FS.maxside":1600,
-            "FS.quality":80,
-            "FS.order":0,
+        "FS.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "FS.percent":80,
+        "FS.maxside":1600,
+        "FS.quality":80,
+        "FS.order":0,
+        "FS.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
 
         # Html Gallery conf
@@ -76,11 +78,12 @@ class ExportConf(object):
         "HG.folder": "",
         "HG.template": 0,
 
-            "HG.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "HG.percent":80,
-            "HG.maxside":1600,
-            "HG.quality":80,
-            "HG.order":0,
+        "HG.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "HG.percent":80,
+        "HG.maxside":1600,
+        "HG.quality":80,
+        "HG.order":0,
+        "HG.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
 
         # Pycasa conf
@@ -89,11 +92,12 @@ class ExportConf(object):
         "PW.password": "",
         "PW.privacy": 0,       # 0 or 1
 
-            "PW.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "PW.percent":80,
-            "PW.maxside":1600,
-            "PW.quality":80,
-            "PW.order":0,
+        "PW.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "PW.percent":80,
+        "PW.maxside":1600,
+        "PW.quality":80,
+        "PW.order":0,
+        "PW.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
         # flickr conf
         # ===================
@@ -102,11 +106,12 @@ class ExportConf(object):
         "FR.family": 0,
         "FR.same_privacy":0,       # 0 or 1
 
-            "FR.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "FR.percent":80,
-            "FR.maxside":1600,
-            "FR.quality":80,
-            "FR.order":0,
+        "FR.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "FR.percent":80,
+        "FR.maxside":1600,
+        "FR.quality":80,
+        "FR.order":0,
+        "FR.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
         # Mail conf
         # ===================
@@ -121,11 +126,12 @@ class ExportConf(object):
         "SM.subject":"",
         "SM.message":"",
 
-            "SM.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "SM.percent":80,
-            "SM.maxside":1600,
-            "SM.quality":80,
-            "SM.order":0,
+        "SM.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "SM.percent":80,
+        "SM.maxside":1600,
+        "SM.quality":80,
+        "SM.order":0,
+        "SM.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
         # FTP conf
         # ===================
@@ -134,11 +140,12 @@ class ExportConf(object):
         "FT.password":"",
         "FT.path":"",
 
-            "FT.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
-            "FT.percent":80,
-            "FT.maxside":1600,
-            "FT.quality":80,
-            "FT.order":0,
+        "FT.resize":0,    # 0:NO, 1:PERCENT, 2:MAXSIDE
+        "FT.percent":80,
+        "FT.maxside":1600,
+        "FT.quality":80,
+        "FT.order":0,
+        "FT.metadata":0,  # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
     }
     def __init__(self,conf):
@@ -174,7 +181,7 @@ class Plugin(JPlugin):
     """ Multi export plugin"""
 
     __author__ = "manatlan"
-    __version__ = "0.9"
+    __version__ = "0.10"
 
     #def menuEntries(self,l):
     #    return [(3000,_("Export to"),False,self.export,None)]
@@ -204,6 +211,22 @@ class Plugin(JPlugin):
             quality=ec[type+".quality"]
             maxside=ec[type+".maxside"]
             order=ec[type+".order"]
+            metadata=ec[type+".metadata"]
+
+            delCom=False
+            delTags=False
+            keepInfo=True
+            if metadata == 4:
+                keepInfo = False
+            elif metadata == 3:
+                delCom = True
+                delTags = True
+            elif metadata == 2:
+                delTags = True
+            elif metadata == 1:
+                delCom = True
+
+            # 0:Keep, 1:Del comment, 2:Del tags, 3:Del comment & tags, 4:Del all
 
             if type == "CA":
                 msg = _("Export to archive")
@@ -222,7 +245,6 @@ class Plugin(JPlugin):
                         archive = tarfile.open(os.path.join(path, ("Jbrout " + time.strftime("%Y-%m-%d, %H-%M-%S") + '.' + ec["CA.type"])), archMode)
                     else:
                         archive = zipfile.ZipFile(os.path.join(path, ("Jbrout " + time.strftime("%Y-%m-%d, %H-%M-%S") + '.zip')), "w")
-                    # TODO: open archive
                 else:
                     self.MessageBox(_("The selected path doesn't exists !"))
                     return False
@@ -319,7 +341,7 @@ class Plugin(JPlugin):
                         self.showProgress( list.index(photo), len(list) , msg )
 
                         if resize == 0: # no resize
-                            file = photo.copyTo(destination)
+                            file = photo.copyTo(destination, keepInfo=keepInfo, delCom=delCom, delTags=delTags)
                         elif resize == 1: # resize
                             file = photo.copyTo(destination,resize=( float(percent/100),quality))
                         elif resize == 2: # max side

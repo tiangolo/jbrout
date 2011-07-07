@@ -1,53 +1,65 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--*- mode: xml -*-->
+<?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.6 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="WinExport">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">Export</property>
-    <signal name="delete_event" handler="on_winExport_delete_event"/>
+    <signal name="delete_event" handler="on_winExport_delete_event" swapped="no"/>
     <child>
       <widget class="GtkTable" id="tableWindow">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="border_width">8</property>
-        <property name="n_rows">4</property>
+        <property name="n_rows">5</property>
         <property name="n_columns">2</property>
         <property name="column_spacing">8</property>
         <property name="row_spacing">6</property>
         <child>
           <widget class="GtkHButtonBox" id="hbuttonbox1">
             <property name="visible">True</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="btnCancel">
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
-                <property name="label" translatable="yes">gtk-cancel</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="on_btnCancel_clicked"/>
+                <signal name="clicked" handler="on_btnCancel_clicked" swapped="no"/>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="btnOk">
+                <property name="label">gtk-apply</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
-                <property name="label" translatable="yes">gtk-apply</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="on_btnOk_clicked"/>
+                <signal name="clicked" handler="on_btnOk_clicked" swapped="no"/>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
           </widget>
           <packing>
             <property name="right_attach">2</property>
-            <property name="top_attach">3</property>
-            <property name="bottom_attach">4</property>
+            <property name="top_attach">4</property>
+            <property name="bottom_attach">5</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
           </packing>
@@ -55,9 +67,10 @@
         <child>
           <widget class="GtkLabel" id="lblTitre">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">32 photos, taille 42mo (demo)</property>
-            <property name="justify">GTK_JUSTIFY_CENTER</property>
+            <property name="justify">center</property>
           </widget>
           <packing>
             <property name="right_attach">2</property>
@@ -66,24 +79,27 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkFrame" id="frame1">
+          <widget class="GtkFrame" id="frameMain">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label_xalign">0</property>
             <child>
               <widget class="GtkNotebook" id="nbExport">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="border_width">5</property>
-                <signal name="switch_page" handler="on_nbExport_switch_page" after="yes"/>
+                <signal name="switch_page" handler="on_nbExport_switch_page" after="yes" swapped="no"/>
                 <child>
                   <widget class="GtkTable" id="tableFileSystem">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_columns">3</property>
                     <child>
                       <widget class="GtkLabel" id="label26">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Folder</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="x_options">GTK_FILL</property>
@@ -94,6 +110,10 @@
                       <widget class="GtkEntry" id="tbFolderF">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -103,12 +123,13 @@
                     </child>
                     <child>
                       <widget class="GtkButton" id="btnFolderF">
+                        <property name="label" translatable="yes">...</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">...</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="on_btnFolderF_clicked"/>
+                        <signal name="clicked" handler="on_btnFolderF_clicked" swapped="no"/>
                       </widget>
                       <packing>
                         <property name="left_attach">2</property>
@@ -122,27 +143,27 @@
                 <child>
                   <widget class="GtkLabel" id="label2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Filesystem</property>
-                    <property name="justify">GTK_JUSTIFY_CENTER</property>
+                    <property name="justify">center</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="table3">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_rows">2</property>
                     <property name="n_columns">3</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
                       <widget class="GtkLabel" id="label13">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Folder</property>
-                        <property name="justify">GTK_JUSTIFY_RIGHT</property>
+                        <property name="justify">right</property>
                       </widget>
                       <packing>
                         <property name="x_options">GTK_FILL</property>
@@ -153,6 +174,10 @@
                       <widget class="GtkEntry" id="tbFolderH">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -162,12 +187,13 @@
                     </child>
                     <child>
                       <widget class="GtkButton" id="btnFolderH">
+                        <property name="label" translatable="yes">...</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">...</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="on_btnFolderH_clicked"/>
+                        <signal name="clicked" handler="on_btnFolderH_clicked" swapped="no"/>
                       </widget>
                       <packing>
                         <property name="left_attach">2</property>
@@ -179,9 +205,10 @@
                     <child>
                       <widget class="GtkLabel" id="label14">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Template </property>
-                        <property name="justify">GTK_JUSTIFY_RIGHT</property>
+                        <property name="justify">right</property>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
@@ -193,6 +220,7 @@
                     <child>
                       <widget class="GtkComboBox" id="cbTemplate">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -203,6 +231,9 @@
                         <property name="y_options">GTK_FILL</property>
                       </packing>
                     </child>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </widget>
                   <packing>
                     <property name="position">1</property>
@@ -211,29 +242,29 @@
                 <child>
                   <widget class="GtkLabel" id="label3">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Html Gallery</property>
-                    <property name="justify">GTK_JUSTIFY_CENTER</property>
+                    <property name="justify">center</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="position">1</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="tablePW">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_rows">4</property>
                     <property name="n_columns">2</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
                       <widget class="GtkLabel" id="label15">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Login</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="x_options">GTK_FILL</property>
@@ -243,9 +274,10 @@
                     <child>
                       <widget class="GtkLabel" id="label16">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Password</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
@@ -258,6 +290,10 @@
                       <widget class="GtkEntry" id="tbLoginPW">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -270,6 +306,10 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="visibility">False</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -281,11 +321,12 @@
                     </child>
                     <child>
                       <widget class="GtkRadioButton" id="rbPublicPW">
+                        <property name="label" translatable="yes">Public</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">Public</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
                       </widget>
                       <packing>
@@ -299,11 +340,12 @@
                     </child>
                     <child>
                       <widget class="GtkRadioButton" id="rbPrivatePW">
+                        <property name="label" translatable="yes">Private</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">Private</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">rbPublicPW</property>
                       </widget>
@@ -319,6 +361,7 @@
                     <child>
                       <widget class="GtkLabel" id="label38">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Privacy</property>
                       </widget>
@@ -329,6 +372,9 @@
                         <property name="y_options"></property>
                       </packing>
                     </child>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </widget>
                   <packing>
                     <property name="position">2</property>
@@ -337,53 +383,57 @@
                 <child>
                   <widget class="GtkLabel" id="label4">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">PicasaWeb</property>
-                    <property name="justify">GTK_JUSTIFY_CENTER</property>
+                    <property name="justify">center</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="position">2</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="tableFlickr">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_columns">2</property>
-                    <child>
-                      <placeholder/>
-                    </child>
                     <child>
                       <widget class="GtkVBox" id="vb1FR">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <child>
                           <widget class="GtkRadioButton" id="rbPrivateFR">
+                            <property name="label" translatable="yes">Private</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Private</property>
+                            <property name="receives_default">False</property>
+                            <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_rbPrivateFR_toggled"/>
+                            <signal name="toggled" handler="on_rbPrivateFR_toggled" swapped="no"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <widget class="GtkAlignment" id="alignment1">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="left_padding">5</property>
                             <child>
                               <widget class="GtkCheckButton" id="cbFriendsFR">
+                                <property name="label" translatable="yes">Friends</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="label" translatable="yes">Friends</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
-                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="on_friends_or_family_toggled"/>
+                                <signal name="toggled" handler="on_friends_or_family_toggled" swapped="no"/>
                               </widget>
                             </child>
                           </widget>
@@ -396,16 +446,18 @@
                         <child>
                           <widget class="GtkAlignment" id="alignment2">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="left_padding">5</property>
                             <child>
                               <widget class="GtkCheckButton" id="cbFamilyFR">
+                                <property name="label" translatable="yes">Family</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="label" translatable="yes">Family</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
-                                <property name="response_id">0</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="on_friends_or_family_toggled"/>
+                                <signal name="toggled" handler="on_friends_or_family_toggled" swapped="no"/>
                               </widget>
                             </child>
                           </widget>
@@ -417,11 +469,12 @@
                         </child>
                         <child>
                           <widget class="GtkRadioButton" id="rbPublicFR">
+                            <property name="label" translatable="yes">Public</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Public</property>
+                            <property name="receives_default">False</property>
+                            <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
                             <property name="group">rbPrivateFR</property>
                           </widget>
@@ -434,21 +487,24 @@
                         <child>
                           <widget class="GtkHSeparator" id="hseparator2">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
+                            <property name="fill">True</property>
                             <property name="position">4</property>
                           </packing>
                         </child>
                         <child>
                           <widget class="GtkCheckButton" id="cbSelectAllFR">
+                            <property name="label" translatable="yes">Apply to all</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="label" translatable="yes">Apply to all</property>
+                            <property name="receives_default">False</property>
+                            <property name="use_action_appearance">False</property>
                             <property name="use_underline">True</property>
-                            <property name="response_id">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="on_cbSelectAllFR_toggled"/>
+                            <signal name="toggled" handler="on_cbSelectAllFR_toggled" swapped="no"/>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -458,6 +514,9 @@
                         </child>
                       </widget>
                     </child>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </widget>
                   <packing>
                     <property name="position">3</property>
@@ -466,31 +525,30 @@
                 <child>
                   <widget class="GtkLabel" id="label29">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Flickr</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="position">3</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="tblSmtp">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_rows">10</property>
                     <property name="n_columns">2</property>
                     <child>
                       <widget class="GtkLabel" id="lblSmtp">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">SMTP address</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
-		        <property name="top_attach">0</property>
-                        <property name="bottom_attach">1</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                       </packing>
@@ -499,89 +557,92 @@
                       <widget class="GtkEntry" id="tbSmtp">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
-		        <property name="top_attach">0</property>
-                        <property name="bottom_attach">1</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		     <child>
+                    <child>
                       <widget class="GtkLabel" id="lblPortSM">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Port</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
-		        <property name="top_attach">1</property>
+                        <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkSpinButton" id="spPortSM">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                         <property name="snap_to_ticks">True</property>
                         <property name="numeric">True</property>
                       </widget>
                       <packing>
-		        <property name="left_attach">1</property>
+                        <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
                       </packing>
-		    </child>
-		    <child>
+                    </child>
+                    <child>
                       <widget class="GtkLabel" id="lblAuthSM">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Authentication</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
-		        <property name="top_attach">2</property>
+                        <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkCheckButton" id="cbAuthSM">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes"></property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="on_cbAuthSM_toggled"/>
+                        <signal name="toggled" handler="on_cbAuthSM_toggled" swapped="no"/>
                       </widget>
                       <packing>
-		        <property name="left_attach">1</property>
+                        <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblUserSM">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">User Name</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
-		        <property name="top_attach">3</property>
+                        <property name="top_attach">3</property>
                         <property name="bottom_attach">4</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
@@ -591,26 +652,29 @@
                       <widget class="GtkEntry" id="tbUserSM">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
-		        <property name="top_attach">3</property>
+                        <property name="top_attach">3</property>
                         <property name="bottom_attach">4</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblPasswordSM">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Password</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
-		        <property name="top_attach">4</property>
+                        <property name="top_attach">4</property>
                         <property name="bottom_attach">5</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
@@ -618,61 +682,64 @@
                     </child>
                     <child>
                       <widget class="GtkEntry" id="tbPasswordSM">
-                        <property name="visibility">False</property>>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="visibility">False</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
-		        <property name="top_attach">4</property>
+                        <property name="top_attach">4</property>
                         <property name="bottom_attach">5</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblSecurity">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Security</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
-		        <property name="top_attach">5</property>
+                        <property name="top_attach">5</property>
                         <property name="bottom_attach">6</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkComboBox" id="cbSecurity">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="items" translatable="yes">None
 SSL
 Start TLS</property>
-			<signal name="changed" handler="on_cbSecurity_changed"/>
+                        <signal name="changed" handler="on_cbSecurity_changed" swapped="no"/>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
-		        <property name="top_attach">5</property>
+                        <property name="top_attach">5</property>
                         <property name="bottom_attach">6</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblTo">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">to Emails</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
                         <property name="top_attach">6</property>
                         <property name="bottom_attach">7</property>
                         <property name="x_options">GTK_FILL</property>
@@ -683,6 +750,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbTo">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -692,16 +763,15 @@ Start TLS</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblFrom">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">From email</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                       <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
                         <property name="top_attach">7</property>
                         <property name="bottom_attach">8</property>
                         <property name="x_options">GTK_FILL</property>
@@ -712,25 +782,28 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbFrom">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
-                       <property name="left_attach">1</property>
+                        <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
                         <property name="top_attach">7</property>
                         <property name="bottom_attach">8</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblSubject">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Subject</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
                         <property name="top_attach">8</property>
                         <property name="bottom_attach">9</property>
                         <property name="x_options">GTK_FILL</property>
@@ -741,6 +814,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbSubject">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -750,16 +827,15 @@ Start TLS</property>
                         <property name="y_options"></property>
                       </packing>
                     </child>
-		    <child>
+                    <child>
                       <widget class="GtkLabel" id="lblMessage">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Message</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="right_attach">1</property>
                         <property name="top_attach">9</property>
                         <property name="bottom_attach">10</property>
                         <property name="x_options">GTK_FILL</property>
@@ -770,6 +846,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbMessage">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -787,26 +867,29 @@ Start TLS</property>
                 <child>
                   <widget class="GtkLabel" id="label6">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Mail</property>
-                    <property name="justify">GTK_JUSTIFY_CENTER</property>
+                    <property name="justify">center</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="position">4</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="tableFTP">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_rows">4</property>
                     <property name="n_columns">2</property>
                     <child>
                       <widget class="GtkLabel" id="label34">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Login</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
@@ -818,9 +901,10 @@ Start TLS</property>
                     <child>
                       <widget class="GtkLabel" id="label35">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Password</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="top_attach">2</property>
@@ -833,6 +917,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbLoginFT">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -847,6 +935,10 @@ Start TLS</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="visibility">False</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -859,6 +951,7 @@ Start TLS</property>
                     <child>
                       <widget class="GtkLabel" id="label36">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">FTP</property>
                       </widget>
@@ -871,6 +964,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbFtp">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -881,6 +978,7 @@ Start TLS</property>
                     <child>
                       <widget class="GtkLabel" id="label37">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Path</property>
                       </widget>
@@ -895,6 +993,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbPath">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -912,22 +1014,25 @@ Start TLS</property>
                 <child>
                   <widget class="GtkLabel" id="label33">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">FTP</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="position">5</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkTable" id="tableArchive">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="n_rows">2</property>
                     <property name="n_columns">3</property>
                     <child>
                       <widget class="GtkComboBox" id="cbTypeA">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -941,8 +1046,9 @@ Start TLS</property>
                     <child>
                       <widget class="GtkLabel" id="lblTypeA">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Type</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
@@ -952,13 +1058,11 @@ Start TLS</property>
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
                       <widget class="GtkLabel" id="lblFolderA">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Folder</property>
-                        <property name="justify">GTK_JUSTIFY_CENTER</property>
+                        <property name="justify">center</property>
                       </widget>
                       <packing>
                         <property name="x_options">GTK_FILL</property>
@@ -969,6 +1073,10 @@ Start TLS</property>
                       <widget class="GtkEntry" id="tbFolderA">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -978,12 +1086,13 @@ Start TLS</property>
                     </child>
                     <child>
                       <widget class="GtkButton" id="btnFolderA">
+                        <property name="label" translatable="yes">...</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">...</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="on_btnFolderA_clicked"/>
+                        <signal name="clicked" handler="on_btnFolderA_clicked" swapped="no"/>
                       </widget>
                       <packing>
                         <property name="left_attach">2</property>
@@ -991,6 +1100,9 @@ Start TLS</property>
                         <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                       </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
                     </child>
                   </widget>
                   <packing>
@@ -1000,19 +1112,21 @@ Start TLS</property>
                 <child>
                   <widget class="GtkLabel" id="lblTabArchive">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Archive</property>
                   </widget>
                   <packing>
-                    <property name="type">tab</property>
                     <property name="position">6</property>
                     <property name="tab_fill">False</property>
+                    <property name="type">tab</property>
                   </packing>
                 </child>
               </widget>
             </child>
             <child>
-              <widget class="GtkLabel" id="label12">
+              <widget class="GtkLabel" id="labelExport">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Export To</property>
               </widget>
               <packing>
@@ -1022,7 +1136,7 @@ Start TLS</property>
           </widget>
           <packing>
             <property name="top_attach">1</property>
-            <property name="bottom_attach">3</property>
+            <property name="bottom_attach">4</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options">GTK_FILL</property>
           </packing>
@@ -1030,17 +1144,20 @@ Start TLS</property>
         <child>
           <widget class="GtkFrame" id="frameOrder">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label_xalign">0</property>
             <child>
               <widget class="GtkComboBox" id="cbOrder">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="items" translatable="yes">Newer first
 Oldest first</property>
               </widget>
             </child>
             <child>
-              <widget class="GtkLabel" id="label27">
+              <widget class="GtkLabel" id="labelOrder">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Order</property>
               </widget>
               <packing>
@@ -1051,25 +1168,28 @@ Oldest first</property>
           <packing>
             <property name="left_attach">1</property>
             <property name="right_attach">2</property>
-            <property name="top_attach">2</property>
-            <property name="bottom_attach">3</property>
+            <property name="top_attach">3</property>
+            <property name="bottom_attach">4</property>
             <property name="x_options">GTK_FILL</property>
             <property name="y_options"></property>
           </packing>
         </child>
         <child>
-          <widget class="GtkFrame" id="frame2">
+          <widget class="GtkFrame" id="frameResize">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label_xalign">0</property>
             <child>
               <widget class="GtkTable" id="tableResize">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">5</property>
                 <property name="n_rows">5</property>
                 <property name="n_columns">2</property>
                 <child>
                   <widget class="GtkComboBoxEntry" id="cbMaxSide">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <property name="items" translatable="yes">640
 800
@@ -1081,6 +1201,10 @@ Oldest first</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
                       </widget>
                     </child>
                   </widget>
@@ -1094,13 +1218,14 @@ Oldest first</property>
                 </child>
                 <child>
                   <widget class="GtkRadioButton" id="rbResize">
+                    <property name="label" translatable="yes">resize</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">resize</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="on_resize_toggled"/>
+                    <signal name="toggled" handler="on_resize_toggled" swapped="no"/>
                   </widget>
                   <packing>
                     <property name="top_attach">1</property>
@@ -1111,14 +1236,15 @@ Oldest first</property>
                 </child>
                 <child>
                   <widget class="GtkRadioButton" id="rbMaxSide">
+                    <property name="label" translatable="yes">Max side</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Max side</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">rbResize</property>
-                    <signal name="toggled" handler="on_resize_toggled"/>
+                    <signal name="toggled" handler="on_resize_toggled" swapped="no"/>
                   </widget>
                   <packing>
                     <property name="top_attach">2</property>
@@ -1130,9 +1256,10 @@ Oldest first</property>
                 <child>
                   <widget class="GtkLabel" id="label11">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Quality</property>
-                    <property name="justify">GTK_JUSTIFY_RIGHT</property>
+                    <property name="justify">right</property>
                   </widget>
                   <packing>
                     <property name="top_attach">4</property>
@@ -1146,7 +1273,7 @@ Oldest first</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="adjustment">10 10 100 1 10 0</property>
-                    <property name="value_pos">GTK_POS_LEFT</property>
+                    <property name="value_pos">left</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -1162,7 +1289,7 @@ Oldest first</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="adjustment">10 10 100 1 10 0</property>
-                    <property name="value_pos">GTK_POS_LEFT</property>
+                    <property name="value_pos">left</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -1175,15 +1302,16 @@ Oldest first</property>
                 </child>
                 <child>
                   <widget class="GtkRadioButton" id="rbNoResize">
+                    <property name="label" translatable="yes">don't touch originals</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">don't touch originals</property>
+                    <property name="receives_default">False</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="active">True</property>
                     <property name="draw_indicator">True</property>
                     <property name="group">rbResize</property>
-                    <signal name="toggled" handler="on_resize_toggled"/>
+                    <signal name="toggled" handler="on_resize_toggled" swapped="no"/>
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
@@ -1194,6 +1322,7 @@ Oldest first</property>
                 <child>
                   <widget class="GtkHSeparator" id="hseparator1">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
@@ -1207,6 +1336,7 @@ Oldest first</property>
             <child>
               <widget class="GtkLabel" id="label1">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Resize</property>
               </widget>
               <packing>
@@ -1220,6 +1350,43 @@ Oldest first</property>
             <property name="top_attach">1</property>
             <property name="bottom_attach">2</property>
             <property name="x_options">GTK_FILL</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkFrame" id="frameMetadata">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <widget class="GtkComboBox" id="cbMetadata">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="items" translatable="yes">Keep All
+Remove Comments
+Remove Tags
+Remove Comments &amp; Tags
+Remove All</property>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="labelMetadata">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Metadata</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="right_attach">2</property>
+            <property name="top_attach">2</property>
+            <property name="bottom_attach">3</property>
+            <property name="y_options"></property>
           </packing>
         </child>
       </widget>
