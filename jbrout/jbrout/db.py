@@ -33,6 +33,7 @@ from libs.dict4ini import DictIni
 from commongtk import Buffer,rgb,Img
 
 from subprocess import Popen,PIPE
+import char_utils
 
 def walktree (top = ".", depthfirst = True):
     try:
@@ -894,7 +895,13 @@ class PhotoNode(object):
                 self.__node.append(nodeTag)
         if pc.comment:
             nodeComment = Element("c")
-            nodeComment.text = pc.comment.replace(u'\x00',u' ')
+            try:
+                nodeComment.text = char_utils.make_xml_string_legal(pc.comment)
+            except ValueError, f:
+                print "exception = %s" % f
+                print "nodeComment = %s" % nodeComment
+                print "pc.comment = %s" % pc.comment
+                raise
             self.__node.append(nodeComment)
         if pc.rating:
             nodeRating = Element("r")
