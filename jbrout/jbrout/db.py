@@ -12,7 +12,6 @@
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
-
 from lxml.etree import Element,ElementTree
 import lxml
 import traceback
@@ -58,6 +57,12 @@ def dec(s): # ensure that a return from etree is in utf-8
     if s!=None:
         return s.decode("utf_8")
 
+
+class ImportError(Exception):
+    def __init__(self,txt,file):
+        self.txt=txt
+        self.file=file
+        Exception.__init__(self,txt)
 
 class DBPhotos:
     """
@@ -187,7 +192,7 @@ class DBPhotos:
                 # to recreate minimal exif tags (because it's readonly ?)
                 # we can't continue to import this photo
                 raise Exception("Exif couldn't be set in this picture (readonly?)")
-        except:
+        except Exception,m:
             # getback the stack trace exception
             import traceback
             err=traceback.format_exc()
@@ -196,7 +201,7 @@ class DBPhotos:
             nodeDir.remove(newNode)
 
             # and raise exception
-            raise Exception(err+"\nPhoto has incorrect exif/iptc tags, can't be imported :\n"+str([file,]))
+            raise ImportError( str(m), file )
             return None
         else:
             importedTags=node.updateInfo( iii )
