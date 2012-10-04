@@ -224,6 +224,41 @@ def MessageBox(parent,data,title=_("Jbrout Message")):
 
     dialog.destroy()
 
+def MessageBoxScrolled(parent,data,title=_("Jbrout Message")):
+    dialog = gtk.Dialog(title, parent, 0,
+            (gtk.STOCK_OK, gtk.RESPONSE_OK)
+            )
+    dialog.set_default_response(gtk.RESPONSE_OK)
+    dialog.set_default_size(800,300)
+
+    hbox = gtk.HBox(False, 8)
+    hbox.set_border_width(8)
+    dialog.vbox.pack_start(hbox, True, True, 0)
+
+    stock = gtk.image_new_from_stock(
+            gtk.STOCK_DIALOG_INFO,
+            gtk.ICON_SIZE_DIALOG)
+    hbox.pack_start(stock, False, False, 0)
+
+    table = gtk.Table(2, 2)
+    table.set_row_spacings(4)
+    table.set_col_spacings(4)
+    hbox.pack_start(table, True, True, 0)
+
+    sw = gtk.ScrolledWindow()
+    tbuf = gtk.TextBuffer()
+    tbuf.set_text(data)
+    text = gtk.TextView(tbuf)
+    text.set_editable(False)
+    sw.add(text)
+    table.attach(sw, 0, 2, 0, 1)
+
+    dialog.show_all()
+
+    response = dialog.run()
+
+    dialog.destroy()
+
 def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK)):
     dialog = gtk.Dialog (title, parent, 0, buttons)
     dialog.set_default_response(gtk.RESPONSE_OK)

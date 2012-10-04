@@ -30,7 +30,7 @@ from tools import PhotoCmd,supportedFormats
 import os,re,sys,thread,shutil,stat,string
 
 from libs.dict4ini import DictIni
-from commongtk import Buffer,rgb,Img
+from commongtk import Buffer,rgb,Img,MessageBoxScrolled
 
 from subprocess import Popen,PIPE
 import char_utils
@@ -108,6 +108,8 @@ class DBPhotos:
         assert type(path)==unicode
         assert os.path.isdir(path)
         path = os.path.normpath(path)
+        
+        importErrors = {}
 
         ln = self.root.xpath(u"""//folder[@name="%s"]""" % path)
         assert len(ln)<=1
@@ -164,13 +166,22 @@ class DBPhotos:
             #                needRename=DBPhotos.normalizeName,
             #                needAutoRot=DBPhotos.autorotAtImport,
             #                )
-            self.__addPhoto( nodeDir,file ,tags,filesInBasket)
+            m = self.__addPhoto( nodeDir,file ,tags,filesInBasket)
+            if m:
+                importErrors[file] = m
 
         ln = self.root.xpath(u"""//folder[@name="%s"]""" % path)
         if ln:
             yield FolderNode( ln[0] )
         else:
             yield None
+        if len(importErrors) > 0:
+            k = importErrors.keys()
+            k.sort()
+            msgs=[]
+            for f in k:
+                 msgs.append('"%s" adding file: "%s"' % (importErrors[f],f))
+            MessageBoxScrolled(None, '\n'.join(msgs),'Jbrout Import Errors')
 
     def __addPhoto(self,nodeDir,file,tags,filesInBasket):
         assert type(file)==unicode
@@ -202,13 +213,13 @@ class DBPhotos:
             nodeDir.remove(newNode)
 
             # and raise exception
-            raise ImportError( str(m), file )
-            return None
+            #raise ImportError( str(m), file )
+            return m
         else:
             importedTags=node.updateInfo( iii )
             for i in importedTags:  tags[i]=i # feed the dict of tags
 
-            return node
+            return None
 
     def getRootFolder(self):
         if len(self.root)>0:
