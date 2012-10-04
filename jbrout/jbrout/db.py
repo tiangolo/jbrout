@@ -185,7 +185,6 @@ class DBPhotos:
 
     def __addPhoto(self,nodeDir,file,tags,filesInBasket):
         assert type(file)==unicode
-        dir,name= os.path.split(file)
 
         newNode = Element("photo")
         nodeDir.append( newNode )
@@ -205,15 +204,9 @@ class DBPhotos:
                 # we can't continue to import this photo
                 raise Exception("Exif couldn't be set in this picture (readonly?)")
         except Exception,m:
-            # getback the stack trace exception
-            import traceback
-            err=traceback.format_exc()
-
             # remove the bad node
             nodeDir.remove(newNode)
 
-            # and raise exception
-            #raise ImportError( str(m), file )
             return m
         else:
             importedTags=node.updateInfo( iii )
