@@ -3042,7 +3042,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             op = u"r%s" % t
             if t.find("=0")>-1 or t.find("<")>-1:
                 # to find rating zero, include missing db <r> tag
-                op = u"not(r) or " + op
+                op = u"(not(r) or " + op + ")"
             ops.append( op )
             tops.append( _(u"Rating:%s") % t )
 
