@@ -945,8 +945,6 @@ class Window(GladeApp):
 
 
         # build the "plugins buttons"
-        self.tooltips = gtk.Tooltips()
-
         if JBrout.modify:
             l=JBrout.plugins.request("PhotosProcess",isIcon=True)
         else:
@@ -960,7 +958,7 @@ class Window(GladeApp):
             bb = gtk.ToolButton(image)
             txt = props["label"]
             if props["key"]: txt+=" (ctrl + %s)"%props["key"]
-            bb.set_tooltip(self.tooltips, txt)
+            bb.set_tooltip_text(txt)
             bb.connect("clicked", self.on_selecteur_menu_select_plugin,table,instance.id,callback)
             self.toolbar.insert(bb, 3)
             bb.show()

@@ -105,7 +105,6 @@ class WinShow(GladeApp):
         #=======================================================================
         # put real plugins
         #=======================================================================
-        self.tooltips = gtk.Tooltips()
         if isModify:
             l=JBrout.plugins.request("PhotosProcess",isIcon=True)
         else:
@@ -119,7 +118,7 @@ class WinShow(GladeApp):
             bb = gtk.ToolButton(image)
             txt = props["label"]
             if props["key"]: txt+=" (ctrl + %s)"%props["key"]
-            bb.set_tooltip(self.tooltips, txt)
+            bb.set_tooltip_text(txt)
             bb.connect("clicked", self.on_selecteur_menu_select_plugin,callback)
             self.toolbar1.insert(bb, 3)
             bb.show()
