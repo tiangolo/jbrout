@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
@@ -36,6 +36,22 @@
                         <property name="label" translatable="yes">_Preferences</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="on_editOptions_activate"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkMenuItem" id="exportBasket">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">E_xport Basket</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_exportBasket_activate"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkMenuItem" id="importBasket">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Import in Basket</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="on_importBasket_activate"/>
                       </widget>
                     </child>
                     <child>
@@ -1134,7 +1150,6 @@
     <property name="modal">True</property>
     <property name="window_position">center</property>
     <property name="type_hint">dialog</property>
-    <property name="has_separator">False</property>
     <signal name="delete_event" handler="on_WinGetComment_delete_event"/>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
@@ -1290,7 +1305,6 @@
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <child>
           <widget class="GtkNotebook" id="notebook1">
             <property name="visible">True</property>
@@ -1338,7 +1352,6 @@
                 <child>
                   <widget class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <widget class="GtkHBox" id="hbox2">
                         <property name="visible">True</property>

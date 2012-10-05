@@ -299,6 +299,46 @@ class DBPhotos:
         else:
             return [PhotoNode(i) for i in self.root.xpath("//photo[@basket='1']")]
 
+    def exportBasket(self, basketFile):
+        """ Export basket to the specified file as simple txt """
+        # save a "simple txt file" of basket'files near db.xml
+        if self.isBasket():
+            list =[i.file for i in self.getBasket()]
+
+            fid = open(basketFile,"w")
+            if fid:
+                fid.write((u"\n".join(list)).encode("utf_8"))
+                fid.close()
+
+    def importBasket(self, basketFile):
+        """ Import basket from the specified file as simple txt """
+        # save a "simple txt file" of basket'files near db.xml
+        countExisting = 0
+        countNew = 0
+        countError = 0
+        fid = open(basketFile,"r")
+        if fid:
+            lines = fid.readlines()
+            fid.close()
+            for iline in lines:
+                iline = iline.strip()
+                if os.path.isfile(iline):
+                    dirname = os.path.dirname(iline)
+                    basename = os.path.basename(iline)
+    
+                    for inode in self.root.xpath("//folder[@name='%s']/photo[@name='%s']"%(dirname,basename)):
+                        #print inode
+                        photo = PhotoNode(inode)
+                        #print photo
+                        if photo.isInBasket:
+                            countExisting = countExisting + 1
+                        else:
+                            countNew += 1
+                            photo.addToBasket()
+                else:
+                    countError += 1
+        msg = "imported [" + str(countNew) + "], [" + str(countExisting) + "] already in basket, [" + str(countError) + "] errors"
+        return msg
 
 
 class FolderNode(object):

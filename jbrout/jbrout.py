@@ -15,8 +15,6 @@
 ##load
 ## URL : http://jbrout.googlecode.com
 
-#TODO : code to load/save bookmarks ;-)
-
 import os
 import string
 import sys,time # to hack thread on win32
@@ -1633,6 +1631,73 @@ class Window(GladeApp):
         model.activeBasket()
         self.tbl.refresh()
 
+    def on_menu_import_basket(self, e):
+        Window.importBasket(self)
+
+    def on_menu_export_basket(self, e):
+        Window.exportBasket(self)
+
+        
+    def exportBasket(self):
+        if JBrout.db.isBasket():
+            dialog = gtk.FileChooserDialog (_("Export basket as..."),
+                        None, gtk.FILE_CHOOSER_ACTION_SAVE,
+                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_SAVE, gtk.RESPONSE_OK))
+            dialog.set_default_response (gtk.RESPONSE_OK)
+            dialog.set_transient_for (self.main_widget)
+    
+            # preselect default conf dir
+            #default = JBrout.getHomeDir()
+            #dialog.set_current_folder(default)
+    
+            response = dialog.run ()
+            if response == gtk.RESPONSE_OK:
+                file = dialog.get_filename()
+                if file:
+                    file = file.decode( "utf_8" ) # gtk return utf8
+            else:
+                file = None
+            dialog.destroy()
+            response = True
+            if file:
+                #Test existence...
+                if os.path.exists(file):
+                    response = InputQuestion(self.main_widget,
+                                             _("file [%s] already exists, do you want to replace it ?") % file,
+                                             _("Replace Existing File ?"),
+                                             (gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK))
+                if response:
+                    JBrout.db.exportBasket(file)
+        else: 
+            MessageBox(self.main_widget,_("Nothing to export in basket") % file)
+
+
+    def importBasket(self):
+        dialog = gtk.FileChooserDialog (_("Import in basket..."),
+                    None, gtk.FILE_CHOOSER_ACTION_OPEN,
+                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response (gtk.RESPONSE_OK)
+        dialog.set_transient_for (self.main_widget)
+
+        response = dialog.run ()
+        if response == gtk.RESPONSE_OK:
+            file = dialog.get_filename()
+            if file:
+                file = file.decode( "utf_8" ) # gtk return utf8
+        else:
+            file = None
+        dialog.destroy()
+        if file:
+            #Test existence...
+            if os.path.exists(file):
+                msg = JBrout.db.importBasket(file)
+                MessageBox(self.main_widget,_("Import result: %s") % msg)
+                model = self.treeviewdb.get_model()
+                model.activeBasket()
+                self.tbl.refresh()
+            else:
+                MessageBox(self.main_widget,_("file [%s] does not exist !") % file)
+
 
     def on_menu_select_only(self,e):
         treeselection = self.treeviewdb.get_selection()
@@ -2372,6 +2437,15 @@ class Window(GladeApp):
             JBrout.conf["plugins"] = ret
             #TODO: reload toolbar for plugin icons
 
+    def on_exportBasket_activate(self,*args):
+        """Export basket"""
+        Window.exportBasket(self)
+
+    def on_importBasket_activate(self,*args):
+        """Import in basket"""
+        Window.importBasket(self)
+
+
     def on_quitter_activate(self, widget, *args):
         self.on_window_delete_event(widget,*args)
 
@@ -2593,6 +2667,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 if event.button==3:
                     menu = gtk.Menu()
                     menu.append( makeItem(_("Remove"),self.on_menu_remove_basket) )
+                    menu.append( makeItem(_("Export basket"),self.on_menu_export_basket) )
+                    menu.append( makeItem(_("Import in basket"),self.on_menu_import_basket) )
                     menu.popup(None,None,None,event.button,event.time)
                     return 1
                 elif event.button==2:
