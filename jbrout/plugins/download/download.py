@@ -30,6 +30,7 @@ import shutil
 
 from libs import extListview
 from jbrout import pyexiv
+import pyexiv2
 from libs.gladeapp import GladeApp
 
 from jbrout.common import format_file_size_for_display,ed2d,dnd_args_to_dir_list
@@ -210,7 +211,7 @@ class WinDownload(GladeApp):
             self.buildListRunning = False
             yield False
         for srcFile in fileList:
-            exifData=pyexiv.Image(srcFile)
+            exifData = pyexiv.Exiv2Metadata(pyexiv2.ImageMetadata(srcFile))
             exifData.readMetadata()
             size=os.path.getsize(srcFile)
             if 'Exif.Photo.DateTimeOriginal' in exifData.exifKeys():
@@ -319,7 +320,8 @@ class WinDownload(GladeApp):
                 statS = 'C'
                 statL = _('Collision with New')
             elif os.path.isfile(destFile):
-                destExif = pyexiv.Image(destFile)
+                destExif = pyexiv.Exiv2Metadata(
+                        pyexiv2.ImageMetadata(destFile))
                 destExif.readMetadata()
                 if 'Image DateTime' in destExif.exifKeys():
                     destDate = ed2d(destExif.interpretedExifValue('Exif.Photo.DateTimeOriginal'))

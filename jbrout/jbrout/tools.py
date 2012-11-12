@@ -27,6 +27,7 @@ MAJOR CHANGES :
 """
 import os,sys
 from jbrout import pyexiv
+import pyexiv2
 
 import time
 from datetime import datetime,timedelta
@@ -175,7 +176,7 @@ class PhotoCmd(object):
 
         # pre-read
 
-        self.__info = pyexiv.Image(self.__file)
+        self.__info = pyexiv.Exiv2Metadata(pyexiv2.ImageMetadata(self.__file))
         self.__info.readMetadata()
 
         if self.readonly:
@@ -247,7 +248,8 @@ class PhotoCmd(object):
         self.__refresh()
 
     def __refresh(self):
-        self.__info = pyexiv.Image(self.__file)
+        self.__info = pyexiv.Exiv2Metadata(
+                pyexiv2.ImageMetadata(self.__file))
         self.__info.readMetadata()
 
         if "Exif.Image.Make" in self.__info.exifKeys():

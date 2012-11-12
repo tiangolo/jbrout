@@ -306,6 +306,7 @@ def InputQuestion (parent, label, title=_("Jbrout Question"), buttons=(gtk.STOCK
 
 from StringIO import StringIO
 from jbrout import pyexiv
+import pyexiv2
 
 import os
 
@@ -327,7 +328,7 @@ class Img(object):
                 #~ fid.close()
                 #~ data = jo["JPEGThumbnail"]
 
-                img = pyexiv.Image(thumb)
+                img = pyexiv.Exiv2Metadata(pyexiv2.ImageMetadata(thumb))
                 img.readMetadata()
                 # XXX external call while pyexiv can't handle it
                 if extension == 'nef':

@@ -1635,7 +1635,6 @@ class Window(GladeApp):
     def on_menu_export_basket(self, e):
         Window.exportBasket(self)
 
-
     def exportBasket(self):
         if JBrout.db.isBasket():
             dialog = gtk.FileChooserDialog (_("Export basket as..."),
@@ -3185,10 +3184,6 @@ JBrout %s by Marc Lentz (c)2003-2009, Licence GPL2
 http://jbrout.googlecode.com""" % ("%prog",__version__)
 
 if __name__ == "__main__":
-    # Print pyexiv2-0.2+ warning if necessary
-    from jbrout.pyexiv import Check
-    Check()
-
     try:
         parser = optparse.OptionParser(usage=USAGE, version=("JBrout "+__version__))
         parser.add_option("-v","--view",
