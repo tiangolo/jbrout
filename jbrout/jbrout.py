@@ -1635,7 +1635,7 @@ class Window(GladeApp):
     def on_menu_export_basket(self, e):
         Window.exportBasket(self)
 
-        
+
     def exportBasket(self):
         if JBrout.db.isBasket():
             dialog = gtk.FileChooserDialog (_("Export basket as..."),
@@ -1643,11 +1643,11 @@ class Window(GladeApp):
                         (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_SAVE, gtk.RESPONSE_OK))
             dialog.set_default_response (gtk.RESPONSE_OK)
             dialog.set_transient_for (self.main_widget)
-    
+
             # preselect default conf dir
             #default = JBrout.getHomeDir()
             #dialog.set_current_folder(default)
-    
+
             response = dialog.run ()
             if response == gtk.RESPONSE_OK:
                 file = dialog.get_filename()
@@ -1666,7 +1666,7 @@ class Window(GladeApp):
                                              (gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK))
                 if response:
                     JBrout.db.exportBasket(file)
-        else: 
+        else:
             MessageBox(self.main_widget,_("Nothing to export in basket") % file)
 
 
@@ -3185,12 +3185,6 @@ JBrout %s by Marc Lentz (c)2003-2009, Licence GPL2
 http://jbrout.googlecode.com""" % ("%prog",__version__)
 
 if __name__ == "__main__":
-    try:
-        #import psyco
-        psyco.profile()
-        psyco.full()
-    except:
-        print "The psyco module does not seem to be installed. It is not necessary, however it can speed up performance."
     # Print pyexiv2-0.2+ warning if necessary
     from jbrout.pyexiv import Check
     Check()
