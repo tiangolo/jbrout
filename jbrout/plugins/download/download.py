@@ -827,7 +827,8 @@ class WinDownloadExecute(GladeApp):
                 yield True
                 noThumb = False
                 try:
-                    if item[dc.C_EXIF].getThumbnailData():
+                  if item[dc.C_EXIF].getThumbnailData():
+                    try:
                         thumbJpeg = item[dc.C_EXIF].getThumbnailData()[1]
                         loader = gtk.gdk.PixbufLoader ('jpeg')
                         loader.write (thumbJpeg, len(thumbJpeg))
@@ -851,6 +852,8 @@ class WinDownloadExecute(GladeApp):
                             thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
                     else:
                         noThumb = True
+                  else:
+                    noThumb = True
                 except:
                     noThumb = True
 
