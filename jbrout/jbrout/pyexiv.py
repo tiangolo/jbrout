@@ -24,6 +24,8 @@ map old methods/objects from pyexiv2(<2), to work with versions 1 & 2
 """
 import re
 import sys
+import logging
+logging.basicConfig(level=logging.INFO)
 
 try:
     import pyexiv2
@@ -135,6 +137,11 @@ class Exiv2Metadata(object):
 
         ll = list(set(li + lx + lk))
         ll.sort()
+        _keys = ['Iptc.Application2.Keywords', 'Xmp.iptc.Keywords',
+                'Xmp.dc.subject']
+        for key in _keys:
+            if key in self._md:
+                logging.debug("%s = %s" % (key, self._md[key]))
         return ll
 
     def setTags(self, l):
@@ -144,12 +151,10 @@ class Exiv2Metadata(object):
         if l:
             self._md["Iptc.Application2.Keywords"] = \
                 [i.encode("utf_8") for i in l]
-            self._md["Xmp.dc.subject"] = [",".join(l)]
+            self._md["Xmp.dc.subject"] = l
         else:
             del self._md["Iptc.Application2.Keywords"]
             del self._md["Xmp.dc.subject"]
-        if 'Xmp.iptc.Keywords' in self._md.xmp_keys:
-            del self._md['Xmp.iptc.Keywords']
 
     def clearTags(self):
         if "Iptc.Application2.Keywords" in self._md.iptc_keys:
