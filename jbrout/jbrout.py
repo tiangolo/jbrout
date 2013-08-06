@@ -38,7 +38,7 @@ pygtk.require('2.0')
 
 import gtk
 import locale
-locale.setlocale(locale.LC_ALL, '.'.join(locale.getdefaultlocale()))
+locale.setlocale(locale.LC_ALL)
 
 from libs.gladeapp import GladeApp
 from libs.i18n import createGetText
