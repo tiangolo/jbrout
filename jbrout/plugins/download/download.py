@@ -857,7 +857,7 @@ class WinDownloadExecute(GladeApp):
                             thumbIm = thumbIm.flip(True)
                         elif item[dc.C_RS] == "rotate270":
                             thumbIm = thumbIm.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
-                    else:
+                    except:
                         noThumb = True
                   else:
                     noThumb = True
