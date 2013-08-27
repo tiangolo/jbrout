@@ -162,8 +162,8 @@ class WinDownload(GladeApp):
         if self.__conf['promptJobCode'] == 1:
             newJobCode = InputBox(self.main_widget,
             _('Please enter the new Job Code'),
-            '%s' % self.__conf['jobCode'])
-            if newJobCode != None:
+                '%s' % self.__conf['jobCode'])
+            if newJobCode is not None:
                 self.__conf['jobCode'] = newJobCode
 
     def _bgWork(self):
@@ -175,7 +175,7 @@ class WinDownload(GladeApp):
                 task = self._buildListSource()
                 gobject.idle_add(task.next)
             yield True
-            (self.invalidSource, self.invalidDest,self.buildListRunning)
+            (self.invalidSource, self.invalidDest, self.buildListRunning)
             if self.invalidDest and\
                     not self.invalidSource and\
                     not self.buildListRunning and\
@@ -311,7 +311,7 @@ class WinDownload(GladeApp):
         self.statusBar.push(self.cidStatusBar, _('Checking Status of Images'))
         yield True
         for rowIdx, row in enumerate(self.imLst.iterAllRows()):
-            destFile = os.path.join(self.destFolder,row[dc.C_DEST])
+            destFile = os.path.join(self.destFolder, row[dc.C_DEST])
             count = 0
             for chkRow in self.imLst.iterAllRows():
                 if chkRow[dc.C_DEST] == row[dc.C_DEST]:
@@ -321,10 +321,11 @@ class WinDownload(GladeApp):
                 statL = _('Collision with New')
             elif os.path.isfile(destFile):
                 destExif = pyexiv.Exiv2Metadata(
-                        pyexiv2.ImageMetadata(destFile))
+                    pyexiv2.ImageMetadata(destFile))
                 destExif.readMetadata()
                 if 'Image DateTime' in destExif.exifKeys():
-                    destDate = ed2d(destExif.interpretedExifValue('Exif.Photo.DateTimeOriginal'))
+                    destDate = ed2d(destExif.interpretedExifValue(
+                        'Exif.Photo.DateTimeOriginal'))
                 else:
                     destDate = datetime.datetime.fromtimestamp(
                         os.path.getmtime(destFile))
@@ -346,13 +347,16 @@ class WinDownload(GladeApp):
             yield True
         self.statusBar.pop(self.cidStatusBar)
         # Check Rotation
-        self.statusBar.push(self.cidStatusBar, _('Checking Rotation Required for Images'))
+        self.statusBar.push(self.cidStatusBar,
+                            _('Checking Rotation Required for Images'))
         yield True
         for rowIdx, row in enumerate(self.imLst.iterAllRows()):
             if self.__conf["autoRotate"] == 1:
                 try:
-                    rotS = autoTrans[int(row[dc.C_EXIF]['Exif.Image.Orientation'])][0]
-                    rotL = autoTrans[int(row[dc.C_EXIF]['Exif.Image.Orientation'])][1]
+                    rotS = autoTrans[int(row[dc.C_EXIF]
+                                         ['Exif.Image.Orientation'])][0]
+                    rotL = autoTrans[int(row[dc.C_EXIF]
+                                         ['Exif.Image.Orientation'])][1]
                 except KeyError:
                     rotS = autoTrans[1][0]
                     rotL = autoTrans[1][1]
@@ -383,14 +387,14 @@ class WinDownload(GladeApp):
         Keyword Arguments:
         dir - Folder to recursivley list image files from
         """
-        fileList=[]
+        fileList = []
         for name in os.listdir(dir):
             path = os.path.join(dir, name)
             if (
-            os.path.isfile( path) and
-            os.path.splitext( name )[1] in sup_ext()
+                os.path.isfile(path) and
+                os.path.splitext(name)[1] in sup_ext()
             ):
-                fileList +=[path]
+                fileList += [path]
             elif (os.path.isdir(path)):
                 fileList += self._listFiles(path)
         return fileList
@@ -399,10 +403,10 @@ class WinDownload(GladeApp):
         """Handles the chanmge source folder button (...), gets the new source
         folder and initiates the update of the download list"""
         dialog = gtk.FileChooserDialog(_('Select source folder'),
-                self.main_widget,
-                gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+                                       self.main_widget,
+                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                        gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         dialog.set_default_response(gtk.RESPONSE_OK)
         dialog.set_filename(self.srcFolder)
         response = dialog.run()
@@ -450,15 +454,17 @@ class WinDownload(GladeApp):
             self.badPattern = False
             self.invalidDest = True
 
-
     def on_btnExecute_clicked(self, widget, *args):
         """Handles the Execute button and starts the download process"""
         # Save settings
         self.quitNow = True
-        self.__conf["sourceFolder"]=self.entSourceFolder.get_text()
-        if self.chkDelete.get_active(): self.__conf['delete'] = 1
-        else: self.__conf['delete'] = 0
-        self.__conf["width"],self.__conf["height"] = self.main_widget.get_size()
+        self.__conf["sourceFolder"] = self.entSourceFolder.get_text()
+        if self.chkDelete.get_active():
+            self.__conf['delete'] = 1
+        else:
+            self.__conf['delete'] = 0
+        self.__conf["width"], self.__conf["height"] = \
+            self.main_widget.get_size()
 
         # Build the list of images to download
         noRowsSelected = self.imLst.getSelectedRowsCount()
@@ -472,7 +478,7 @@ class WinDownload(GladeApp):
         """Handles toggling of the delete check box"""
         pass
 
-    def on_winDownloadStart_delete_event(self,*args):
+    def on_winDownloadStart_delete_event(self, *args):
         """Handles programatically closing the window"""
         self.quitNow = True
         self.quit(False)
@@ -486,6 +492,7 @@ class WinDownload(GladeApp):
         """Returns the list of 'selected' images to be downloaded
         (can be run after the window has been closed)"""
         return self.toDownload
+
 
 class WinDownloadPreferences(GladeApp):
     """Class to handle the Download Preferences window"""
@@ -513,9 +520,10 @@ class WinDownloadPreferences(GladeApp):
         self.tbufComment = self.txtComment.get_buffer()
 
         # Init general page
-        self.chkAutoRotate.set_active(self.__conf["autoRotate"]==1)
-        self.chkCopyOther.set_active(self.__conf["copyOther"]==1)
-        self.chkAutoComment.set_active(not len(self.__conf["autoComment"])==0)
+        self.chkAutoRotate.set_active(self.__conf["autoRotate"] == 1)
+        self.chkCopyOther.set_active(self.__conf["copyOther"] == 1)
+        self.chkAutoComment.set_active(
+            not len(self.__conf["autoComment"]) == 0)
         comment = self.__conf["autoComment"]
         self.tbufComment.set_text(comment.replace("\\n", "\n"))
         # Init naming page
@@ -523,7 +531,7 @@ class WinDownloadPreferences(GladeApp):
         self.entFilename.set_text(self.__conf["nameFormat"])
         self.origJobCode = self.__conf["jobCode"]
         self.entJobCode.set_text(self.__conf["jobCode"])
-        self.chkJobCode.set_active(self.__conf["promptJobCode"]==1)
+        self.chkJobCode.set_active(self.__conf["promptJobCode"] == 1)
         self.updateExample()
         # Init Auto Tag page
         self.ltags = eval('%s' % self.__conf['autoTag'])
@@ -533,14 +541,15 @@ class WinDownloadPreferences(GladeApp):
             cell.set_property('foreground', model.get_value(iter, 2))
             cell.set_property('xalign', 0)
             #~ cell.set_property('xpad', 1)
+
         def pixbuf(column, cell, model, iter):
-            node=model.get_value(iter,1)
+            node = model.get_value(iter, 1)
             if node.__class__.__name__ == "TagNode":
-                if model.get_value(iter, 3)==0:
+                if model.get_value(iter, 3) == 0:
                     cell.set_property('pixbuf', Buffer.pbCheckEmpty)
-                elif model.get_value(iter, 3)==1:
+                elif model.get_value(iter, 3) == 1:
                     cell.set_property('pixbuf', Buffer.pbCheckInclude)
-                elif model.get_value(iter, 3)==2:
+                elif model.get_value(iter, 3) == 2:
                     cell.set_property('pixbuf', Buffer.pbCheckExclude)
                 else:
                     cell.set_property('pixbuf', Buffer.pbCheckDisabled)
@@ -562,7 +571,7 @@ class WinDownloadPreferences(GladeApp):
         treeselection.set_mode(gtk.SELECTION_NONE)
 
         storeTags = TreeTags()
-        self.tvTags.set_model( storeTags )
+        self.tvTags.set_model(storeTags)
         self.tvTags.set_enable_search(False)
         self.tvTags.set_state(gtk.CAN_FOCUS)
 
@@ -641,10 +650,10 @@ class WinDownloadPreferences(GladeApp):
 
     def on_btnTokens_clicked(self, widget, *args):
         """Handles the Show all Tokens buttons & launches the list of tokens"""
-        tokens=WinNameBuilderTokens(self.exSource,
-                                    self.exExif,
-                                    self.exDate,
-                                    self.entJobCode.get_text())
+        tokens = WinNameBuilderTokens(self.exSource,
+                                      self.exExif,
+                                      self.exDate,
+                                      self.entJobCode.get_text())
         tokens.loop()
 
     def updateExample(self):
@@ -662,10 +671,10 @@ class WinDownloadPreferences(GladeApp):
     ## Auto Tag Tab Handlers
     def on_tvTags_button_press_event(self, widget, *args):
         """Handles button presses in the AutoTag list"""
-        event=args[0]
-        tup= widget.get_path_at_pos( int(event.x), int(event.y) )
+        event = args[0]
+        tup = widget.get_path_at_pos(int(event.x), int(event.y))
         if tup:
-            path,obj,x,y = tup
+            path, obj, x, y = tup
 
             if path:
                 model = widget.get_model()
@@ -673,13 +682,13 @@ class WinDownloadPreferences(GladeApp):
                 node = model.get(iterTo)
 
                 # let's find the x beginning of the cell
-                xcell = widget.get_cell_area(path, widget.get_column(0) ).x
+                xcell = widget.get_cell_area(path, widget.get_column(0)).x
 
                 if node.__class__.__name__ == "TagNode":
-                    if x>xcell:
+                    if x > xcell:
                         # click on the cell (not on the arrow)
-                        if event.button==1:
-                            cv = model.get_value(iterTo,3)
+                        if event.button == 1:
+                            cv = model.get_value(iterTo, 3)
                             if cv == 1:
                                 # Delete tag
                                 self.ltags.remove(node.name)
@@ -687,13 +696,11 @@ class WinDownloadPreferences(GladeApp):
                                 # Add tag
                                 self.ltags.append(node.name)
                                 self.ltags.sort()
-                        model=self.tvTags.get_model()
+                        model = self.tvTags.get_model()
                         model.setSelected(self.ltags)
                         tags = ", ".join(self.ltags)
-                        self.lblTags.set_label("Tags: %s" %tags)
-                        return 1 # stop the propagation of the event
-
-
+                        self.lblTags.set_label("Tags: %s" % tags)
+                        return 1  # stop the propagation of the event
 
     def on_tvTags_row_activated(self, widget, *args):
         """handles activation of rows in the auto tag list"""
@@ -719,32 +726,32 @@ class WinDownloadPreferences(GladeApp):
             self.chkDcrawCopyRaw.unset_flags(gtk.SENSITIVE)
             self.chkDcrawCopyRaw.set_active(False)
 
-
     ## Camera mapping Tab Handlers
-    def on_btnMappingAdd_clicked(self,*args):
+    def on_btnMappingAdd_clicked(self, *args):
         """Handles the Add Mapping button and adds a new camera mapping from
         the classes in example file & exif information (future)"""
         pass
 
-    def on_btnMappingAddFile_clicked(self,*args):
+    def on_btnMappingAddFile_clicked(self, *args):
         """Handles the Add Mapping from File button and adds a new camera
         mapping from the user selected image file (future)"""
         pass
 
-    def btnMappingDelete_clicked_cb(self,*args):
+    def btnMappingDelete_clicked_cb(self, *args):
         """Handles the Delete Mapping button and deletes the selected
         mappings (future)"""
         pass
 
-    def on_btnMappingEdit_clicked(self,*args):
+    def on_btnMappingEdit_clicked(self, *args):
         """Handles the Edit Mapping button and initiates alwos the used to edit
         the selected mappings (future)"""
         pass
 
-    def on_chkMappingIdentify_toggled(self,*args):
+    def on_chkMappingIdentify_toggled(self, *args):
         """Handles toggling of the additional information in Mapping check-box
         and updates the current camer information (future)"""
         pass
+
 
 class WinCameraMapping(GladeApp):
     """Class to handle the camera mapping window (future, untested)"""
@@ -924,17 +931,17 @@ class WinDownloadExecute(GladeApp):
                             yield True
                             self._touch(relDest,timeStamp)
                             # Delete associated source if enabled
-                            if  self.conf['delete'] == 1:
-                                self.lblAction.set_label(_('Deleting Related File Source'))
-                                yield True
-                                self._delete(relSrc)
+                            if self.conf['delete'] == 1:
+                               self.lblAction.set_label(_('Deleting Related File Source'))
+                               yield True
+                               self._delete(relSrc)
             # Check if we need to exit
             if self.quitNow:
                 if InputQuestion(self.main_widget,
                 _('Do you realy want to stop the download process'),
                 _("Jbrout Question"),
-                (gtk.STOCK_NO, gtk.RESPONSE_CANCEL,
-                 gtk.STOCK_YES, gtk.RESPONSE_OK)):
+                    (gtk.STOCK_NO, gtk.RESPONSE_CANCEL,
+                        gtk.STOCK_YES, gtk.RESPONSE_OK)):
                     self.quit(True)
                     yield False
                 else:
@@ -955,13 +962,14 @@ class WinDownloadExecute(GladeApp):
 
         Keyword arguments:
         file      - file to have it's date/time stamps set
-        timeStamp - the datetime object containing the date/time that the file is to be set to
+        timeStamp - the datetime object containing the date/time
+                    that the file is to be set to
         """
         try:
-            os.utime(file,(timeStamp,timeStamp))
-        except OSError,detail:
+            os.utime(file, (timeStamp, timeStamp))
+        except OSError:
             # utime doesn't work well if uid/gid are not the same
             # so we need to use the real touch ;-) (with mtime)
             print "need to touch ;-("
-            stime = time.strftime("%Y%m%d%H%M.%S",time.localtime(timeStamp) )
-            _Command._run( ["touch",'-t',stime,file] )
+            stime = time.strftime("%Y%m%d%H%M.%S", time.localtime(timeStamp))
+            _Command._run(["touch", '-t', stime, file])
