@@ -12,34 +12,33 @@
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
-from lxml.etree import Element,ElementTree
-import lxml
-import traceback
-from datetime import datetime
+from lxml.etree import Element, ElementTree
 #~ import cElementTree as ElementTree
 import gc
 
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
+# WILLNEED import gobject
 
 
 from common import cd2d
-from tools import PhotoCmd,supportedFormats
-import os,re,sys,thread,shutil,stat,string
+from tools import PhotoCmd, supportedFormats
+import os
+import shutil
+import stat
 
-from libs.dict4ini import DictIni
-from commongtk import Buffer,rgb,Img,MessageBoxScrolled
+from commongtk import Buffer, rgb, Img, MessageBoxScrolled
 
-from subprocess import Popen,PIPE
+from subprocess import Popen, PIPE
 import char_utils
 
-def walktree (top = ".", depthfirst = True):
+
+def walktree(top=".", depthfirst=True):
     try:
         names = os.listdir(top)
-    except WindowsError: #protected dirs in win
-        names=[]
+    except WindowsError:  # protected dirs in win
+        names = []
 
     if not depthfirst:
         yield top, names
@@ -49,21 +48,24 @@ def walktree (top = ".", depthfirst = True):
         except os.error:
             continue
         if stat.S_ISDIR(st.st_mode) and not name.startswith("."):
-            for (newtop, children) in walktree (os.path.join(top, name), depthfirst):
+            for (newtop, children) in walktree(os.path.join(top, name),
+                                               depthfirst):
                 yield newtop, children
     if depthfirst:
         yield top, names
 
-def dec(s): # ensure that a return from etree is in utf-8
-    if s!=None:
+
+def dec(s):  # ensure that a return from etree is in utf-8
+    if s is not None:
         return s.decode("utf_8")
 
 
 class ImportError(Exception):
-    def __init__(self,txt,file):
-        self.txt=txt
-        self.file=file
-        Exception.__init__(self,txt)
+    def __init__(self, txt, file):
+        self.txt = txt
+        self.file = file
+        Exception.__init__(self, txt)
+
 
 class DBPhotos:
     """
@@ -71,7 +73,7 @@ class DBPhotos:
     normalizeName = False
     autorotAtImport = False
 
-    def __init__(self,file):
+    def __init__(self, file):
         if os.path.isfile(file):
             self.root = ElementTree(file=file).getroot()
         else:
@@ -86,54 +88,53 @@ class DBPhotos:
             nodeB = None
 
         if nodeB:
-            ln=nodeB.xpath("""/db/basket/p""")
-            nodeB.getparent().remove(nodeB) # adios old basket !
+            # FIXME unused var ln = nodeB.xpath("""/db/basket/p""")
+            nodeB.getparent().remove(nodeB)  # adios old basket !
         #==== simple basket convertion (without verification)
 
-
-    def setNormalizeName(self,v):
-        assert v in (True,False)
+    def setNormalizeName(self, v):
+        assert v in (True, False)
         DBPhotos.normalizeName = v
 
-    def setNormalizeNameFormat(self,v):
-        assert isinstance(v,basestring)
+    def setNormalizeNameFormat(self, v):
+        assert isinstance(v, basestring)
         PhotoCmd.setNormalizeNameFormat(v)
 
-    def setAutorotAtImport(self,v):
-        assert v in (True,False)
+    def setAutorotAtImport(self, v):
+        assert v in (True, False)
         DBPhotos.autorotAtImport = v
 
-
-    def add(self,path,tags={}):
-        assert type(path)==unicode
+    def add(self, path, tags={}):
+        assert type(path) == unicode
         assert os.path.isdir(path)
         path = os.path.normpath(path)
-        
+
         importErrors = {}
 
         ln = self.root.xpath(u"""//folder[@name="%s"]""" % path)
-        assert len(ln)<=1
+        assert len(ln) <= 1
         if ln:
             nodeFolder = ln[0]
             filesInBasket = [i.file for i in self.getBasket(nodeFolder)]
             nodeFolder.getparent().remove(nodeFolder)
         else:
-            filesInBasket=[]
+            filesInBasket = []
 
         files = []
-        for (basepath, children) in walktree(path,False):
-            dir=basepath
+        for (basepath, children) in walktree(path, False):
+            dir = basepath
             try:
                 nodeDir = self.root.xpath(u"""//folder[@name="%s"]""" % dir)[0]
             except:
-                nodeDir=None
+                nodeDir = None
 
             if nodeDir is None:
-                rep=[]
+                rep = []
                 while True:
                     rep.append(dir)
-                    dir,n = os.path.split(dir)
-                    if not n: break
+                    dir, n = os.path.split(dir)
+                    if not n:
+                        break
                 rep.reverse()
 
                 node = self.root
@@ -142,52 +143,52 @@ class DBPhotos:
                         nodeDir = node.xpath(u"""folder[@name="%s"]""" % r)[0]
                     except:
                         nodeDir = Element("folder", name=r)
-                        node.append( nodeDir )
+                        node.append(nodeDir)
 
-                        FolderNode(nodeDir)._updateInfo() # read comments
+                        FolderNode(nodeDir)._updateInfo()  # read comments
 
                     node = nodeDir
-                nodeDir=node
+                nodeDir = node
 
             for child in children:
-                if child.split('.')[-1].lower() in supportedFormats :
+                if child.split('.')[-1].lower() in supportedFormats:
                     file = os.path.join(basepath, child)
                     if os.path.isfile(file):
-                        files.append((file,nodeDir))
+                        files.append((file, nodeDir))
 
         yield len(files)   # first yield is the total number of files
 
-        i=0
-        for (file,nodeDir) in files:
+        i = 0
+        for (file, nodeDir) in files:
             yield i
-            i+=1
+            i += 1
             #OLD TOOLS:
             #file = PhotoCmd.prepareFile(file,
             #                needRename=DBPhotos.normalizeName,
             #                needAutoRot=DBPhotos.autorotAtImport,
             #                )
-            m = self.__addPhoto( nodeDir,file ,tags,filesInBasket)
+            m = self.__addPhoto(nodeDir, file, tags, filesInBasket)
             if m:
                 importErrors[file] = m
 
         ln = self.root.xpath(u"""//folder[@name="%s"]""" % path)
         if ln:
-            yield FolderNode( ln[0] )
+            yield FolderNode(ln[0])
         else:
             yield None
         if len(importErrors) > 0:
             k = importErrors.keys()
             k.sort()
-            msgs=[]
+            msgs = []
             for f in k:
-                 msgs.append('"%s" adding file: "%s"' % (importErrors[f],f))
-            MessageBoxScrolled(None, '\n'.join(msgs),'Jbrout Import Errors')
+                msgs.append('"%s" adding file: "%s"' % (importErrors[f], f))
+            MessageBoxScrolled(None, '\n'.join(msgs), 'Jbrout Import Errors')
 
-    def __addPhoto(self,nodeDir,file,tags,filesInBasket):
-        assert type(file)==unicode
+    def __addPhoto(self, nodeDir, file, tags, filesInBasket):
+        assert type(file) == unicode
 
         newNode = Element("photo")
-        nodeDir.append( newNode )
+        nodeDir.append(newNode)
 
         node = PhotoNode(newNode)
         if file in filesInBasket:
@@ -195,42 +196,43 @@ class DBPhotos:
 
         try:
             iii = PhotoCmd(file,
-                            needAutoRename=DBPhotos.normalizeName,
-                            needAutoRotation=DBPhotos.autorotAtImport,
+                           needAutoRename=DBPhotos.normalizeName,
+                           needAutoRotation=DBPhotos.autorotAtImport,
                            )
-            if iii.exifdate=="":
+            if iii.exifdate == "":
                 # exif is not present, and photocmd can't reach
                 # to recreate minimal exif tags (because it's readonly ?)
                 # we can't continue to import this photo
-                raise Exception("Exif couldn't be set in this picture (readonly?)")
-        except Exception,m:
+                raise Exception(
+                    "Exif couldn't be set in this picture (readonly?)")
+        except Exception, m:
             # remove the bad node
             nodeDir.remove(newNode)
 
             return m
         else:
-            importedTags=node.updateInfo( iii )
-            for i in importedTags:  tags[i]=i # feed the dict of tags
+            importedTags = node.updateInfo(iii)
+            for i in importedTags:
+                tags[i] = i  # feed the dict of tags
 
             return None
 
     def getRootFolder(self):
-        if len(self.root)>0:
+        if len(self.root) > 0:
             return FolderNode(self.root[0])
 
     def redoIPTC(self):
         """ refresh IPTC in file and db """
         ln = self.root.xpath(u"""//photo[t]""")
         for i in ln:
-            p=PhotoNode(i)
+            p = PhotoNode(i)
             print p.name
             pc = PhotoCmd(p.file)
-            pc._write()             # rewrite iptc in file
-            p.updateInfo( pc )      # rewrite iptc in db.xml
-
+            pc._write()              # rewrite iptc in file
+            p.updateInfo(pc)      # rewrite iptc in db.xml
 
     def getMinMaxDates(self):
-        """ return a tuple of the (min,max) of photo dates
+        """ return a tuple of the (min, max) of photo dates
             or none if no photos
         """
         ln = self.root.xpath("//photo")
@@ -238,42 +240,40 @@ class DBPhotos:
             ma = 11111111111111
             mi = 99999999999999
             for i in ln:
-                a=int( i.attrib["date"] )
-                ma = max(a,ma)
-                mi = min(a,mi)
-            return cd2d(str(mi)),cd2d(str(ma))
+                a = int(i.attrib["date"])
+                ma = max(a, ma)
+                mi = min(a, mi)
+            return cd2d(str(mi)), cd2d(str(ma))
 
-
-    def select(self,xpath,fromNode=None):
-        ln=self.root.xpath(xpath)
+    def select(self, xpath, fromNode=None):
+        ln = self.root.xpath(xpath)
         if ln:
             return [PhotoNode(i) for i in ln]
         else:
             return []
 
-
     def toXml(self):
         """ for tests only """
         from StringIO import StringIO
-        fid=StringIO()
+        fid = StringIO()
         fid.write("""<?xml version="1.0" encoding="UTF-8"?>""")
-        ElementTree(self.root).write(fid,encoding="utf-8")
+        ElementTree(self.root).write(fid, encoding="utf-8")
         return fid.getvalue()
 
     def save(self):
         """ save the db, and a basket.txt file """
-        fid = open(self.file,"w")
+        fid = open(self.file, "w")
         fid.write("""<?xml version="1.0" encoding="UTF-8"?>""")
-        ElementTree(self.root).write(fid,encoding="utf-8")
+        ElementTree(self.root).write(fid, encoding="utf-8")
         fid.close()
 
         # save a "simple txt file" of basket'files near db.xml
         # (could be used in another prog ?)
-        file = os.path.join( os.path.dirname(self.file),"basket.txt")
+        file = os.path.join(os.path.dirname(self.file), "basket.txt")
         if self.isBasket():
-            list =[i.file for i in self.getBasket()]
+            list = [i.file for i in self.getBasket()]
 
-            fid = open(file,"w")
+            fid = open(file, "w")
             if fid:
                 fid.write((u"\n".join(list)).encode("utf_8"))
                 fid.close()
@@ -282,30 +282,33 @@ class DBPhotos:
                 os.unlink(file)
             except:
                 pass
-    #--------------------------------------------------------------------------------
+
+    #------------------------------------------------------------------------
     # basket methods
-    #--------------------------------------------------------------------------------
+    #------------------------------------------------------------------------
     def isBasket(self):
-        return len(self.root.xpath("//photo[@basket='1']"))>0
+        return len(self.root.xpath("//photo[@basket='1']")) > 0
 
     def clearBasket(self):
-        ln=self.getBasket()
+        ln = self.getBasket()
         for i in ln:
             i.removeFromBasket()
 
-    def getBasket(self,nodeFrom=None):
+    def getBasket(self, nodeFrom=None):
         if nodeFrom is not None:
-            return [PhotoNode(i) for i in nodeFrom.xpath("//photo[@basket='1']")]
+            return [PhotoNode(i) for i in
+                    nodeFrom.xpath("//photo[@basket='1']")]
         else:
-            return [PhotoNode(i) for i in self.root.xpath("//photo[@basket='1']")]
+            return [PhotoNode(i) for i in
+                    self.root.xpath("//photo[@basket='1']")]
 
     def exportBasket(self, basketFile):
         """ Export basket to the specified file as simple txt """
         # save a "simple txt file" of basket'files near db.xml
         if self.isBasket():
-            list =[i.file for i in self.getBasket()]
+            list = [i.file for i in self.getBasket()]
 
-            fid = open(basketFile,"w")
+            fid = open(basketFile, "w")
             if fid:
                 fid.write((u"\n".join(list)).encode("utf_8"))
                 fid.close()
@@ -316,7 +319,7 @@ class DBPhotos:
         countExisting = 0
         countNew = 0
         countError = 0
-        fid = open(basketFile,"r")
+        fid = open(basketFile, "r")
         if fid:
             lines = fid.readlines()
             fid.close()
@@ -325,8 +328,10 @@ class DBPhotos:
                 if os.path.isfile(iline):
                     dirname = os.path.dirname(iline)
                     basename = os.path.basename(iline)
-    
-                    for inode in self.root.xpath("//folder[@name='%s']/photo[@name='%s']"%(dirname,basename)):
+
+                    for inode in self.root.xpath(
+                        "//folder[@name='%s']/photo[@name='%s']" %
+                            (dirname, basename)):
                         #print inode
                         photo = PhotoNode(inode)
                         #print photo
@@ -337,25 +342,28 @@ class DBPhotos:
                             photo.addToBasket()
                 else:
                     countError += 1
-        msg = "imported [" + str(countNew) + "], [" + str(countExisting) + "] already in basket, [" + str(countError) + "] errors"
+        msg = "imported [" + str(countNew) + "], [" + str(countExisting) + \
+              "] already in basket, [" + str(countError) + "] errors"
         return msg
 
 
 class FolderNode(object):
     """ A folder node containing photo nodes"""
-    commentFile="album.txt"
+    commentFile = "album.txt"
 
-    def __init__(self,n):
-        assert n.tag in ["folder","db"]
+    def __init__(self, n):
+        assert n.tag in ["folder", "db"]
         self.__node = n
 
-    def __getName(self):    return os.path.basename(self.__node.attrib["name"])
+    def __getName(self):
+        return os.path.basename(self.__node.attrib["name"])
     name = property(__getName)
 
     #~ def __getIsReadOnly(self):   return not os.access( self.file, os.W_OK)
     #~ isReadOnly = property(__getIsReadOnly)
 
-    def __getFile(self):  return self.__node.attrib["name"]
+    def __getFile(self):
+        return self.__node.attrib["name"]
     file = property(__getFile)
 
     def __getComment(self):
@@ -368,20 +376,20 @@ class FolderNode(object):
 
     def __getExpand(self):
         if "expand" in self.__node.attrib:
-            return (self.__node.attrib["expand"]!="0")
+            return (self.__node.attrib["expand"] != "0")
         else:
             return True
     expand = property(__getExpand)
 
-    def _getNode(self): # special
+    def _getNode(self):  # special
         return self.__node
 
     def getParent(self):
-        return FolderNode( self.__node.getparent() )
+        return FolderNode(self.__node.getparent())
 
     def getFolders(self):
-        ln=[FolderNode(i) for i in self.__node.xpath("folder")]
-        ln.sort(cmp=lambda x,y: cmp(x.name.lower(),y.name.lower()))
+        ln = [FolderNode(i) for i in self.__node.xpath("folder")]
+        ln.sort(cmp=lambda x, y: cmp(x.name.lower(), y.name.lower()))
         return ln
 
     def getPhotos(self):
@@ -390,22 +398,23 @@ class FolderNode(object):
     def getAllPhotos(self):
         return self._select("descendant::photo")
 
-    def _select(self,xpath):
+    def _select(self, xpath):
         """ 'xpath' should only target photo node """
         class PhotoNodes(list):
-            def __init__(self,l,xpath):
-                list.__init__(self,l)
-                self.xpath=xpath
+            def __init__(self, l, xpath):
+                list.__init__(self, l)
+                self.xpath = xpath
 
-        ln=self.__node.xpath(xpath)
-        ll= [PhotoNode(i) for i in ln]
-        return PhotoNodes(ll,"//folder[@name='%s']/%s"%(self.file,xpath))
+        ln = self.__node.xpath(xpath)
+        ll = [PhotoNode(i) for i in ln]
+        return PhotoNodes(ll, "//folder[@name='%s']/%s" %
+                          (self.file, xpath))
 
-    def setComment(self,t):
-        assert type(t)==unicode
-        file = os.path.join(self.file,FolderNode.commentFile)
-        if t=="": # if is the "kill comment"
-            if os.path.isfile(file): # if files exists, kill it
+    def setComment(self, t):
+        assert type(t) == unicode
+        file = os.path.join(self.file, FolderNode.commentFile)
+        if t == "":  # if is the "kill comment"
+            if os.path.isfile(file):  # if files exists, kill it
                 try:
                     os.unlink(file)
                     return True
@@ -414,9 +423,9 @@ class FolderNode(object):
 
             return True
         else:
-            fid=open( file ,"w" )
+            fid = open(file, "w")
             if fid:
-                fid.write( t.encode("utf_8") )
+                fid.write(t.encode("utf_8"))
                 fid.close()
                 self._updateInfo()
                 return True
@@ -425,45 +434,44 @@ class FolderNode(object):
 
     def _updateInfo(self):
         ln = self.__node.xpath("c")
-        assert len(ln) in [0,1]
+        assert len(ln) in [0, 1]
         if ln:
-            nodeComment =ln[0]
+            nodeComment = ln[0]
         else:
-            nodeComment =None
+            nodeComment = None
 
         comment = None
-        file = os.path.join(self.file,FolderNode.commentFile)
+        file = os.path.join(self.file, FolderNode.commentFile)
         if os.path.isfile(file):
-            fid=open( file ,"r" )
+            fid = open(file, "r")
             if fid:
                 comment = fid.read().decode("utf_8")
                 fid.close()
 
         if comment:
-            if nodeComment ==  None:
+            if nodeComment is None:
                 nodeComment = Element("c")
                 nodeComment.text = comment
                 self.__node.append(nodeComment)
             else:
                 nodeComment.text = comment
         else:
-            if nodeComment !=  None:
+            if nodeComment is not None:
                 self.__node.remove(nodeComment)
 
-
-    def setExpand(self,bool):
+    def setExpand(self, bool):
         if bool:
             self.__node.attrib["expand"] = "1"
         else:
             self.__node.attrib["expand"] = "0"
 
-    def rename(self,newname):
-        assert type(newname)==unicode
+    def rename(self, newname):
+        assert type(newname) == unicode
         oldname = self.file
-        newname = os.path.join( os.path.dirname(oldname), newname )
+        newname = os.path.join(os.path.dirname(oldname), newname)
         if not (os.path.isdir(newname) or os.path.isfile(newname)):
             try:
-                shutil.move( oldname, newname )
+                shutil.move(oldname, newname)
                 moved = True
             except os.error, detail:
                 raise Exception(detail)
@@ -474,16 +482,17 @@ class FolderNode(object):
 
                 ln = self.__node.xpath("descendant::folder")
                 for i in ln:
-                    i.attrib["name"] = newname + i.attrib["name"][len(oldname):]
+                    i.attrib["name"] = newname + \
+                        i.attrib["name"][len(oldname):]
                 return True
 
         return False
 
-    def createNewFolder(self,newname):
-        assert type(newname)==unicode
-        newname = os.path.join( self.file, newname )
-        ll=[i for i in self.getFolders() if i.file==newname]
-        if len(ll)==1:
+    def createNewFolder(self, newname):
+        assert type(newname) == unicode
+        newname = os.path.join(self.file, newname)
+        ll = [i for i in self.getFolders() if i.file == newname]
+        if len(ll) == 1:
             # folder is already mapped in the db/xml
             # so no creation
             return False
@@ -492,22 +501,22 @@ class FolderNode(object):
                 # it's not a file
 
                 if os.path.isdir(newname):
-                    # but it's a existing folder
+                    # but it's an existing folder
                     created = True
                 else:
                     # this is a real new folder
                     # let's create it in the FS
                     try:
-                       os.mkdir( newname )
-                       created = True
+                        os.mkdir(newname)
+                        created = True
                     except os.error, detail:
-                       raise Exception(detail)
-                       created = False
+                        raise Exception(detail)
+                        created = False
 
                 if created:
                     #so map the folder to a db node
                     nodeDir = Element("folder", name=newname)
-                    self.__node.append( nodeDir )
+                    self.__node.append(nodeDir)
                     return FolderNode(nodeDir)
         return False
 
@@ -519,13 +528,13 @@ class FolderNode(object):
         """ delete real folder and node """
         if os.path.isdir(self.file):
             try:
-               shutil.rmtree( self.file )
-               deleted = True
+                shutil.rmtree(self.file)
+                deleted = True
             except os.error, detail:
-               raise Exception(detail)
-               deleted = False
+                raise Exception(detail)
+                deleted = False
         else:
-            deleted=True
+            deleted = True
 
         if deleted:
             self.remove()
@@ -533,13 +542,13 @@ class FolderNode(object):
 
         return False
 
-    def moveToFolder(self,nodeFolder):
+    def moveToFolder(self, nodeFolder):
         assert nodeFolder.__class__ == FolderNode
         oldname = self.file
-        newname = os.path.join(nodeFolder.file,self.name)
+        newname = os.path.join(nodeFolder.file, self.name)
         if not (os.path.isdir(newname) or os.path.isfile(newname)):
             try:
-                shutil.move( oldname, newname )
+                shutil.move(oldname, newname)
                 moved = True
             except os.error, detail:
                 raise Exception(detail)
@@ -552,7 +561,8 @@ class FolderNode(object):
 
                 ln = self.__node.xpath("descendant::folder")
                 for i in ln:
-                    i.attrib["name"] = newname + i.attrib["name"][len(oldname):]
+                    i.attrib["name"] = newname + \
+                        i.attrib["name"][len(oldname):]
                 return self
         return False
 
@@ -574,19 +584,17 @@ class FolderNode(object):
             #~ gtk.threads_leave()
     #~ gobject.idle_add(idle_func)
 
-
-
 #~ class PhotoFile:
     #~ @staticmethod
     #~ def generate(path):
         #~ list=[]
         #~ for i in os.listdir(path):
-            #~ if i[-4:].lower()==".jpg":
-                #~ list.append( PhotoFile(os.path.join(path,i)) )
+            #~ if i[-4:].lower() == ".jpg":
+                #~ list.append( PhotoFile(os.path.join(path, i)) )
         #~ return list
     #~ generate = staticmethod(generate)
 
-    #~ def __init__(self,f):
+    #~ def __init__(self, f):
         #~ self.file = f
         #~ self.name = os.path.basename(f)
 
@@ -598,28 +606,29 @@ class FolderNode(object):
         #~ except:
             #~ return None
 
-
 class PhotoNode(object):
     """
       Class PhotoNode
       to manipulate a node photo in the dom of album.xml.
     """
-    def __init__(self,node):
+    def __init__(self, node):
         assert node.tag == "photo"
         self.__node = node
 
-    def __getName(self):    return self.__node.attrib["name"]
+    def __getName(self):
+        return self.__node.attrib["name"]
     name = property(__getName)
 
-    def __getfolderName(self):    return os.path.basename(self.folder)
+    def __getfolderName(self):
+        return os.path.basename(self.folder)
     folderName = property(__getfolderName)
 
-    def __getIsReadOnly(self):    return not os.access( self.file, os.W_OK)
+    def __getIsReadOnly(self):
+        return not os.access(self.file, os.W_OK)
     isReadOnly = property(__getIsReadOnly)
 
-
     def __getTags(self):
-        l=[dec(i.text) for i in self.__node.xpath("t")]
+        l = [dec(i.text) for i in self.__node.xpath("t")]
         l.sort()
         return l
     tags = property(__getTags)
@@ -632,106 +641,111 @@ class PhotoNode(object):
             return ""
     comment = property(__getComment)
 
-    def __getRating(self): # 0x4746 18246 IFD0 Exif.Image.Rating Short
-            ln = self.__node.xpath("r") # saved decimal like <r>5</r>
+    def __getRating(self):  # 0x4746 18246 IFD0 Exif.Image.Rating Short
+            ln = self.__node.xpath("r")  # saved decimal like <r>5</r>
             if ln:
                 return int(ln[0].text)
             else:
                 return 0
     rating = property(__getRating)
 
-    def __getDate(self): return self.__node.attrib["date"]  # if exif -> exifdate else filedate
+    # if exif -> exifdate else filedate
+    def __getDate(self):
+        return self.__node.attrib["date"]
     date = property(__getDate)
 
-    def __getResolution(self): return self.__node.attrib["resolution"]
+    def __getResolution(self):
+        return self.__node.attrib["resolution"]
     resolution = property(__getResolution)
 
-    def __getReal(self): return self.__node.attrib["real"]  # if exifdate -> true else false
+    # if exifdate -> true else false
+    def __getReal(self):
+        return self.__node.attrib["real"]
     real = property(__getReal)
 
     def __getFolder(self):
-        na=dec(self.__node.getparent().attrib["name"])
-        assert type(na)==unicode
+        na = dec(self.__node.getparent().attrib["name"])
+        assert type(na) == unicode
         return na
     folder = property(__getFolder)
 
-    def __getFile(self):  return dec(os.path.join(self.__getFolder(),self.__getName()))
+    def __getFile(self):
+        return dec(os.path.join(self.__getFolder(), self.__getName()))
     file = property(__getFile)
 
     def getParent(self):
-        return FolderNode( self.__node.getparent() )
+        return FolderNode(self.__node.getparent())
 
-    def __getIsInBasket(self):  return (self.__node.get("basket")=="1")
+    def __getIsInBasket(self):
+        return (self.__node.get("basket") == "1")
     isInBasket = property(__getIsInBasket)
 
-
     def addToBasket(self):
-        self.__node.set("basket","1")
+        self.__node.set("basket", "1")
 
     def removeFromBasket(self):
         if self.isInBasket:
             del(self.__node.attrib["basket"])
 
-    #~ def __eq__(self,p):
-        #~ assert p.__class__==PhotoNode
+    #~ def __eq__(self, p):
+        #~ assert p.__class__ == PhotoNode
         #~ return self.file == p.file
     # throw a bug in lxml ?!?! ;-(
 
     def getThumb(self):
         """ Get thumb from exif data"""
         if self.real == "yes":  # real photo (exifdate !)
-            backGroundColor=None
+            backGroundColor = None
             pb_nothumb = Buffer.pixbufNT
-            pb_notfound =Buffer.pixbufNF
-            pb_error   =Buffer.pixbufERR
-        else:                   # photo with hadn't got exif before (exif setted by jbrout)
-            backGroundColor=rgb(255,0,0)
+            pb_notfound = Buffer.pixbufNF
+            pb_error = Buffer.pixbufERR
+        else:       # photo with hadn't got exif before (exif setted by jbrout)
+            backGroundColor = rgb(255, 0, 0)
             pb_nothumb = Buffer.pixbufNTNE
-            pb_notfound =Buffer.pixbufNFNE
-            pb_error   =Buffer.pixbufERRNE
+            pb_notfound = Buffer.pixbufNFNE
+            pb_error = Buffer.pixbufERRNE
 
         try:
-            i=Img(thumb=self.file)
-            pb= i.resizeC(160,backGroundColor).pixbuf
-        except IOError: # 404
-            pb= pb_notfound
-        except KeyError: # no exif
-            pb= pb_nothumb
+            i = Img(thumb=self.file)
+            pb = i.resizeC(160, backGroundColor).pixbuf
+        except IOError:  # 404
+            pb = pb_notfound
+        except KeyError:  # no exif
+            pb = pb_nothumb
         except:
-            pb=pb_error
+            pb = pb_error
             raise
-
 
         return pb
 
     def getImage(self):
         file = self.file
         # XXX external call while pyexiv2 can't handle it
-        extension=file.split('.')[-1].lower()
+        extension = file.split('.')[-1].lower()
         if extension == 'nef':
-            data=Popen(["exiftool","-b","-JpgFromRaw","%s"%file],stdout=PIPE).communicate()[0]
-            loader = gtk.gdk.PixbufLoader ('jpeg')
-            loader.write (data, len (data))
-            im = loader.get_pixbuf ()
-            loader.close ()
+            data = Popen(["exiftool", "-b", "-JpgFromRaw",
+                         "%s" % file], stdout=PIPE).communicate()[0]
+            loader = gtk.gdk.PixbufLoader('jpeg')
+            loader.write(data, len(data))
+            im = loader.get_pixbuf()
+            loader.close()
             return im
         else:
             return gtk.gdk.pixbuf_new_from_file(file)
 
-
-    def moveToFolder(self,nodeFolder):
+    def moveToFolder(self, nodeFolder):
         assert nodeFolder.__class__ == FolderNode
 
         name = self.name
-        while os.path.isfile(os.path.join(nodeFolder.file,name) ):
-            name=PhotoCmd.giveMeANewName(name)
+        while os.path.isfile(os.path.join(nodeFolder.file, name)):
+            name = PhotoCmd.giveMeANewName(name)
 
         try:
-            shutil.move( self.file, os.path.join(nodeFolder.file,name) )
-            moved=True
+            shutil.move(self.file, os.path.join(nodeFolder.file, name))
+            moved = True
         except os.error, detail:
             raise Exception(detail)
-            moved=False
+            moved = False
 
         if moved:
             self.__node.attrib["name"] = name
@@ -740,50 +754,52 @@ class PhotoNode(object):
             nf.append(self.__node)
             return True
 
-    def rotate(self,sens):
-        assert sens in ["R","L"]
+    def rotate(self, sens):
+        assert sens in ["R", "L"]
 
         pc = PhotoCmd(self.file)
         pc.rotate(sens)
         self.updateInfo(pc)
 
-    def transform(self,sens):
-        assert sens in ["auto","rotate90","rotate180","rotate270","flipHorizontal","flipVertical","transpose","transverse"]
+    def transform(self, sens):
+        assert sens in ["auto", "rotate90", "rotate180", "rotate270",
+                        "flipHorizontal", "flipVertical", "transpose",
+                        "transverse"]
 
         pc = PhotoCmd(self.file)
         pc.transform(sens)
         self.updateInfo(pc)
 
-    def setComment(self,txt):
-        assert type(txt)==unicode
+    def setComment(self, txt):
+        assert type(txt) == unicode
 
         pc = PhotoCmd(self.file)
         if pc.addComment(txt):
             self.updateInfo(pc)
 
-    def setRating(self,val):
-        assert type(val)==int
+    def setRating(self, val):
+        assert type(val) == int
 
         pc = PhotoCmd(self.file)
-        if pc.addRating(val): # always true
+        if pc.addRating(val):  # always true
             self.updateInfo(pc)
 
-    def addTag(self,tag):
-        assert type(tag)==unicode
+    def addTag(self, tag):
+        assert type(tag) == unicode
 
         pc = PhotoCmd(self.file)
         if pc.add(tag):
             self.updateInfo(pc)
 
-    def addTags(self,tags):
-        assert type(tags)==list
+    def addTags(self, tags):
+        assert type(tags) == list
 
         pc = PhotoCmd(self.file)
         if pc.addTags(tags):
             self.updateInfo(pc)
 
-    def delTag(self,tag):
-        assert type(tag)==unicode
+    def delTag(self, tag):
+        assert type(tag) == unicode
 
         pc = PhotoCmd(self.file)
         if pc.sub(tag):
@@ -799,59 +815,62 @@ class PhotoNode(object):
         pc.rebuildExifTB()
         self.updateInfo(pc)
 
-    def copyTo(self,path,resize=None, keepInfo=True, delTags=False, delCom=False):
+    def copyTo(self, path, resize=None, keepInfo=True, delTags=False,
+               delCom=False):
         """ copy self to the path "path", and return its newfilename or none
-            by default, it keeps IPTC/THUMB/EXIF, but it can be removed by setting
-            keepInfo at False. In all case, new file keep its filedate system
+            by default, it keeps IPTC/THUMB/EXIF, but it can be removed by
+            setting keepInfo at False. In all case, new file keep its filedate
+            system
 
             image can be resized/recompressed (preserving ratio) if resize
-            (which is a tuple=(size,qual)) is provided:
+            (which is a tuple=(size, qual)) is provided:
                 if size is a float : it's a percent of original
                 if size is a int : it's the desired largest side
                 qual : is the percent for the quality
         """
-        assert type(path)==unicode, "photonod.copyTo() : path is not unicode"
-        dest = os.path.join( path, self.name)
+        assert type(path) == unicode, "photonod.copyTo() : path is not unicode"
+        dest = os.path.join(path, self.name)
 
         while os.path.isfile(dest):
-            dest = os.path.join( path, PhotoCmd.giveMeANewName(os.path.basename(dest)) )
+            dest = os.path.join(path,
+                                PhotoCmd.giveMeANewName(
+                                    os.path.basename(dest)))
 
         if resize:
-            assert len(resize)==2
-            size,qual = resize
-            assert type(size) in [int,float]
+            assert len(resize) == 2
+            size, qual = resize
+            assert type(size) in [int, float]
 
-            pb = self.getImage() # a gtk.PixBuf
-            (wx,wy) = pb.get_width(),pb.get_height()
-
+            pb = self.getImage()  # a gtk.PixBuf
+            (wx, wy) = pb.get_width(), pb.get_height()
 
             # compute the new size -> wx/wy
-            if type(size)==float:
+            if type(size) == float:
                 # size is a percent
-                size = int(size*100)
-                wx = int(wx*size / 100)
-                wy = int(wy*size / 100)
+                size = int(size * 100)
+                wx = int(wx * size / 100)
+                wy = int(wy * size / 100)
 
             else:
                 # size is the largest side in pixels
-                if wx>wy:
+                if wx > wy:
                     # format landscape
-                    wx, wy = size, (size * wy)/wx
+                    wx, wy = size, (size * wy) / wx
                 else:
                     # format portrait
-                    wx, wy = (size * wx)/wy, size
+                    wx, wy = (size * wx) / wy, size
 
-
-            pb = pb.scale_simple(wx,wy,3)   # 3= best quality (gtk.gdk.INTERP_HYPER)
-            pb.save(dest, "jpeg", {"quality":str(int(qual))})
+            # 3= best quality (gtk.gdk.INTERP_HYPER)
+            pb = pb.scale_simple(wx, wy, 3)
+            pb.save(dest, "jpeg", {"quality": str(int(qual))})
 
             if keepInfo:
                 pc = PhotoCmd(self.file)
                 pc.copyInfoTo(dest)
             del(pb)
-            gc.collect() # so it cleans pixbufs
+            gc.collect()  # so it cleans pixbufs
         else:
-            shutil.copy2(self.file,dest)
+            shutil.copy2(self.file, dest)
             if not keepInfo:
                 # we must destroy info
                 PhotoCmd(dest).destroyInfo()
@@ -863,13 +882,13 @@ class PhotoNode(object):
 
         return dest
 
-    def getInfoFrom(self,copy):
+    def getInfoFrom(self, copy):
         """ rewrite info from a 'copy' to the file (exif, iptc, ...)
             and rebuild thumb
             (used to ensure everything is back after a run in another program
              see plugin 'touch')
         """
-        pc=PhotoCmd(copy)
+        pc = PhotoCmd(copy)
         pc.copyInfoTo(self.file)
 
         #and update infos
@@ -881,12 +900,13 @@ class PhotoNode(object):
     #~ def repair(self):
         #~ pc = PhotoCmd(self.file)
         #~ pc.repair()                 # kill exif tags ;-(
-        #~ pc.rebuildExifTB()          # recreate "fake exif tags" with exifutils and thumbnails
+        # recreate "fake exif tags" with exifutils and thumbnails
+        #~ pc.rebuildExifTB()
         #~ self.updateInfo(pc)
 
-    def redate(self,w,d,h,m,s ):
+    def redate(self, w, d, h, m, s):
         pc = PhotoCmd(self.file)
-        pc.redate(w,d,h,m,s)
+        pc.redate(w, d, h, m, s)
         self.updateInfo(pc)
         self.updateName()
 
@@ -900,22 +920,22 @@ class PhotoNode(object):
         #photo has been redated
         #it should be renamed if in config ...
         if DBPhotos.normalizeName:
-            pc = PhotoCmd(self.file,needAutoRename=True)
+            pc = PhotoCmd(self.file, needAutoRename=True)
             self.updateInfo(pc)
 
         return True
 
-    def updateInfo(self,pc):
+    def updateInfo(self, pc):
         """ feel the node with REALS INFOS from "pc"(PhotoCmd)
             return the tags
         """
-        assert pc.__class__==PhotoCmd
+        assert pc.__class__ == PhotoCmd
 
         wasInBasket = self.isInBasket
 
         self.__node.clear()
-        self.__node.attrib["name"]=os.path.basename(pc.file)
-        self.__node.attrib["resolution"]=pc.resolution
+        self.__node.attrib["name"] = os.path.basename(pc.file)
+        self.__node.attrib["resolution"] = pc.resolution
 
         # OLD PhotoCmd
         #~ if pc.exifdate:
@@ -926,11 +946,11 @@ class PhotoNode(object):
             #~ self.__node.attrib["real"]="no"
 
         # NEW PhotoCmd (always a exifdate)
-        self.__node.attrib["date"]=pc.exifdate
+        self.__node.attrib["date"] = pc.exifdate
         if pc.isreal:
-            self.__node.attrib["real"]="yes"
+            self.__node.attrib["real"] = "yes"
         else:
-            self.__node.attrib["real"]="no"
+            self.__node.attrib["real"] = "no"
 
         if pc.tags:
             for tag in pc.tags:
@@ -962,11 +982,11 @@ class PhotoNode(object):
         get real infos from photocmd
         """
         pc = PhotoCmd(self.file)
-        info={}
+        info = {}
         info["tags"] = pc.tags
         info["comment"] = pc.comment
         info["exifdate"] = pc.exifdate
-        info["rating"] = pc.rating # huh, did i use that?
+        info["rating"] = pc.rating  # huh, did i use that?
         info["filedate"] = pc.filedate
         info["resolution"] = pc.resolution
         info["readonly"] = pc.readonly
@@ -975,21 +995,20 @@ class PhotoNode(object):
         return info
 
     def getThumbSize(self):
-        """Get the size (width,height) of the thumbnail"""
+        """Get the size (width, height) of the thumbnail"""
         try:
-            thumbnail=Img(thumb=self.file)
-            return (thumbnail.width,thumbnail.height)
-        except IOError: # 404
-            return (-1,-1)
-
+            thumbnail = Img(thumb=self.file)
+            return (thumbnail.width, thumbnail.height)
+        except IOError:  # 404
+            return (-1, -1)
 
     def delete(self):
         try:
-           os.unlink( self.file )
-           deleted = True
+            os.unlink(self.file)
+            deleted = True
         except os.error, detail:
-           raise Exception(detail)
-           deleted = False
+            raise Exception(detail)
+            deleted = False
 
         if deleted:
             self.__node.getparent().remove(self.__node)
@@ -998,10 +1017,10 @@ class PhotoNode(object):
         return False
 
 
-# ============================================================================================
+# =============================================================================
 class DBTags:
     """ Class to manage tags tree """
-    def __init__(self,file):
+    def __init__(self, file):
         if os.path.isfile(file):
             self.root = ElementTree(file=file).getroot()
         else:
@@ -1010,28 +1029,29 @@ class DBTags:
 
     def getAllTags(self):
         """ return list of tuples (tag, parent catg)"""
-        l=[(n.text,n.getparent().get("name")) for n in self.root.xpath("//tag")]
-        l.sort(cmp= lambda x,y: cmp(x[0].lower(),y[0].lower()))
+        l = [(n.text, n.getparent().get("name")) for n in
+             self.root.xpath("//tag")]
+        l.sort(cmp=lambda x, y: cmp(x[0].lower(), y[0].lower()))
         return l
 
     def save(self):
-        fid = open(self.file,"w")
+        fid = open(self.file, "w")
         fid.write("""<?xml version="1.0" encoding="UTF-8"?>""")
-        ElementTree(self.root).write(fid,encoding="utf-8")
+        ElementTree(self.root).write(fid, encoding="utf-8")
         fid.close()
 
-    #def getTagForKey(self,key):
+    #def getTagForKey(self, key):
     #    """ return the tag as utf_8 for the key 'key' """
     #    ln=self.root.xpath("//tag[@key='%s']"%key)
     #    if ln:
-    #        assert len(ln)==1
+    #        assert len(ln) == 1
     #        return dec(ln[0].text)
 
     #~ def update(self, tg):
        #~ nc = self.dom.selectSingleNode("//catg[@name='IMPORTEDTAGS']")
        #~ if not nc:
           #~ nc=self.dom.createElement("catg")
-          #~ nc.setAttribute( "name","IMPORTEDTAGS")
+          #~ nc.setAttribute( "name", "IMPORTEDTAGS")
 
        #~ newtags=False
        #~ st = self.getTags()
@@ -1040,7 +1060,7 @@ class DBTags:
              #~ pass
           #~ else:
              #~ n=self.dom.createElement("tag")
-             #~ n.setAttribute( "name",i)
+             #~ n.setAttribute( "name", i)
              #~ nc.appendChild(n)
              #~ newtags = True
 
@@ -1051,14 +1071,14 @@ class DBTags:
     def getRootTag(self):
         return CatgNode(self.root)
 
-    def updateImportedTags( self, importedTags ):
-        assert type(importedTags)==list
+    def updateImportedTags(self, importedTags):
+        assert type(importedTags) == list
 
         r = self.getRootTag()
         existingTags = [i.name for i in r.getAllTags()]
 
         # compare existing and imported tags -> newTags
-        newTags=[]
+        newTags = []
         for tag in importedTags:
             if tag not in existingTags:
                 newTags.append(tag)
@@ -1067,43 +1087,48 @@ class DBTags:
             # create a category imported
             nom = u"Imported Tags"
             while 1:
-                nc=r.addCatg(nom)
-                if nc!=None:
+                nc = r.addCatg(nom)
+                if nc is not None:
                     break
                 else:
-                    nom+=u"!"
+                    nom += u"!"
 
             for tag in newTags:
-                ret=nc.addTag(tag)
-                assert ret!=None,"tag '%s' couldn't be added"%tag
+                ret = nc.addTag(tag)
+                assert ret is not None, "tag '%s' couldn't be added" % tag
 
         return len(newTags)
 
+
 class TagNode(object):
     """ """
-    def __init__(self,n):
+    def __init__(self, n):
         assert n.tag == "tag"
         self.__node = n
 
-    def __getName(self): return dec(self.__node.text)
+    def __getName(self):
+        return dec(self.__node.text)
     name = property(__getName)
 
-    def __getKey(self): return dec(self.__node.get("key"))
-    def __setKey(self,v): self.__node.set("key",v)
-    key = property(__getKey,__setKey)
+    def __getKey(self):
+        return dec(self.__node.get("key"))
+
+    def __setKey(self, v):
+        self.__node.set("key", v)
+    key = property(__getKey, __setKey)
 
     def remove(self):
         self.__node.getparent().remove(self.__node)
 
-    def moveToCatg(self,c):
-        assert type(c)==CatgNode
+    def moveToCatg(self, c):
+        assert type(c) == CatgNode
         self.remove()
         c._appendToCatg(self.__node)
 
 
 class CatgNode(object):
     """ """
-    def __init__(self,n):
+    def __init__(self, n):
         assert n.tag == "tags"
         self.__node = n
 
@@ -1116,65 +1141,65 @@ class CatgNode(object):
 
     def __getExpand(self):
         if "expand" in self.__node.attrib:
-            return (self.__node.attrib["expand"]!="0")
+            return (self.__node.attrib["expand"] != "0")
         else:
             return True
     expand = property(__getExpand)
 
     def getTags(self):
-        l=[TagNode(i) for i in self.__node.xpath("tag")]
-        l.sort( cmp=lambda x,y: cmp(x.name,y.name) )
+        l = [TagNode(i) for i in self.__node.xpath("tag")]
+        l.sort(cmp=lambda x, y: cmp(x.name, y.name))
         return l
+
     def getCatgs(self):
         return [CatgNode(i) for i in self.__node.xpath("tags")]
 
     def getAllTags(self):
-        l= self.getTags()
+        l = self.getTags()
         for i in self.getCatgs():
-            l.extend( i.getAllTags() )
-        l.sort(cmp=lambda x,y: cmp(x.name,y.name))
+            l.extend(i.getAllTags())
+        l.sort(cmp=lambda x, y: cmp(x.name, y.name))
         return l
 
-    def addTag(self,t):
-        assert type(t)==unicode
-        if self.isUnique("tag",t):
+    def addTag(self, t):
+        assert type(t) == unicode
+        if self.isUnique("tag", t):
             n = Element("tag")
             n.text = t
             self.__node.append(n)
             return TagNode(n)
 
-    def rename(self,newName):
+    def rename(self, newName):
         self.__node.attrib["name"] = newName
-
 
     def remove(self):
         self.__node.getparent().remove(self.__node)
 
-    def moveToCatg(self,c):
+    def moveToCatg(self, c):
         self.remove()
         c._appendToCatg(self.__node)
 
-    def _appendToCatg(self,element):
+    def _appendToCatg(self, element):
         self.__node.append(element)
 
-    def addCatg(self,t):
-        assert type(t)==unicode
-        if self.isUnique("tags",t):
-            n = Element("tags",name=t)
+    def addCatg(self, t):
+        assert type(t) == unicode
+        if self.isUnique("tags", t):
+            n = Element("tags", name=t)
             self.__node.append(n)
             return CatgNode(n)
 
-    def setExpand(self,bool):
+    def setExpand(self, bool):
         if bool:
             self.__node.attrib["expand"] = "1"
         else:
             self.__node.attrib["expand"] = "0"
 
-    def isUnique(self,type,name):
-        if type=="tag":
-            ln=[dec(i.text) for i in self.__node.xpath("//tag")]
+    def isUnique(self, type, name):
+        if type == "tag":
+            ln = [dec(i.text) for i in self.__node.xpath("//tag")]
         else:
-            ln=[CatgNode(i).name for i in self.__node.xpath("//tags")]
+            ln = [CatgNode(i).name for i in self.__node.xpath("//tags")]
         return name not in ln
 
 
@@ -1198,12 +1223,11 @@ if __name__ == "__main__":
     #~ r=db.getRootTag()
 
     #~ for i in r.getTags():
-        #~ print type(i),i.name
+        #~ print type(i), i.name
     #~ for i in r.getCatgs():
-        #~ print type(i),i.name
+        #~ print type(i), i.name
 
     #~ ln = db.select("//photo")
     #~ for i in ln:
         #~ print i.name, i.file
     #~ print ln[0].getParent()
-
