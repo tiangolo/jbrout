@@ -27,6 +27,7 @@ from tools import PhotoCmd, supportedFormats
 import os
 import shutil
 import stat
+import os.path
 
 from commongtk import Buffer, rgb, Img, MessageBoxScrolled
 
@@ -721,7 +722,7 @@ class PhotoNode(object):
     def getImage(self):
         file = self.file
         # XXX external call while pyexiv2 can't handle it
-        extension = file.split('.')[-1].lower()
+        extension = os.path.splitext(file)[1].lower()
         if extension == 'nef':
             data = Popen(["exiftool", "-b", "-JpgFromRaw",
                          "%s" % file], stdout=PIPE).communicate()[0]
