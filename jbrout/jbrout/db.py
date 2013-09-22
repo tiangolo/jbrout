@@ -229,7 +229,7 @@ class DBPhotos:
             p = PhotoNode(i)
             print p.name
             pc = PhotoCmd(p.file)
-            pc._write()              # rewrite iptc in file
+            pc.__maj()              # rewrite iptc in file
             p.updateInfo(pc)      # rewrite iptc in db.xml
 
     def getMinMaxDates(self):
@@ -927,7 +927,7 @@ class PhotoNode(object):
         return True
 
     def updateInfo(self, pc):
-        """ feel the node with REALS INFOS from "pc"(PhotoCmd)
+        """ fill the node with REAL INFOS from "pc"(PhotoCmd)
             return the tags
         """
         assert pc.__class__ == PhotoCmd
