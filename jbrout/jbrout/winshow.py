@@ -31,6 +31,7 @@ class TagList(gtk.VBox):
         #self.b.set_label("Test bouton")
         gtk.VBox.__init__(self)
         self.__callbackRemove = callbackRemove
+        # getAllTags returns list of tuples (tag, parent catg)
         self.__tags = dict(JBrout.tags.getAllTags())
 
     def fill(self, ll):
@@ -40,12 +41,17 @@ class TagList(gtk.VBox):
 
     def __refresh(self):
         l = self.get_children()
+        valid_categories = set(self.__tags.values())
+
         for a in l:
             a.destroy()
             del a
 
         for i in self.__ll:
-
+            # we should filter out Categories ... some other programs, e.g.
+            # Shotwell, add these among Tags of the photo
+            if i not in valid_categories:
+                continue
             hb = gtk.HBox()
             lbl = gtk.Label()
             lbl.set_label("%s (%s)" % (i, self.__tags[i]))
