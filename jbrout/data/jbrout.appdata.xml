@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+ <id type="desktop">jbrout.desktop</id>
+ <licence>CC BY-SA</licence>
+ <name>JBrout</name>
+ <summary>Photo manager which try to use standard EXIF/IPTC and XML to
+     handle your photos</summary>
+ <description>
+     <p>jBrout is a photo manager, written in python/pygtk under the GPL
+         licence. It's cross-platform, and has been tested on GNU/linux
+         and windows XP/2k.</p>
+
+     <p>The first jBrout was my first python application. I'd started to
+         developp it because i was unable to find a “good application”
+         to manage my collection of pictures. I'd tested a lot of
+         well-known applications (adobe photoshop album, picasa, imatch,
+         jasc photoalbum…) on windows. But no one was perfect (use of
+         database (and often proprietary database), no respect for
+         pictures, not cross-platforms (for future)…), so i've decided
+         to build my own, and build &amp; use jBrout! Now, i've
+         redevelopped jBrout 0.2.x from scratch! I manage more than
+         30000 photos, with IPTC keywords, and i'm really happy …</p>
+
+     <p>jBrout stands for J-Brout. “J” as JPEG, and “brout” as brouteur
+         (a french world meanning “browser”). When I'd started this
+         project google returned 0 pages pour the word “jbrout” ;-)</p>
+
+     <p>jBrout doesn't use a database to handle your pictures! It just
+         uses a XML file to handle your tags! The albums/pictures are
+         managed like folders/files!!! All information that could be
+         used in the interface are stored in your pictures.</p>
+
+     <p>jBrout RESPECTS your pictures! it doesn't change any capital
+         information in your pictures! (internal thumbnail are
+         respected! rotation are loss-less…).</p>
+
+     <p>jBrout is pluginable! In jBrout, Plugins are tools that can be
+         applied on a set of pictures, or on an album. You can select one or
+         more pictures, or an album, and call a plugin in the contextual
+         menu.</p>
+ </description>
+ <screenshots>
+     <screenshot type="default">http://jbrout.manatlan.com/jbrout/static/shot.png</screenshot>
+ </screenshots>
+ <url type="homepage">http://jbrout.manatlan.com/</url>
+ <updatecontact>jbrout@googlegroups.com</updatecontact>
+</application>
