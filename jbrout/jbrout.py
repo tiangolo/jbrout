@@ -2004,7 +2004,8 @@ class Window(GladeApp):
         if w.selected:  # perhaps a new desired selection
             sel = self.tbl.setSelected(w.selected)
         else:
-            sel = self.tbl.setSelected([self.tbl.items[w.idx]])
+            if self.tbl.items:
+                sel = self.tbl.setSelected([self.tbl.items[w.idx]])
 
         if w.isBasketUpdate:    #is basket updated ?
             model = self.treeviewdb.get_model()
