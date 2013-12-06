@@ -289,19 +289,38 @@ class PhotoCmd(object):
 
         self.__comment = decode(self.__info.getComment())
 
-        if "Exif.Image.RatingPercent" in self.__info.exifKeys():
-            # Read the RatingPercent key first
+        if "Xmp.xmp.Rating" in self.__info.xmpKeys():
+            # First, XMP
+            r = int(self.__info["Xmp.xmp.Rating"])
+            if   r<0: r=0
+            elif r>5: r=5
+            self.__rating = r
+            if not "Exif.Image.RatingPercent" in self.__info.exifKeys() or not "Exif.Image.Rating" in self.__info.exifKeys() or self.__info["Exif.Image.Rating"] != r:
+                self.__info["Exif.Image.Rating"]=self.__rating
+                if r>=5:   r=99
+                elif r>1:  r=(r-1)*25
+                elif r<=0: r=0
+                self.__info["Exif.Image.RatingPercent"]=r # short, but libexiv2 should convert this
+                self.__info.writeMetadata()
+        elif "Exif.Image.RatingPercent" in self.__info.exifKeys():
+            # Then EXIF, RatingPercent key first
             r = int(self.__info["Exif.Image.RatingPercent"])
             if r>=99:  r=5
             elif r>1:  r=1+r/25
             elif r<=0: r=0
             self.__rating = r
+            if not "Xmp.xmp.Rating" in self.__info.xmpKeys() or self.__info["Xmp.xmp.Rating"] != self.__rating:
+                self.__info["Xmp.xmp.Rating"]=self.__rating
+                self.__info.writeMetadata()
         elif "Exif.Image.Rating" in self.__info.exifKeys():
             # Fallback to Rating if RatingPercent is not available
             r = int(self.__info["Exif.Image.Rating"])
             if   r<0: r=0
             elif r>5: r=5
             self.__rating = r
+            if not "Xmp.xmp.Rating" in self.__info.xmpKeys() or self.__info["Xmp.xmp.Rating"] != self.__rating:
+                self.__info["Xmp.xmp.Rating"]=self.__rating
+                self.__info.writeMetadata()
         else:
             self.__rating = None # dont touch if no rating tag was set before
 
@@ -507,6 +526,7 @@ isreal : %s""" % (
     # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
         assert type(r)==int
         self.__info["Exif.Image.Rating"]=r # short, but libexiv2 should convert this
+        self.__info["Xmp.xmp.Rating"]=r # short, but libexiv2 should convert this
         if r>=5:   r=99
         elif r>1:  r=(r-1)*25
         elif r<=0: r=0
