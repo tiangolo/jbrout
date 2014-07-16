@@ -1296,6 +1296,12 @@ class Window(GladeApp):
                                        self.__end.day, 0, 0, 0)
 
         t = (self.__end - self.__begin).days + 1
+        # FIXME Sometimes warning here happens:
+        # matej@wycliff: plugins (PEP8-204 *)$ jbrout
+        # /home/matej/repos/jbrout/jbrout/jbrout.py:1299: GtkWarning:
+        #     IA__gtk_range_set_range: assertion `min < max' failed
+        # /home/matej/repos/jbrout/jbrout/jbrout.py:1300: GtkWarning:
+        #     IA__gtk_range_set_range: assertion `min < max' failed
         self.hs_from.set_range(0, t)
         self.hs_to.set_range(0, t)
 

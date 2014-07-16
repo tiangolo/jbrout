@@ -350,9 +350,11 @@ class ThumbnailsView(gtk.Layout):
         self.do_scroll()
 
     def do_scroll(self):
-        vadjustment = self.get_vadjustment()
-        hadjustment = self.get_hadjustment()
-
+        #vadjustment = self.get_vadjustment()
+        #hadjustment = self.get_hadjustment()
+        # FIXME not sure what is this good for
+        # it is run when closing full-screen view of individual images,
+        pass
 
     def on_size_allocate(self, widget, rectangle):
         self.update_layout(rectangle)
