@@ -30,6 +30,7 @@ if __name__ == '__main__':
 from libs.gladeapp import GladeApp
 from common import caseFreeCmp
 
+
 class FolderSelect(GladeApp):
     """Folder selection dialog allowing the selection of single or multiple
     folders"""
@@ -45,8 +46,7 @@ class FolderSelect(GladeApp):
         selectMultiple - If true allow selection of multiple folders
         """
 
-        self.mdl = gtk.TreeStore(gobject.TYPE_STRING,
-                                         gobject.TYPE_STRING)
+        self.mdl = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 
         self.renderer = gtk.CellRendererText()
         self.column0 = gtk.TreeViewColumn("Select Folder",
@@ -110,7 +110,6 @@ class FolderSelect(GladeApp):
                     break
             self.view.set_cursor(tPath)
 
-
     def addDir(self, folder, maxDepth=1, parent=None, depth=0):
         """
         Adds a directory/folder and children as determined by arguments to the
@@ -130,23 +129,25 @@ class FolderSelect(GladeApp):
             for subFolder in sorted(os.listdir(folder), cmp=caseFreeCmp):
                 subFolderFull = os.path.join(folder, subFolder)
                 if self.checkFolder(subFolder, subFolderFull):
-                    newParent = self.mdl.append(parent, (subFolder, subFolderFull))
+                    newParent = self.mdl.append(parent,
+                                                (subFolder, subFolderFull))
                     if maxDepth > depth:
                         self.addDir(subFolderFull, maxDepth, newParent, depth)
         except:
             print "Something happening with permissions at %s" % folder
 
     def checkFolder(self, folder, folderFull):
-        """Checks a folder to see if it should be displayed based on full path"""
+        """Checks a folder to see if it should be displayed based on
+        full path"""
         try:
             pathOk = os.path.isdir(folderFull) and\
-                     os.access(folderFull, os.X_OK)
+                os.access(folderFull, os.X_OK)
         except:
             pathOk = False
         if self.showHidden:
             ret = pathOk
         else:
-            ret = pathOk and re.match('^\..*', folder) == None
+            ret = pathOk and re.match('^\..*', folder) is None
         return ret
 
     def winDrives(self):
@@ -172,6 +173,7 @@ class FolderSelect(GladeApp):
         """Handles the expansion of nodes and builds the tree under them as
         necessary"""
         to_remove = []
+
         def remove_iter(iter_r, remove_this=True):
             child_iter = self.mdl.iter_children(iter_r)
             while child_iter:

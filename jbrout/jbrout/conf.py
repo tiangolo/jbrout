@@ -12,19 +12,18 @@
 # # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # # GNU General Public License for more details.
 # #
-import re, sys, thread, shutil, stat, string
+import shutil
 
 from libs.dict4ini import DictIni
 from plugins import JPlugins
-import os, os.path
+import os
+import os.path
 from db import DBPhotos, DBTags
 import socket
 import glib
 
-# ============================================================================================
-class Conf(object):
-# ============================================================================================
 
+class Conf(object):
     def __init__(self, file):
         self.__ini = DictIni(file)
 
@@ -36,10 +35,6 @@ class Conf(object):
     def __getitem__(self, n):
         """ main conf get """
         return self.__ini.jBrout[n]
-
-    def has_key(self, n):
-        """ main conf test """
-        return self.__ini.jBrout.has_key(n)
 
     def __contains__(self, n):
         """ main conf test """
@@ -55,6 +50,7 @@ class Conf(object):
 
     def save(self):
         self.__ini.save()
+
 
 class JBrout:
     # ~ __lockFile = "jbrout.lock"
@@ -78,7 +74,6 @@ class JBrout:
         # ~ if os.path.isfile(file):
             # ~ os.unlink(file)
 
-
     @classmethod
     def isRunning(cls, p=64738):  # "sys 64738" nostaligc ;-)
         try:
@@ -92,8 +87,9 @@ class JBrout:
     def getHomeDir(mkdir=None):
         """
         Return the "Home dir" of the system (if it exists), or None
-        (if mkdir is set : it will create a subFolder "mkdir" if the path exist,
-        and will append to it (the newfolder can begins with a "." or not))
+        (if mkdir is set : it will create a subFolder "mkdir" if the
+        path exist, and will append to it (the newfolder can begins with
+        a "." or not))
         """
         maskDir = False
         glibConfDir = glib.get_user_data_dir()
@@ -145,13 +141,12 @@ class JBrout:
                     if os.path.isdir(oldConfDir):
                         print "Copying %s to %s" % (oldConfDir, confDir)
                         shutil.copytree(oldConfDir, confDir,
-                            symlinks=True)
+                                        symlinks=True)
                     else:
                         print "Creating new dir %s" % confDir
                         os.mkdir(confDir)
 
         return confDir
-
 
     @staticmethod
     def getConfFile(name):
@@ -171,11 +166,11 @@ class JBrout:
                 # there is not a "jbrout" config dir
                 # the file must be present/created in this local "./"
                 return name
+
     @staticmethod
     def init(modify):
 
         JBrout.modify = modify
-
 
         # initialisation de ".db"
         #======================================================================
@@ -227,4 +222,3 @@ if __name__ == "__main__":
     # ~ for i in ln:
         # ~ print i.name, i.file
     # ~ print ln[0].getParent()
-

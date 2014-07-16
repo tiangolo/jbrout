@@ -22,7 +22,6 @@ pyexiv2 wrapper
 map old methods/objects from pyexiv2(<2), to work with versions 1 & 2
 
 """
-import re
 import sys
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -138,7 +137,7 @@ class Exiv2Metadata(object):
         ll = list(set(li + lx + lk))
         ll.sort()
         _keys = ['Iptc.Application2.Keywords', 'Xmp.iptc.Keywords',
-                'Xmp.dc.subject']
+                 'Xmp.dc.subject']
         for key in _keys:
             if key in self._md:
                 logging.debug("%s = %s" % (key, self._md[key]))
@@ -175,9 +174,8 @@ class Exiv2Metadata(object):
 
 ###############################################################################
 if __name__ == "__main__":
-    t = Image("/home/manatlan/Documents/python/tests_libs_python" + \
+    t = Image("/home/manatlan/Documents/python/tests_libs_python" +
               "/TestJPG/p20030830_130202 (copie).jpg")
-    # ~ t=Image("/home/manatlan/Desktop/fotaux/autorot/p20020115_173654(1).jpg")
     t.readMetadata()
 
     ##----

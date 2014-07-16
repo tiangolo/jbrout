@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import re
-# Originally from http://boodebr.org/main/python/all-about-python-and-unicode#UNI_XML
-# http://coreapython.hosting.paran.com/boodebr/All%20About%20Python%20and%20Unicode%20%20boodebr_org.htm#UNI_XML
+# Originally from http://boodebr.org/main/python\
+#        /all-about-python-and-unicode#UNI_XML
+# http://coreapython.hosting.paran.com/boodebr\
+#        /All%20About%20Python%20and%20Unicode%20%20boodebr_org.htm#UNI_XML
+
 
 def raw_illegal_xml_regex():
     """
@@ -38,37 +41,44 @@ def raw_illegal_xml_regex():
     """
 
     # First, add a group for all the basic illegal areas above
-    re_xml_illegal = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])'
+    re_xml_illegal = \
+        u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])'
 
     re_xml_illegal += u"|"
 
-    # Next, we know that (uD800-uDBFF) must ALWAYS be followed by (uDC00-uDFFF),
-    # and (uDC00-uDFFF) must ALWAYS be preceded by (uD800-uDBFF), so this
-    # is how we check for the U00010000-U0010FFFF range. There are also special
-    # case checks for start & end of string cases.
+    # Next, we know that (uD800-uDBFF) must ALWAYS be followed by
+    # (uDC00-uDFFF), and (uDC00-uDFFF) must ALWAYS be preceded by
+    # (uD800-uDBFF), so this is how we check for the U00010000-U0010FFFF
+    # range. There are also special case checks for start & end of
+    # string cases.
 
     # I've defined this oddly due to the bug mentioned at the top of this file
-    re_xml_illegal += u'([%s-%s][^%s-%s])|([^%s-%s][%s-%s])|([%s-%s]$)|(^[%s-%s])' % \
-                      (unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff),
-                       unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff),
-                       unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff))
+    re_xml_illegal += \
+        u'([%s-%s][^%s-%s])|([^%s-%s][%s-%s])|([%s-%s]$)|(^[%s-%s])' % \
+        (unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff),
+         unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff),
+         unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff))
 
     return re_xml_illegal
+
 
 def make_illegal_xml_regex():
     return re.compile(raw_illegal_xml_regex())
 
 c_re_xml_illegal = make_illegal_xml_regex()
 
+
 def is_legal_xml(uval):
     """
     Given a Unicode object, figure out if it is legal
     to place it in an XML file.
     """
-    return (c_re_xml_illegal.search(uval) == None)
+    return (c_re_xml_illegal.search(uval) is None)
+
 
 def make_xml_string_legal(instr):
     return c_re_xml_illegal.sub('', instr)
+
 
 def is_legal_xml_char(uchar):
     """
@@ -100,15 +110,13 @@ def is_legal_xml_char(uchar):
     # sequences are legal for XML).
 
     if len(uchar) == 1:
-        return not \
-               (
-               (uchar >= u'\u0000' and uchar <= u'\u0008') or \
-               (uchar >= u'\u000b' and uchar <= u'\u000c') or \
-               (uchar >= u'\u000e' and uchar <= u'\u001f') or \
-               # always illegal as single chars
-               (uchar >= unichr(0xd800) and uchar <= unichr(0xdfff)) or \
-               (uchar >= u'\ufffe' and uchar <= u'\uffff')
-               )
+        return not (
+            (uchar >= u'\u0000' and uchar <= u'\u0008') or
+            (uchar >= u'\u000b' and uchar <= u'\u000c') or
+            (uchar >= u'\u000e' and uchar <= u'\u001f') or
+            # always illegal as single chars
+            (uchar >= unichr(0xd800) and uchar <= unichr(0xdfff)) or
+            (uchar >= u'\ufffe' and uchar <= u'\uffff'))
     elif len(uchar) == 2:
         # all 2-char codings are legal in XML
         # (this looks weird, but remember that even after calling
@@ -118,4 +126,3 @@ def is_legal_xml_char(uchar):
 
     else:
         raise Exception("Must pass a single character to is_legal_xml_char")
-

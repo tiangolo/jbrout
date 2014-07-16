@@ -12,9 +12,7 @@
 # # GNU General Public License for more details.
 # #
 
-import os
 import gtk
-import sys
 
 from __main__ import GladeApp
 
@@ -33,24 +31,25 @@ class WinPref(GladeApp):
         def mkRacine(nom, typ):
             it = model.append(None, [nom, 0, 0, ""])
             for instance, callback, props in plugins.request(typ, all=True):
-                isChecked = "%s.%s" % (instance.id, props["method"]) in self.liste
-                model.append(it, [props["label"], isChecked, 1, (instance, callback, props)])
+                isChecked = "%s.%s" % (instance.id, props["method"]) \
+                    in self.liste
+                model.append(it,
+                             [props["label"], isChecked, 1,
+                             (instance, callback, props)])
 
             self.tvPlugins.expand_row(model.get_path(it), False)
             return it
 
-
         mkRacine(_("Photos"), "PhotosProcess")
         mkRacine(_("Albums"), "AlbumProcess")
 
-
-        renderer = gtk.CellRendererToggle();
+        renderer = gtk.CellRendererToggle()
         renderer.set_data("column", 1)  # data on col 1
         renderer.connect("toggled", self.on_item_toggled, model)
         column = gtk.TreeViewColumn("chk", renderer,
                                     active=1,  # active on col 1
                                     visible=2,  # visibl on col 2
-                        )
+                                    )
         column.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
         # ~ column.set_fixed_width(50)
         column.set_clickable(True)
@@ -61,7 +60,6 @@ class WinPref(GladeApp):
         column = gtk.TreeViewColumn("name", cell_renderer, text=0)
         self.tvPlugins.append_column(column)
         #
-
 
         self.main_widget.show_all()
 
@@ -74,17 +72,19 @@ class WinPref(GladeApp):
         pid = "%s.%s" % (instance.id, props["method"])
 
         if v:
-            if pid in self.liste: self.liste.remove(pid)
+            if pid in self.liste:
+                self.liste.remove(pid)
         else:
-            if pid not in self.liste: self.liste.append(pid)
+            if pid not in self.liste:
+                self.liste.append(pid)
 
         isChecked = pid in self.liste
 
         model.set(it, 1, isChecked)  # set col1
 
-
     def on_WinPref_delete_event(self, *args):
         self.quit(None)
+
     def on_bntClose_clicked(self, *args):
         self.quit(self.liste)
 
@@ -93,7 +93,8 @@ class WinPref(GladeApp):
         model, it = treeselection.get_selected()
         self.info.set_label("")
         if it:
-            isPlugin = model.get(it, 2)[0] == 1  # test col2 to see if it's a child
+            # test col2 to see if it's a child
+            isPlugin = model.get(it, 2)[0] == 1
             if isPlugin:
                 instance, cb, props = model.get(it, 3)[0]  # get col3 to tuple
 
@@ -104,7 +105,8 @@ Description : %s
 
 More infos:
 %s
-""" % (instance.id, instance.__version__, instance.__author__, instance.__doc__, props["doc"]))
+""" % (instance.id, instance.__version__, instance.__author__,
+       instance.__doc__, props["doc"]))
 
 if __name__ == "__main__":
     pass
