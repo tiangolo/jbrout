@@ -37,11 +37,13 @@ so you can instantiate window, by passing params x,y to .init() method :
     w = window(12,13)
 
 and decide to loop it (needed for the first window !!!)
-(if a loop already running, a new window will be displayed in the already exixting loop)
+(if a loop already running, a new window will be displayed in the
+already exixting loop)
 
     ret = w.loop()
 
-and get back the tuple value returned by the .quit() method (the .exit() method force quit all)
+and get back the tuple value returned by the .quit() method (the .exit()
+method force quit all)
 (quit() can take arguments only if win is in loop ... for the returned value)
 
 gladeapp will autoconnect signals and warn when missing a binding method
@@ -59,15 +61,14 @@ changelog
    - try/except on the quit() ... sometimes __inloop was problematic
 """
 import pygtk
-pygtk.require ('2.0')
+pygtk.require('2.0')
 import gtk
 import gtk.glade
 import gtk.gdk
 import gobject
-from xml.dom.minidom import parse, parseString
+from xml.dom.minidom import parse
 
 import re
-import os
 import sys
 
 
@@ -76,28 +77,37 @@ class GladeApp:
 
     def __init__(self, *args, **dargs):
         n = self.__class__.__name__
-        assert hasattr(self, "glade"), "*ERROR* manque attribut 'glade' dans '%s'" % n
-        assert hasattr(self, "init"), "*ERROR* manque methode 'init' dans '%s'" % n
+        assert hasattr(self, "glade"), \
+            "*ERROR* manque attribut 'glade' dans '%s'" % n
+        assert hasattr(self, "init"), \
+            "*ERROR* manque methode 'init' dans '%s'" % n
 
         # recupere la liste des windows du glade -> l
         x = parse(self.glade)
-        l = [(i.getAttribute("id"), i) for i in x.documentElement.childNodes if i.nodeType == i.ELEMENT_NODE]
+        l = [(i.getAttribute("id"), i)
+             for i in x.documentElement.childNodes
+             if i.nodeType == i.ELEMENT_NODE]
         assert len(l) >= 1, "*ERROR* pas de widget dans le .glade"
 
         # controle le matching object avec une ou la window du glade
         if len(l) > 1:
             theId, theNode = None, None
-            assert hasattr(self, "window"), "*ERROR* manque attribut 'window' dans '%s' (car le glade en possede plusieurs)" % n
+            assert hasattr(self, "window"), \
+                "*ERROR* manque attribut 'window' dans " + \
+                " '%s' (car le glade en possede plusieurs)" % n
             for id, node in l:
                 if self.window == id:
                     theId, theNode = id, node
-                    break;
-            assert theNode != None, "*ERROR* l'attribut 'window' dans '%s' ne correspond a aucune window dans le .glade" % n
+                    break
+            assert theNode is not None, \
+                ("*ERROR* l'attribut 'window' dans '%s' ne correspond" +
+                 " a aucune window dans le .glade") % n
         else:
             theId, theNode = l[0]
 
         # verifi que ses events sont presents
-        for i in re.findall(r"""<signal handler="([^"]+)" """, theNode.toxml()):
+        for i in re.findall(r"""<signal handler="([^"]+)" """,
+                            theNode.toxml()):
             if not hasattr(self, i):
                 print "*WARNING* manque methode dans '%s'" % n
                 print "    def %s(self,*args):" % i
@@ -118,7 +128,7 @@ class GladeApp:
             else:
                 setattr(self, name, w)
 
-        assert self.main_widget != None, "main_widget not found ?!?"
+        assert self.main_widget is not None, "main_widget not found ?!?"
 
         # et appel la methode init, en passant les arguments !
         obj = getattr(self, "init")
@@ -128,7 +138,6 @@ class GladeApp:
         GladeApp.__win.append(self)
 
         self.__inLoop = None
-
 
     def loop(self):
         self.__return = None
@@ -175,5 +184,3 @@ class GladeApp:
         # make translation available in the glade
         gtk.glade.bindtextdomain(app_name, locale_dir)
         gtk.glade.textdomain(app_name)
-
-
