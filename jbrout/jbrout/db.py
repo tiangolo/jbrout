@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# #
-# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-# #
-# # This program is free software; you can redistribute it and/or modify
-# # it under the terms of the GNU General Public License as published
-# # by the Free Software Foundation; version 2 only.
-# #
-# # This program is distributed in the hope that it will be useful,
-# # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# # GNU General Public License for more details.
-# #
+##
+##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published
+## by the Free Software Foundation; version 2 only.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
 from lxml.etree import Element, ElementTree
-# ~ import cElementTree as ElementTree
+#~ import cElementTree as ElementTree
 import gc
 
 import pygtk
@@ -32,7 +32,6 @@ import os.path
 from commongtk import Buffer, rgb, Img, MessageBoxScrolled
 
 from subprocess import Popen, PIPE
-import char_utils
 
 
 def walktree(top=".", depthfirst=True):
@@ -157,14 +156,14 @@ class DBPhotos:
                     if os.path.isfile(file):
                         files.append((file, nodeDir))
 
-        yield len(files)  # first yield is the total number of files
+        yield len(files)   # first yield is the total number of files
 
         i = 0
         for (file, nodeDir) in files:
             yield i
             i += 1
-            # OLD TOOLS:
-            # file = PhotoCmd.prepareFile(file,
+            #OLD TOOLS:
+            #file = PhotoCmd.prepareFile(file,
             #                needRename=DBPhotos.normalizeName,
             #                needAutoRot=DBPhotos.autorotAtImport,
             #                )
@@ -229,8 +228,8 @@ class DBPhotos:
             p = PhotoNode(i)
             print p.name
             pc = PhotoCmd(p.file)
-            pc.__maj()  # rewrite iptc in file
-            p.updateInfo(pc)  # rewrite iptc in db.xml
+            pc.__maj()              # rewrite iptc in file
+            p.updateInfo(pc)      # rewrite iptc in db.xml
 
     def getMinMaxDates(self):
         """ return a tuple of the (min, max) of photo dates
@@ -331,11 +330,11 @@ class DBPhotos:
                     basename = os.path.basename(iline)
 
                     for inode in self.root.xpath(
-                        "//folder[@name='%s']/photo[@name='%s']" % 
+                        "//folder[@name='%s']/photo[@name='%s']" %
                             (dirname, basename)):
-                        # print inode
+                        #print inode
                         photo = PhotoNode(inode)
-                        # print photo
+                        #print photo
                         if photo.isInBasket:
                             countExisting = countExisting + 1
                         else:
@@ -360,8 +359,8 @@ class FolderNode(object):
         return os.path.basename(self.__node.attrib["name"])
     name = property(__getName)
 
-    # ~ def __getIsReadOnly(self):   return not os.access( self.file, os.W_OK)
-    # ~ isReadOnly = property(__getIsReadOnly)
+    #~ def __getIsReadOnly(self):   return not os.access( self.file, os.W_OK)
+    #~ isReadOnly = property(__getIsReadOnly)
 
     def __getFile(self):
         return self.__node.attrib["name"]
@@ -408,7 +407,7 @@ class FolderNode(object):
 
         ln = self.__node.xpath(xpath)
         ll = [PhotoNode(i) for i in ln]
-        return PhotoNodes(ll, "//folder[@name='%s']/%s" % 
+        return PhotoNodes(ll, "//folder[@name='%s']/%s" %
                           (self.file, xpath))
 
     def setComment(self, t):
@@ -515,7 +514,7 @@ class FolderNode(object):
                         created = False
 
                 if created:
-                    # so map the folder to a db node
+                    #so map the folder to a db node
                     nodeDir = Element("folder", name=newname)
                     self.__node.append(nodeDir)
                     return FolderNode(nodeDir)
@@ -568,44 +567,44 @@ class FolderNode(object):
         return False
 
 
-# ~ def pixbuf_from_data(data):
-    # ~ loader = gtk.gdk.PixbufLoader ('jpeg')
-    # ~ loader.write (data, len (data))
-    # ~ pixbuf = loader.get_pixbuf ()
-    # ~ loader.close ()
-    # ~ return pixbuf
+#~ def pixbuf_from_data(data):
+    #~ loader = gtk.gdk.PixbufLoader ('jpeg')
+    #~ loader.write (data, len (data))
+    #~ pixbuf = loader.get_pixbuf ()
+    #~ loader.close ()
+    #~ return pixbuf
 
-# ~ def do_gui_operation(function, *args, **kw):
-    # ~ def idle_func():
-        # ~ gtk.threads_enter()
-        # ~ try:
-            # ~ function(*args, **kw)
-            # ~ return False
-        # ~ finally:
-            # ~ gtk.threads_leave()
-    # ~ gobject.idle_add(idle_func)
+#~ def do_gui_operation(function, *args, **kw):
+    #~ def idle_func():
+        #~ gtk.threads_enter()
+        #~ try:
+            #~ function(*args, **kw)
+            #~ return False
+        #~ finally:
+            #~ gtk.threads_leave()
+    #~ gobject.idle_add(idle_func)
 
-# ~ class PhotoFile:
-    # ~ @staticmethod
-    # ~ def generate(path):
-        # ~ list=[]
-        # ~ for i in os.listdir(path):
-            # ~ if i[-4:].lower() == ".jpg":
-                # ~ list.append( PhotoFile(os.path.join(path, i)) )
-        # ~ return list
-    # ~ generate = staticmethod(generate)
+#~ class PhotoFile:
+    #~ @staticmethod
+    #~ def generate(path):
+        #~ list=[]
+        #~ for i in os.listdir(path):
+            #~ if i[-4:].lower() == ".jpg":
+                #~ list.append( PhotoFile(os.path.join(path, i)) )
+        #~ return list
+    #~ generate = staticmethod(generate)
 
-    # ~ def __init__(self, f):
-        # ~ self.file = f
-        # ~ self.name = os.path.basename(f)
+    #~ def __init__(self, f):
+        #~ self.file = f
+        #~ self.name = os.path.basename(f)
 
-    # ~ def getThumb(self):
-        # ~ try:
-            # ~ i=Img(thumb=self.file)
-            # ~ data = i.resizeC(160).getStreamJpeg().read()
-            # ~ return pixbuf_from_data(data)
-        # ~ except:
-            # ~ return None
+    #~ def getThumb(self):
+        #~ try:
+            #~ i=Img(thumb=self.file)
+            #~ data = i.resizeC(160).getStreamJpeg().read()
+            #~ return pixbuf_from_data(data)
+        #~ except:
+            #~ return None
 
 class PhotoNode(object):
     """
@@ -688,9 +687,9 @@ class PhotoNode(object):
         if self.isInBasket:
             del(self.__node.attrib["basket"])
 
-    # ~ def __eq__(self, p):
-        # ~ assert p.__class__ == PhotoNode
-        # ~ return self.file == p.file
+    #~ def __eq__(self, p):
+        #~ assert p.__class__ == PhotoNode
+        #~ return self.file == p.file
     # throw a bug in lxml ?!?! ;-(
 
     def getThumb(self):
@@ -700,7 +699,7 @@ class PhotoNode(object):
             pb_nothumb = Buffer.pixbufNT
             pb_notfound = Buffer.pixbufNF
             pb_error = Buffer.pixbufERR
-        else:  # photo with hadn't got exif before (exif setted by jbrout)
+        else:       # photo with hadn't got exif before (exif setted by jbrout)
             backGroundColor = rgb(255, 0, 0)
             pb_nothumb = Buffer.pixbufNTNE
             pb_notfound = Buffer.pixbufNFNE
@@ -892,18 +891,18 @@ class PhotoNode(object):
         pc = PhotoCmd(copy)
         pc.copyInfoTo(self.file)
 
-        # and update infos
+        #and update infos
         # generally, it's not necessary ... but if size had changed, jhead
         # correct automatically width/height exif, so we need to put back in db
         pc = PhotoCmd(self.file)
         self.updateInfo(pc)
 
-    # ~ def repair(self):
-        # ~ pc = PhotoCmd(self.file)
-        # ~ pc.repair()                 # kill exif tags ;-(
+    #~ def repair(self):
+        #~ pc = PhotoCmd(self.file)
+        #~ pc.repair()                 # kill exif tags ;-(
         # recreate "fake exif tags" with exifutils and thumbnails
-        # ~ pc.rebuildExifTB()
-        # ~ self.updateInfo(pc)
+        #~ pc.rebuildExifTB()
+        #~ self.updateInfo(pc)
 
     def redate(self, w, d, h, m, s):
         pc = PhotoCmd(self.file)
@@ -918,8 +917,8 @@ class PhotoNode(object):
         self.updateName()
 
     def updateName(self):
-        # photo has been redated
-        # it should be renamed if in config ...
+        #photo has been redated
+        #it should be renamed if in config ...
         if DBPhotos.normalizeName:
             pc = PhotoCmd(self.file, needAutoRename=True)
             self.updateInfo(pc)
@@ -939,12 +938,12 @@ class PhotoNode(object):
         self.__node.attrib["resolution"] = pc.resolution
 
         # OLD PhotoCmd
-        # ~ if pc.exifdate:
-            # ~ self.__node.attrib["date"]=pc.exifdate
-            # ~ self.__node.attrib["real"]="yes"
-        # ~ else:
-            # ~ self.__node.attrib["date"]=pc.filedate
-            # ~ self.__node.attrib["real"]="no"
+        #~ if pc.exifdate:
+            #~ self.__node.attrib["date"]=pc.exifdate
+            #~ self.__node.attrib["real"]="yes"
+        #~ else:
+            #~ self.__node.attrib["date"]=pc.filedate
+            #~ self.__node.attrib["real"]="no"
 
         # NEW PhotoCmd (always a exifdate)
         self.__node.attrib["date"] = pc.exifdate
@@ -960,13 +959,7 @@ class PhotoNode(object):
                 self.__node.append(nodeTag)
         if pc.comment:
             nodeComment = Element("c")
-            try:
-                nodeComment.text = char_utils.make_xml_string_legal(pc.comment)
-            except ValueError, f:
-                print "exception = %s" % f
-                print "nodeComment = %s" % nodeComment
-                print "pc.comment = %s" % pc.comment
-                raise
+            nodeComment.text = pc.comment.replace(u'\x00', u' ')
             self.__node.append(nodeComment)
         if pc.rating:
             nodeRating = Element("r")
@@ -1041,34 +1034,34 @@ class DBTags:
         ElementTree(self.root).write(fid, encoding="utf-8")
         fid.close()
 
-    # def getTagForKey(self, key):
+    #def getTagForKey(self, key):
     #    """ return the tag as utf_8 for the key 'key' """
     #    ln=self.root.xpath("//tag[@key='%s']"%key)
     #    if ln:
     #        assert len(ln) == 1
     #        return dec(ln[0].text)
 
-    # ~ def update(self, tg):
-       # ~ nc = self.dom.selectSingleNode("//catg[@name='IMPORTEDTAGS']")
-       # ~ if not nc:
-          # ~ nc=self.dom.createElement("catg")
-          # ~ nc.setAttribute( "name", "IMPORTEDTAGS")
+    #~ def update(self, tg):
+       #~ nc = self.dom.selectSingleNode("//catg[@name='IMPORTEDTAGS']")
+       #~ if not nc:
+          #~ nc=self.dom.createElement("catg")
+          #~ nc.setAttribute( "name", "IMPORTEDTAGS")
 
-       # ~ newtags=False
-       # ~ st = self.getTags()
-       # ~ for i in tg:
-          # ~ if i in st:
-             # ~ pass
-          # ~ else:
-             # ~ n=self.dom.createElement("tag")
-             # ~ n.setAttribute( "name", i)
-             # ~ nc.appendChild(n)
-             # ~ newtags = True
+       #~ newtags=False
+       #~ st = self.getTags()
+       #~ for i in tg:
+          #~ if i in st:
+             #~ pass
+          #~ else:
+             #~ n=self.dom.createElement("tag")
+             #~ n.setAttribute( "name", i)
+             #~ nc.appendChild(n)
+             #~ newtags = True
 
-       # ~ if newtags:
-          # ~ self.dom.documentElement.appendChild(nc)
-          # ~ self.win.treeTags.init()
-          # ~ msgBox(_("There are New Imported Tags"))
+       #~ if newtags:
+          #~ self.dom.documentElement.appendChild(nc)
+          #~ self.win.treeTags.init()
+          #~ msgBox(_("There are New Imported Tags"))
     def getRootTag(self):
         return CatgNode(self.root)
 
@@ -1205,30 +1198,30 @@ class CatgNode(object):
 
 
 if __name__ == "__main__":
-    # ~ doc = lxml.etree.fromstring("<foo>fd<bar>kk</bar>oi</foo>")
-    # ~ r = doc.xpath('/foo/bar')
-    # ~ print len(r)
-    # ~ print r[0].tag
-    # ~ print doc.tag
-    # ~ print doc.text
+    #~ doc = lxml.etree.fromstring("<foo>fd<bar>kk</bar>oi</foo>")
+    #~ r = doc.xpath('/foo/bar')
+    #~ print len(r)
+    #~ print r[0].tag
+    #~ print doc.tag
+    #~ print doc.text
 
     db = DBPhotos()
-    # db.clearBasket()
-    # ~ db.add("/home/manatlan/Desktop/tests")
+    #db.clearBasket()
+    #~ db.add("/home/manatlan/Desktop/tests")
 
-    # ~ print db.cpt()
-    # ~ db.save()
-    # ~ print db.getRootBasket()
+    #~ print db.cpt()
+    #~ db.save()
+    #~ print db.getRootBasket()
 
-    # ~ db=DBTags()
-    # ~ r=db.getRootTag()
+    #~ db=DBTags()
+    #~ r=db.getRootTag()
 
-    # ~ for i in r.getTags():
-        # ~ print type(i), i.name
-    # ~ for i in r.getCatgs():
-        # ~ print type(i), i.name
+    #~ for i in r.getTags():
+        #~ print type(i), i.name
+    #~ for i in r.getCatgs():
+        #~ print type(i), i.name
 
-    # ~ ln = db.select("//photo")
-    # ~ for i in ln:
-        # ~ print i.name, i.file
-    # ~ print ln[0].getParent()
+    #~ ln = db.select("//photo")
+    #~ for i in ln:
+        #~ print i.name, i.file
+    #~ print ln[0].getParent()

@@ -194,7 +194,7 @@ class ListView(ThumbnailsView):
             nbSelected = len(self.selection)
             if nbSelected > 0:
                 if event.keyval < 255 and event.string.strip() != "":
-                    wk = WinKeyTag(_("Apply to %d photo(s)") % 
+                    wk = WinKeyTag(_("Apply to %d photo(s)") %
                                    nbSelected, event.string,
                                    JBrout.tags.getAllTags())
                     ret = wk.loop()
@@ -286,7 +286,7 @@ class ListView(ThumbnailsView):
             if orderAscending:
                 l.sort(cmp=lambda x, y: cmp(x.date, y.date))
             else:
-                l.sort(cmp=lambda x, y:-cmp(x.date, y.date))
+                l.sort(cmp=lambda x, y: -cmp(x.date, y.date))
         elif orderBy == "File":  # order by file
             if orderAscending:
                 l.sort(cmp=lambda x, y:
@@ -295,17 +295,17 @@ class ListView(ThumbnailsView):
             else:
                 l.sort(cmp=lambda x, y:
                        - locale.strcoll(os.path.basename(x.file),
-                                       os.path.basename(y.file)))
+                                        os.path.basename(y.file)))
         elif orderBy == "Path":  # order by file
             if orderAscending:
                 l.sort(cmp=lambda x, y: locale.strcoll(x.file, y.file))
             else:
-                l.sort(cmp=lambda x, y:-locale.strcoll(x.file, y.file))
+                l.sort(cmp=lambda x, y: -locale.strcoll(x.file, y.file))
         elif orderBy == "Rating":  # order by rating
             if orderAscending:
                 l.sort(cmp=lambda x, y: cmp(x.rating, y.rating))
             else:
-                l.sort(cmp=lambda x, y:-cmp(x.rating, y.rating))
+                l.sort(cmp=lambda x, y: -cmp(x.rating, y.rating))
         self.set_photos(l)
 
     def remove(self, n):
@@ -761,13 +761,13 @@ class TreeTags(gtk.TreeStore):
         return _lookInside.ite
 
     def expander(self, tree):
-        """ do the expand/collapse from the model(node) to the treeview 'tree' """
+        """ do the expand/collapse from the model(node) to the treeview
+        'tree' """
         def _expander(model, path, iter0, tree):
             node = model.get(iter0)
             if node.__class__.__name__ == "CatgNode" and node.expand:
                 tree.expand_row(path, False)
         self.foreach(_expander, tree)
-
 
     def get(self, it):
         """ get the 'node' of the iter 'it' """
@@ -850,7 +850,9 @@ class TreeTags(gtk.TreeStore):
                 tcheck = self.get_value(ii, 3)
                 if node.__class__.__name__ == "CatgNode":
                     if tcheck in (1, 2):
-                        l.append((tcheck, node.name, getAllLeaves(self.iter_children(ii))))
+                        l.append((tcheck,
+                                  node.name,
+                                  getAllLeaves(self.iter_children(ii))))
                     else:
                         l += par(self.iter_children(ii))
                 else:
@@ -860,7 +862,6 @@ class TreeTags(gtk.TreeStore):
             return l
 
         return par(ii)
-
 
     def setSelected(self, ltags):
         """ set included for all TAGS in 'ltags'
@@ -880,14 +881,14 @@ class TreeTags(gtk.TreeStore):
     def add(self, it, node):
         """ append the 'node' to the iter """
         if node.__class__.__name__ == "TagNode":
-            return self.append(it, [node.name, node, JStyle.TEXT, 0, self.__displayKey(node)])
+            return self.append(
+                it, [node.name, node, JStyle.TEXT, 0, self.__displayKey(node)])
         else:
-            return self.append(it, ["[%s]" % node.name, node, JStyle.TEXT_LOLIGHT, 0, ""])
+            return self.append(it, ["[%s]" % node.name, node,
+                               JStyle.TEXT_LOLIGHT, 0, ""])
 
 
-
-#=============================================================================
-
+#============================================================================
 class Window(GladeApp):
     """Main JBrout window"""
     glade = os.path.join(os.path.dirname(__file__), 'data/jbrout.glade')
@@ -898,58 +899,62 @@ class Window(GladeApp):
             Read preferences
             Activate plugins
         """
-        #=============================================================================
-        if not JBrout.conf.has_key("normalizeName"):
-            ret = InputQuestion(self.main_widget,
-                              _('Do you want JBrout to rename your imported photos according to their create timestamp (Recommended) ?'),
-                              buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
-                             )
-            if ret:
-                JBrout.conf["normalizeName"] = True
-            else:
-                JBrout.conf["normalizeName"] = False
+        #====================================================================
+        if "normalizeName" not in JBrout.conf:
+            ret = InputQuestion(
+                self.main_widget,
+                _('Do you want JBrout to rename your imported photos ' +
+                  'according to their create timestamp (Recommended) ?'),
+                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES,
+                         gtk.RESPONSE_OK))
+            JBrout.conf["normalizeName"] = bool(ret)
 
-        # FIXME not used anywhere currently, although synchronization of tags could be useful.
-        # most likely should be reimplemented in plugins/syncTags/__init__.py
-        if not JBrout.conf.has_key("synchronizeXmp"):
-            ret = InputQuestion(self.main_widget,
-                              _('Do you want JBrout to synchronize IPTC and XMP keywords (Recommended) ?'),
-                              buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
-                             )
-            if ret:
-                JBrout.conf["synchronizeXmp"] = True
-            else:
-                JBrout.conf["synchronizeXmp"] = False
+        # FIXME not used anywhere currently, although synchronization of
+        # tags could be useful.  most likely should be reimplemented in
+        # plugins/syncTags/__init__.py
+        if "synchronizeXmp" not in JBrout.conf:
+            ret = InputQuestion(
+                self.main_widget,
+                _('Do you want JBrout to synchronize IPTC ' +
+                  'and XMP keywords (Recommended) ?'),
+                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES,
+                         gtk.RESPONSE_OK))
+            JBrout.conf["synchronizeXmp"] = bool(ret)
 
-        if not JBrout.conf.has_key("normalizeNameFormat"):  # key not present
-            JBrout.conf["normalizeNameFormat"] = "p%Y%m%d_%H%M%S"  # set default
+        if "normalizeNameFormat" not in JBrout.conf:  # key not present
+            # set default
+            JBrout.conf["normalizeNameFormat"] = "p%Y%m%d_%H%M%S"
 
-        if not JBrout.conf.has_key("autorotAtImport"):  # key not present
-            ret = InputQuestion(self.main_widget,
-                              _('Do you want JBrout to auto-rotate your imported photos according to their orientation tag (Recommended) ?'),
-                              buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK)
-                             )
-            if ret:
-                JBrout.conf["autorotAtImport"] = True
-            else:
-                JBrout.conf["autorotAtImport"] = False
+        if "autorotAtImport" not in JBrout.conf:  # key not present
+            ret = InputQuestion(
+                self.main_widget,
+                _('Do you want JBrout to auto-rotate your imported ' +
+                  'photos according to their orientation tag (Recommended) ?'),
+                buttons=(gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES,
+                         gtk.RESPONSE_OK))
+            JBrout.conf["autorotAtImport"] = bool(ret)
 
-        if not JBrout.conf.has_key("thumbsize"):  # key not present
+        if "thumbsize" not in JBrout.conf:  # key not present
             JBrout.conf["thumbsize"] = 160  # set default
 
-        if not JBrout.conf.has_key("orderAscending"):  # key not present
+        if "orderAscending" not in JBrout.conf:  # key not present
             JBrout.conf["orderAscending"] = False  # set default
 
-        if not JBrout.conf.has_key("orderBy"):  # key not present
+        if "orderBy" not in JBrout.conf:  # key not present
             JBrout.conf["orderBy"] = "Date"  # set default
 
-        if not JBrout.conf.has_key("plugins"):
-            JBrout.conf["plugins"] = ["%s.%s" % (i.id, p["method"]) for i, c, p in JBrout.plugins.request("AlbumProcess", all=True) + JBrout.plugins.request("PhotosProcess", all=True)]
+        if "plugins" not in JBrout.conf:
+            JBrout.conf["plugins"] = \
+                ["%s.%s" % (i.id, p["method"])
+                 for i, c, p in JBrout.plugins.request("AlbumProcess",
+                                                       all=True) +
+                 JBrout.plugins.request("PhotosProcess", all=True)]
 
         Buffer.size = JBrout.conf["thumbsize"]
 
         JBrout.db.setNormalizeName(JBrout.conf["normalizeName"])
-        JBrout.db.setNormalizeNameFormat(str(JBrout.conf["normalizeNameFormat"]))
+        JBrout.db.setNormalizeNameFormat(
+            str(JBrout.conf["normalizeNameFormat"]))
         JBrout.db.setAutorotAtImport(JBrout.conf["autorotAtImport"])
 
         self.tagsInSelection = []
@@ -959,29 +964,29 @@ class Window(GladeApp):
         self.__saveSelection = None
 
         try:
-            self.__bookmarks = zip(JBrout.conf["bookmarkNames"], JBrout.conf["bookmarkXpaths"])
+            self.__bookmarks = zip(JBrout.conf["bookmarkNames"],
+                                   JBrout.conf["bookmarkXpaths"])
         except:
             self.__bookmarks = []
-
 
         # create the listview with the right thumbsize
         table = ListView(self, JBrout.modify)
         table.connect('button-press-event', self.on_selecteur_mouseClick)
 
-
         # code to make a black background in the listview (override style)
         # (but i'm not able to select a white color for texts ;-())
-        # table.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(red=0, green=0, blue=0, pixel=0))
-
+        # table.modify_bg(gtk.STATE_NORMAL,
+        #                 gtk.gdk.Color(red=0, green=0, blue=0, pixel=0))
+        #
         # and init all static images
         Buffer.clear()
-
 
         # build the "plugins buttons"
         if JBrout.modify:
             l = JBrout.plugins.request("PhotosProcess", isIcon=True)
         else:
-            l = JBrout.plugins.request("PhotosProcess", isIcon=True, isAlter=False)
+            l = JBrout.plugins.request("PhotosProcess", isIcon=True,
+                                       isAlter=False)
 
         for instance, callback, props in l:
             image = gtk.Image()
@@ -990,17 +995,21 @@ class Window(GladeApp):
 
             bb = gtk.ToolButton(image)
             txt = props["label"]
-            if props["key"]: txt += " (ctrl + %s)" % props["key"]
+            if props["key"]:
+                txt += " (ctrl + %s)" % props["key"]
             bb.set_tooltip_text(txt)
-            bb.connect("clicked", self.on_selecteur_menu_select_plugin, table, instance.id, callback)
+            bb.connect("clicked", self.on_selecteur_menu_select_plugin,
+                       table, instance.id, callback)
             self.toolbar.insert(bb, 3)
             bb.show()
 
         # build the status bar
         try:
-            self.label_image_infos = self.statusbar.get_children()[0].get_children()[0].get_children()[0]
+            self.label_image_infos = self.statusbar.\
+                get_children()[0].get_children()[0].get_children()[0]
         except:
-            self.label_image_infos = self.statusbar.get_children()[0].get_children()[0]
+            self.label_image_infos = self.statusbar.\
+                get_children()[0].get_children()[0]
 
         self.label_image_infos.set_text("welcome")
 
@@ -1035,7 +1044,8 @@ class Window(GladeApp):
         self.hpanedView.remove(self.frameFilter)  # remove the frame
         # ~ self.frameFilter.hide()                 # hide it
         self.hpanedView.pack1(b, True)  # add the combo album/listview
-        self.hpanedView.pack2(self.frameFilter, False)  # and so, re-add the frame
+        # and so, re-add the frame
+        self.hpanedView.pack2(self.frameFilter, False)
         # ~ self.hpanedView.pack1(b, True)
         # ~ self.hs_size.set_right_justified(True)
 
@@ -1044,8 +1054,8 @@ class Window(GladeApp):
         self.tbl = table
         sclwin.set_shadow_type(1)
         self.hpaned1.set_focus_chain((self.tbl,))
-        TARGET_STRING = 0
-        TARGET_ROOTWIN = 1
+        #TARGET_STRING = 0
+        #TARGET_ROOTWIN = 1
 
         self.main_widget.set_title("JBrout " + __version__)
 
@@ -1056,25 +1066,37 @@ class Window(GladeApp):
                        ('STRING', 0, 3), ]
             self.treeviewdb.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
                                                      [TARGETS[0]],
-                                                     gtk.gdk.ACTION_DEFAULT | 
+                                                     gtk.gdk.ACTION_DEFAULT |
                                                      gtk.gdk.ACTION_COPY)
-            self.treeviewdb.enable_model_drag_dest([TARGETS[0]] + [("to_albums", 0, 0)],  # can receive from self and selecteur
+            # can receive from self and selecteur
+            self.treeviewdb.enable_model_drag_dest([TARGETS[0]] +
+                                                   [("to_albums", 0, 0)],
                                                    gtk.gdk.ACTION_DEFAULT)
 
+            # drag from os
+            self.btn_addFolder.drag_dest_set(gtk.DEST_DEFAULT_ALL,
+                                             [('text/uri-list', 0, 1),
+                                              ('text/plain', 0, 1)],
+                                             gtk.gdk.ACTION_COPY |
+                                             gtk.gdk.ACTION_MOVE)
 
-            self.btn_addFolder.drag_dest_set(gtk.DEST_DEFAULT_ALL, [('text/uri-list', 0, 1), ('text/plain', 0, 1)],  # drag from os
-                                             gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
-
-
-            self.treeviewtags.enable_model_drag_source(gtk.gdk.BUTTON1_MASK | gtk.gdk.BUTTON2_MASK,
-                                                       [TARGETS[0]] + [("from_tags", 0, 0)],  # drag on self and listview
-                                                       gtk.gdk.ACTION_DEFAULT | 
+            # drag on self and listview
+            self.treeviewtags.enable_model_drag_source(gtk.gdk.BUTTON1_MASK |
+                                                       gtk.gdk.BUTTON2_MASK,
+                                                       [TARGETS[0]] +
+                                                       [("from_tags", 0, 0)],
+                                                       gtk.gdk.ACTION_DEFAULT |
                                                        gtk.gdk.ACTION_COPY)
-            self.tvFilteredTags.enable_model_drag_source(gtk.gdk.BUTTON1_MASK | gtk.gdk.BUTTON2_MASK,
-                                                         [("from_ftags", 0, 0)],  # drag on listview only !!
-                                                         gtk.gdk.ACTION_DEFAULT | 
+
+            # drag on listview only !!
+            self.tvFilteredTags.enable_model_drag_source(gtk.gdk.BUTTON1_MASK |
+                                                         gtk.gdk.BUTTON2_MASK,
+                                                         [("from_ftags", 0, 0)],
+                                                         gtk.gdk.ACTION_DEFAULT |
                                                          gtk.gdk.ACTION_COPY)
-            self.treeviewtags.enable_model_drag_dest([TARGETS[0]],  # can receive from self only
+
+            # can receive from self only
+            self.treeviewtags.enable_model_drag_dest([TARGETS[0]],
                                                      gtk.gdk.ACTION_DEFAULT)
 
             self.treeviewtags.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
@@ -1086,7 +1108,8 @@ class Window(GladeApp):
 
         ################
         # ~ cell_renderer = gtk.CellRendererText()
-        # ~ column = gtk.TreeViewColumn("folder", cell_renderer, text = 0, foreground=3)
+        # ~ column = gtk.TreeViewColumn("folder", cell_renderer, text
+        # = 0, foreground=3)
         ################
 
         def filename(column, cell, model, iter):
@@ -1099,6 +1122,7 @@ class Window(GladeApp):
             cell.set_property('foreground', model.get_value(iter, 3))
             cell.set_property('xalign', 0)
             # ~ cell.set_property('xpad', 1)
+
         def pixbuf(column, cell, model, iter):
             if model.get_value(iter, 2) is None:
                 cell.set_property('pixbuf', Buffer.pbBasket)
@@ -1143,33 +1167,36 @@ class Window(GladeApp):
         self.treeviewdb.set_model(store)
         store.expander(self.treeviewdb)
 
-
         cell_renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("Tags", cell_renderer, text=0, foreground=2)
+        column = gtk.TreeViewColumn("Tags", cell_renderer, text=0,
+                                    foreground=2)
         self.treeviewtags.append_column(column)
         cell_renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("Tags", cell_renderer, text=0, foreground=2)
+        column = gtk.TreeViewColumn("Tags", cell_renderer, text=0,
+                                    foreground=2)
         self.tvFilteredTags.append_column(column)
 
         # if JBrout.modify:
         #    # if modify enabled display keyboar shortcuts
         #    cell_renderer = gtk.CellRendererText()
-        #    column = gtk.TreeViewColumn("Key", cell_renderer, text = 4, foreground = 2)
+        #    column = gtk.TreeViewColumn("Key", cell_renderer, text = 4,
+        #                                foreground = 2)
         #    self.treeviewtags.append_column(column)
 
         store = TreeTags()
         self.treeviewtags.set_model(store)
         store.expander(self.treeviewtags)
 
-        # =#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        # =#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
         # # new "Tab Time" (treeview)
-        # =#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        # =#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 
         cell_renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn("date", cell_renderer, text=0)
         self.treeViewDate.append_column(column)
         # cell_renderer = gtk.CellRendererText()
-        # column = gtk.TreeViewColumn("nb", cell_renderer, text=3, expand=False)
+        # column = gtk.TreeViewColumn("nb", cell_renderer, text=3,
+        #                             expand=False)
         # self.treeViewDate.append_column(column)
         cellpb = gtk.CellRendererPixbuf()
         column = gtk.TreeViewColumn("thumb", cellpb, pixbuf=4)
@@ -1188,7 +1215,7 @@ class Window(GladeApp):
         column = gtk.TreeViewColumn("thumb", cellpb, pixbuf=4)
         self.tvFilteredTime.append_column(column)
 
-        # =#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
+        # =#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 
         # build the display menu *!*
         #----------------------------------------------------------
@@ -1196,7 +1223,8 @@ class Window(GladeApp):
         gitem = None
         for i in reversed(ListView.choix):
             item = gtk.RadioMenuItem(gitem, i)
-            if not gitem: gitem = item
+            if not gitem:
+                gitem = item
             idx = self.tbl.choix.index(i) + 1
             item.connect("activate", self.on_affichage_select, idx)
             if idx == (JBrout.conf["viewSelection"] or 5):
@@ -1204,7 +1232,6 @@ class Window(GladeApp):
                 item.set_active(True)
             item.show()
             menuDisplay.prepend(item)
-
 
         # build the bookmarks menu
         #----------------------------------------------------------
@@ -1219,20 +1246,23 @@ class Window(GladeApp):
         elif JBrout.conf["orderBy"] == "Rating":
             self.menuOrderByRating.set_active(1)
 
-        self.tvFilteredTags.connect("row_activated", self.on_treeviewtags_row_activated)
-        self.tvFilteredAlbums.connect("row_activated", self.on_treeviewdb_row_activated)
-        self.tvFilteredTime.connect("row_activated", self.on_selectDate_row_activated)
+        self.tvFilteredTags.connect("row_activated",
+                                    self.on_treeviewtags_row_activated)
+        self.tvFilteredAlbums.connect("row_activated",
+                                      self.on_treeviewdb_row_activated)
+        self.tvFilteredTime.connect("row_activated",
+                                    self.on_selectDate_row_activated)
 
         w, h = JBrout.conf["width"] or 800, JBrout.conf["height"] or 600
         x, y = int(JBrout.conf["x_pos"] or 0), int(JBrout.conf["y_pos"] or 0)
-
 
         self.main_widget.set_gravity(gtk.gdk.GRAVITY_NORTH_WEST)
         self.main_widget.move(x, y)
 
         if sys.platform[:3].lower() == "win":
-            # work arround for bug in pygtk/gtk 2.10.6 on windows set default size
-            # then reshow with initial (default) size instead of simple resize
+            # work arround for bug in pygtk/gtk 2.10.6 on windows set
+            # default size then reshow with initial (default) size
+            # instead of simple resize
             self.main_widget.set_default_size(w, h)
             self.main_widget.reshow_with_initial_size()
         else:
@@ -1252,12 +1282,9 @@ class Window(GladeApp):
         # and set it
         self.mode = Window.MODEFOLDER
 
-
-
-
-        # $#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
+        # $#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
         # tab search init
-        # $#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
+        # $#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
         try:
             min, max = JBrout.db.getMinMaxDates()
         except:
@@ -1265,7 +1292,8 @@ class Window(GladeApp):
 
         self.__begin = min
         self.__end = datetime.datetime.now()
-        self.__end = datetime.datetime(self.__end.year, self.__end.month, self.__end.day, 0, 0, 0)
+        self.__end = datetime.datetime(self.__end.year, self.__end.month,
+                                       self.__end.day, 0, 0, 0)
 
         t = (self.__end - self.__begin).days + 1
         self.hs_from.set_range(0, t)
@@ -1281,13 +1309,18 @@ class Window(GladeApp):
         self.cb_format.pack_start(cell, True)
         self.cb_format.add_attribute(cell, 'text', 0)
 
-        self.setSearchCombo(self.cb_format, [_("Any"), _("Landscape"), _("Portrait")], 0)
+        self.setSearchCombo(self.cb_format,
+                            [_("Any"), _("Landscape"), _("Portrait")], 0)
 
         # rating search list button
         cell = gtk.CellRendererText()
         self.cb_rating.pack_start(cell, True)
         self.cb_rating.add_attribute(cell, 'text', 0)
-        self.setSearchCombo(self.cb_rating, [_("Any")] + [" >= %s" % i for i in range(1, 6)] + [" = %s" % i for i in range(0, 6)] + ["<%s" % i for i in range(1, 6)], 0)
+        self.setSearchCombo(
+            self.cb_rating,
+            [_("Any")] + [" >= %s" % i for i in range(1, 6)] +
+                         [" = %s" % i for i in range(0, 6)] +
+                         ["<%s" % i for i in range(1, 6)], 0)
 
         ###################
         def filename(column, cell, model, iter):
@@ -1295,6 +1328,7 @@ class Window(GladeApp):
             cell.set_property('foreground', model.get_value(iter, 2))
             cell.set_property('xalign', 0)
             # ~ cell.set_property('xpad', 1)
+
         def pixbuf(column, cell, model, iter):
             if model.get_value(iter, 3) == 0:
                 cell.set_property('pixbuf', Buffer.pbCheckEmpty)
@@ -1327,20 +1361,18 @@ class Window(GladeApp):
             storeTags.cleanSelections()
         except:
             pass
-        # $#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
-
+        # $#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$#$
 
         # init some attributs
         self.storeMultipleSelectedPathsOfTags = []
 
-        #=============================================================================
-
-
     def on_orderby_changed(self, checkmenuitem, *args):
         """change display order by (menu)"""
-        # there are 3 items in this group, all of them connected to this handler
-        # -> only handle activation (ignore the related deactivation)
-        if not(checkmenuitem.get_active()): return
+        # there are 3 items in this group, all of them connected to this
+        # handler -> only handle activation (ignore the related
+        # deactivation)
+        if not(checkmenuitem.get_active()):
+            return
 
         if self.menuOrderBy.get_active():
             JBrout.conf["orderBy"] = "Date"
@@ -1352,14 +1384,16 @@ class Window(GladeApp):
             JBrout.conf["orderBy"] = "Rating"
 
         # live change
-        self.tbl.init(self.tbl.items, JBrout.conf["orderAscending"], JBrout.conf["orderBy"])
+        self.tbl.init(self.tbl.items,
+                      JBrout.conf["orderAscending"], JBrout.conf["orderBy"])
 
     def on_order_changed(self, *args):
         """change display order ascending/descending (menu)"""
         JBrout.conf["orderAscending"] = (self.menuAscending.get_active() == 1)
 
         # live change
-        self.tbl.init(self.tbl.items, JBrout.conf["orderAscending"], JBrout.conf["orderBy"])
+        self.tbl.init(self.tbl.items, JBrout.conf["orderAscending"],
+                      JBrout.conf["orderBy"])
 
     def on_affichage_select(self, widget, idx):
         """select display (menu)"""
@@ -1373,11 +1407,13 @@ class Window(GladeApp):
         return True
 
     old_percent = -1
+
     def showProgress(self, cur=None, max=None, msg=None, r=200):
         """
             to show a current process is pending ... 3 types of call:
             - showProgress(True) : block principal window (no msg, no win)
-            - showProgress(cur, max, msg) : block principal window, and show a progress bar cur/max + msg
+            - showProgress(cur, max, msg) : block principal window, and
+              show a progress bar cur/max + msg
             - showProgress() : release principal window
         """
 
@@ -1428,21 +1464,21 @@ class Window(GladeApp):
                     self.label_progress_infos.set_text(msg)
 
                     # in the future:
-                    # http://www.async.com.br/faq/pygtk/index.py?req=show&file=faq23.020.htp
+                    # http://www.async.com.br\
+                    #   /faq/pygtk/index.py?req=show&file=faq23.020.htp
                     while gtk.events_pending():  # *!*
                         gtk.main_iteration(False)
 
                     # the display is refreshed r times during the processing.
                     self.old_percent = percent
 
-
-
     def SetSelection(self, title, xpath, ln, mode, withFilter=True):
         """Select the folder to display as thumbs"""
         self.__saveSelection = (title, xpath)
         self.mode = mode
         self.main_widget.set_title(_("%s (%d photo(s))") % (title, len(ln)))
-        self.tbl.init(ln, JBrout.conf["orderAscending"], JBrout.conf["orderBy"])
+        self.tbl.init(ln, JBrout.conf["orderAscending"],
+                      JBrout.conf["orderBy"])
         if mode != Window.MODEFOLDER:
             self.comment.hide()
 
@@ -1482,10 +1518,9 @@ class Window(GladeApp):
             self.tvFilteredTime.set_model(store)
             # store.expander(self.tvFilteredTime)
 
-
-    ###################################################################################
+    #########################################################################
     # # TREEVIEW DB
-    ###################################################################################
+    #########################################################################
     def selectAlbum(self, model, iter0, all=True, fromFilteredTree=False):
         if iter0:
             self.showProgress(True)
@@ -1519,7 +1554,6 @@ class Window(GladeApp):
             finally:
                 self.showProgress()
                 pass
-
 
     def on_menuAddBookmark_activate(self, *args):
         s = self.__saveSelection
@@ -1569,7 +1603,6 @@ class Window(GladeApp):
         ln = JBrout.db.select(xpath)
         self.SetSelection(name, xpath, ln, self.mode)  # don't change mode
 
-
     def on_menu_rename(self, e):
         treeselection = self.treeviewdb.get_selection()
         model, iter0 = treeselection.get_selected()
@@ -1610,7 +1643,7 @@ class Window(GladeApp):
         model, iter0 = treeselection.get_selected()
         node = model.get(iter0)
 
-        parentIter = model.iter_parent(iter0)
+        #parentIter = model.iter_parent(iter0)
         path = node.file.decode("utf_8")  # because node.file is utf_8 ;-(
 
         self.on_drop_folders_from_os(model, [path])
@@ -1643,7 +1676,8 @@ class Window(GladeApp):
         if nbsubfiles == 0:
             question = _("Are you sure to delete this folder ?")
         else:
-            question = _("Are you sure to delete this folder ?\n(This folder contains %d file(s))") % nbsubfiles
+            question = _("Are you sure to delete this folder ?" +
+                         "\n(This folder contains %d file(s))") % nbsubfiles
         ret = InputQuestion(self.main_widget, question)
         self.showProgress()
         if ret:
@@ -1654,7 +1688,6 @@ class Window(GladeApp):
                 model.activeBasket()
 
                 self.selectAlbum(model, parentIter)
-
 
     def on_menu_remove_basket(self, e):
         JBrout.db.clearBasket()
@@ -1670,17 +1703,20 @@ class Window(GladeApp):
 
     def exportBasket(self):
         if JBrout.db.isBasket():
-            dialog = gtk.FileChooserDialog (_("Export basket as..."),
-                        None, gtk.FILE_CHOOSER_ACTION_SAVE,
-                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_SAVE, gtk.RESPONSE_OK))
-            dialog.set_default_response (gtk.RESPONSE_OK)
-            dialog.set_transient_for (self.main_widget)
+            dialog = gtk.FileChooserDialog(_("Export basket as..."),
+                                           None, gtk.FILE_CHOOSER_ACTION_SAVE,
+                                           (gtk.STOCK_CANCEL,
+                                            gtk.RESPONSE_CANCEL,
+                                            gtk.STOCK_SAVE,
+                                            gtk.RESPONSE_OK))
+            dialog.set_default_response(gtk.RESPONSE_OK)
+            dialog.set_transient_for(self.main_widget)
 
             # preselect default conf dir
             # default = JBrout.getHomeDir()
             # dialog.set_current_folder(default)
 
-            response = dialog.run ()
+            response = dialog.run()
             if response == gtk.RESPONSE_OK:
                 file = dialog.get_filename()
                 if file:
@@ -1692,24 +1728,28 @@ class Window(GladeApp):
             if file:
                 # Test existence...
                 if os.path.exists(file):
-                    response = InputQuestion(self.main_widget,
-                                             _("file [%s] already exists, do you want to replace it ?") % file,
-                                             _("Replace Existing File ?"),
-                                             (gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES, gtk.RESPONSE_OK))
+                    response = InputQuestion(
+                        self.main_widget,
+                        _("file [%s] already exists, " +
+                          "do you want to replace it ?") % file,
+                        _("Replace Existing File ?"),
+                        (gtk.STOCK_NO, gtk.RESPONSE_CANCEL, gtk.STOCK_YES,
+                         gtk.RESPONSE_OK))
                 if response:
                     JBrout.db.exportBasket(file)
         else:
-            MessageBox(self.main_widget, _("Nothing to export in basket") % file)
-
+            MessageBox(self.main_widget,
+                       _("Nothing to export in basket") % file)
 
     def importBasket(self):
-        dialog = gtk.FileChooserDialog (_("Import in basket..."),
-                    None, gtk.FILE_CHOOSER_ACTION_OPEN,
-                    (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        dialog.set_default_response (gtk.RESPONSE_OK)
-        dialog.set_transient_for (self.main_widget)
+        dialog = gtk.FileChooserDialog(_("Import in basket..."),
+                                       None, gtk.FILE_CHOOSER_ACTION_OPEN,
+                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                        gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        dialog.set_transient_for(self.main_widget)
 
-        response = dialog.run ()
+        response = dialog.run()
         if response == gtk.RESPONSE_OK:
             file = dialog.get_filename()
             if file:
@@ -1726,8 +1766,8 @@ class Window(GladeApp):
                 model.activeBasket()
                 self.tbl.refresh()
             else:
-                MessageBox(self.main_widget, _("file [%s] does not exist !") % file)
-
+                MessageBox(self.main_widget,
+                           _("file [%s] does not exist !") % file)
 
     def on_menu_select_only(self, e):
         treeselection = self.treeviewdb.get_selection()
@@ -1746,7 +1786,8 @@ class Window(GladeApp):
                 nb += 1
                 self.showProgress(nb, total, _("Moving %d/%d") % (nb, total))
                 nodeFolderParent = i.getParent()
-                if nodeFolderParent.file != node.file:  # don't move from the same folder ;-)
+                # don't move from the same folder ;-)
+                if nodeFolderParent.file != node.file:
                     if i.moveToFolder(node):
                         self.tbl.remove(i)
 
@@ -1766,7 +1807,6 @@ class Window(GladeApp):
         model.activeBasket()
         self.tbl.reSelectFocus()
 
-
     def on_drop_folders_from_os(self, model, files):
         self.showProgress(0, 1, "import")  # not displayed
         try:
@@ -1781,7 +1821,10 @@ class Window(GladeApp):
                     total = iterator.next()
                     for nb in iterator:
                         if type(nb) == int and nb >= 0:
-                            self.showProgress(nb, total, _("Importing %d/%d") % (nb, total))
+                            self.showProgress(nb,
+                                              total,
+                                              _("Importing %d/%d") %
+                                              (nb, total))
                     if nb:
                         newNodeFolder = nb
 
@@ -1793,7 +1836,8 @@ class Window(GladeApp):
                         tmodel = self.treeviewtags.get_model()
                         tmodel.init()
                         tmodel.expander(self.treeviewtags)
-                        MessageBox(self.main_widget, _(" % d tag(s) were added !") % nbNewTags)
+                        MessageBox(self.main_widget,
+                                   _(" % d tag(s) were added !") % nbNewTags)
 
                 model.init()  # redraw the full tree (+basket)
                 model.expander(self.treeviewdb)
@@ -1807,17 +1851,16 @@ class Window(GladeApp):
         finally:
             self.showProgress()
 
-
-
     def on_move_folder(self, model, ifrom, ito):
         nfrom = model.get(ifrom)
         nto = model.get(ito)
         if nto is not None:
             # drop on a real folder
 
-            if nfrom != None:
+            if nfrom is not None:
                 # drag from a real folder
-                if  InputQuestion(self.main_widget, _("Are you sure to move this folder here ?")):
+                if InputQuestion(self.main_widget,
+                                 _("Are you sure to move this folder here ?")):
                     new = nfrom.moveToFolder(nto)
                     if new:
                         model.remove(ifrom)
@@ -1829,10 +1872,11 @@ class Window(GladeApp):
                         model.activeBasket()
             else:
                 # drag from the basket
-                MessageBox(self.main_widget, _("Can't drag the basket to a folder"))
+                MessageBox(self.main_widget,
+                           _("Can't drag the basket to a folder"))
         else:
             # drop on the basket
-            if nfrom != None:
+            if nfrom is not None:
                 # drag from a real folder
                 for node in nfrom.getAllPhotos():
                     node.addToBasket()
@@ -1841,9 +1885,9 @@ class Window(GladeApp):
                 # refresh the photos view
                 self.tbl.refresh()
 
-    ###################################################################################
+    #########################################################################
     # # SELECTEUR / LISTVIEW
-    ###################################################################################
+    #########################################################################
 
     def on_selecteur_mouseClick(self, widget, event):
         if event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS:
@@ -1852,11 +1896,13 @@ class Window(GladeApp):
             return 1
 
         elif event.button == 1 and\
-             event.type == gtk.gdk._2BUTTON_PRESS and\
-             len(self.tbl.getSelected()) != 0:
+            event.type == gtk.gdk._2BUTTON_PRESS and\
+                len(self.tbl.getSelected()) != 0:
             # call the winshow
-            self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
-            return 1
+            self.call_winshow(self.tbl.items,
+                              self.tbl.items.index(self.tbl.getSelected()[-1]),
+                              self.tbl.getSelected())
+        return 1
 
     def get_menu(self, widget, ln):
         def makeItem(nom, callback, selecteur):
@@ -1885,16 +1931,18 @@ class Window(GladeApp):
         menu = gtk.Menu()
         if canBasketAdd:  # there are pictures which could be added to basket
             menu.append(makeItem(_("Add to Basket"),
-                                  self.on_selecteur_menu_add_to_basket, widget))
+                                 self.on_selecteur_menu_add_to_basket, widget))
         if canBasketRemove:  # there are pictures which could be removed basket
             menu.append(makeItem(_("Remove From Basket"),
-                                  self.on_selecteur_menu_remove_from_basket, widget))
+                                 self.on_selecteur_menu_remove_from_basket,
+                                 widget))
 
         if len(ln) == 1:  # there is only one selected picture
             menu.append(makeItem(_("Select this folder"),
-                                  self.on_selecteur_menu_select_folder, widget))
+                                 self.on_selecteur_menu_select_folder,
+                                 widget))
             menu.append(makeItem(_("Select this time"),
-                                  self.on_selecteur_menu_select_time, widget))
+                                 self.on_selecteur_menu_select_time, widget))
 
         rmenu = gtk.Menu()  # build the set rating context menu
         for points in range(0, 6):
@@ -1921,7 +1969,8 @@ class Window(GladeApp):
 
         for instance, callback, props in l:
             txt = props["label"]
-            if props["key"]: txt += " (ctrl + %s)" % props["key"]
+            if props["key"]:
+                txt += " (ctrl + %s)" % props["key"]
             item = gtk.ImageMenuItem(txt)
 
             if props["icon"]:
@@ -1967,7 +2016,6 @@ class Window(GladeApp):
             smenuET.show_all()
             menu.append(smenuET)
 
-
         # build the "delete tags" sub menu
         if canModify:
             # search all tags from selection, to present the delete tags menu
@@ -1997,8 +2045,8 @@ class Window(GladeApp):
                 menu.append(smenu3)
 
             menu.append(makeItem(_("Delete"),
-                                  self.on_selecteur_menu_delete,
-                                  widget))
+                                 self.on_selecteur_menu_delete,
+                                 widget))
 
         return menu
 
@@ -2013,14 +2061,14 @@ class Window(GladeApp):
         self.tbl.set_focus_cell(w.idx)
 
         if w.removed:
-            sel = self.tbl.setSelected(w.removed)
+            self.tbl.setSelected(w.removed)
             self.on_selecteur_menu_delete(None, self.tbl)
 
         if w.selected:  # perhaps a new desired selection
-            sel = self.tbl.setSelected(w.selected)
+            self.tbl.setSelected(w.selected)
         else:
             if self.tbl.items:
-                sel = self.tbl.setSelected([self.tbl.items[w.idx]])
+                self.tbl.setSelected([self.tbl.items[w.idx]])
 
         if w.isBasketUpdate:  # is basket updated ?
             model = self.treeviewdb.get_model()
@@ -2099,15 +2147,16 @@ class Window(GladeApp):
             self.treeViewDate.expand_to_path(path)
             self.treeViewDate.set_cursor(path)
 
-            self.SetSelection(d.strftime("%d/%m/%Y"), xpath, ln, Window.MODETIME)
+            self.SetSelection(d.strftime("%d/%m/%Y"), xpath, ln,
+                              Window.MODETIME)
 
             # and select the selected photo
             sel.setSelected([node])
 
-
     def on_selecteur_menu_delete(self, b, sel):
         l = sel.getSelected()
-        ret = InputQuestion(None, _("Delete %d photo(s) are you sure ?") % len(l))
+        ret = InputQuestion(None,
+                            _("Delete %d photo(s) are you sure ?") % len(l))
         if ret:
             sel.hide()
             model = self.treeviewdb.get_model()
@@ -2164,7 +2213,6 @@ class Window(GladeApp):
                 if id == "redate":
                     self.treeViewDate.get_model().init()
 
-
     def on_selecteur_menu_select_external_tool(self, ib, listview, et):
         l = listview.getSelected()
         self.showProgress(True)
@@ -2182,14 +2230,16 @@ class Window(GladeApp):
             while 1:
                 self.showProgress(c, len(l), et.label)
                 c += 1
-                if not g.next(): break
+                if not g.next():
+                    break
         finally:
             self.showProgress()
 
-        # don't believe in et.__canModify, because all external tools are devils
-        # for jbrout ;-) (so we are pretty sure that an external tool can't broke
-        # some important internal infos)
-        # so restore all infos (exif, iptc, jpeg header) and rebuild exif thumb
+        # don't believe in et.__canModify, because all external tools
+        # are devils for jbrout ;-) (so we are pretty sure that an
+        # external tool can't broke some important internal infos) so
+        # restore all infos (exif, iptc, jpeg header) and rebuild exif
+        # thumb
         for pnode in l:
             tmpfile = os.path.join(destination, pnode.name)
             try:
@@ -2199,7 +2249,6 @@ class Window(GladeApp):
                 # file was deleted by external tools ? not cool
                 # get back the file from temp dir
                 shutil.move(tmpfile, pnode.file)
-
 
         try:
             shutil.rmtree(destination)
@@ -2212,7 +2261,6 @@ class Window(GladeApp):
         self.treeviewdb.get_model().activeBasket()
         listview.refresh()
         listview.refresh()  # on win, the first call do nothing
-
 
     def on_selecteur_drop(self, sel):
         self.setTagsOnSelected(sel, self.dragTags)
@@ -2251,10 +2299,9 @@ class Window(GladeApp):
 
             sel.refresh()
 
-
-    ###################################################################################
+    #########################################################################
     # # TREEVIEW TAGS
-    ###################################################################################
+    #########################################################################
     def on_cbxFilter_toggled(self, widg, *args):
         if widg.get_active():
             self.frameFilter.show()
@@ -2264,7 +2311,6 @@ class Window(GladeApp):
 
     # def on_cbxUseTagKey_toggled(self, *args):
     #    self.tbl.grab_focus()
-
 
     # too complex to filter ..
     # ~ def on_cbxTagsInSelection_toggled(self, w, *args):
@@ -2277,7 +2323,6 @@ class Window(GladeApp):
             # ~ self.treeviewtags.set_model(ss)
         # ~ else:
             # ~ pass
-
     def on_menu_add_tag(self, e):
         treeselection = self.treeviewtags.get_selection()
         model, paths = treeselection.get_selected_rows()
@@ -2354,7 +2399,8 @@ class Window(GladeApp):
     #                    isInUse = False
     #
     #                if isInUse:
-    #                    MessageBox(self.main_widget, _("This key is already in use"))
+    #                    MessageBox(self.main_widget,
+    #                    _("This key is already in use"))
     #                else:
     #                    node.key = ret
     #                    model.refreshKey(iter0)
@@ -2382,8 +2428,6 @@ class Window(GladeApp):
                 else:
                     MessageBox(self.main_widget, _("Category is not empty"))
 
-
-
     # def date_display_update(self, date):
         # try to find the active item in the list -> act
         # act = 0
@@ -2398,18 +2442,16 @@ class Window(GladeApp):
         # self.comboboxmonth.set_active(date.month-1)
         # pass
 
-    ###################################################################################
-
-
-
-
+    #########################################################################
     def on_window_delete_event(self, widget, *args):
         """Window close"""
         # ~ JBrout.conf["hpanedView"]=self.hpanedView.get_position()
 
         JBrout.conf["hpaned"] = self.hpaned1.get_position()
-        JBrout.conf["width"], JBrout.conf["height"] = self.main_widget.get_size()
-        JBrout.conf["x_pos"], JBrout.conf["y_pos"] = self.main_widget.get_position()
+        JBrout.conf["width"], JBrout.conf["height"] = \
+            self.main_widget.get_size()
+        JBrout.conf["x_pos"], JBrout.conf["y_pos"] = \
+            self.main_widget.get_position()
         JBrout.conf["bookmarkNames"] = [n for n, x in self.__bookmarks]
         JBrout.conf["bookmarkXpaths"] = [x for n, x in self.__bookmarks]
         JBrout.db.save()
@@ -2423,29 +2465,35 @@ class Window(GladeApp):
         isCtrl = b.state & gtk.gdk.CONTROL_MASK
         if isCtrl:
             if JBrout.modify:
-                pluginsWithKey = JBrout.plugins.request("PhotosProcess", isKey=True)
+                pluginsWithKey = JBrout.plugins.request("PhotosProcess",
+                                                        isKey=True)
             else:
-                pluginsWithKey = JBrout.plugins.request("PhotosProcess", isKey=True, isAlter=False)
+                pluginsWithKey = JBrout.plugins.request("PhotosProcess",
+                                                        isKey=True,
+                                                        isAlter=False)
 
             key = gtk.gdk.keyval_name(b.keyval).lower()
 
             for instance, callback, props in pluginsWithKey:
                 if props["key"] == key:
-                    self.on_selecteur_menu_select_plugin("?!?", self.tbl, instance.id, callback)  # TODO: what's ib ? see "?!?"
+                    # TODO: what's ib ? see "?!?"
+                    self.on_selecteur_menu_select_plugin("?!?", self.tbl,
+                                                         instance.id, callback)
                     self.tbl.grab_focus()
                     return 1  # event consumed
         else:
-            if key in ['f11', 'kp_enter', 'return'] :
+            if key in ['f11', 'kp_enter', 'return']:
                 if len(self.tbl.getSelected()) > 0:
-                    self.call_winshow(self.tbl.items, self.tbl.items.index(self.tbl.getSelected()[-1]), self.tbl.getSelected())
+                    self.call_winshow(
+                        self.tbl.items,
+                        self.tbl.items.index(self.tbl.getSelected()[-1]),
+                        self.tbl.getSelected())
             elif key == "escape":
                 self.on_window_delete_event(self, widget)
                 self.quit()
             elif key == 'menu':
                 menu = self.get_menu(self.tbl, self.tbl.getSelected())
                 menu.popup(None, None, None, 3, 0)
-
-
 
     def on_window_size_allocate(self, widget, *args):
         pass
@@ -2454,10 +2502,12 @@ class Window(GladeApp):
         """edit external commands"""
         if not os.path.isfile(JBrout.toolsFile):
             ExternalTools.generate(JBrout.toolsFile)
-        if JBrout.conf.has_key("editor"):
-            runWith([JBrout.conf["editor"], "notepad.exe", "leafpad", "scite", "gedit", "kate", "gvim"], unicode(JBrout.toolsFile))
+        if "editor" in JBrout.conf:
+            runWith([JBrout.conf["editor"], "notepad.exe", "leafpad", "scite",
+                    "gedit", "kate", "gvim"], unicode(JBrout.toolsFile))
         else:
-            runWith(["notepad.exe", "leafpad", "scite", "gedit", "kate", "gvim"], unicode(JBrout.toolsFile))
+            runWith(["notepad.exe", "leafpad", "scite", "gedit", "kate",
+                    "gvim"], unicode(JBrout.toolsFile))
 
     def on_editOptions_activate(self, *args):
         """edit jBrout options"""
@@ -2476,10 +2526,8 @@ class Window(GladeApp):
         """Import in basket"""
         Window.importBasket(self)
 
-
     def on_quitter_activate(self, widget, *args):
         self.on_window_delete_event(widget, *args)
-
 
     def on_help_activate(self, *args):
         try:
@@ -2498,14 +2546,18 @@ class Window(GladeApp):
         about.set_version(__version__)
         about.set_copyright('Copyright 2005-2010 Marc Lentz')
         about.set_license(open("data/gpl.txt").read())
-        about.set_authors(['Marc Lentz', "Rob Wallace", "Thierry Benita", "", "thanks to:", '- Frederic Peters', "- Erik Charlesson (french online help)", "- Pieter Edelman (flickr uploader)"])
+        about.set_authors(['Marc Lentz', "Rob Wallace", "Thierry Benita", "",
+                           "thanks to:", '- Frederic Peters',
+                           "- Erik Charlesson (french online help)",
+                           "- Pieter Edelman (flickr uploader)"])
         about.set_website('http://jbrout.googlecode.com')
-        about.set_comments(
-"""Library Versions:
+        about.set_comments("""Library Versions:
 Python: %d.%d.%d
 PyGTK: %d.%d.%d
 GTK: %d.%d.%d
-PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Image.VERSION,)))
+PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version +
+              (Image.VERSION,)))
+
         def close(w, res):
             if res == gtk.RESPONSE_CANCEL:
                 w.destroy()
@@ -2513,22 +2565,9 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         # ~ about.set_comments('handle your photos')
         about.show()
 
-
-    def on_btn_addFolder_clicked(self, widget, *args):
-        print "on_btn_addFolder_clicked called with self.%s" % widget.get_name()
-
-
-
-    def on_btn_addFolder_drag_data_received(self, widget, *args):
-        print "on_btn_addFolder_drag_data_received called with self.%s" % widget.get_name()
-
-
-
     def on_hs_size_value_changed(self, widget, *args):
         self.tbl.thumbnail_width = int(widget.get_value())
         JBrout.conf["thumbsize"] = int(widget.get_value())
-
-
 
     def on_notebook1_switch_page(self, widget, *args):
         gpoint, page = args
@@ -2552,8 +2591,6 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                         model.switch_inc(iterTo)
                     elif code == 2:
                         model.switch_exc(iterTo)
-
-
 
     def on_treeviewdb_drag_data_received(self, widget, *args):
         context, x, y, selection, info, time = args
@@ -2592,7 +2629,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             model = widget.get_model()
             if drop_info:
                 path, position = drop_info
-                if position in [gtk.TREE_VIEW_DROP_INTO_OR_BEFORE, gtk.TREE_VIEW_DROP_INTO_OR_AFTER]:
+                if position in [gtk.TREE_VIEW_DROP_INTO_OR_BEFORE,
+                                gtk.TREE_VIEW_DROP_INTO_OR_AFTER]:
                     iterTo = model.get_iter(path)
                     self.on_drop_photos(model, iterTo)
         else:
@@ -2643,31 +2681,40 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             if node is not None:
                 # on a real folder
                 if event.button == 3:
-                    path, obj, x, y = widget.get_path_at_pos(int(event.x), int(event.y))
+                    path, obj, x, y = widget.get_path_at_pos(int(event.x),
+                                                             int(event.y))
                     if path:
                         self.treeviewdb.set_cursor(path)
                     menu = gtk.Menu()
-                    menu.append(makeItem(_("Select only"), self.on_menu_select_only))
+                    menu.append(makeItem(_("Select only"),
+                                self.on_menu_select_only))
                     if JBrout.modify:
                         menu.append(makeItem(_("Rename"), self.on_menu_rename))
-                        menu.append(makeItem(_("New folder"), self.on_menu_new_folder))
-                        menu.append(makeItem(_("Refresh"), self.on_menu_refresh))
-                        menu.append(makeItem(_("Remove from db"), self.on_menu_delete_from_db))
-                        menu.append(makeItem(_("Delete from disk"), self.on_menu_delete_from_disk))
+                        menu.append(makeItem(_("New folder"),
+                                    self.on_menu_new_folder))
+                        menu.append(makeItem(_("Refresh"),
+                                    self.on_menu_refresh))
+                        menu.append(makeItem(_("Remove from db"),
+                                    self.on_menu_delete_from_db))
+                        menu.append(makeItem(_("Delete from disk"),
+                                    self.on_menu_delete_from_disk))
 
-                    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+                    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
                     # new album plugin
-                    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+                    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
                     menu2 = gtk.Menu()
 
                     if JBrout.modify:
                         l = JBrout.plugins.request("AlbumProcess")
                     else:
-                        l = JBrout.plugins.request("AlbumProcess", isAlter=False)
+                        l = JBrout.plugins.request("AlbumProcess",
+                                                   isAlter=False)
 
                     for instance, callback, props in l:
                         item = gtk.ImageMenuItem(props["label"])
-                        item.connect("activate", self.on_album_menu_select_plugin, widget, callback)
+                        item.connect("activate",
+                                     self.on_album_menu_select_plugin,
+                                     widget, callback)
                         menu2.append(item)
 
                     if len(menu2) > 0:
@@ -2675,12 +2722,12 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                         smenu2.set_submenu(menu2)
                         smenu2.show_all()
                         menu.append(smenu2)
-                    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+                    # /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
                     menu.popup(None, None, None, event.button, event.time)
                     return 1
                 elif event.button == 2:
 
-                    # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= patch
+                    # #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-= patch
                     # tup = widget.get_path_at_pos(int(event.x), int(event.y))
                     # if tup:  # if click on something
                     #    path, obj, x, y= tup
@@ -2689,7 +2736,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     #
                     # path = model.get_path(iter0)
                     # self.treeviewdb.set_cursor(path)
-                    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+                    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
                     self.selectAlbum(model, iter0, False)
                     return 1
@@ -2697,9 +2744,12 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 # on the basket
                 if event.button == 3:
                     menu = gtk.Menu()
-                    menu.append(makeItem(_("Remove"), self.on_menu_remove_basket))
-                    menu.append(makeItem(_("Export basket"), self.on_menu_export_basket))
-                    menu.append(makeItem(_("Import in basket"), self.on_menu_import_basket))
+                    menu.append(makeItem(_("Remove"),
+                                self.on_menu_remove_basket))
+                    menu.append(makeItem(_("Export basket"),
+                                self.on_menu_export_basket))
+                    menu.append(makeItem(_("Import in basket"),
+                                self.on_menu_import_basket))
                     menu.popup(None, None, None, event.button, event.time)
                     return 1
                 elif event.button == 2:
@@ -2728,12 +2778,13 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 # ~ self.selectAlbum(model, iter0)
 
     def on_btn_addFolder_clicked(self, widget, *args):
-        dialog = gtk.FileChooserDialog (_("Add Folder"),
-                                        None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
-                                         gtk.RESPONSE_OK))
-        dialog.set_default_response (gtk.RESPONSE_OK)
-        dialog.set_transient_for (self.main_widget)
+        dialog = gtk.FileChooserDialog(_("Add Folder"),
+                                       None,
+                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                       gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        dialog.set_transient_for(self.main_widget)
 
         if sys.platform[:3].lower() == "win":
             default = "c:\\"
@@ -2741,9 +2792,10 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             default = ""
 
         # preselect the previous mount point
-        dialog.set_current_folder(JBrout.conf["addFolderDefaultPath"] or default)
+        dialog.set_current_folder(JBrout.conf["addFolderDefaultPath"] or
+                                  default)
 
-        response = dialog.run ()
+        response = dialog.run()
         if response == gtk.RESPONSE_OK:
             folder = dialog.get_filename()
             if folder:
@@ -2753,18 +2805,13 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             folder = None
         dialog.destroy()
 
-
         if folder:
             self.on_drop_folders_from_os(self.treeviewdb.get_model(), [folder])
-
-
 
     def on_btn_addFolder_drag_data_received(self, widget, *args):
         list = dnd_args_to_dir_list(args)
         if list:
             self.on_drop_folders_from_os(self.treeviewdb.get_model(), list)
-
-
 
     # def on_btn_yl_clicked(self, widget, *args):
     #    self.date_display_update(self.selectDate.get_model().init(-12))
@@ -2800,7 +2847,6 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         finally:
             self.showProgress()
 
-
     #
     # def on_combodate_changed(self, widget, *args):
     #    try:
@@ -2811,10 +2857,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
     #        date = None
     #
     #    if date:
-    #        self.date_display_update(self.selectDate.get_model().init(selectDate = date))
-
-
-
+    #        self.date_display_update(self.selectDate.get_model().
+    #                                 init(selectDate = date))
     def on_treeviewtags_row_activated(self, widget, *args):
         treeselection = widget.get_selection()
         model, paths = treeselection.get_selected_rows()
@@ -2840,10 +2884,10 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 try:
                     xpath = """//photo[%s]""" % xpath
                     ln = JBrout.db.select(xpath)
-                    self.SetSelection(npath, xpath, ln, Window.MODETAG, withFilter)
+                    self.SetSelection(npath, xpath, ln, Window.MODETAG,
+                                      withFilter)
                 finally:
                     self.showProgress()
-
 
     def on_treeviewtags_row_collapsed(self, widget, *args):
         iter0, path = args
@@ -2879,7 +2923,7 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
     def on_treeviewtags_drag_data_received(self, widget, *args):
         context, x, y, selection, info, time = args
 
-        dragFrom = context.get_source_widget().__class__.__name__
+        #dragFrom = context.get_source_widget().__class__.__name__
 
         model = widget.get_model()
 
@@ -2895,7 +2939,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     moved = False
                     for i in self.dragTags:
                         it = model.find(i)
-                        node = model.get(it)  # node can be a TagNode or a CatgNode
+                        # node can be a TagNode or a CatgNode
+                        node = model.get(it)
 
                         _cur = iterTo
                         parents = [model.get_path(_cur)]
@@ -2910,7 +2955,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                             node.moveToCatg(nodeTo)
                             moved = True
                         else:
-                            beep(_("Tag/catg couldn't be a parent of the destination"))
+                            beep(_("Tag/catg couldn't be a parent " +
+                                 "of the destination"))
 
                     if moved:
                         model.init()
@@ -2940,18 +2986,22 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 iter0 = model.get_iter(paths[0])
 
                 node = model.get(iter0)
-                if node :
+                if node:
                     if event.button == 3:
                         menu = gtk.Menu()
                         if node.__class__.__name__ == "CatgNode":
-                            menu.append(makeItem(_("Add Tag"), self.on_menu_add_tag))
-                            menu.append(makeItem(_("Add Category"), self.on_menu_add_catg))
-                            menu.append(makeItem(_("Rename Category"), self.on_menu_rename_catg))
+                            menu.append(makeItem(_("Add Tag"),
+                                        self.on_menu_add_tag))
+                            menu.append(makeItem(_("Add Category"),
+                                        self.on_menu_add_catg))
+                            menu.append(makeItem(_("Rename Category"),
+                                        self.on_menu_rename_catg))
                         # if node.__class__.__name__ == "TagNode":
-                        #    menu.append(makeItem(_("Set keyboard shortcut"), self.on_menu_set_key))
-                        menu.append(makeItem(_("Delete"), self.on_menu_delete_tags))
+                        #    menu.append(makeItem(_("Set keyboard shortcut"),
+                        #                self.on_menu_set_key))
+                        menu.append(makeItem(_("Delete"),
+                                    self.on_menu_delete_tags))
                         menu.popup(None, None, None, event.button, 0)
-
 
     def on_treeviewtags_cursor_changed(self, widget, *args):
         if self.storeMultipleSelectedPathsOfTags:
@@ -2978,25 +3028,23 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                         # select/unselect
                         if treeselection.iter_is_selected(iterTo):
                             treeselection.unselect_iter(iterTo)
-                            ret = 1  # stop propagation-event on unselect (to cancel drag'n'drop begin)
+                            # stop propagation-event on unselect (to
+                            # cancel drag'n'drop begin)
+                            ret = 1
                         else:
                             treeselection.select_iter(iterTo)
-                            ret = 0  # leave propagation on select (to able d'n'd begin)
+                            # leave propagation on select (to able d'n'd
+                            # begin)
+                            ret = 0
 
                         # save the current multiple selection ...
-                        # thus we can reselect them in the event "cursor_changed", to be able
-                        # to not loose them
+                        # thus we can reselect them in the event
+                        # "cursor_changed", to be able to not loose them
                         model, paths = treeselection.get_selected_rows()
                         self.storeMultipleSelectedPathsOfTags = paths
 
                         return ret
                         # ~ return ret
-
-
-
-
-
-
 
     def on_tvSearch_button_press_event(self, widget, *args):
         event = args[0]
@@ -3007,13 +3055,14 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             if path:
                 model = widget.get_model()
                 iterTo = model.get_iter(path)
-                node = model.get(iterTo)
+                #node = model.get(iterTo)
 
                 # let's find the x beginning of the cell
                 xcell = widget.get_cell_area(path, widget.get_column(0)).x
 
                 # if node.__class__.__name__ != "TagNode":
-                #    # we are on a category, there is an arrow at the beginning of
+                #    # we are on a category, there is an arrow at the
+                #    beginning of
                 #    # the cell to set expand or collapse
                 #    # we must shift the xcell beginning
                 #    xcell += 16
@@ -3031,7 +3080,6 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                     # click nowhere or on the arrow ;-)
                     return 0  # let the event propagation
 
-
         # ~ event = args[0]
         # ~ click_info = widget.get_dest_row_at_pos(int(event.x), int(event.y))
         # ~ if click_info:
@@ -3045,7 +3093,6 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
                 # ~ model.switch_inc(iterTo)
             # ~ elif event.button == 3:
                 # ~ model.switch_exc(iterTo)
-
     def on_tvSearch_row_activated(self, widget, *args):
         treeselection = widget.get_selection()
         model, iter0 = treeselection.get_selected()
@@ -3057,14 +3104,16 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         if val < self.hs_from.get_value():
             self.hs_from.set_value(val)
         d = self.getDateFromScale(val)
-        self.l_to.set_label(d.strftime(unicode(_("To %m/%d/%Y %A")).encode("utf_8")))
+        self.l_to.set_label(
+            d.strftime(unicode(_("To %m/%d/%Y %A")).encode("utf_8")))
 
     def on_hs_from_value_changed(self, widget, *args):
         val = widget.get_value()
         if val > self.hs_to.get_value():
             self.hs_to.set_value(val)
         d = self.getDateFromScale(val)
-        self.l_from.set_label(d.strftime(unicode(_("From %m/%d/%Y %A")).encode("utf_8")))
+        self.l_from.set_label(
+            d.strftime(unicode(_("From %m/%d/%Y %A")).encode("utf_8")))
 
     def setSearchCombo(self, obj, list, n):
         m = gtk.ListStore(str)
@@ -3088,26 +3137,29 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         t = (self.__end - self.__begin).days + 1
         self.hs_to.set_value(t)
 
-
     def on_btn_search_clicked(self, widget, *args):
-
         def mkpcom(valRech):  # photo comment
             valRech = unicode(valRech).encode("utf_16")
             sfrom = u"ABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöûùüç"
             sto = u"abcdefghijklmnopqrstuvwxyzaaaeeeeiioouuuc"
-            valRech = valRech.translate(string.maketrans(sfrom.encode("utf_16"), sto.encode("utf_16"))).decode("utf_16")
-            return u"""contains(translate(c, "%s", "%s"), %s)""" % (sfrom, sto, xpathquoter(valRech))
+            valRech = valRech.translate(
+                string.maketrans(sfrom.encode("utf_16"),
+                                 sto.encode("utf_16"))).decode("utf_16")
+            return u"""contains(translate(c, "%s", "%s"), %s)""" % \
+                (sfrom, sto, xpathquoter(valRech))
 
         def mkacom(valRech):  # album comment
             valRech = unicode(valRech).encode("utf_16")
             sfrom = u"ABCDEFGHIJKLMNOPQRSTUVWXYZàâäéèêëïîôöûùüç"
             sto = u"abcdefghijklmnopqrstuvwxyzaaaeeeeiioouuuc"
-            valRech = valRech.translate(string.maketrans(sfrom.encode("utf_16"), sto.encode("utf_16"))).decode("utf_16")
+            valRech = valRech.translate(
+                string.maketrans(sfrom.encode("utf_16"),
+                                 sto.encode("utf_16"))).decode("utf_16")
             valRech = xpathquoter(valRech)
-            return  u""" (contains(translate(../c, "%s", "%s"), %s)""" % (sfrom, sto, valRech) + \
-                    u""" or contains(translate(../@name, "%s", "%s"), %s))""" % (sfrom, sto, valRech)
-
-
+            return u""" (contains(translate(../c, "%s", "%s"), %s)""" % \
+                (sfrom, sto, valRech) + \
+                u""" or contains(translate(../@name, "%s", "%s"), %s))""" % \
+                (sfrom, sto, valRech)
 
         def string2ops(chaine, callback):
             tmots = []
@@ -3130,17 +3182,21 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
         tops = []  # textual operands
         ops = []
         if self.__begin.date() != dt_from:
-            ops.append(u"substring(@date, 1, 8) >= '%s'" % dt_from.strftime('%Y%m%d'))
+            ops.append(u"substring(@date, 1, 8) >= '%s'" %
+                       dt_from.strftime('%Y%m%d'))
             tops.append(dt_from.strftime('From:%d/%m/%Y'))
         if self.__end.date() != dt_to:
-            ops.append(u"substring(@date, 1, 8) <= '%s'" % dt_to.strftime('%Y%m%d'))
+            ops.append(u"substring(@date, 1, 8) <= '%s'" %
+                       dt_to.strftime('%Y%m%d'))
             tops.append(dt_to.strftime('To:%d/%m/%Y'))
 
         if self.cb_format.get_active() == 1:  # landscape
-            ops.append(u"substring-before(@resolution, 'x')>substring-after(@resolution, 'x')")
+            ops.append(u"substring-before(@resolution, 'x')>" +
+                       u"substring-after(@resolution, 'x')")
             tops.append(_("Format:Landscape"))
         if self.cb_format.get_active() == 2:  # portrait
-            ops.append(u"substring-before(@resolution, 'x')<substring-after(@resolution, 'x')")
+            ops.append(u"substring-before(@resolution, 'x')<" +
+                       u"substring-after(@resolution, 'x')")
             tops.append(_("Format:Portrait"))
 
         if self.cb_rating.get_active():
@@ -3168,7 +3224,8 @@ PIL: %s""" % (sys.version_info[:3] + gtk.pygtk_version + gtk.gtk_version + (Imag
             for tcheck, nom, l in ll:
                 if l:
                     if type(l) == list:
-                        orList = u" or ".join([u"t = %s" % xpathquoter(i) for i in l])
+                        orList = u" or ".join([u"t = %s" % xpathquoter(i)
+                                              for i in l])
                         if tcheck == 1:  # include
                             ops.append(u"(%s)" % orList)
                             tops.append(u"'%s'" % nom)
