@@ -13,12 +13,15 @@
 # #
 from __main__ import JPlugin
 
+
 class Plugin(JPlugin):
-    """ Plugin to display the full exif/iptc info contained in one ore more photos """
+    """ Plugin to display the full exif/iptc info contained in one ore
+    more photos """
     __author__ = "Rob Wallace"
     __version__ = "0.0.3"
 
-    @JPlugin.Entry.PhotosProcess(_("Display Meta Data"), order=5000, alter=False)
+    @JPlugin.Entry.PhotosProcess(_("Display Meta Data"), order=5000,
+                                 alter=False)
     def viewExif(self, list):
         from viewExif import WinViewExif
 

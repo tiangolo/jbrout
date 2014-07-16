@@ -14,6 +14,7 @@
 
 from __main__ import JPlugin
 
+
 class Plugin(JPlugin):
     """Plugin to perform mass tagging changes"""
 
@@ -32,16 +33,18 @@ class Plugin(JPlugin):
 
     @JPlugin.Entry.PhotosProcess(_("Import Tags"), order=8100)
     def importTags(self, imgList):
-        """Import tags used in the given image list (IPTC and XMP) and merge them together"""
-        self.showProgress(0, 1 , _("Importing Tags"))
+        """Import tags used in the given image list (IPTC and XMP) and
+        merge them together"""
+        self.showProgress(0, 1, _("Importing Tags"))
         self.__SyncXmpIptc()
         self.showProgress()
         return True
 
     @JPlugin.Entry.AlbumProcess(_("Import Tags"), order=300)
     def importAlbumTags(self, nodeAlbum):
-        """Import tags used in the given image list (IPTC and XMP) and merge them together"""
-        self.showProgress(0, 1 , _("Importing Tags"))
+        """Import tags used in the given image list (IPTC and XMP) and
+        merge them together"""
+        self.showProgress(0, 1, _("Importing Tags"))
         # XMPUpdater([nodeAlbum.file]).SyncXmpIptc() needs to be rewritten
         raise NotImplementedError
         self.showProgress()

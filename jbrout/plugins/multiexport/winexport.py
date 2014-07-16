@@ -1,35 +1,38 @@
 # -*- coding: UTF-8 -*-
-# #
-# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-# #
-# # This program is free software; you can redistribute it and/or modify
-# # it under the terms of the GNU General Public License as published
-# # by the Free Software Foundation; version 2 only.
-# #
-# # This program is distributed in the hope that it will be useful,
-# # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# # GNU General Public License for more details.
-# #
+##
+##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published
+## by the Free Software Foundation; version 2 only.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
 import os
 import gtk
-import time
 from jbrout.commongtk import PictureSelector
 from crypt import crypt, uncrypt
 
-from __main__ import GladeApp  # no "libs.gladeapp", because there is a libs dir here ;-(
+# no "libs.gladeapp", because there is a libs dir here ;-(
+from __main__ import GladeApp
+
 
 def chooseFolder(t):
-    dialog = gtk.FileChooserDialog (_("Select the destination"),
-         None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-         (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN,
-          gtk.RESPONSE_OK))
-    dialog.set_default_response (gtk.RESPONSE_OK)
+    dialog = gtk.FileChooserDialog(_("Select the destination"),
+                                   None,
+                                   gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                   (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                    gtk.STOCK_OPEN,
+                                    gtk.RESPONSE_OK))
+    dialog.set_default_response(gtk.RESPONSE_OK)
 
     # preselect the previous mount point
-    dialog.select_filename (t)
+    dialog.select_filename(t)
 
-    response = dialog.run ()
+    response = dialog.run()
     if response == gtk.RESPONSE_OK:
         ret = dialog.get_filename()
     else:
@@ -38,8 +41,8 @@ def chooseFolder(t):
     dialog.destroy()
     return ret
 
-class Windowexport(GladeApp):
 
+class Windowexport(GladeApp):
     glade = os.path.join(os.path.dirname(__file__), 'winexport.glade')
 
     def init(self, conf, titre, photoList, templateList):
@@ -70,14 +73,14 @@ class Windowexport(GladeApp):
 
         self.cbTypeA.set_model(am)
 
-
         self.photoList = photoList
 
         self.privacyFR = {}
 
         # Create the Flickr thumbnail selector
         self.psThumbSelectFR = PictureSelector(self.photoList)
-        self.psThumbSelectFR.connect("value_changed", self.on_psThumbSelectFR_value_changed)
+        self.psThumbSelectFR.connect("value_changed",
+                                     self.on_psThumbSelectFR_value_changed)
         self.tableFlickr.attach(self.psThumbSelectFR, 1, 2, 0, 1)
         self.psThumbSelectFR.show()
 
@@ -91,7 +94,6 @@ class Windowexport(GladeApp):
         self.setPrivacyFR(apply_to_all=True)
 
         self.on_nbExport_switch_page(None)  # simulate tab changed
-
 
     def initFromConf(self, conf):
         self.__conf = conf
@@ -131,17 +133,27 @@ class Windowexport(GladeApp):
 
         self.tbLoginPW.set_text(conf["PW.login"])
         self.tbPasswordPW.set_text(uncrypt(conf["PW.password"]))
-        if (bool(conf["PW.privacy"])): self.rbPrivatePW.set_active(1)
-        else: self.rbPublicPW.set_active(1)
+        if (bool(conf["PW.privacy"])):
+            self.rbPrivatePW.set_active(1)
+        else:
+            self.rbPublicPW.set_active(1)
 
-        if (bool(conf["FR.public"])): self.rbPublicFR.set_active(1)
-        else: self.rbPrivateFR.set_active(1)
-        if (bool(conf["FR.friends"])): self.cbFriendsFR.set_active(1)
-        else: self.cbFriendsFR.set_active(0)
-        if (bool(conf["FR.family"])): self.cbFamilyFR.set_active(1)
-        else: self.cbFamilyFR.set_active(0)
-        if (bool(conf["FR.same_privacy"])): self.cbSelectAllFR.set_active(1)
-        else: self.cbSelectAllFR.set_active(0)
+        if (bool(conf["FR.public"])):
+            self.rbPublicFR.set_active(1)
+        else:
+            self.rbPrivateFR.set_active(1)
+        if (bool(conf["FR.friends"])):
+            self.cbFriendsFR.set_active(1)
+        else:
+            self.cbFriendsFR.set_active(0)
+        if (bool(conf["FR.family"])):
+            self.cbFamilyFR.set_active(1)
+        else:
+            self.cbFamilyFR.set_active(0)
+        if (bool(conf["FR.same_privacy"])):
+            self.cbSelectAllFR.set_active(1)
+        else:
+            self.cbSelectAllFR.set_active(0)
 
         self.tbSmtp.set_text(conf["SM.smtp"])
         self.spPortSM.set_value(int(conf["SM.port"]))
@@ -167,7 +179,8 @@ class Windowexport(GladeApp):
         self.tbPath.set_text(conf["FT.path"])
 
     def getExportType(self):
-        return ["FS", "HG", "PW", "FR", "SM", "FT", "CA"][self.nbExport.get_current_page()]
+        return ["FS", "HG", "PW", "FR", "SM", "FT", "CA"][
+            self.nbExport.get_current_page()]
 
     def getResizeType(self):
         if self.rbNoResize.get_active():
@@ -215,7 +228,8 @@ class Windowexport(GladeApp):
             self.__conf["SM.auth"] = int(self.cbAuthSM.get_active())
             if self.cbAuthSM.get_active():
                 self.__conf["SM.username"] = self.tbUserSM.get_text()
-                self.__conf["SM.password"] = crypt(self.tbPasswordSM.get_text())
+                self.__conf["SM.password"] = \
+                    crypt(self.tbPasswordSM.get_text())
             self.__conf["SM.security"] = self.cbSecurity.get_active()
             self.__conf["SM.to"] = self.tbTo.get_text()
             self.__conf["SM.from"] = self.tbFrom.get_text()
@@ -291,11 +305,12 @@ class Windowexport(GladeApp):
     def on_psThumbSelectFR_value_changed(self, widget, *args):
         # This method is called when the value of the Flickr slider changes
         photo_num = widget.getValue()
-        is_public, is_friends, is_family = self.privacyFR[self.photoList[photo_num]]
+        is_public, is_friends, is_family = \
+            self.privacyFR[self.photoList[photo_num]]
         if (is_public):
             self.rbPublicFR.set_active(True)
         else:
-          self.rbPrivateFR.set_active(True)
+            self.rbPrivateFR.set_active(True)
         self.cbFriendsFR.set_active(is_friends)
         self.cbFamilyFR.set_active(is_family)
 
@@ -307,7 +322,8 @@ class Windowexport(GladeApp):
             self.psThumbSelectFR.set_sensitive(True)
 
     def on_rbPrivateFR_toggled(self, widget, *args):
-        # (De)activates the friends and family checkbuttons in the Flickr tab when "public" is (de)selected
+        # (De)activates the friends and family checkbuttons in the
+        # Flickr tab when "public" is (de)selected
         if (widget.get_active()):
             self.cbFriendsFR.set_sensitive(True)
             self.cbFamilyFR.set_sensitive(True)
@@ -317,14 +333,18 @@ class Windowexport(GladeApp):
         self.setPrivacyFR()
 
     def on_friends_or_family_toggled(self, *args):
-        # The checkbuttons for privacy can't call setPrivacy directly,because they give extra arguments which setPrivacy can't use
+        # The checkbuttons for privacy can't call setPrivacy
+        # directly,because they give extra arguments which setPrivacy
+        # can't use
         self.setPrivacyFR()
 
     def setPrivacyFR(self, apply_to_all=None):
-        # Set the Flickr privacy as indicated in the window to the photos indicated in te window
-        # If apply_to_all is given, it overrides the checkbutton (used for initialization)
+        # Set the Flickr privacy as indicated in the window to the
+        # photos indicated in te window
+        # If apply_to_all is given, it overrides the checkbutton (used
+        # for initialization)
 
-        if (apply_to_all == None):
+        if (apply_to_all is None):
             apply_to_all = self.cbSelectAllFR.get_active()
 
         photo = self.photoList[int(self.psThumbSelectFR.getValue())]
@@ -361,4 +381,3 @@ class Windowexport(GladeApp):
         else:
             if self.spPortSM.get_value_as_int() == 465:
                 self.spPortSM.set_value(25)
-

@@ -13,7 +13,8 @@ Based on the script "picasa_upload.py" by Marcin Sochacki (wanted#linux.gda.pl)
 
 need ElementTree (py2.5 included battery)
 """
-import sys,os
+import sys
+import os
 sys.path.append(os.path.dirname(__file__))  # bad things ;-)
 
 import atom
@@ -21,8 +22,9 @@ import gdata.service
 import gdata
 import gdata.base
 
+
 class PicasaWeb(gdata.service.GDataService):
-    def __init__(self,username,password):
+    def __init__(self, username, password):
         gdata.service.GDataService.__init__(self)
         self.email = username
         self.password = password

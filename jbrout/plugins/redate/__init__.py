@@ -15,7 +15,6 @@
 
 from __main__ import JPlugin
 
-import datetime
 from jbrout.common import cd2d
 
 
@@ -25,10 +24,8 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "2.0"
 
-
     # def menuEntries(self,l):
     #    return [(2500,_("Change Datetime"),True,self.redate,None)]
-
     @JPlugin.Entry.PhotosProcess(_("Change Datetime"), order=2500)
     def redate(self, list):
         from redate import Winredate
@@ -43,7 +40,7 @@ class Plugin(JPlugin):
                 vw, vd, vh, vi, vs = value
             try:
                 for i in list:
-                    self.showProgress(list.index(i), len(list) , _("Redating"))
+                    self.showProgress(list.index(i), len(list), _("Redating"))
                     if method == 'relative':
                         i.redate(vw, vd, vh, vi, vs)
                     else:

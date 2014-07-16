@@ -7,10 +7,12 @@ from email.Utils import COMMASPACE, formatdate
 from email import Encoders
 import os
 
-def sendMail(fro="", to="", subject="", text="", files=[],server="localhost",
-                security="none",port=25,auth=False,username="",password="" ):
-    assert type(to)==list
-    assert type(files)==list
+
+def sendMail(fro="", to="", subject="", text="", files=[],
+             server="localhost",
+             security="none", port=25, auth=False, username="", password=""):
+    assert type(to) == list
+    assert type(files) == list
     #print "Server is:   ", server
     #print "Port is:     ", port
     #print "Security is: ", security
@@ -24,14 +26,14 @@ def sendMail(fro="", to="", subject="", text="", files=[],server="localhost",
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 
-    msg.attach( MIMEText(text) )
+    msg.attach(MIMEText(text))
 
     for file in files:
         part = MIMEBase('application', "octet-stream")
-        part.set_payload( open(file,"rb").read() )
+        part.set_payload(open(file, "rb").read())
         Encoders.encode_base64(part)
         part.add_header('Content-Disposition', 'attachment; filename="%s"'
-                       % os.path.basename(file))
+                        % os.path.basename(file))
         msg.attach(part)
 
     if security == "ssl":
@@ -45,7 +47,5 @@ def sendMail(fro="", to="", subject="", text="", files=[],server="localhost",
         smtp.starttls()
     if auth:
         smtp.login(username, password)
-    smtp.sendmail(fro, to, msg.as_string() )
+    smtp.sendmail(fro, to, msg.as_string())
     smtp.close()
-
-

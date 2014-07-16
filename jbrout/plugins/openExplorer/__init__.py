@@ -15,7 +15,7 @@
 
 from __main__ import JPlugin, runWith
 import os
-import sys
+
 
 class Plugin(JPlugin):
     """ Plugin to open the folder in (nautilus/linux) or (explorer/windows) """
@@ -28,19 +28,21 @@ class Plugin(JPlugin):
     #        return [(1010,_("Open in explorer"),False,self.open,None)]
     #    else:
     #        return []
-    #    
+    #
     # def albumEntries(self,n):
     #    return [(90,_("Open in explorer"),False,self.openFromAlbum)]
 
     @JPlugin.Entry.AlbumProcess(_("Open in explorer"), order=90, alter=False)
     def openFromAlbum(self, node):
-        runWith(["xdg-open", "nautilus", "rox", "konqueror", "explorer.exe"], unicode(node.file))  # path of folder
+        runWith(["xdg-open", "nautilus", "rox", "konqueror", "explorer.exe"],
+                unicode(node.file))  # path of folder
         return False  # no visual modif
-        
+
     @JPlugin.Entry.PhotosProcess(_("Open in explorer"), order=90, alter=False)
     def open(self, list):
         path = os.path.dirname(list[0].file)
         # ~ path = path.encode(sys.getfilesystemencoding())
-        runWith(["xdg-open", "nautilus", "rox", "konqueror", "explorer.exe"], path)
+        runWith(["xdg-open", "nautilus", "rox", "konqueror", "explorer.exe"],
+                path)
 
         return False  # no visual modif

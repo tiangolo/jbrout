@@ -18,9 +18,9 @@ from datetime import datetime, timedelta
 
 from libs.gladeapp import GladeApp
 
+
 class Winredate(GladeApp):
     glade = os.path.join(os.path.dirname(__file__), 'redate.glade')
-
 
     def init(self):
         self.main_widget.set_modal(True)
@@ -38,7 +38,6 @@ class Winredate(GladeApp):
         self.date.select_day(self.d.day)
         print self.d
 
-
     def recalc(self):
         vw = self.weeks.get_value()
         vd = self.days.get_value()
@@ -46,7 +45,8 @@ class Winredate(GladeApp):
         vi = self.minutes.get_value()
         vs = self.seconds.get_value()
 
-        f = lambda x: x.strftime(unicode(_("%m/%d/%Y %H:%M:%S")).encode("utf_8"))
+        f = lambda x: x.strftime(
+            unicode(_("%m/%d/%Y %H:%M:%S")).encode("utf_8"))
 
         dn = self.d
         dn += timedelta(weeks=vw, days=vd, hours=vh, minutes=vi, seconds=vs)
@@ -59,7 +59,6 @@ class Winredate(GladeApp):
             self.vals = (vw, vd, vh, vi, vs)
             msg += _("Change to %s :\n\n") % f(dn)
         self.msg.set_text(msg)
-
 
     def on_WinRedate_delete_event(self, widget, *args):
         self.quit(False)
@@ -84,15 +83,15 @@ class Winredate(GladeApp):
 
     def on_btn_appliquer_clicked(self, widget, *args):
         if self.notebook.get_current_page() == 0:
-            if self.vals == None:
+            if self.vals is None:
                 rep = None
             else:
                 rep = ('relative', self.vals)
         else:
             [ny, nm, nd] = self.date.get_date()
             ndt = datetime(ny, nm + 1, nd, int(self.hour.get_value()),
-                         int(self.minute.get_value()),
-                         int(self.second.get_value()))
+                           int(self.minute.get_value()),
+                           int(self.second.get_value()))
             rep = ('absolute', ndt)
         self.quit(rep)
 
@@ -104,5 +103,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

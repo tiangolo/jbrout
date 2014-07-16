@@ -26,6 +26,7 @@ import pyexiv2
 
 import re
 
+
 class WinViewExif(GladeApp):
     glade = os.path.join(os.path.dirname(__file__), 'viewExif.glade')
 
@@ -79,7 +80,8 @@ class WinViewExif(GladeApp):
 
         self.scrolledwindow1.show_all()
 
-        # Call set-photo to populate the table with the values for the first picture
+        # Call set-photo to populate the table with the values for the
+        # first picture
         self.setPhoto(0)
 
     def setPhoto(self, i):
@@ -89,33 +91,41 @@ class WinViewExif(GladeApp):
                 self.nodes[i].file))
             image.readMetadata()
             try:
-                self.exifList.append([_('JPEG Comment'), image.getComment().decode("utf_8", "replace")])
+                self.exifList.append([_('JPEG Comment'),
+                                     image.getComment().
+                                     decode("utf_8", "replace")])
             except:
                 print "Error reafing JPEG comment"
             for key in image.exifKeys():
-                if re.match(self.ignoredPattern, key) == None and key not in self.ignoredKeys:
+                if re.match(self.ignoredPattern, key) is None and \
+                        key not in self.ignoredKeys:
                     tag_details = image.tagDetails(key)
                     try:
                         self.exifList.append(["Exif: " + tag_details[0],
-                            image.interpretedExifValue(key)])
+                                             image.interpretedExifValue(key)])
                     except:
                         print "Error on tag " + key
             for key in image.iptcKeys():
-                if re.match(self.ignoredPattern, key) == None and key not in self.ignoredKeys:
+                if re.match(self.ignoredPattern, key) is None and \
+                        key not in self.ignoredKeys:
                     tag_details = image.tagDetails(key)
                     try:
-                        self.exifList.append(["Iptc: " + tag_details[0], image[key]])
+                        self.exifList.append(["Iptc: " + tag_details[0],
+                                             image[key]])
                     except:
                         print "Error on tag " + key
             for key in image.xmpKeys():
-                if re.match(self.ignoredPattern, key) == None and key not in self.ignoredKeys:
+                if re.match(self.ignoredPattern, key) is None and \
+                        key not in self.ignoredKeys:
                     tag_details = image.tagDetails(key)
                     try:
-                        self.exifList.append(["Xmp: " + tag_details[0], image[key]])
+                        self.exifList.append(["Xmp: " + tag_details[0],
+                                             image[key]])
                     except:
                         print "Error on tag " + key
             if len(self.exifList) == 0:
-                self.exifList.append([_('No Displayable Meta Data found in file!'), ''])
+                self.exifList.append(
+                    [_('No Displayable Meta Data found in file!'), ''])
 
         else:
             self.exifList.append([_('Can not open file!'), ''])
@@ -129,6 +139,7 @@ class WinViewExif(GladeApp):
     def on_selector_value_changed(self, *args):
         self.setPhoto(self.selector.getValue())
 
+
 def main():
     win_viewExif = WinViewExif()
 
@@ -138,9 +149,11 @@ if __name__ == "__main__":
     from libs.i18n import createGetText
 
     # make translation available in the gui/gtk
-    GladeApp.bindtextdomain("jbrout", os.path.join(os.path.dirname(__file__), 'po'))
+    GladeApp.bindtextdomain("jbrout", os.path.join(os.path.dirname(__file__),
+                            'po'))
 
     # make translation available in the code
-    __builtins__.__dict__["_"] = createGetText("jbrout", os.path.join(os.path.dirname(__file__), 'po'))
+    __builtins__.__dict__["_"] = createGetText(
+        "jbrout", os.path.join(os.path.dirname(__file__), 'po'))
 
     main()

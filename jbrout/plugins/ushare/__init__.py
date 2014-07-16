@@ -20,9 +20,11 @@ import tempfile
 import shutil
 from subprocess import Popen, PIPE
 
+
 def run(cmd):
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     return "".join(p.stdout.readlines()).strip()
+
 
 def isUshareInstalled():
     return run("which ushare").startswith("/")
@@ -40,10 +42,12 @@ class Plugin(JPlugin):
             p = tempfile.mkdtemp()
             try:
                 for photo in l:
-                    os.symlink(photo.file, os.path.join(p, os.path.basename(photo.file)))
+                    os.symlink(photo.file, os.path.join(p,
+                               os.path.basename(photo.file)))
 
                 cmd = Popen(["ushare", "-f", "ushare.conf", "-c", p])
-                self.MessageBox(_("Sharing %d photo(s)") % len(l), _("Media Share"))
+                self.MessageBox(_("Sharing %d photo(s)") % len(l),
+                                _("Media Share"))
                 print "Terminate ushare"
                 cmd.terminate()
 

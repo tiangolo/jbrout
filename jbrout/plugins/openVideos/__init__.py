@@ -1,26 +1,30 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __main__ import JPlugin, runWith
+from __main__ import JPlugin
 import os
 import glob
 from subprocess import Popen
 
+
 class Plugin(JPlugin):
-    """ Plugin to open the videos associated to selected files in totem/vlc/mplayer (linux/windows) """
+    """ Plugin to open the videos associated to selected files in
+    totem/vlc/mplayer (linux/windows) """
     __author__ = "fchartier"
     __version__ = "1.0"
 
-    LIST_VIDEO_SUFFIX = [ ".mpg", ".mpeg", ".mp4", ".avi", ".wma", ".mov" ] 
+    LIST_VIDEO_SUFFIX = [".mpg", ".mpeg", ".mp4", ".avi", ".wma", ".mov"]
 
-    @JPlugin.Entry.PhotosProcess(_("Open associated videos"), order=2001, alter=False)
+    @JPlugin.Entry.PhotosProcess(_("Open associated videos"), order=2001,
+                                 alter=False)
     def openAssociatedVideos(self, listOfPhotoNodes):
         """Open associated video of selected files"""
         listVideos = []
-        
+
         for picture in listOfPhotoNodes:
-            # self.showProgress(listOfPhotoNodes.index(picture), len(listOfPhotoNodes), _("Searching videos") )
-            
+            # self.showProgress(listOfPhotoNodes.index(picture),
+            # len(listOfPhotoNodes), _("Searching videos") )
+
             picfile = picture.file
             # remove extension
             picshort = picfile[0:picfile.rfind(".")]
@@ -38,8 +42,9 @@ class Plugin(JPlugin):
 
         self.openVideoList(listVideos)
         return False  # no visual modif
-    
-    @JPlugin.Entry.AlbumProcess(_("Open associated videos"), order=2001, alter=False)
+
+    @JPlugin.Entry.AlbumProcess(_("Open associated videos"), order=2001,
+                                alter=False)
     def openFolderVideos(self, node):
         """Open videos in selected folder"""
         listVideos = []
@@ -55,7 +60,7 @@ class Plugin(JPlugin):
                 videoFic = os.path.join(node.file, fic)
                 print "Found video: " + videoFic
                 listVideos.append(videoFic)
-        
+
         self.openVideoList(listVideos)
         return False  # no visual modif
 
@@ -65,7 +70,6 @@ class Plugin(JPlugin):
             self.MessageBox(_("No video was found"))
         else:
             self.runListWith(["totem", "vlc", "mplayer"], list)
-        
 
     def runListWith(self, listCmd, listArgs):
         """ try command in the list 'listCmd' with the list listArgs """
@@ -75,7 +79,7 @@ class Plugin(JPlugin):
                 for a in listArgs:
                     execList.append(unicode(a))
                 Popen(execList)
-                
+
             except OSError:
                 pass
             else:
