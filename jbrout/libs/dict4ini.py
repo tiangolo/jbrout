@@ -234,7 +234,7 @@ class DictNode(object):
 
     # add in test support
     def __contains__(self, name):
-        return name in self
+        return name in self._items
 
     def items(self):
         return self._items.items()
@@ -258,8 +258,8 @@ class DictNode(object):
         s = []
         for key, value in values.items():
             left_value = self._root._orders.get(
-                self._section_delimeter.join(sec + [key]))
-            s.append((left_value, 99999), key, value)
+                self._section_delimeter.join(sec + [key]), 99999)
+            s.append((left_value, key, value))
         s.sort()
         return [(x, y) for z, x, y in s]
 

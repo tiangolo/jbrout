@@ -29,7 +29,7 @@ class Conf(object):
         self.__ini = DictIni(file)
 
         # to recreate the new INI file, bases on dict4ini
-        if not self.__ini.has_key("jBrout"):
+        if "jBrout" not in self.__ini:
             # clear old values, to restart a new one
             self.__ini.clear()
 
@@ -40,6 +40,10 @@ class Conf(object):
     def has_key(self, n):
         """ main conf test """
         return self.__ini.jBrout.has_key(n)
+
+    def __contains__(self, n):
+        """ main conf test """
+        return n in self.__ini.jBrout
 
     def __setitem__(self, n, v):
         """ main conf set """
