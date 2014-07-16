@@ -1,17 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-##
-##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 
 """
 MAJOR CHANGES :
@@ -121,7 +121,7 @@ class _Command:
 
     @staticmethod
     def _run(cmds):
-        #~ print cmds
+        # ~ print cmds
         # to output easily (with strange chars)
         cmdline = str([" ".join(cmds)])
         try:
@@ -199,7 +199,7 @@ class PhotoCmd(object):
             # SO exifdate = filedate FOR ALL
             if "Exif.Photo.DateTimeOriginal" in self.__info.exifKeys():
                 try:
-                    #self.__info[
+                    # self.__info[
                     #    "Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
                     self.__info[
                         "Exif.Photo.DateTimeOriginal"].strftime("%Y%m%d%H%M%S")
@@ -207,7 +207,7 @@ class PhotoCmd(object):
                 # content of tag exif DateTimeOriginal is not a datetime
                 except AttributeError:
                     isDateExifOk = False
-            else:                       # tag exif DateTimeOriginal not present
+            else:  # tag exif DateTimeOriginal not present
                 isDateExifOk = False
 
             if not isDateExifOk:
@@ -223,7 +223,7 @@ class PhotoCmd(object):
                 self.__info["Exif.Photo.DateTimeDigitized"] = fd
                 self.__info.writeMetadata()
 
-            #exifdate = self.__info["Exif.Image.DateTime"]
+            # exifdate = self.__info["Exif.Image.DateTime"]
             exifdate = self.__info["Exif.Photo.DateTimeOriginal"]
 
             #-----------------------------------------------------------
@@ -260,7 +260,7 @@ class PhotoCmd(object):
 
                         os.rename(file, newfile)
                         self.__file = newfile
-                        #self.debug("*WARNING* File %s to be renamed -> %s"
+                        # self.debug("*WARNING* File %s to be renamed -> %s"
                         #    % (file, newfile) )
 
         self.__refresh()
@@ -279,7 +279,7 @@ class PhotoCmd(object):
             self.__isreal = False
 
         if "Exif.Photo.DateTimeOriginal" in self.__info.exifKeys():
-            #self.__exifdate =
+            # self.__exifdate =
             #    self.__info["Exif.Image.DateTime"].strftime("%Y%m%d%H%M%S")
             self.__exifdate = \
                 self.__info[
@@ -303,7 +303,7 @@ class PhotoCmd(object):
         if "Exif.Photo.Flash" in self.__info.exifKeys():
             v = self.__info.interpretedExifValue("Exif.Photo.Flash")
             if v:
-                if v[:2].lower() in ["fi", "ye"]:    # fired, yes, ...
+                if v[:2].lower() in ["fi", "ye"]:  # fired, yes, ...
                     self.__isflash = "Yes"
                 else:
                     self.__isflash = "No"
@@ -367,7 +367,7 @@ class PhotoCmd(object):
 
         self.__tags = [decode(i) for i in self.__info.getTags()]
 
-    def __saveTB(self, f):   # not used
+    def __saveTB(self, f):  # not used
         self.__info.dumpThumbnailToFile(f)
 
     def __getThumbnail(self):
@@ -409,7 +409,7 @@ isreal : %s""" % (self.__file,
 
         #TODO:attention au fichier sans EXIF ici !!!!
 
-        #fd = self.__info["Exif.Image.DateTime"]
+        # fd = self.__info["Exif.Image.DateTime"]
         fd = self.__info["Exif.Photo.DateTimeOriginal"]
         fd += timedelta(weeks=w, days=d, hours=h, minutes=m, seconds=s)
         return self.setDate(fd)
@@ -504,10 +504,10 @@ isreal : %s""" % (self.__file,
                 # we don't need to clear it, no ?
                 pass
 
-        self.__info.deleteThumbnail()   # seems not needed !
+        self.__info.deleteThumbnail()  # seems not needed !
         self.__info.clearComment()
 
-        self.__maj()    # so, ONLY CASE where self.exifdate == ""
+        self.__maj()  # so, ONLY CASE where self.exifdate == ""
         return True
 
     def copyInfoTo(self, file2):
@@ -528,7 +528,7 @@ isreal : %s""" % (self.__file,
             im = Image.open(self.__file)
             im.thumbnail((160, 160), Image.ANTIALIAS)
         except Exception, m:
-            print "*WARNING* can't load this file : ", (self.__file, ), m
+            print "*WARNING* can't load this file : ", (self.__file,), m
             im = None
 
         if im:
@@ -647,7 +647,7 @@ isreal : %s""" % (self.__file,
 
         if not(sens == "none"):
             if _Command.isWin:
-                _Command._run([_Command._jpegtran] + jpegtranOpt +
+                _Command._run([_Command._jpegtran] + jpegtranOpt + 
                               ['-copy', 'all', self.__file, self.__file])
                 # rebuild the exif thumb and reset the orientation tag,
                 # because jpegtran doesn't do it on windows
@@ -661,10 +661,10 @@ isreal : %s""" % (self.__file,
 
             self.__refresh()
 
-     #~ def rotates(self):           # NO ROTATE LOSS LESS ;-(
-        #~ im = Image.open(self.__file)
-        #~ im = im.transpose(Image.ROTATE_90)
-        #~ im.save(self.__file)
+     # ~ def rotates(self):           # NO ROTATE LOSS LESS ;-(
+        # ~ im = Image.open(self.__file)
+        # ~ im = im.transpose(Image.ROTATE_90)
+        # ~ im.save(self.__file)
 
     def isThumbOk(self):
         #  1 : thumb seems good with original (same orientation)
@@ -692,14 +692,14 @@ isreal : %s""" % (self.__file,
         else:
             isThumbOk = -1
 
-        assert (self.__info["Exif.Image.DateTime"] ==
-                self.__info["Exif.Photo.DateTimeOriginal"] ==
+        assert (self.__info["Exif.Image.DateTime"] == 
+                self.__info["Exif.Photo.DateTimeOriginal"] == 
                 self.__info["Exif.Photo.DateTimeDigitized"])
 
         return isThumbOk
 
-    #@staticmethod
-    #def normalizeName(file):
+    # @staticmethod
+    # def normalizeName(file):
     #    """
     #    normalize name (only real exif pictures !!!!)
     #    """
@@ -725,8 +725,8 @@ isreal : %s""" % (self.__file,
         return u"%s(%d)%s" % (n, num, ext)
 
 
-    #@staticmethod
-    #def prepareFile(file, needRename, needAutoRot):
+    # @staticmethod
+    # def prepareFile(file, needRename, needAutoRot):
     #    """
     #    prepare file, rotating/autorotating according exif tags
     #    (same things as normalizename + autorot, in one action)
@@ -752,18 +752,18 @@ isreal : %s""" % (self.__file,
 
 if __name__ == "__main__":
 
-    #~ f = u"images_exemples/IMG_3320.JPG"
-    #~ help(pyexiv2)
-    #~ i = PhotoCmd(f)
-    #~ i.showAll()
-    #~ i.showExiv()
-    #~ print i.file
-    #~ i.autorotate()
-    #~ i.rename()
-    #~ i.destroyInfo()
-    #~ print len(i.getThumbnail())
-    #~ print i["Exif.Image.DateTime"]
-    #~ print i["Exif.Image.DateTime"]
-    #~ print i.control()
-    #~ print i
+    # ~ f = u"images_exemples/IMG_3320.JPG"
+    # ~ help(pyexiv2)
+    # ~ i = PhotoCmd(f)
+    # ~ i.showAll()
+    # ~ i.showExiv()
+    # ~ print i.file
+    # ~ i.autorotate()
+    # ~ i.rename()
+    # ~ i.destroyInfo()
+    # ~ print len(i.getThumbnail())
+    # ~ print i["Exif.Image.DateTime"]
+    # ~ print i["Exif.Image.DateTime"]
+    # ~ print i.control()
+    # ~ print i
     pass

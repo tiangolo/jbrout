@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python﻿
-##
-##    Copyright (C) 2009 Rob Wallace rob[at]wallace(dot)gen(dot)nz
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2009 Rob Wallace rob[at]wallace(dot)gen(dot)nz
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 
 import os
 import sys
@@ -45,20 +45,20 @@ class FolderSelect(GladeApp):
         selectMultiple - If true allow selection of multiple folders
         """
 
-        self.mdl = gtk.TreeStore( gobject.TYPE_STRING,
-                                         gobject.TYPE_STRING )
+        self.mdl = gtk.TreeStore(gobject.TYPE_STRING,
+                                         gobject.TYPE_STRING)
 
         self.renderer = gtk.CellRendererText()
         self.column0 = gtk.TreeViewColumn("Select Folder",
                                           self.renderer,
                                           text=0)
-        self.view = gtk.TreeView( self.mdl )
-        self.view.append_column( self.column0 )
+        self.view = gtk.TreeView(self.mdl)
+        self.view.append_column(self.column0)
         self.view.set_rubber_banding(True)
         self.view.set_headers_visible(False)
         self.view.set_enable_tree_lines(True)
         self.view.connect('row-expanded', self.on_node_expand)
-        self.selection =  self.view.get_selection()
+        self.selection = self.view.get_selection()
         self.setSelectMultiple(selectMultiple)
 
         self.swFolderList.add(self.view)
@@ -88,14 +88,14 @@ class FolderSelect(GladeApp):
     def selectDir(self, path):
         """Sets the currently selected folder/directory to path"""
         if os.path.isdir(path):
-            pathSplit= []
+            pathSplit = []
             while True:
                 (path, b) = os.path.split(path)
                 if b == '':
-                    pathSplit.insert(0,path)
+                    pathSplit.insert(0, path)
                     break
                 else:
-                    pathSplit.insert(0,b)
+                    pathSplit.insert(0, b)
             tIter = self.mdl.get_iter_root()
             for folder in pathSplit:
                 while tIter is not None:
@@ -128,9 +128,9 @@ class FolderSelect(GladeApp):
         depth += 1
         try:
             for subFolder in sorted(os.listdir(folder), cmp=caseFreeCmp):
-                subFolderFull = os.path.join(folder,subFolder)
+                subFolderFull = os.path.join(folder, subFolder)
                 if self.checkFolder(subFolder, subFolderFull):
-                    newParent = self.mdl.append(parent,(subFolder,subFolderFull))
+                    newParent = self.mdl.append(parent, (subFolder, subFolderFull))
                     if maxDepth > depth:
                         self.addDir(subFolderFull, maxDepth, newParent, depth)
         except:
@@ -140,13 +140,13 @@ class FolderSelect(GladeApp):
         """Checks a folder to see if it should be displayed based on full path"""
         try:
             pathOk = os.path.isdir(folderFull) and\
-                     os.access(folderFull,os.X_OK)
+                     os.access(folderFull, os.X_OK)
         except:
             pathOk = False
         if self.showHidden:
             ret = pathOk
         else:
-            ret = pathOk and re.match('^\..*',folder) == None
+            ret = pathOk and re.match('^\..*', folder) == None
         return ret
 
     def winDrives(self):
@@ -160,49 +160,49 @@ class FolderSelect(GladeApp):
     def initTree(self):
         """Initalises the folder tree with the roots and their direct
         children"""
-        if sys.platform[:3].lower()=="win":
+        if sys.platform[:3].lower() == "win":
             roots = self.winDrives()
         else:
             roots = ['/']
         for root in roots:
-            parent = self.mdl.append(None,(root, root))
+            parent = self.mdl.append(None, (root, root))
             self.addDir(root, maxDepth=1, parent=parent)
 
-    def on_node_expand(self,treeview,iter, path,*args):
+    def on_node_expand(self, treeview, iter, path, *args):
         """Handles the expansion of nodes and builds the tree under them as
         necessary"""
-        to_remove=[]
+        to_remove = []
         def remove_iter(iter_r, remove_this=True):
-            child_iter=self.mdl.iter_children(iter_r)
+            child_iter = self.mdl.iter_children(iter_r)
             while child_iter:
                 remove_iter(child_iter)
-                child_iter=self.mdl.iter_next(child_iter)
+                child_iter = self.mdl.iter_next(child_iter)
             if remove_this:
-                sub_node=self.mdl[iter_r].iter
+                sub_node = self.mdl[iter_r].iter
                 to_remove.append(sub_node)
         remove_iter(iter, False)
-        self.addDir(self.mdl[path][1],2,iter)
+        self.addDir(self.mdl[path][1], 2, iter)
         for node in to_remove:
             self.mdl.remove(node)
 
-    def on_cbShowHidden_toggled(self,*args):
+    def on_cbShowHidden_toggled(self, *args):
         """Handles toggling of the show Hidden check button and sets the
         internal state, refresh of the tree is not performed, this can be done
         by the user contracting and expanding the branches"""
         self.showHidden = self.cbShowHidden.get_active()
 
-    def on_butOpen_clicked(self,*args):
+    def on_butOpen_clicked(self, *args):
         """Handles closing the dialog and returning the folders/directories
         selected when the Open button is clicked"""
         self.quit([tuple(self.mdl[path])[1] for path in
                    self.selection.get_selected_rows()[1]])
 
-    def on_butCancel_clicked(self,*args):
+    def on_butCancel_clicked(self, *args):
         """Handles closing the dialog and returning an empty list when the
         Cancel button is clicked"""
         self.quit([])
 
-    def on_dlgSelectFolder_delete_event(self,*args):
+    def on_dlgSelectFolder_delete_event(self, *args):
         """Handles closing the dialog and returning an empty list when the
         dialog is closed programatically"""
         self.quit([])
@@ -210,7 +210,7 @@ class FolderSelect(GladeApp):
 if __name__ == '__main__':
     fs = FolderSelect()
     fs.setSelectMultiple(True)
-    if sys.platform[:3].lower()=="win":
+    if sys.platform[:3].lower() == "win":
         fs.selectDir('S:\\jbrout\\dist')
     else:
         fs.selectDir('/home/robertw')

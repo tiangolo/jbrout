@@ -1,16 +1,16 @@
 # -*- coding: UTF-8 -*-
-##
-##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 """
 ======================================================================
 GLADEAPP ... "dynamic simple tepache method", by manatlan (c) 2006
@@ -72,97 +72,97 @@ import sys
 
 
 class GladeApp:
-    __win=[]
+    __win = []
 
-    def __init__(self,*args,**dargs):
-        n=self.__class__.__name__
-        assert hasattr(self,"glade"), "*ERROR* manque attribut 'glade' dans '%s'"%n
-        assert hasattr(self,"init"), "*ERROR* manque methode 'init' dans '%s'"%n
+    def __init__(self, *args, **dargs):
+        n = self.__class__.__name__
+        assert hasattr(self, "glade"), "*ERROR* manque attribut 'glade' dans '%s'" % n
+        assert hasattr(self, "init"), "*ERROR* manque methode 'init' dans '%s'" % n
 
         # recupere la liste des windows du glade -> l
-        x=parse(self.glade)
-        l=[(i.getAttribute("id"),i) for i in x.documentElement.childNodes if i.nodeType == i.ELEMENT_NODE]
-        assert len(l)>=1,"*ERROR* pas de widget dans le .glade"
+        x = parse(self.glade)
+        l = [(i.getAttribute("id"), i) for i in x.documentElement.childNodes if i.nodeType == i.ELEMENT_NODE]
+        assert len(l) >= 1, "*ERROR* pas de widget dans le .glade"
 
         # controle le matching object avec une ou la window du glade
-        if len(l)>1:
-            theId,theNode=None,None
-            assert hasattr(self,"window"), "*ERROR* manque attribut 'window' dans '%s' (car le glade en possede plusieurs)"%n
-            for id,node in l:
+        if len(l) > 1:
+            theId, theNode = None, None
+            assert hasattr(self, "window"), "*ERROR* manque attribut 'window' dans '%s' (car le glade en possede plusieurs)" % n
+            for id, node in l:
                 if self.window == id:
-                    theId,theNode=id,node
+                    theId, theNode = id, node
                     break;
-            assert theNode!=None, "*ERROR* l'attribut 'window' dans '%s' ne correspond a aucune window dans le .glade"%n
+            assert theNode != None, "*ERROR* l'attribut 'window' dans '%s' ne correspond a aucune window dans le .glade" % n
         else:
-            theId,theNode=l[0]
+            theId, theNode = l[0]
 
         # verifi que ses events sont presents
-        for i in re.findall(r"""<signal handler="([^"]+)" """,theNode.toxml()):
-            if not hasattr(self,i):
-                print "*WARNING* manque methode dans '%s'"%n
+        for i in re.findall(r"""<signal handler="([^"]+)" """, theNode.toxml()):
+            if not hasattr(self, i):
+                print "*WARNING* manque methode dans '%s'" % n
                 print "    def %s(self,*args):" % i
 
         # chargement du glage
-        self.__xml = gtk.glade.XML(self.glade,theId)
+        self.__xml = gtk.glade.XML(self.glade, theId)
 
         # autoconnect les signaux
         self.__xml.signal_autoconnect(self)
 
         # autodéfini les attributs (objets)
-        self.main_widget=None
-        l=self.__xml.get_widget_prefix("")
+        self.main_widget = None
+        l = self.__xml.get_widget_prefix("")
         for w in l:
             name = gtk.Widget.get_name(w)
             if name == theId:
                 self.main_widget = w
             else:
-                setattr(self, name,w )
+                setattr(self, name, w)
 
         assert self.main_widget != None, "main_widget not found ?!?"
 
         # et appel la methode init, en passant les arguments !
-        obj=getattr(self,"init")
-        obj(*(args),**(dargs))
+        obj = getattr(self, "init")
+        obj(*(args), **(dargs))
 
         # stock la win en session
         GladeApp.__win.append(self)
 
-        self.__inLoop=None
+        self.__inLoop = None
 
 
     def loop(self):
-        self.__return=None
+        self.__return = None
         if self in GladeApp.__win:
             GladeApp.__win.remove(self)
 
         # run a loop
-        self.__inLoop=gobject.MainLoop()
+        self.__inLoop = gobject.MainLoop()
         self.__inLoop.run()
 
         return self.__return
 
-    def quit(self,*a,**k):
+    def quit(self, *a, **k):
         """ handle the main quit
         (count instance, and when at zero : real quit ! (except loop)
         """
-        try:                            # *NEW*
+        try:  # *NEW*
 
             if self.__inLoop:
                 # if was in loop, quit loop properly
                 self.main_widget.destroy()
-                self.__return=a                         # pass the args
-                gobject.MainLoop.quit(self.__inLoop)    # quit the loop
-                self.__inLoop=None
+                self.__return = a  # pass the args
+                gobject.MainLoop.quit(self.__inLoop)  # quit the loop
+                self.__inLoop = None
             else:
-                assert not a,"*ERROR* Cette fenetre ne loop pas! pas d'args"
+                assert not a, "*ERROR* Cette fenetre ne loop pas! pas d'args"
                 if self in GladeApp.__win:
                     GladeApp.__win.remove(self)
                     self.main_widget.destroy()
 
-        except AttributeError:          # *NEW*
+        except AttributeError:  # *NEW*
             self.main_widget.destroy()  # *NEW*
 
-    def exit(self,ret=0):
+    def exit(self, ret=0):
         """ exit direct """
         sys.exit(ret)
 
@@ -171,7 +171,7 @@ class GladeApp:
         gtk.window_set_default_icon_from_file(file)
 
     @staticmethod
-    def bindtextdomain(app_name,locale_dir):
+    def bindtextdomain(app_name, locale_dir):
         # make translation available in the glade
         gtk.glade.bindtextdomain(app_name, locale_dir)
         gtk.glade.textdomain(app_name)

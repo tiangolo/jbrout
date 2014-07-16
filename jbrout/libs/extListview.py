@@ -42,7 +42,7 @@ from gobject import signal_new, TYPE_INT, TYPE_LONG, TYPE_BOOLEAN, TYPE_PYOBJECT
 
 
 # Internal d'n'd (reordering)
-DND_REORDERING_ID   = 1024
+DND_REORDERING_ID = 1024
 DND_INTERNAL_TARGET = ('extListview-internal', gtk.TARGET_SAME_WIDGET, DND_REORDERING_ID)
 
 
@@ -69,9 +69,9 @@ class ExtListView(gtk.TreeView):
         self.selection = self.get_selection()
 
         # Sorting rows
-        self.sortLastCol     = None   # The last column used for sorting (needed to switch between ascending/descending)
-        self.sortAscending   = True   # Ascending or descending order
-        self.sortColCriteria = {}     # For each column, store the tuple of indexes used to sort the rows
+        self.sortLastCol = None  # The last column used for sorting (needed to switch between ascending/descending)
+        self.sortAscending = True  # Ascending or descending order
+        self.sortColCriteria = {}  # For each column, store the tuple of indexes used to sort the rows
 
         # Default configuration for this list
         self.set_rules_hint(True)
@@ -100,35 +100,35 @@ class ExtListView(gtk.TreeView):
                     nbEntries += 1
                     dataTypes.append(type)
                     column.pack_start(renderer, False)
-                    if   isinstance(renderer, gtk.CellRendererToggle): column.add_attribute(renderer, 'active', nbEntries-1)
-                    elif isinstance(renderer, gtk.CellRendererPixbuf): column.add_attribute(renderer, 'pixbuf', nbEntries-1)
+                    if   isinstance(renderer, gtk.CellRendererToggle): column.add_attribute(renderer, 'active', nbEntries - 1)
+                    elif isinstance(renderer, gtk.CellRendererPixbuf): column.add_attribute(renderer, 'pixbuf', nbEntries - 1)
                     elif isinstance(renderer, gtk.CellRendererText):
-                        if useMarkup: column.add_attribute(renderer, 'markup', nbEntries-1)
-                        else:         column.add_attribute(renderer, 'text',   nbEntries-1)
+                        if useMarkup: column.add_attribute(renderer, 'markup', nbEntries - 1)
+                        else:         column.add_attribute(renderer, 'text', nbEntries - 1)
 
         # Mark management
-        self.markedRow  = None
+        self.markedRow = None
         self.markColumn = len(dataTypes)
-        dataTypes.append(TYPE_BOOLEAN)     # When there's no other solution, this additional entry helps in finding the marked row
+        dataTypes.append(TYPE_BOOLEAN)  # When there's no other solution, this additional entry helps in finding the marked row
 
         # Create the ListStore associated with this tree
         self.store = gtk.ListStore(*dataTypes)
         self.set_model(self.store)
 
         # Drag'n'drop management
-        self.dndContext    = None
-        self.dndTargets    = dndTargets
-        self.motionEvtId   = None
-        self.dndStartPos   = None
+        self.dndContext = None
+        self.dndTargets = dndTargets
+        self.motionEvtId = None
+        self.dndStartPos = None
         self.dndReordering = False
 
         if len(dndTargets) != 0:
             self.enable_model_drag_dest(dndTargets, gdk.ACTION_DEFAULT)
 
-        self.connect('drag-begin',           self.onDragBegin)
-        self.connect('drag-motion',          self.onDragMotion)
-        self.connect('button-press-event',   self.onButtonPressed)
-        self.connect('drag-data-received',   self.onDragDataReceived)
+        self.connect('drag-begin', self.onDragBegin)
+        self.connect('drag-motion', self.onDragMotion)
+        self.connect('button-press-event', self.onButtonPressed)
+        self.connect('drag-data-received', self.onDragDataReceived)
         self.connect('button-release-event', self.onButtonReleased)
 
         # Show the list
@@ -228,11 +228,11 @@ class ExtListView(gtk.TreeView):
         if self.sortLastCol == column:
             self.sortAscending = not self.sortAscending
         else:
-            self.sortLastCol   = column
+            self.sortLastCol = column
             self.sortAscending = True
 
         # Dump the rows, sort them and reorder the list
-        rows     = [tuple(r) + (i,) for i, r in enumerate(self.store)]
+        rows = [tuple(r) + (i,) for i, r in enumerate(self.store)]
         criteria = self.sortColCriteria[column]
         rows.sort(lambda r1, r2: self.__cmpRows(r1, r2, criteria, self.sortAscending))
         self.store.reorder([r[-1] for r in rows])
@@ -347,10 +347,10 @@ class ExtListView(gtk.TreeView):
             if self.markedRow is not None:
                 currentPath = self.store.get_path(iter)[0]
                 if   currentPath < self.markedRow:  self.markedRow -= 1
-                elif currentPath == self.markedRow: self.markedRow  = None
+                elif currentPath == self.markedRow: self.markedRow = None
             # Remove the current row
             if   self.store.remove(iter): self.set_cursor(self.store.get_path(iter))
-            elif len(self.store) != 0:    self.set_cursor(len(self.store)-1)
+            elif len(self.store) != 0:    self.set_cursor(len(self.store) - 1)
         self.thaw_child_notify()
         if len(self.store) == 0:
             self.set_cursor(0)
@@ -450,8 +450,8 @@ class ExtListView(gtk.TreeView):
             pos, path = gtk.TREE_VIEW_DROP_INTO_OR_AFTER, len(self.store) - 1
         else:
             pos, path = dropInfo[1], dropInfo[0][0]
-            if self.__isDropAfter(pos) and path < len(self.store)-1:
-                pos   = gtk.TREE_VIEW_DROP_INTO_OR_BEFORE
+            if self.__isDropAfter(pos) and path < len(self.store) - 1:
+                pos = gtk.TREE_VIEW_DROP_INTO_OR_BEFORE
                 path += 1
 
         self.freeze_child_notify()
@@ -459,7 +459,7 @@ class ExtListView(gtk.TreeView):
             srcPath = self.store.get_path(srcIter)[0]
 
             if self.__isDropAfter(pos):
-                dstIter = self.store.insert_after(self.store.get_iter(path),  self.store[srcIter])
+                dstIter = self.store.insert_after(self.store.get_iter(path), self.store[srcIter])
             else:
                 dstIter = self.store.insert_before(self.store.get_iter(path), self.store[srcIter])
                 if path == srcPath:
@@ -472,7 +472,7 @@ class ExtListView(gtk.TreeView):
                 path += 1
 
             if self.markedRow is not None:
-                if   srcPath == self.markedRow:                              self.markedRow  = dstPath
+                if   srcPath == self.markedRow:                              self.markedRow = dstPath
                 elif srcPath < self.markedRow and dstPath >= self.markedRow: self.markedRow -= 1
                 elif srcPath > self.markedRow and dstPath <= self.markedRow: self.markedRow += 1
         self.thaw_child_notify()
@@ -485,7 +485,7 @@ class ExtListView(gtk.TreeView):
 
     def onButtonPressed(self, tree, event):
         """ A mouse button has been pressed """
-        retVal   = False
+        retVal = False
         pathInfo = self.get_path_at_pos(int(event.x), int(event.y))
 
         if pathInfo is None: path = None
@@ -517,7 +517,7 @@ class ExtListView(gtk.TreeView):
         """ A mouse button has been released """
         if self.motionEvtId is not None:
             self.disconnect(self.motionEvtId)
-            self.dndContext  = None
+            self.dndContext = None
             self.motionEvtId = None
 
             if len(self.dndTargets) != 0:
@@ -540,7 +540,7 @@ class ExtListView(gtk.TreeView):
 
     def onDragBegin(self, tree, context):
         """ A drag'n'drop operation has begun """
-        if self.getSelectedRowsCount() == 1: context.set_icon_stock(gtk.STOCK_DND,          0, 0)
+        if self.getSelectedRowsCount() == 1: context.set_icon_stock(gtk.STOCK_DND, 0, 0)
         else:                                context.set_icon_stock(gtk.STOCK_DND_MULTIPLE, 0, 0)
 
 

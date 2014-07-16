@@ -103,15 +103,15 @@ class ThumbnailsView(gtk.Layout):
     sort_by = 'date'
     reversed_sort_order = False
 
-    priority_loads=[]
+    priority_loads = []
 
     def __init__(self):
         gtk.Layout.__init__(self, None, None)
 
-        w = gtk.Window()    # create a fake window
-        w.realize()         # realize it ...
-        style=w.get_style() # ... to obtain the REAL theme style
-        del(w)              # it's the only trick i've found
+        w = gtk.Window()  # create a fake window
+        w.realize()  # realize it ...
+        style = w.get_style()  # ... to obtain the REAL theme style
+        del(w)  # it's the only trick i've found
         BACKGROUND = style.base[gtk.STATE_NORMAL]
 
         self.modify_bg(gtk.STATE_NORMAL, BACKGROUND)
@@ -131,7 +131,7 @@ class ThumbnailsView(gtk.Layout):
         self.items = []
         self.update_layout()
         selection.add_notify_callback(self.notify_selection_change)
-        self.hdl=None
+        self.hdl = None
 
     def __load_thumbnails_bg(self):
         while True:
@@ -146,18 +146,18 @@ class ThumbnailsView(gtk.Layout):
         """ stop background process which load thumbs """
         if self.hdl:
             gobject.source_remove(self.hdl)
-            self.hdl=None
+            self.hdl = None
 
     def start(self):
         """ start background process to load thumbs """
         if not self.hdl:
-            self.hdl=gobject.idle_add(self.__load_thumbnails_bg().next)
+            self.hdl = gobject.idle_add(self.__load_thumbnails_bg().next)
 
     def set_photos(self, photos):
         self.stop()
 
         self.items = photos
-        #~ self.sort_photos(photos)
+        # ~ self.sort_photos(photos)
         self.update_layout()
         self.selection.empty()
         self.set_focus_cell(0)
@@ -178,7 +178,7 @@ class ThumbnailsView(gtk.Layout):
     def get_thumbnail_width(self):
         return self.real_thumbnail_width
     def set_thumbnail_width(self, value):
-        self.thumbnail_height = value #int(value * 3./4)
+        self.thumbnail_height = value  # int(value * 3./4)
         self.real_thumbnail_width = int(value)
         self.invalidate_view()
         self.update_layout()
@@ -192,7 +192,7 @@ class ThumbnailsView(gtk.Layout):
         if value < 0:
             value = 0
         if value >= len(self.items):
-            value = len(self.items)-1
+            value = len(self.items) - 1
         if value != self.real_focus_cell:
             self.invalidate_cell(value)
             self.invalidate_cell(self.real_focus_cell)
@@ -222,13 +222,13 @@ class ThumbnailsView(gtk.Layout):
             self.focus_cell = 0
         elif event.keyval == gtk.keysyms.End:
             self.focus_cell = len(self.items) - 1
-        elif ctrl and event.keyval == ord('a'): # select All
-            self.selection.set( range(0,len(self.items)) )
+        elif ctrl and event.keyval == ord('a'):  # select All
+            self.selection.set(range(0, len(self.items)))
         else:
             return False
 
         self.focus_cell = max(self.focus_cell, 0)
-        self.focus_cell = min(self.focus_cell, len(self.items)-1)
+        self.focus_cell = min(self.focus_cell, len(self.items) - 1)
 
         if self.focus_cell == focus_old:
             # so up from the first or down from the last doesn't tab
@@ -239,11 +239,11 @@ class ThumbnailsView(gtk.Layout):
 
         if shift:
             if focus_old != self.focus_cell and focus_old in self.selection and self.focus_cell in self.selection:
-                for i in range(min(focus_old, self.focus_cell)+1, max(focus_old, self.focus_cell)+1):
+                for i in range(min(focus_old, self.focus_cell) + 1, max(focus_old, self.focus_cell) + 1):
                     if i in self.selection:
                         self.selection.remove(i)
             else:
-                for i in range(min(focus_old, self.focus_cell), max(focus_old, self.focus_cell)+1):
+                for i in range(min(focus_old, self.focus_cell), max(focus_old, self.focus_cell) + 1):
                     if not i in self.selection:
                         self.selection.append(i)
 
@@ -274,17 +274,17 @@ class ThumbnailsView(gtk.Layout):
             ctrl = event.state & gtk.gdk.CONTROL_MASK
             shift = event.state & gtk.gdk.SHIFT_MASK
             self.selection.freeze()
-            if ctrl or event.button==2:
+            if ctrl or event.button == 2:
                 if cell_num in self.selection:
                     self.selection.remove(cell_num)
                 else:
                     self.selection.append(cell_num)
             elif shift:
-                for i in range(min(self.focus_cell, cell_num), max(self.focus_cell, cell_num)+1):
+                for i in range(min(self.focus_cell, cell_num), max(self.focus_cell, cell_num) + 1):
                     if not i in self.selection:
                         self.selection.append(i)
             else:
-                if (event.button==3 or event.button==1) and cell_num not in self.selection:#don't set selection if target is already selected
+                if (event.button == 3 or event.button == 1) and cell_num not in self.selection:  # don't set selection if target is already selected
                     self.selection.set([cell_num])
 
             self.focus_cell = cell_num  # needed before thaw() ! else it will not be good in notification event !!!!!
@@ -292,14 +292,14 @@ class ThumbnailsView(gtk.Layout):
 
             self.queue_resize()
 
-            #~ if event.button != 1:
-                #~ return True
+            # ~ if event.button != 1:
+                # ~ return True
 
             return False
 
-        #~ if event.type == gtk.gdk._2BUTTON_PRESS and event.button == 1:
-            #~ self.focus_cell = cell_num
-            #~ self.app.on_fullscreen_activate()
+        # ~ if event.type == gtk.gdk._2BUTTON_PRESS and event.button == 1:
+            # ~ self.focus_cell = cell_num
+            # ~ self.app.on_fullscreen_activate()
 
 
 
@@ -318,7 +318,7 @@ class ThumbnailsView(gtk.Layout):
 
 
 
-    def cell_at_position(self, x, y, crop_visible = True):
+    def cell_at_position(self, x, y, crop_visible=True):
         vadjustment = self.get_vadjustment()
         hadjustment = self.get_hadjustment()
         if crop_visible and (
@@ -358,17 +358,17 @@ class ThumbnailsView(gtk.Layout):
         self.update_layout(rectangle)
         return True
 
-    def update_layout(self, rectangle = None):
+    def update_layout(self, rectangle=None):
         if rectangle is None:
             rectangle = self.allocation
-        #print 'updating layout'
+        # print 'updating layout'
         self.available_width = rectangle[2] - 2 * BORDER_SIZE
         self.cell_width = self.thumbnail_width + 2 * CELL_BORDER_WIDTH
         self.cell_height = self.thumbnail_height + 2 * CELL_BORDER_WIDTH
         self.cells_per_row = max(int(self.available_width / self.cell_width), 1)
         self.cell_width += (self.available_width - self.cells_per_row * self.cell_width) / self.cells_per_row
 
-        if True: # display date
+        if True:  # display date
             metrics = self.get_pango_context().get_metrics(self.style.font_desc,
                     pango.Language('en_US'))
             self.cell_height += pango.PIXELS(metrics.get_ascent() + metrics.get_descent())
@@ -443,12 +443,12 @@ class ThumbnailsView(gtk.Layout):
         return x, y
 
     def draw_all_cells(self, area):
-        #print 'draw_all_cells', area.x, area.y, area.width, area.height
+        # print 'draw_all_cells', area.x, area.y, area.width, area.height
         if self.cell_width == 0 or self.cell_height == 0:
             return
 
-        start_cell_column = max((area[0] - BORDER_SIZE)/self.cell_width, 0)
-        start_cell_row = max((area[1] - BORDER_SIZE)/self.cell_height, 0)
+        start_cell_column = max((area[0] - BORDER_SIZE) / self.cell_width, 0)
+        start_cell_row = max((area[1] - BORDER_SIZE) / self.cell_height, 0)
         start_cell_num = start_cell_column + start_cell_row * self.cells_per_row
 
         start_cell_x, cell_y = self.get_cell_position(start_cell_num)
@@ -466,7 +466,7 @@ class ThumbnailsView(gtk.Layout):
             cell_x = start_cell_x
             j = 0
             while j < num_cols and cell_num + j < len(self.items):
-                #print '  ',
+                # print '  ',
                 self.draw_cell(cell_num + j, area)
                 cell_x += self.cell_width
                 j += 1
@@ -492,7 +492,7 @@ class ThumbnailsView(gtk.Layout):
         if not self.is_thumb(thumbnail_num):
             if thumbnail_num in self.priority_loads:
                 self.priority_loads.remove(thumbnail_num)
-            self.priority_loads.insert(0,thumbnail_num)
+            self.priority_loads.insert(0, thumbnail_num)
             pixbuf = self.loading_pixbuf
         else:
             pixbuf = self.get_thumb(thumbnail_num)
@@ -500,14 +500,14 @@ class ThumbnailsView(gtk.Layout):
                 wx, wy = self.thumbnail_width, self.thumbnail_height
             else:
                 r = float(pixbuf.get_height()) / self.thumbnail_height
-                wx, wy = int(pixbuf.get_width()/r), self.thumbnail_height
-            #~ pixbuf = pixbuf.scale_simple(wx, wy, gtk.gdk.INTERP_BILINEAR)
-            pixbuf = pixbuf.scale_simple(wx, wy, gtk.gdk.INTERP_NEAREST)    #speedest
+                wx, wy = int(pixbuf.get_width() / r), self.thumbnail_height
+            # ~ pixbuf = pixbuf.scale_simple(wx, wy, gtk.gdk.INTERP_BILINEAR)
+            pixbuf = pixbuf.scale_simple(wx, wy, gtk.gdk.INTERP_NEAREST)  # speedest
         return pixbuf
 
     def draw_cell(self, thumbnail_num, area):
-        #print 'drawing cell', thumbnail_num, self.items[thumbnail_num]
-        #~ filename = self.items[thumbnail_num]
+        # print 'drawing cell', thumbnail_num, self.items[thumbnail_num]
+        # ~ filename = self.items[thumbnail_num]
 
         bounds = self.cell_bounds(thumbnail_num)
 
@@ -526,31 +526,31 @@ class ThumbnailsView(gtk.Layout):
         if thumbnail != self.loading_pixbuf:
             self.style.paint_flat_box(self.bin_window, cell_state,
                     gtk.SHADOW_OUT, area, self, 'ThumbnailsView',
-                    bounds.x, bounds.y, bounds.width-1, bounds.height-1)
+                    bounds.x, bounds.y, bounds.width - 1, bounds.height - 1)
 
         def inflate(rect, x, y):
-            return gtk.gdk.Rectangle(rect.x-x, rect.y-y, rect.width+2*x, rect.height+2*y)
+            return gtk.gdk.Rectangle(rect.x - x, rect.y - y, rect.width + 2 * x, rect.height + 2 * y)
 
-        isFocused=False
+        isFocused = False
         if self.flags() & gtk.HAS_FOCUS and thumbnail_num == self.focus_cell:
             focus = inflate(bounds, -3, -3)
             self.style.paint_focus(self.bin_window, cell_state,
                     area, self, None, focus.x, focus.y, focus.width, focus.height)
-            isFocused=True
+            isFocused = True
 
-        region = gtk.gdk.Rectangle(0,0,0,0)
+        region = gtk.gdk.Rectangle(0, 0, 0, 0)
         image_bounds = inflate(bounds, -CELL_BORDER_WIDTH, -CELL_BORDER_WIDTH)
 
         if selected:
             expansion = SELECTION_THICKNESS
         else:
             expansion = 0
-        image_bounds = inflate(image_bounds, expansion+1, expansion+1).intersect(area)
+        image_bounds = inflate(image_bounds, expansion + 1, expansion + 1).intersect(area)
         if image_bounds.width:
             def fit(orig_width, orig_height, dest_width, dest_height):
                 if orig_width == 0 or orig_height == 0:
                     return 0, 0
-                scale = min(dest_width/orig_width, dest_height/orig_height)
+                scale = min(dest_width / orig_width, dest_height / orig_height)
                 if scale > 1:
                     scale = 1
                 fit_width = scale * orig_width
@@ -558,7 +558,7 @@ class ThumbnailsView(gtk.Layout):
                 return fit_width, fit_height
 
             # resizing during the painting (pn.getThumb give some 160x160)
-            w, h = fit(thumbnail.get_width(), thumbnail.get_height(), self.thumbnail_width,self.thumbnail_width)
+            w, h = fit(thumbnail.get_width(), thumbnail.get_height(), self.thumbnail_width, self.thumbnail_width)
 
             # resizing during the extraction (pn.getThumb desired size)
             # w, h = fit(thumbnail.get_width(), thumbnail.get_height(), 160, 160)
@@ -568,12 +568,12 @@ class ThumbnailsView(gtk.Layout):
                     bounds.y + self.thumbnail_height - h + CELL_BORDER_WIDTH,
                     w, h)
 
-            region = inflate(region, expansion, expansion)   # EXPAND WHEN SELECTED !
+            region = inflate(region, expansion, expansion)  # EXPAND WHEN SELECTED !
             region.width = max(1, region.width)
             region.height = max(1, region.height)
             if region.width != thumbnail.get_width() and region.height != thumbnail.get_height():
                 temp_thumbnail = thumbnail.scale_simple(region.width, region.height,
-                        gtk.gdk.INTERP_NEAREST) # the speedest
+                        gtk.gdk.INTERP_NEAREST)  # the speedest
             else:
                 temp_thumbnail = thumbnail
 
@@ -599,7 +599,7 @@ class ThumbnailsView(gtk.Layout):
                         gtk.gdk.RGB_DITHER_NONE,
                         draw.x, draw.y)
 
-        layout_bounds = gtk.gdk.Rectangle(0,0,0,0)
+        layout_bounds = gtk.gdk.Rectangle(0, 0, 0, 0)
 
         item = self.items[thumbnail_num]
         if item:
@@ -607,13 +607,13 @@ class ThumbnailsView(gtk.Layout):
             layout.set_font_description(self.style.font_desc)
             layout.set_text(self.get_text(thumbnail_num))
 
-            #~ if isFocused:
-            layout.set_width((region.width+6)*1000)
+            # ~ if isFocused:
+            layout.set_width((region.width + 6) * 1000)
             layout.set_wrap(1)
 
             layout_bounds.width, layout_bounds.height = layout.get_pixel_size()
             layout_bounds.y = bounds.y + bounds.height - CELL_BORDER_WIDTH - layout_bounds.height + 3
-            layout_bounds.x = bounds.x + (bounds.width - layout_bounds.width)/2
+            layout_bounds.x = bounds.x + (bounds.width - layout_bounds.width) / 2
 
             region = layout_bounds.intersect(area)
             if region.width:
@@ -625,7 +625,7 @@ class ThumbnailsView(gtk.Layout):
                         'ThumbnailsView', layout_bounds.x, layout_bounds.y, layout)
 
 
-    def scroll_to(self, cell_num, center = True):
+    def scroll_to(self, cell_num, center=True):
         if not (self.flags() & gtk.REALIZED):
             return
         adjustment = self.get_vadjustment()
@@ -644,8 +644,8 @@ class ThumbnailsView(gtk.Layout):
             adjustment.value = y
 
 class ListView(ThumbnailsView):
-    allow_drag=True
-    allow_drop=True
+    allow_drag = True
+    allow_drop = True
 
     def __init__(self):
         ThumbnailsView.__init__(self)
@@ -653,49 +653,49 @@ class ListView(ThumbnailsView):
         if self.allow_drag:
             # allow drag'n'drop from
             self.drag_source_set(gtk.gdk.BUTTON1_MASK | gtk.gdk.BUTTON2_MASK,
-                  [('STRING', 0, 111),], gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
+                  [('STRING', 0, 111), ], gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
 
         if self.allow_drop:
             # allow drag'n'drop to
-            self.drag_dest_set(gtk.DEST_DEFAULT_ALL, [('STRING', 0, 111),],
+            self.drag_dest_set(gtk.DEST_DEFAULT_ALL, [('STRING', 0, 111), ],
                 gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
             self.connect("drag_data_received",
                               self.on_drag_data_received_data)
 
 
-    def on_drag_data_received_data(self, widget, object,x,y,sdata,code,time):
+    def on_drag_data_received_data(self, widget, object, x, y, sdata, code, time):
         """ event drop notified """
-        cell_num = self.cell_at_position(x,y, False)
-        if cell_num >=0:
+        cell_num = self.cell_at_position(x, y, False)
+        if cell_num >= 0:
             if cell_num not in self.selection:
                 self.selection.set([cell_num])
             print "drop good !!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
-    def notify_selection_change(self,old):
+    def notify_selection_change(self, old):
         """ event selection changed """
-        ThumbnailsView.notify_selection_change(self,old)
-        print "select change",self.selection.real_selection
+        ThumbnailsView.notify_selection_change(self, old)
+        print "select change", self.selection.real_selection
 
 
     def getSelected(self):
         return [self.items[i] for i in self.selection.real_selection]
 
-    def init(self,l):
+    def init(self, l):
         self.set_photos(l)
 
     def refresh(self):
         """ refresh the layout """
         self.update_layout()
 
-    def get_text(self,idx):
+    def get_text(self, idx):
         item = self.items[idx]
         return item.display
 
-    def get_thumb(self,idx):
+    def get_thumb(self, idx):
         item = self.items[idx]
         return Cache.get(item)
 
-    def is_thumb(self,idx):
+    def is_thumb(self, idx):
         item = self.items[idx]
         return Cache.exists(item)
 
@@ -714,14 +714,14 @@ class TestLayoutMgr(gtk.Dialog):
         self.icon_view.connect('key-press-event', self.on_key_press)
         self.icon_view.connect('button-press-event', self.on_button_press)
 
-        l=ImageFile.load(self.path_base)
+        l = ImageFile.load(self.path_base)
 
         self.icon_view.set_photos(l)
         sclwin = gtk.ScrolledWindow()
         sclwin.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
         sclwin.add(self.icon_view)
         print self.icon_view.get_parent()
-        ss=sclwin.get_vscrollbar()
+        ss = sclwin.get_vscrollbar()
         ss.set_value(550)
         self.icon_view.grab_focus()
         self.vbox.pack_start(sclwin)
@@ -738,11 +738,11 @@ class TestLayoutMgr(gtk.Dialog):
         self.show_all()
 
 
-    def on_key_press(self,widget,event):
-        print "pression touche",gtk.gdk.keyval_name(event.keyval).lower()
+    def on_key_press(self, widget, event):
+        print "pression touche", gtk.gdk.keyval_name(event.keyval).lower()
 
-    def on_button_press(self,widget,event):
-        print "pression button",event.button,event.type
+    def on_button_press(self, widget, event):
+        print "pression button", event.button, event.type
 
     def zoom_changed(self, widget):
         self.icon_view.thumbnail_width = int(widget.get_value())
@@ -750,7 +750,7 @@ class TestLayoutMgr(gtk.Dialog):
 
 
 class Cache:
-    __buf={}
+    __buf = {}
 
     @staticmethod
     def exists(item):
@@ -759,25 +759,25 @@ class Cache:
     @staticmethod
     def get(item):
         if not Cache.exists(item):
-            Cache.__buf[item.file]=item.getThumb()
+            Cache.__buf[item.file] = item.getThumb()
         return Cache.__buf[item.file]
 
 class ImageFile(object):
 
     def __getAff(self): return os.path.basename(self.__file)
-    display=property(__getAff)
+    display = property(__getAff)
 
     def __getFile(self): return self.__file
-    file=property(__getFile)
+    file = property(__getFile)
 
-    def __init__(self,file):
+    def __init__(self, file):
         """ constructor of a ImageFile """
-        self.__file=file
+        self.__file = file
 
     @staticmethod
     def load(path):
         """ constructor of a list of ImageFile """
-        ll=[]
+        ll = []
         for filename in os.listdir(path):
             if not os.path.splitext(filename)[1].lower() in ('.jpg', '.jpeg'):
                 continue
@@ -785,7 +785,7 @@ class ImageFile(object):
         return ll
 
 if __name__ == '__main__':
-    THUMBNAILS_CACHE_SIZE = 10 # so it tests lazy-loading
+    THUMBNAILS_CACHE_SIZE = 10  # so it tests lazy-loading
     if len(sys.argv) == 2:
         path_base = sys.argv[1]
     else:

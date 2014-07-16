@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __main__ import JPlugin,runWith
+from __main__ import JPlugin, runWith
 import os
 import glob
 from subprocess import Popen
@@ -13,34 +13,34 @@ class Plugin(JPlugin):
 
     LIST_VIDEO_SUFFIX = [ ".mpg", ".mpeg", ".mp4", ".avi", ".wma", ".mov" ] 
 
-    @JPlugin.Entry.PhotosProcess( _("Open associated videos"), order=2001, alter=False )
-    def openAssociatedVideos(self,listOfPhotoNodes):
+    @JPlugin.Entry.PhotosProcess(_("Open associated videos"), order=2001, alter=False)
+    def openAssociatedVideos(self, listOfPhotoNodes):
         """Open associated video of selected files"""
         listVideos = []
         
         for picture in listOfPhotoNodes:
-            #self.showProgress(listOfPhotoNodes.index(picture), len(listOfPhotoNodes), _("Searching videos") )
+            # self.showProgress(listOfPhotoNodes.index(picture), len(listOfPhotoNodes), _("Searching videos") )
             
-            picfile=picture.file
+            picfile = picture.file
             # remove extension
             picshort = picfile[0:picfile.rfind(".")]
-            #picshort = picfile[0:len(picfile)-4]
+            # picshort = picfile[0:len(picfile)-4]
             print picfile + " => " + picshort
 
             # Search files starting like picture, but with all extensions
             listFic = glob.glob(picshort + "*")
             for fic in listFic:
-                suffix=fic[fic.rfind("."):].lower()
+                suffix = fic[fic.rfind("."):].lower()
                 if suffix in self.LIST_VIDEO_SUFFIX:
                     print "Found video: " + fic
                     listVideos.append(fic)
-            #self.showProgress()
+            # self.showProgress()
 
         self.openVideoList(listVideos)
-        return False    # no visual modif
+        return False  # no visual modif
     
-    @JPlugin.Entry.AlbumProcess( _("Open associated videos"), order=2001, alter=False )
-    def openFolderVideos(self,node):
+    @JPlugin.Entry.AlbumProcess(_("Open associated videos"), order=2001, alter=False)
+    def openFolderVideos(self, node):
         """Open videos in selected folder"""
         listVideos = []
 
@@ -49,20 +49,20 @@ class Plugin(JPlugin):
         listFic = os.listdir(node.file)
         listFic.sort()
         for fic in listFic:
-            suffix=fic[fic.rfind("."):].lower()
-            #print "suffix:" + suffix
+            suffix = fic[fic.rfind("."):].lower()
+            # print "suffix:" + suffix
             if suffix in self.LIST_VIDEO_SUFFIX:
                 videoFic = os.path.join(node.file, fic)
                 print "Found video: " + videoFic
                 listVideos.append(videoFic)
         
         self.openVideoList(listVideos)
-        return False    # no visual modif
+        return False  # no visual modif
 
     def openVideoList(self, list):
         """ try opening the list of videos with different players """
         if len(list) == 0:
-            self.MessageBox( _("No video was found"))
+            self.MessageBox(_("No video was found"))
         else:
             self.runListWith(["totem", "vlc", "mplayer"], list)
         

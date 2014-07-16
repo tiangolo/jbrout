@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-##
-##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 
 import pygtk
 pygtk.require('2.0')
@@ -19,7 +19,7 @@ import os
 import gobject
 import re
 import unicodedata
-#~ from __main__ import _
+# ~ from __main__ import _
 from libs.gladeapp import GladeApp
 from subprocess import Popen, PIPE
 
@@ -51,7 +51,7 @@ class WinKeyTag(GladeApp):
         self.lTags.append_column(column)
 
         cell_renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("info", cell_renderer, text=1)   # catg
+        column = gtk.TreeViewColumn("info", cell_renderer, text=1)  # catg
         self.lTags.append_column(column)
 
         self.main_widget.show_all()
@@ -59,7 +59,7 @@ class WinKeyTag(GladeApp):
         self.text.set_position(len(t))
         self.main_widget.set_title("Tag")
 
-    #def feed(self, l, s): # filter with begginning of 't'
+    # def feed(self, l, s): # filter with begginning of 't'
     #    l.clear()
     #    s = unicode(s).lower()
     #    for t, c in self.liste:
@@ -92,12 +92,12 @@ class WinKeyTag(GladeApp):
                 if u.upper().startswith(s):
                     l.append((t, "(%s)" % c))
 
-        #~ for t, c in self.liste:
-            #~ u = unicode(t).upper()
-            #~ u = unicodedata.normalize('NFD', u)
-            #~ u = u.encode('ascii', 'ignore')
-            #~ if u.upper().startswith(s):
-                #~ l.append( (t, "(%s)"%c) )
+        # ~ for t, c in self.liste:
+            # ~ u = unicode(t).upper()
+            # ~ u = unicodedata.normalize('NFD', u)
+            # ~ u = u.encode('ascii', 'ignore')
+            # ~ if u.upper().startswith(s):
+                # ~ l.append( (t, "(%s)"%c) )
 
     def on_text_changed(self, w):
         t = w.get_text().strip()
@@ -139,13 +139,13 @@ class AlbumCommenter(gtk.Entry):
 
     def set(self, nodeFolder):
         # if nodefolder contains some photos it can be commented
-        #~ if nodeFolder.getPhotos():
-            #~ self.show()
-            #~ self.set_text(nodeFolder.comment)
-            #~ self.__nf = nodeFolder
-        #~ else:
-            #~ self.hide()
-            #~ self.__nf = None
+        # ~ if nodeFolder.getPhotos():
+            # ~ self.show()
+            # ~ self.set_text(nodeFolder.comment)
+            # ~ self.__nf = nodeFolder
+        # ~ else:
+            # ~ self.hide()
+            # ~ self.__nf = None
         self.show()
         self.set_text(nodeFolder.comment)
         self.__nf = nodeFolder
@@ -287,10 +287,10 @@ def InputQuestion(parent, label, title=_("Jbrout Question"),
     label.set_use_underline(True)
     label.set_line_wrap(True)
     table.attach(label, 0, 2, 0, 1)
-    #~ local_entry1 = gtk.Entry()
-    #~ local_entry1.set_text(data)
-    #~ table.attach(local_entry1, 0, 2, 1, 2)
-    #~ label.set_mnemonic_widget(local_entry1)
+    # ~ local_entry1 = gtk.Entry()
+    # ~ local_entry1.set_text(data)
+    # ~ table.attach(local_entry1, 0, 2, 1, 2)
+    # ~ label.set_mnemonic_widget(local_entry1)
 
     dialog.show_all()
 
@@ -326,10 +326,10 @@ class Img(object):
         elif thumb:
             extension = thumb.split('.')[-1].lower()
             try:
-                #~ fid = open(thumb, 'rb')
-                #~ jo = exif.process_file(fid)
-                #~ fid.close()
-                #~ data = jo["JPEGThumbnail"]
+                # ~ fid = open(thumb, 'rb')
+                # ~ jo = exif.process_file(fid)
+                # ~ fid.close()
+                # ~ data = jo["JPEGThumbnail"]
 
                 img = pyexiv.Exiv2Metadata(pyexiv2.ImageMetadata(thumb))
                 img.readMetadata()
@@ -372,11 +372,11 @@ class Img(object):
         return self.__im
     pixbuf = property(__getPixbuf)
 
-    #~ def getStreamJpeg(self, quality=70):
-        #~ f = StringIO()
-        #~ self.__im.save(f, "jpeg", quality=quality)
-        #~ f.seek(0)
-        #~ return f
+    # ~ def getStreamJpeg(self, quality=70):
+        # ~ f = StringIO()
+        # ~ self.__im.save(f, "jpeg", quality=quality)
+        # ~ f.seek(0)
+        # ~ return f
 
     def resize(self, size):
         pb = self.__im
@@ -393,8 +393,8 @@ class Img(object):
         return Img(im=pb)
 
     def resizeC(self, size, color=rgb(0, 0, 0)):
-        #~ pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, size, size)
-        #~ pb.fill(color)
+        # ~ pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, size, size)
+        # ~ pb.fill(color)
         if color is not None:
             pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, size, size)
             pb.fill(color)
@@ -432,7 +432,7 @@ class PictureSelector(gtk.VBox):
 
         # The integer cast is for the result is needed because the dates are
         # usually of type long, and a comparison needs an int
-        #self.photo_list.sort(lambda f, s: int(int(s.date) - int(f.date)))
+        # self.photo_list.sort(lambda f, s: int(int(s.date) - int(f.date)))
 
         self.photo_list.sort(lambda f, s: cmp(s.date, f.date))
 
@@ -501,14 +501,14 @@ class PictureSelector(gtk.VBox):
 # Create the "value_changed" signal and connect it to the PictureSelector class
 gobject.signal_new("value_changed", PictureSelector,
                    gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-                   (gobject.TYPE_PYOBJECT, ))
+                   (gobject.TYPE_PYOBJECT,))
 
 
 class Buffer(object):
     size = None
 
     images = {}
-    #~ pixbufRefresh = gtk.gdk.pixbuf_new_from_file( "data/gfx/refresh.png" )
+    # ~ pixbufRefresh = gtk.gdk.pixbuf_new_from_file( "data/gfx/refresh.png" )
     pixbufRefresh = Img("data/gfx/refresh.png").pixbuf
 
     pbFolder = Img("data/gfx/folder.png").pixbuf
@@ -523,28 +523,28 @@ class Buffer(object):
 
     pixRaw = Img("data/gfx/raw.png").pixbuf
 
-    #~ @staticmethod
-    #~ def __thread(file, callback, callbackRefresh, item):
-        #~ do_gui_operation(Buffer.__fetcher, file, callback,
+    # ~ @staticmethod
+    # ~ def __thread(file, callback, callbackRefresh, item):
+        # ~ do_gui_operation(Buffer.__fetcher, file, callback,
         #                   callbackRefresh, item)
 
-    #~ @staticmethod
-    #~ def __fetcher(file, callback, callbackRefresh, item):
-        #~ Buffer.images[file] = callback()
-        #~ if callbackRefresh and item>=0:
-            #~ callbackRefresh(item)
+    # ~ @staticmethod
+    # ~ def __fetcher(file, callback, callbackRefresh, item):
+        # ~ Buffer.images[file] = callback()
+        # ~ if callbackRefresh and item>=0:
+            # ~ callbackRefresh(item)
 
-    #~ @staticmethod
-    #~ def get(file, callback, callbackRefresh=None, item=None):
-        #~ """
-        #~ send a signal "refreshItem"(item) to object
-        #~ """
-        #~ if file in Buffer.images:
-            #~ return Buffer.images[file]
-        #~ else:
-            #~ thread.start_new_thread(Buffer.__thread,
-            #~ (file, callback, callbackRefresh, item) )
-            #~ return Buffer.pixbufRefresh
+    # ~ @staticmethod
+    # ~ def get(file, callback, callbackRefresh=None, item=None):
+        # ~ """
+        # ~ send a signal "refreshItem"(item) to object
+        # ~ """
+        # ~ if file in Buffer.images:
+            # ~ return Buffer.images[file]
+        # ~ else:
+            # ~ thread.start_new_thread(Buffer.__thread,
+            # ~ (file, callback, callbackRefresh, item) )
+            # ~ return Buffer.pixbufRefresh
 
     @staticmethod
     def remove(file):
@@ -574,20 +574,20 @@ if __name__ == "__main__":
     l = [('ana', 'potes'), ('Anna', 'voisin'), ('beer', 'drinks')]
     w = WinKeyTag("apply this tag", "", l)
     #
-    #b = gtk.Button("akk")
-    #b.show()
-    #w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
-    #b = gtk.Button("gut")
-    #b.show()
-    #w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
-    #b = gtk.Button("trud")
-    #b.show()
-    #w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
-    #b = gtk.Button("trud")
-    #b.show()
-    #w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
-    #b = gtk.Button("trud")
-    #b.show()
-    #w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
+    # b = gtk.Button("akk")
+    # b.show()
+    # w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
+    # b = gtk.Button("gut")
+    # b.show()
+    # w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
+    # b = gtk.Button("trud")
+    # b.show()
+    # w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
+    # b = gtk.Button("trud")
+    # b.show()
+    # w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
+    # b = gtk.Button("trud")
+    # b.show()
+    # w.hbTags.pack_start(b, expand = False, fill = False, padding = 0)
 
     w.loop()

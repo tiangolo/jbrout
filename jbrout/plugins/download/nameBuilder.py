@@ -1,16 +1,16 @@
 # -*- coding: UTF-8 -*-
-##
-##    Copyright (C) 2007 Rob Wallace rob[at]wallace(dot)gen(dot)nz
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2007 Rob Wallace rob[at]wallace(dot)gen(dot)nz
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 import os
 #====
 import pygtk
@@ -27,7 +27,7 @@ import re
 from libs import extListview
 from libs.gladeapp import GladeApp
 
-from jbrout.common import ed2d,caseFreeCmp
+from jbrout.common import ed2d, caseFreeCmp
 
 class WinNameBuilderTokens(GladeApp):
     """Class used to display a window containing a list of tokens, examples
@@ -35,7 +35,7 @@ class WinNameBuilderTokens(GladeApp):
     glade = os.path.join(os.path.dirname(__file__), 'nameBuilder.glade')
     window = "winDownloadTokens"
 
-    def init(self,exSource, exExif, exDate, jobCode):
+    def init(self, exSource, exExif, exDate, jobCode):
         """
         Initalises a window listing the tokens and buils examples based on the
         arguments
@@ -54,24 +54,24 @@ class WinNameBuilderTokens(GladeApp):
             COL_DESCRIPTION
         ) = range(3)
 
-        columns = (('Token',      [(txtRdr, gobject.TYPE_STRING)],
-                    (COL_TOKEN,),      True),
-                   ('Example',        [(txtRdr, gobject.TYPE_STRING)],
-                    (COL_EXAMPLE,),        True),\
-                   ('Description',   [(txtRdr, gobject.TYPE_STRING)],
-                    (COL_DESCRIPTION,),        True))
+        columns = (('Token', [(txtRdr, gobject.TYPE_STRING)],
+                    (COL_TOKEN,), True),
+                   ('Example', [(txtRdr, gobject.TYPE_STRING)],
+                    (COL_EXAMPLE,), True), \
+                   ('Description', [(txtRdr, gobject.TYPE_STRING)],
+                    (COL_DESCRIPTION,), True))
 
-        self.tokenList = extListview.ExtListView(columns,False)
+        self.tokenList = extListview.ExtListView(columns, False)
 
         self.swTokenList.add(self.tokenList)
         self.swTokenList.show_all()
 
         self.nb = NameBuilder()
-        self.nb.name(exSource,"","",exExif, exDate, jobCode)
+        self.nb.name(exSource, "", "", exExif, exDate, jobCode)
         example = _(
 """Image Information
 _________________""")
-        self.tokenList.insertRows([['',example,'']])
+        self.tokenList.insertRows([['', example, '']])
         self.keys = self.nb.tokens.keys()
         self.keys.sort(caseFreeCmp)
         for key in self.keys:
@@ -85,7 +85,7 @@ ________________""")
 """use only one of these. 
 Add a number after the letter in the braces to pad with
 zeros out to x digits""")
-        self.tokenList.insertRows([['',header,description]])
+        self.tokenList.insertRows([['', header, description]])
         self.keys = self.nb.serialTokens.keys()
         self.keys.sort(caseFreeCmp)
         for key in self.keys:
@@ -106,7 +106,7 @@ class NameBuilder():
     date and image exif data"""
     def __init__(self):
         """Handles Initalisation"""
-        self.tokens={
+        self.tokens = {
             '{a}': (self.a, _("Abbreviated weekday name")),
             '{A}': (self.A, _("full weekday name")),
             '{b}': (self.b, _("Abbreviated month name")),
@@ -175,7 +175,7 @@ class NameBuilder():
             '{6}': (self.no6, _("Month less 3 hours")),
             '{7}': (self.no7, _("Day less 3 hours"))}
 
-        self.serialTokens={
+        self.serialTokens = {
             '{l}': ('2', _("'Uniqueness' number or empty if filename is unique")),
             '{L}': ('1', _("'Uniqueness' number evaluates to 1 or higher")),
             '{n}': ('1', _("Download sequence number with no leading zeros")),
@@ -198,14 +198,14 @@ class NameBuilder():
         self.date = date
         self.jobCode = jobCode
         destName = pattern
-        patTokens = re.findall("\{\w\}",pattern)
+        patTokens = re.findall("\{\w\}", pattern)
         for token in patTokens:
             if token in self.tokens:
-                destName = destName.replace(token,self.tokens[token][0]())
+                destName = destName.replace(token, self.tokens[token][0]())
         destName = destName + os.path.splitext(self.sourceName)[1].lower()
         return(os.path.join(destFolder, destName))
     
-    def seralize(self,data,srcCol,dateCol,destCol,start=1):
+    def seralize(self, data, srcCol, dateCol, destCol, start=1):
         """
         Serialises a table of destination image names in place by replacing
         tokens in the existing destination names and returns the table sorted
@@ -222,15 +222,15 @@ class NameBuilder():
         if len(data) == 0:
             # no rows = no need to do anything
             return True
-        serTokens = re.findall("\{[lLnN]\d*\}",data[0][destCol])
+        serTokens = re.findall("\{[lLnN]\d*\}", data[0][destCol])
         if len(serTokens) == 0:
             # No need to seralise - no tokens
             return True
-        if len(serTokens) !=1:
+        if len(serTokens) != 1:
             return False
         token = serTokens[0]
         # determine amount of zero padding required
-        numRef = re.search("\d+",token)
+        numRef = re.search("\d+", token)
         if numRef == None:
             padTo = 0
         else:
@@ -252,9 +252,9 @@ class NameBuilder():
         count = start
         # do the first line
         if date:
-            data.sort(lambda x,y:cmp(x[dateCol],y[dateCol]))
+            data.sort(lambda x, y:cmp(x[dateCol], y[dateCol]))
         elif not continuous:
-            data.sort(lambda x,y:cmp(x[destCol],y[destCol]))
+            data.sort(lambda x, y:cmp(x[destCol], y[destCol]))
         if len(data) > 1 and notOnUnique:
             if data[0][destCol] == data[1][destCol]:
                 count += 1
@@ -266,21 +266,21 @@ class NameBuilder():
         data[0][destCol] = data[0][destCol].replace(token, replacement)
         if len(data) == 1:
             return True
-        for idx in range(1,len(data)):
+        for idx in range(1, len(data)):
             if continuous:
                 count += 1
             elif date:
-                if data[idx][dateCol].year == data[idx-1][dateCol].year\
-                and data[idx][dateCol].month == data[idx-1][dateCol].month\
-                and data[idx][dateCol].day == data[idx-1][dateCol].day:
+                if data[idx][dateCol].year == data[idx - 1][dateCol].year\
+                and data[idx][dateCol].month == data[idx - 1][dateCol].month\
+                and data[idx][dateCol].day == data[idx - 1][dateCol].day:
                     count += 1
                 else:
                     count = start
             elif data[idx][destCol] == previous:
                 count += 1
-            elif notOnUnique and idx+1 < len(data):
-                if data[idx][destCol] == data[idx+1][destCol]:
-                    count = start +1
+            elif notOnUnique and idx + 1 < len(data):
+                if data[idx][destCol] == data[idx + 1][destCol]:
+                    count = start + 1
                 else:
                     count = start
             else:
@@ -293,10 +293,10 @@ class NameBuilder():
             data[idx][destCol] = data[idx][destCol].replace(token, replacement)
         # Return data to correct order
         if not continuous:
-            data.sort(lambda x,y:cmp(x[srcCol],y[srcCol]))
+            data.sort(lambda x, y:cmp(x[srcCol], y[srcCol]))
         return True
 
-    def singleSeralize(self,pattern,start=1):
+    def singleSeralize(self, pattern, start=1):
         """
         Wrapper around seralize to enable seralizing of a single file name,
         returns seralized file name
@@ -305,8 +305,8 @@ class NameBuilder():
         pattern - file name to seralize
         start - sequence start number for {Nx} (1 if undefrined)
         """
-        toSeralize = [['','',pattern]]
-        if not self.seralize(toSeralize,0,1,2,start):
+        toSeralize = [['', '', pattern]]
+        if not self.seralize(toSeralize, 0, 1, 2, start):
             MessageBox(self.main_widget,
             _("More than one serialisation tag used please remove extras from File Naming > Pattern "))
         return toSeralize[0][2]
@@ -411,7 +411,7 @@ class NameBuilder():
 
     def q(self):
         try:
-            return re.search('\d+',self.Q()).group()
+            return re.search('\d+', self.Q()).group()
         except:
             return ""
 
@@ -446,7 +446,7 @@ class NameBuilder():
         tmp = self.q()[:1]
         if tmp.isdigit():
             if int(tmp) > 0:
-                return "%s%s" % (int(tmp)-1,self.r()[-4:])
+                return "%s%s" % (int(tmp) - 1, self.r()[-4:])
             else:
                 return '0' + self.r()[-4:]
         else:
@@ -463,13 +463,13 @@ class NameBuilder():
 
     def T(self):
         try:
-            return re.search('[a-z,A-Z]*\d+.*',self.T2()).group()
+            return re.search('[a-z,A-Z]*\d+.*', self.T2()).group()
         except:
             return ""
 
     def T1(self):
         try:
-            return re.search('[a-z,A-Z]*\d+.*',re.sub('-',' ',self.T2())).group()
+            return re.search('[a-z,A-Z]*\d+.*', re.sub('-', ' ', self.T2())).group()
         except:
             return ""
 
@@ -478,34 +478,34 @@ class NameBuilder():
 
     def T3(self):
         try:
-            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*',self.T2()).group()
+            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*', self.T2()).group()
         except:
             return ""
 
     def T4(self):
         try:
-            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*',re.sub('-',' ',self.T2())).group()
+            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*', re.sub('-', ' ', self.T2())).group()
         except:
             return ""
 
     def T5(self):
         try:
-            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*(?!.*\d+)',self.T2()).group()
+            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*(?!.*\d+)', self.T2()).group()
         except:
             return ""
 
     def T6(self):
         try:
-            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*(?!.*\d+)',re.sub('-',' ',self.T2())).group()
+            return re.search('[a-z,A-Z]*\d+[a-z,A-Z]*(?!.*\d+)', re.sub('-', ' ', self.T2())).group()
 
         except:
             return ""
 
     def T8(self):
-        return self.T1() # TODO: replace with camera mapping
+        return self.T1()  # TODO: replace with camera mapping
 
     def T9(self):
-        return self.T1() # TODO: replace with camera mapping
+        return self.T1()  # TODO: replace with camera mapping
 
     def v(self):
         return self.T()
@@ -537,9 +537,9 @@ class NameBuilder():
         else:
             to = -time.timezone
         if to >= 0:
-            return "+%i:%02i" % (abs(to)/3600,(abs(to)%3600)/60)
+            return "+%i:%02i" % (abs(to) / 3600, (abs(to) % 3600) / 60)
         else:
-            return "-%i:%02i" % (abs(to)/3600,(abs(to)%3600)/60)
+            return "-%i:%02i" % (abs(to) / 3600, (abs(to) % 3600) / 60)
 
     def dtl(self):
         return self.date.strftime("%A, %d %B %Y %I:%M:%S%p")

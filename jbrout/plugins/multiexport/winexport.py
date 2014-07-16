@@ -1,23 +1,23 @@
 # -*- coding: UTF-8 -*-
-##
-##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 import os
 import gtk
 import time
 from jbrout.commongtk import PictureSelector
-from crypt import crypt,uncrypt
+from crypt import crypt, uncrypt
 
-from __main__ import GladeApp # no "libs.gladeapp", because there is a libs dir here ;-(
+from __main__ import GladeApp  # no "libs.gladeapp", because there is a libs dir here ;-(
 
 def chooseFolder(t):
     dialog = gtk.FileChooserDialog (_("Select the destination"),
@@ -40,33 +40,33 @@ def chooseFolder(t):
 
 class Windowexport(GladeApp):
 
-    glade=os.path.join(os.path.dirname(__file__), 'winexport.glade')
+    glade = os.path.join(os.path.dirname(__file__), 'winexport.glade')
 
-    def init(self,conf,titre,photoList,templateList):
+    def init(self, conf, titre, photoList, templateList):
         self.main_widget.set_modal(True)
-        #~ self.main_widget.set_keep_above(True)
+        # ~ self.main_widget.set_keep_above(True)
         self.main_widget.set_position(gtk.WIN_POS_CENTER)
         self.lblTitre.set_text(titre)
 
         cell = gtk.CellRendererText()
         self.cbTemplate.pack_start(cell, True)
-        self.cbTemplate.add_attribute(cell, 'text',0)
+        self.cbTemplate.add_attribute(cell, 'text', 0)
 
-        m=gtk.ListStore( str)
+        m = gtk.ListStore(str)
         m.clear()
         for i in templateList:
-            m.append( [i,] )
+            m.append([i, ])
         self.cbTemplate.set_model(m)
 
         self.cbTypeA.pack_start(cell, True)
-        self.cbTypeA.add_attribute(cell, 'text',0)
+        self.cbTypeA.add_attribute(cell, 'text', 0)
 
-        am=gtk.ListStore( str)
+        am = gtk.ListStore(str)
         am.clear()
-        am.append( ['Uncompressed tar (.tar)',] )
-        am.append( ['Tar bzip2 (.tbz)',] )
-        am.append( ['Tar gzip (.tgz)',] )
-        am.append( ['Zip (.zip)',] )
+        am.append(['Uncompressed tar (.tar)', ])
+        am.append(['Tar bzip2 (.tbz)', ])
+        am.append(['Tar gzip (.tgz)', ])
+        am.append(['Zip (.zip)', ])
 
         self.cbTypeA.set_model(am)
 
@@ -82,18 +82,18 @@ class Windowexport(GladeApp):
         self.psThumbSelectFR.show()
 
         # Configure the smpt port spin button
-        self.adjPortSM = gtk.Adjustment(1, 1, 64000, 1,100,100)
+        self.adjPortSM = gtk.Adjustment(1, 1, 64000, 1, 100, 100)
         self.spPortSM.set_adjustment(self.adjPortSM)
         self.spPortSM.set_digits(0)
 
         self.initFromConf(conf)
 
-        self.setPrivacyFR(apply_to_all = True)
+        self.setPrivacyFR(apply_to_all=True)
 
-        self.on_nbExport_switch_page(None)  #simulate tab changed
+        self.on_nbExport_switch_page(None)  # simulate tab changed
 
 
-    def initFromConf(self,conf):
+    def initFromConf(self, conf):
         self.__conf = conf
 
         if conf["type"] == "FS":
@@ -114,23 +114,23 @@ class Windowexport(GladeApp):
             print "bad export type in conf : %s" % str(conf["type"])
             self.nbExport.set_current_page(0)
 
-        self.tbFolderA.set_text( conf["CA.folder"] )
+        self.tbFolderA.set_text(conf["CA.folder"])
         if conf["CA.type"] == "tar":
             self.cbTypeA.set_active(0)
         elif conf["CA.type"] == "tbz":
             self.cbTypeA.set_active(1)
         elif conf["CA.type"] == "tgz":
             self.cbTypeA.set_active(2)
-        else: # Use zip as the default/failsafe
+        else:  # Use zip as the default/failsafe
             self.cbTypeA.set_active(3)
 
-        self.tbFolderF.set_text( conf["FS.folder"] )
+        self.tbFolderF.set_text(conf["FS.folder"])
 
-        self.tbFolderH.set_text( conf["HG.folder"] )
-        self.cbTemplate.set_active( conf["HG.template"] )
+        self.tbFolderH.set_text(conf["HG.folder"])
+        self.cbTemplate.set_active(conf["HG.template"])
 
-        self.tbLoginPW.set_text( conf["PW.login"] )
-        self.tbPasswordPW.set_text( uncrypt(conf["PW.password"]) )
+        self.tbLoginPW.set_text(conf["PW.login"])
+        self.tbPasswordPW.set_text(uncrypt(conf["PW.password"]))
         if (bool(conf["PW.privacy"])): self.rbPrivatePW.set_active(1)
         else: self.rbPublicPW.set_active(1)
 
@@ -156,18 +156,18 @@ class Windowexport(GladeApp):
         self.tbUserSM.set_text(conf["SM.username"])
         self.tbPasswordSM.set_text(uncrypt(conf["SM.password"]))
         self.cbSecurity.set_active(int(conf["SM.security"]))
-        self.tbTo.set_text( conf["SM.to"] )
-        self.tbFrom.set_text( conf["SM.from"] )
-        self.tbSubject.set_text( conf["SM.subject"] )
-        self.tbMessage.set_text( conf["SM.message"] )
+        self.tbTo.set_text(conf["SM.to"])
+        self.tbFrom.set_text(conf["SM.from"])
+        self.tbSubject.set_text(conf["SM.subject"])
+        self.tbMessage.set_text(conf["SM.message"])
 
-        self.tbFtp.set_text( conf["FT.ftp"] )
-        self.tbLoginFT.set_text( conf["FT.login"] )
-        self.tbPasswordFT.set_text( uncrypt(conf["FT.password"]) )
-        self.tbPath.set_text( conf["FT.path"] )
+        self.tbFtp.set_text(conf["FT.ftp"])
+        self.tbLoginFT.set_text(conf["FT.login"])
+        self.tbPasswordFT.set_text(uncrypt(conf["FT.password"]))
+        self.tbPath.set_text(conf["FT.path"])
 
     def getExportType(self):
-        return ["FS","HG","PW","FR","SM","FT","CA"][self.nbExport.get_current_page()]
+        return ["FS", "HG", "PW", "FR", "SM", "FT", "CA"][self.nbExport.get_current_page()]
 
     def getResizeType(self):
         if self.rbNoResize.get_active():
@@ -178,113 +178,113 @@ class Windowexport(GladeApp):
             return 2
 
     def getServiceType(self):
-        return ["picasaweb","flickr"][self.cbWebService.get_active()]
+        return ["picasaweb", "flickr"][self.cbWebService.get_active()]
 
-    def on_winExport_delete_event(self,*args):
+    def on_winExport_delete_event(self, *args):
         self.quit(False)
 
-    def on_btnCancel_clicked(self,*args):
+    def on_btnCancel_clicked(self, *args):
         self.quit(False)
 
-    def on_btnOk_clicked(self,*args):
-        type = self.getExportType() # self.__conf["type"]
+    def on_btnOk_clicked(self, *args):
+        type = self.getExportType()  # self.__conf["type"]
 
         # Put back the conf which is desired
         self.__conf["type"] = type
 
         if type == "CA":
-            self.__conf["CA.folder"]=self.tbFolderA.get_text()
-            types = ['tar','tbz','tgz','zip']
-            self.__conf["CA.type"]=types[self.cbTypeA.get_active()]
+            self.__conf["CA.folder"] = self.tbFolderA.get_text()
+            types = ['tar', 'tbz', 'tgz', 'zip']
+            self.__conf["CA.type"] = types[self.cbTypeA.get_active()]
         elif type == "FS":
-            self.__conf["FS.folder"]=self.tbFolderF.get_text()
+            self.__conf["FS.folder"] = self.tbFolderF.get_text()
         elif type == "HG":
-            self.__conf["HG.folder"]=self.tbFolderH.get_text()
-            self.__conf["HG.template"]=self.cbTemplate.get_active()
+            self.__conf["HG.folder"] = self.tbFolderH.get_text()
+            self.__conf["HG.template"] = self.cbTemplate.get_active()
         elif type == "PW":
-            self.__conf["PW.login"]=self.tbLoginPW.get_text(  )
-            self.__conf["PW.password"]=crypt(self.tbPasswordPW.get_text(  ))
-            self.__conf["PW.privacy"]=int(self.rbPrivatePW.get_active())
+            self.__conf["PW.login"] = self.tbLoginPW.get_text()
+            self.__conf["PW.password"] = crypt(self.tbPasswordPW.get_text())
+            self.__conf["PW.privacy"] = int(self.rbPrivatePW.get_active())
         elif type == "FR":
-            self.__conf["FR.public"]=int(self.rbPublicFR.get_active())
-            self.__conf["FR.friends"]=int(self.cbFriendsFR.get_active())
-            self.__conf["FR.family"]=int(self.cbFamilyFR.get_active())
+            self.__conf["FR.public"] = int(self.rbPublicFR.get_active())
+            self.__conf["FR.friends"] = int(self.cbFriendsFR.get_active())
+            self.__conf["FR.family"] = int(self.cbFamilyFR.get_active())
         elif type == "SM":
-            self.__conf["SM.smtp"]=self.tbSmtp.get_text(  )
-            self.__conf["SM.port"]=self.spPortSM.get_value_as_int()
-            self.__conf["SM.auth"]=int(self.cbAuthSM.get_active())
+            self.__conf["SM.smtp"] = self.tbSmtp.get_text()
+            self.__conf["SM.port"] = self.spPortSM.get_value_as_int()
+            self.__conf["SM.auth"] = int(self.cbAuthSM.get_active())
             if self.cbAuthSM.get_active():
-                self.__conf["SM.username"]=self.tbUserSM.get_text()
-                self.__conf["SM.password"]=crypt(self.tbPasswordSM.get_text())
-            self.__conf["SM.security"]=self.cbSecurity.get_active()
-            self.__conf["SM.to"]=self.tbTo.get_text(  )
-            self.__conf["SM.from"]=self.tbFrom.get_text(  )
-            self.__conf["SM.subject"]=self.tbSubject.get_text(  )
-            self.__conf["SM.message"]=self.tbMessage.get_text( )
+                self.__conf["SM.username"] = self.tbUserSM.get_text()
+                self.__conf["SM.password"] = crypt(self.tbPasswordSM.get_text())
+            self.__conf["SM.security"] = self.cbSecurity.get_active()
+            self.__conf["SM.to"] = self.tbTo.get_text()
+            self.__conf["SM.from"] = self.tbFrom.get_text()
+            self.__conf["SM.subject"] = self.tbSubject.get_text()
+            self.__conf["SM.message"] = self.tbMessage.get_text()
         elif type == "FT":
-            self.__conf["FT.ftp"]=self.tbFtp.get_text(  )
-            self.__conf["FT.login"]=self.tbLoginFT.get_text(  )
-            self.__conf["FT.password"]=crypt(self.tbPasswordFT.get_text(  ))
-            self.__conf["FT.path"]=self.tbPath.get_text( )
+            self.__conf["FT.ftp"] = self.tbFtp.get_text()
+            self.__conf["FT.login"] = self.tbLoginFT.get_text()
+            self.__conf["FT.password"] = crypt(self.tbPasswordFT.get_text())
+            self.__conf["FT.path"] = self.tbPath.get_text()
 
         # common
-        self.__conf[type+".resize"]= self.getResizeType()
-        self.__conf[type+".percent"]=self.hsResize.get_value()
-        self.__conf[type+".quality"]=self.hsQuality.get_value()
-        self.__conf[type+".maxside"]=self.eMaxSide.get_text()
-        self.__conf[type+".order"]=self.cbOrder.get_active()
-        self.__conf[type+".metadata"]=self.cbMetadata.get_active()
+        self.__conf[type + ".resize"] = self.getResizeType()
+        self.__conf[type + ".percent"] = self.hsResize.get_value()
+        self.__conf[type + ".quality"] = self.hsQuality.get_value()
+        self.__conf[type + ".maxside"] = self.eMaxSide.get_text()
+        self.__conf[type + ".order"] = self.cbOrder.get_active()
+        self.__conf[type + ".metadata"] = self.cbMetadata.get_active()
 
         self.quit(type)
 
-    def on_resize_toggled(self,*args):
-        t=self.getResizeType()
-        if t==0:    # no
+    def on_resize_toggled(self, *args):
+        t = self.getResizeType()
+        if t == 0:  # no
             self.hsResize.set_sensitive(False)
-            #self.tbMaxSide.set_sensitive(False)
+            # self.tbMaxSide.set_sensitive(False)
             self.cbMaxSide.set_sensitive(False)
             self.hsQuality.set_sensitive(False)
-        elif t==1:  # resize
+        elif t == 1:  # resize
             self.hsResize.set_sensitive(True)
-            #self.tbMaxSide.set_sensitive(False)
+            # self.tbMaxSide.set_sensitive(False)
             self.cbMaxSide.set_sensitive(False)
             self.hsQuality.set_sensitive(True)
-        else:       # max side
+        else:  # max side
             self.hsResize.set_sensitive(False)
-            #self.tbMaxSide.set_sensitive(True)
+            # self.tbMaxSide.set_sensitive(True)
             self.cbMaxSide.set_sensitive(True)
             self.hsQuality.set_sensitive(True)
 
-    def on_nbExport_switch_page(self,*args):
+    def on_nbExport_switch_page(self, *args):
         tp = self.getExportType()
-        if tp in ["CA","FS","FT"]:
+        if tp in ["CA", "FS", "FT"]:
             self.frameOrder.hide()
         else:
             self.frameOrder.show()
-        self.rbNoResize.set_active(self.__conf[tp+".resize"]==0)
-        self.rbResize.set_active(self.__conf[tp+".resize"]==1)
-        self.rbMaxSide.set_active(self.__conf[tp+".resize"]==2)
+        self.rbNoResize.set_active(self.__conf[tp + ".resize"] == 0)
+        self.rbResize.set_active(self.__conf[tp + ".resize"] == 1)
+        self.rbMaxSide.set_active(self.__conf[tp + ".resize"] == 2)
 
-        self.hsResize.set_value(float(self.__conf[tp+".percent"]))
-        self.hsQuality.set_value(float(self.__conf[tp+".quality"]))
-        self.eMaxSide.set_text(str(self.__conf[tp+".maxside"]))    #combobox
-        self.cbOrder.set_active(int(self.__conf[tp+".order"]))
-        self.cbMetadata.set_active(int(self.__conf[tp+".metadata"]))
+        self.hsResize.set_value(float(self.__conf[tp + ".percent"]))
+        self.hsQuality.set_value(float(self.__conf[tp + ".quality"]))
+        self.eMaxSide.set_text(str(self.__conf[tp + ".maxside"]))  # combobox
+        self.cbOrder.set_active(int(self.__conf[tp + ".order"]))
+        self.cbMetadata.set_active(int(self.__conf[tp + ".metadata"]))
 
-    def on_btnFolderA_clicked(self,*args):
-        ret=chooseFolder(self.tbFolderA.get_text())
+    def on_btnFolderA_clicked(self, *args):
+        ret = chooseFolder(self.tbFolderA.get_text())
         if ret:
-            self.tbFolderA.set_text( ret )
+            self.tbFolderA.set_text(ret)
 
-    def on_btnFolderH_clicked(self,*args):
-        ret=chooseFolder(self.tbFolderH.get_text())
+    def on_btnFolderH_clicked(self, *args):
+        ret = chooseFolder(self.tbFolderH.get_text())
         if ret:
-            self.tbFolderH.set_text( ret )
+            self.tbFolderH.set_text(ret)
 
-    def on_btnFolderF_clicked(self,*args):
-        ret=chooseFolder(self.tbFolderF.get_text())
+    def on_btnFolderF_clicked(self, *args):
+        ret = chooseFolder(self.tbFolderF.get_text())
         if ret:
-            self.tbFolderF.set_text( ret )
+            self.tbFolderF.set_text(ret)
 
     # Stuff to make the privacy selections work
 
@@ -320,7 +320,7 @@ class Windowexport(GladeApp):
         # The checkbuttons for privacy can't call setPrivacy directly,because they give extra arguments which setPrivacy can't use
         self.setPrivacyFR()
 
-    def setPrivacyFR(self, apply_to_all = None):
+    def setPrivacyFR(self, apply_to_all=None):
         # Set the Flickr privacy as indicated in the window to the photos indicated in te window
         # If apply_to_all is given, it overrides the checkbutton (used for initialization)
 

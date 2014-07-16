@@ -1,16 +1,16 @@
 # -*- coding: UTF-8 -*-
-##
-##    Copyright (C) 2007 Rob Wallace rob[at]wallace(dot)gen(dot)nz
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2007 Rob Wallace rob[at]wallace(dot)gen(dot)nz
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 import os
 #====
 import pygtk
@@ -33,15 +33,15 @@ from jbrout import pyexiv
 import pyexiv2
 from libs.gladeapp import GladeApp
 
-from jbrout.common import format_file_size_for_display,ed2d,dnd_args_to_dir_list
-from jbrout.tools import PhotoCmd,_Command, autoTrans
-from jbrout.commongtk import InputBox,MessageBox,InputQuestion,Img
+from jbrout.common import format_file_size_for_display, ed2d, dnd_args_to_dir_list
+from jbrout.tools import PhotoCmd, _Command, autoTrans
+from jbrout.commongtk import InputBox, MessageBox, InputQuestion, Img
 
-from nameBuilder import NameBuilder,WinNameBuilderTokens
+from nameBuilder import NameBuilder, WinNameBuilderTokens
 
-from __main__ import Buffer,TreeTags
+from __main__ import Buffer, TreeTags
 
-SUP_EXT = ('jpg', 'raw', 'cr2','nef')
+SUP_EXT = ('jpg', 'raw', 'cr2', 'nef')
 
 def sup_ext():
     ret = []
@@ -53,29 +53,29 @@ def sup_ext():
 class dc():
     """Class to contain column download constants"""
     (
-        C_SRC,    # Source file location
-        C_SIZE,   # File size formatted for printing
-        C_SZ_RAW, # Raw size for sorting & comparrison
-        C_DATE,   # EXIF date or file date if no EXIF
+        C_SRC,  # Source file location
+        C_SIZE,  # File size formatted for printing
+        C_SZ_RAW,  # Raw size for sorting & comparrison
+        C_DATE,  # EXIF date or file date if no EXIF
         C_DATET,  # Date text
-        C_EXIF,   # EXIF information
-        C_DEST,   # Destination file name
-        C_STAT,   # Status formatted for printing
-        C_SS,     # Short status used programatically
-        C_ROT,    # Rotation formatted for printing
-        C_RS      # Short rotation used programatically
+        C_EXIF,  # EXIF information
+        C_DEST,  # Destination file name
+        C_STAT,  # Status formatted for printing
+        C_SS,  # Short status used programatically
+        C_ROT,  # Rotation formatted for printing
+        C_RS  # Short rotation used programatically
     ) = range(11)
 
 class cc():
     """Class to contain camera mapping column constants"""
     (
         C_MODEL,  # Camera Model from EXIF
-        C_SERIAL, # Camera serial Number from EXIF if used
+        C_SERIAL,  # Camera serial Number from EXIF if used
         C_OWNER,  # Camera owner string from EXIF if used
-        C_USER,   # Camera user comment from EXIF if used
-        C_T8,     # String to use for {T8} tag
-        C_T9,     # String to use for {T9} tag
-        C_TAG     # Tag to automatically tag images
+        C_USER,  # Camera user comment from EXIF if used
+        C_T8,  # String to use for {T8} tag
+        C_T9,  # String to use for {T9} tag
+        C_TAG  # Tag to automatically tag images
     ) = range(7)
 
 class WinDownload(GladeApp):
@@ -89,33 +89,33 @@ class WinDownload(GladeApp):
 
         self.btnSourceFolder.drag_dest_set(
             gtk.DEST_DEFAULT_ALL,
-            [( 'text/uri-list', 0, 1 ),('text/plain', 0, 1)], # drag from os
+            [('text/uri-list', 0, 1), ('text/plain', 0, 1)],  # drag from os
             gtk.gdk.ACTION_COPY | gtk.gdk.ACTION_MOVE)
 
         txtRdr = gtk.CellRendererText()
 
-        columns = ((_('Source'),      [(txtRdr, gobject.TYPE_STRING)],
-                    (dc.C_SRC,),    True),
-                   (_('Size'),        [(txtRdr, gobject.TYPE_STRING)],
+        columns = ((_('Source'), [(txtRdr, gobject.TYPE_STRING)],
+                    (dc.C_SRC,), True),
+                   (_('Size'), [(txtRdr, gobject.TYPE_STRING)],
                     (dc.C_SZ_RAW,), True),
-                   (None,             [(None, gobject.TYPE_STRING)],
-                    (None,),          False),# Raw size
-                   (None,             [(None, gobject.TYPE_PYOBJECT)],
-                    (None,),          False), # Datetime object
-                   (_('Date/Time'),   [(txtRdr, gobject.TYPE_STRING)],
-                    (dc.C_DATE,),   True), # Date for display
-                   (None,             [(None, gobject.TYPE_PYOBJECT)],
-                    (None,),          False),# EXIF
+                   (None, [(None, gobject.TYPE_STRING)],
+                    (None,), False),  # Raw size
+                   (None, [(None, gobject.TYPE_PYOBJECT)],
+                    (None,), False),  # Datetime object
+                   (_('Date/Time'), [(txtRdr, gobject.TYPE_STRING)],
+                    (dc.C_DATE,), True),  # Date for display
+                   (None, [(None, gobject.TYPE_PYOBJECT)],
+                    (None,), False),  # EXIF
                    (_('Destination'), [(txtRdr, gobject.TYPE_STRING)],
-                    (dc.C_DEST,),   True),
-                   (_('Status'),      [(txtRdr, gobject.TYPE_STRING)],
-                    (dc.C_STAT,),   True),
-                   (None,             [(None, gobject.TYPE_STRING)],
-                    (None,),          False),# Short Status
-                   (_('Rotation'),    [(txtRdr, gobject.TYPE_STRING)],
-                    (dc.C_ROT,),    True),
-                   (None,             [(None, gobject.TYPE_STRING)],
-                    (None,),          False))
+                    (dc.C_DEST,), True),
+                   (_('Status'), [(txtRdr, gobject.TYPE_STRING)],
+                    (dc.C_STAT,), True),
+                   (None, [(None, gobject.TYPE_STRING)],
+                    (None,), False),  # Short Status
+                   (_('Rotation'), [(txtRdr, gobject.TYPE_STRING)],
+                    (dc.C_ROT,), True),
+                   (None, [(None, gobject.TYPE_STRING)],
+                    (None,), False))
 
         self.imLst = extListview.ExtListView(columns)
         self.imLst.enableDNDReordering()
@@ -130,7 +130,7 @@ class WinDownload(GladeApp):
 
         self._initFromConf(conf)
         self.invalidSource = True
-        self.invalidDest  = True
+        self.invalidDest = True
         self.badPattern = False
         self.buildListRunning = False
         self.quitNow = False
@@ -153,10 +153,10 @@ class WinDownload(GladeApp):
         self.entDestFolder.set_text(self.destFolder)
         self.chkDelete.set_active(self.__conf['delete'] == 1)
 
-        w,h = self.__conf['width'] or 800,self.__conf['height'] or 400
+        w, h = self.__conf['width'] or 800, self.__conf['height'] or 400
         # work arround for bug in pygtk/gtk 2.10.6 on windows set default size
         # then reshow with initial (default) size instead of simple resize
-        self.main_widget.set_default_size(w,h)
+        self.main_widget.set_default_size(w, h)
         self.main_widget.reshow_with_initial_size()
         self.main_widget.resize_children()
         if self.__conf['promptJobCode'] == 1:
@@ -213,13 +213,13 @@ class WinDownload(GladeApp):
         for srcFile in fileList:
             exifData = pyexiv.Exiv2Metadata(pyexiv2.ImageMetadata(srcFile))
             exifData.readMetadata()
-            size=os.path.getsize(srcFile)
+            size = os.path.getsize(srcFile)
             if 'Exif.Photo.DateTimeOriginal' in exifData.exifKeys():
                 date = ed2d(exifData.interpretedExifValue('Exif.Photo.DateTimeOriginal'))
             else:
                 date = datetime.datetime.fromtimestamp(os.path.getmtime(srcFile))
-            row=[
-                srcFile[len(self.srcFolder)+1:],
+            row = [
+                srcFile[len(self.srcFolder) + 1:],
                 format_file_size_for_display(size),
                 size,
                 date,
@@ -271,12 +271,12 @@ class WinDownload(GladeApp):
         for imageInfo in self.imgInfs:
             imageInfo[dc.C_DEST] = self.nb.name(
                                     imageInfo[dc.C_SRC],
-                                    '', # Dest folder blank as not needed here
+                                    '',  # Dest folder blank as not needed here
                                     self.__conf['nameFormat'],
                                     imageInfo[dc.C_EXIF],
                                     imageInfo[dc.C_DATE],
                                     self.__conf['jobCode'])
-        if not self.nb.seralize(self.imgInfs,dc.C_SRC,dc.C_DATE,dc.C_DEST):
+        if not self.nb.seralize(self.imgInfs, dc.C_SRC, dc.C_DATE, dc.C_DEST):
             MessageBox(self.main_widget,
             _("More than one serialisation tag used please use preferencess to remove from File Naming > Parttern"))
             self.statusBar.pop(self.cidStatusBar)
@@ -293,9 +293,9 @@ class WinDownload(GladeApp):
         # for the below to work
         # Write destination names into imList
         for imgIdx, imgInf in enumerate(self.imgInfs):
-            if self.imLst.getItem(imgIdx,dc.C_SRC) != imgInf[dc.C_SRC]:
+            if self.imLst.getItem(imgIdx, dc.C_SRC) != imgInf[dc.C_SRC]:
                 print "No Match at %d ?" % (imgIdx)
-                print "List: %s" % self.imLst.getItem(imageIndex,dc.C_SRC)
+                print "List: %s" % self.imLst.getItem(imageIndex, dc.C_SRC)
                 print "Source: %s" % imgInf[dc.C_SRC]
             else:
                 self.imLst.setItem(imgIdx,
@@ -540,7 +540,7 @@ class WinDownloadPreferences(GladeApp):
             cell.set_property('text', model.get_value(iter, 0))
             cell.set_property('foreground', model.get_value(iter, 2))
             cell.set_property('xalign', 0)
-            #~ cell.set_property('xpad', 1)
+            # ~ cell.set_property('xpad', 1)
 
         def pixbuf(column, cell, model, iter):
             node = model.get_value(iter, 1)
@@ -579,14 +579,14 @@ class WinDownloadPreferences(GladeApp):
         storeTags.cleanSelections()
         storeTags.setSelected(self.ltags)
         tags = ", ".join(self.ltags)
-        self.lblTags.set_label("Tags: %s" %tags)
+        self.lblTags.set_label("Tags: %s" % tags)
         # Init Conversion Page
-        self.chkDcraw.set_active(self.__conf["dcraw"]==1)
-        self.chkDcrawCopyMetaData.set_active(self.__conf["dcrawCopyMetaData"]==1)
-        self.chkDcrawCopyRaw.set_active(self.__conf["dcrawCopyRaw"]==1)
+        self.chkDcraw.set_active(self.__conf["dcraw"] == 1)
+        self.chkDcrawCopyMetaData.set_active(self.__conf["dcrawCopyMetaData"] == 1)
+        self.chkDcrawCopyRaw.set_active(self.__conf["dcrawCopyRaw"] == 1)
         # Remove un-implemented pages
-        self.ntbkPreferences.remove_page(4) # Conversion
-        self.ntbkPreferences.remove_page(3) # Camera Mapping
+        self.ntbkPreferences.remove_page(4)  # Conversion
+        self.ntbkPreferences.remove_page(3)  # Camera Mapping
 
     # Main Window handlers
     def on_winDownloadPreferences_delete_event(self, widget, *args):
@@ -610,7 +610,7 @@ class WinDownloadPreferences(GladeApp):
         else: self.__conf["promptJobCode"] = 0
         self.quit(True)
         # Save Auto Tag page
-        self.__conf['autoTag']=self.ltags
+        self.__conf['autoTag'] = self.ltags
         # Save Conversion page
         if self.chkDcraw.get_active(): self.__conf["dcraw"] = 1
         else: self.__conf["dcraw"] = 0
@@ -623,7 +623,7 @@ class WinDownloadPreferences(GladeApp):
         """Handles the Cancel button"""
         self.quit(False)
 
-    ## General tab handlers
+    # # General tab handlers
     def on_chkAutoComment_toggled(self, widget, *args):
         """handles toggling of the Auto Comment tick-box and en/disables the
         comment text entry"""
@@ -637,7 +637,7 @@ class WinDownloadPreferences(GladeApp):
             self.txtComment.unset_flags(gtk.SENSITIVE)
             self.tbufComment.set_text("")
 
-    ## Naming tab handlers
+    # # Naming tab handlers
     def on_entFilename_changed(self, widget, *args):
         """Detects changes in the destination file name pattern and initates an
          update of the example"""
@@ -668,7 +668,7 @@ class WinDownloadPreferences(GladeApp):
                     self.exDate,
                     self.entJobCode.get_text())))
 
-    ## Auto Tag Tab Handlers
+    # # Auto Tag Tab Handlers
     def on_tvTags_button_press_event(self, widget, *args):
         """Handles button presses in the AutoTag list"""
         event = args[0]
@@ -709,7 +709,7 @@ class WinDownloadPreferences(GladeApp):
         if iter0:
             model.switch(iter0)
 
-    ## Conversion Tab Handlers
+    # # Conversion Tab Handlers
     def on_chkDcraw_toggled(self, widget, *args):
         """handles toggling of the dcraw tick-box and en/disables the
         the associated options"""
@@ -726,7 +726,7 @@ class WinDownloadPreferences(GladeApp):
             self.chkDcrawCopyRaw.unset_flags(gtk.SENSITIVE)
             self.chkDcrawCopyRaw.set_active(False)
 
-    ## Camera mapping Tab Handlers
+    # # Camera mapping Tab Handlers
     def on_btnMappingAdd_clicked(self, *args):
         """Handles the Add Mapping button and adds a new camera mapping from
         the classes in example file & exif information (future)"""
@@ -763,23 +763,23 @@ class WinCameraMapping(GladeApp):
     def init(self, map):
         """Initalises the window and fills out the existing values"""
         comment = _('Please enter the values to use for {T8}, {T9} and auto Tag for the selected camera:')
-        comment = comment + "\n%s: %s" % (_('Camera'),map[cc.MODEL])
+        comment = comment + "\n%s: %s" % (_('Camera'), map[cc.MODEL])
         if map[cc.SERIAL] != '':
-            comment = comment + "\n%s: %s" % (_('Serial Number'),map[cc.MODEL])
+            comment = comment + "\n%s: %s" % (_('Serial Number'), map[cc.MODEL])
         if map[cc.OWNER] != '':
-            comment = comment + "\n%s: %s" % (_('Owner String'),map[cc.OWNER])
+            comment = comment + "\n%s: %s" % (_('Owner String'), map[cc.OWNER])
         if map[cc.USER] != '':
-            comment = comment + "\n%s: %s" % (_('User Comment'),map[cc.USER])
+            comment = comment + "\n%s: %s" % (_('User Comment'), map[cc.USER])
         self.lblIntro.set_text(comment)
         self.entT8.set_text(map[cc.C_T8])
         self.entT9.set_text(map[cc.C_T9])
         self.entTag.set_text(map[cc.C_TAG])
 
-    def on_btnCancel_clicked(self,*args):
+    def on_btnCancel_clicked(self, *args):
         """Handles the cancel button"""
         self.quit(False)
 
-    def on_btnOk_clicked(self,*args):
+    def on_btnOk_clicked(self, *args):
         """Handles the Ok button and saves the modified values"""
         map[cc.C_T8] = self.entT8.get_text()
         map[cc.C_T9] = self.entT9.get_text()
@@ -819,16 +819,16 @@ class WinDownloadExecute(GladeApp):
         """Background task to perform the actual work and send/receive updates
         from the GUI"""
         for itemIndex, item in enumerate(self.list):
-            if  item[dc.C_SS] != 'C': # Not Conflicted
+            if  item[dc.C_SS] != 'C':  # Not Conflicted
                 # Initial set-up for item
-                src = os.path.join(self.srcFolder,item[dc.C_SRC])
-                dest = os.path.join(self.destFolder,item[dc.C_DEST])
+                src = os.path.join(self.srcFolder, item[dc.C_SRC])
+                dest = os.path.join(self.destFolder, item[dc.C_DEST])
                 self.lblSource.set_label(src)
                 self.lblDest.set_label(dest)
-                self.progressbar.set_text(_("Downloading %d of %d") %
-                    (itemIndex+1, len(self.list)))
+                self.progressbar.set_text(_("Downloading %d of %d") % 
+                    (itemIndex + 1, len(self.list)))
                 self.progressbar.set_fraction(
-                    float(itemIndex)/len(self.list))
+                    float(itemIndex) / len(self.list))
                 # Load preview
                 self.lblAction.set_label(_('Loading preview'))
                 yield True
@@ -866,9 +866,9 @@ class WinDownloadExecute(GladeApp):
 
                 if noThumb:
                     thumbIm = gtk.gdk.pixbuf_new_from_file(
-                        os.path.join('data','gfx','imgNoThumb.png'))
+                        os.path.join('data', 'gfx', 'imgNoThumb.png'))
                 self.imgPreview.set_from_pixbuf(thumbIm)
-            if item[dc.C_SS] == 'N': # New item
+            if item[dc.C_SS] == 'N':  # New item
                 # Copying file
                 self.lblAction.set_label(_('Copying'))
                 yield True
@@ -879,7 +879,7 @@ class WinDownloadExecute(GladeApp):
                 # Rotation if enabled/needed
                 if item[dc.C_RS] != 'N':
                     self.lblAction.set_label(
-                        '%s %s' % (_('Performing Transformation:'),item[dc.C_ROT]))
+                        '%s %s' % (_('Performing Transformation:'), item[dc.C_ROT]))
                     yield True
                     pc.transform(item[dc.C_RS])
                 # Build thumb if broken or non existant
@@ -891,7 +891,7 @@ class WinDownloadExecute(GladeApp):
                 if len(self.conf['autoComment']) > 0:
                     self.lblAction.set_label(_('Commenting'))
                     yield True
-                    comment =self.conf['autoComment']
+                    comment = self.conf['autoComment']
                     pc.addComment(unicode(comment.replace("\\n", "\n")))
                 # Auto tagging
                 # TODO: Implement tagging based on Camera Name
@@ -903,7 +903,7 @@ class WinDownloadExecute(GladeApp):
                 self.lblAction.set_label(_('Setting Modification Times'))
                 yield True
                 timeStamp = time.mktime(item[dc.C_DATE].timetuple())
-                self._touch(dest,timeStamp)
+                self._touch(dest, timeStamp)
             # Delete source if enabled and No collision
             if  item[dc.C_SS] != 'C' and self.conf['delete'] == 1:
                 self.lblAction.set_label(_('Deleting Source'))
@@ -915,11 +915,11 @@ class WinDownloadExecute(GladeApp):
                 yield True
                 for file in os.listdir(os.path.dirname(src)):
                     if (file != os.path.basename(src)) and \
-                       (os.path.splitext(file)[0] ==
+                       (os.path.splitext(file)[0] == 
                        os.path.splitext(os.path.basename(src))[0])\
-                       and not(os.path.splitext(file)[1] in ['.jpg','.JPG']):# TODO: programatically get list of file types allowed
+                       and not(os.path.splitext(file)[1] in ['.jpg', '.JPG']):  # TODO: programatically get list of file types allowed
                         relSrc = os.path.join(os.path.dirname(src), file)
-                        relDest = os.path.splitext(dest)[0] +\
+                        relDest = os.path.splitext(dest)[0] + \
                             os.path.splitext(file)[1]
                         if not os.path.exists(relDest):
                             self.lblSource.set_label(relSrc)
@@ -929,7 +929,7 @@ class WinDownloadExecute(GladeApp):
                             shutil.copy2(relSrc, relDest)
                             self.lblAction.set_label(_('Setting Related File Modification Time'))
                             yield True
-                            self._touch(relDest,timeStamp)
+                            self._touch(relDest, timeStamp)
                             # Delete associated source if enabled
                             if self.conf['delete'] == 1:
                                self.lblAction.set_label(_('Deleting Related File Source'))

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-##
-##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 import gtk
 import gc
 import gobject
@@ -19,16 +19,16 @@ from __main__ import Buffer, GladeApp, JBrout
 from commongtk import WinKeyTag
 from common import cd2rd, format_file_size_for_display
 # FIXME from jbrout.externaltools import ExternalTools
-#TODO: add ops : add/del from basket
-#TODO: add ops : external tools
+# TODO: add ops : add/del from basket
+# TODO: add ops : external tools
 
 
 class TagList(gtk.VBox):
     # TODO: this object need to display its parent Hscrollbar when needed
     # (does'nt work ?!)
     def __init__(self, callbackRemove):
-        #self.b = gtk.Button()
-        #self.b.set_label("Test bouton")
+        # self.b = gtk.Button()
+        # self.b.set_label("Test bouton")
         gtk.VBox.__init__(self)
         self.__callbackRemove = callbackRemove
         # getAllTags returns list of tuples (tag, parent catg)
@@ -150,7 +150,7 @@ class WinShow(GladeApp):
         currentNode = self.ln[self.idx]
         if self.isModify and not currentNode.isReadOnly:
 
-            ret = callback([currentNode, ])   # TODO: try/cath here
+            ret = callback([currentNode, ])  # TODO: try/cath here
 
             if ret:  # if change have be done ...
                 if currentNode not in self.invalidThumbs:
@@ -162,7 +162,7 @@ class WinShow(GladeApp):
             # we'll need to redraw "time tab"
 
     def on_eb_scroll_event(self, widget, b):
-        #print "eb scroll event !"
+        # print "eb scroll event !"
         if int(b.direction) == 1:
             self.idx += 1
         else:
@@ -219,7 +219,7 @@ class WinShow(GladeApp):
                 self.draw()
             elif key == "delete":
                 # delete
-                self.on_delete_clicked(None)    # and call draw
+                self.on_delete_clicked(None)  # and call draw
             elif key == "insert" or key == "f9":
                 self.needInfo = not self.needInfo
                 self.draw()
@@ -310,7 +310,7 @@ TAGS :
 
         d = Display()
         d.node = None
-        self.viewer.display = d   # prevent toggle event
+        self.viewer.display = d  # prevent toggle event
         self.basket.set_active(node.isInBasket)
 
         if self.needInfo:
@@ -342,7 +342,7 @@ TAGS :
         self.quit()
 
     def on_WinShow_button_press_event(self, widget, data):
-        #print "winshow button press"
+        # print "winshow button press"
         screen_width, screen_height = data.window.get_size()
         pointer_x, pointer_y = data.get_coords()
         self.pointer_position = (pointer_x, pointer_y, screen_width,
@@ -362,7 +362,7 @@ TAGS :
     def on_delete_clicked(self, *args):
         if self.isModify:
             node = self.ln[self.idx]
-            #currentNode = self.viewer.display.node
+            # currentNode = self.viewer.display.node
             self.ln.remove(node)
             self.removed.append(node)
             self.draw()
@@ -413,7 +413,7 @@ class ImageShow(gtk.DrawingArea):
         if self.display:
             if self.display.image:
                 context.save()
-                #print self.zoom
+                # print self.zoom
                 pb, x, y = render(self.display.image, rect.width, rect.height,
                                   self.zoom, self.pointer_position)
                 context.set_source_pixbuf(pb, x, y)
@@ -440,17 +440,17 @@ class ImageShow(gtk.DrawingArea):
                     context.set_source_rgb(1, 1, 0)
                     context.rel_move_to(5, 0)
                     context.set_font_size(12)
-                    context.show_text(_("(%d selected)") %
+                    context.show_text(_("(%d selected)") % 
                                       self.display.nbSelected)
 
                 if self.display.rating:
                     context.move_to(rect.width - 35, 20)
                     context.set_source_rgb(1, 1, 1)
                     context.set_font_size(12)
-                    context.show_text((self.display.rating * "*") +
+                    context.show_text((self.display.rating * "*") + 
                                       ((5 - self.display.rating) * "-"))
 
-            #if self.display.info:
+            # if self.display.info:
             #    wx = 200
             #    wy = 400
             #    context.set_source_rgba(*fond)
@@ -488,7 +488,7 @@ def fit(orig_width, orig_height, dest_width, dest_height,
         scale = 1
     if zoom:
         scale = 1
-    #print "fit: zoom %s scale %s" % (zoom, scale)
+    # print "fit: zoom %s scale %s" % (zoom, scale)
     fit_width = scale * orig_width
     fit_height = scale * orig_height
     return int(fit_width), int(fit_height)
@@ -551,14 +551,14 @@ class PixbufCache(object):
                 try:
                     PixbufCache._cache = node.getImage()
                 except Exception, m:
-                    print "*WARNING* can't load this file : ", (file, ), m
+                    print "*WARNING* can't load this file : ", (file,), m
                     PixbufCache._cache = None
             else:
                 PixbufCache._cache = None
         return PixbufCache._cache
 
 
-#class WinComment(GladeApp):
+# class WinComment(GladeApp):
 #    """ Creates and handles the dialog for Editing photo comments """
 #    glade = os.path.join(os.path.dirname(os.path.dirname(__file__)),
 #        'data', 'jbrout.glade')

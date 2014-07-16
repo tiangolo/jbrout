@@ -1,4 +1,4 @@
-﻿#!/usr/bin/python
+﻿  #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 from __main__ import JPlugin
@@ -14,15 +14,15 @@ class Plugin(JPlugin):
     __author__ = "manatlan"
     __version__ = "1.0"
 
-    #def albumEntries(self,l):
+    # def albumEntries(self,l):
     #    return [ (100,_("Create folders by dates"),True,self.createSubFolder), ]
 
-    @JPlugin.Entry.AlbumProcess( _("Create folders by dates"),order=100 )
-    def createSubFolder(self,nodeFolder):
-        l=nodeFolder.getPhotos()
-        fold={}
+    @JPlugin.Entry.AlbumProcess(_("Create folders by dates"), order=100)
+    def createSubFolder(self, nodeFolder):
+        l = nodeFolder.getPhotos()
+        fold = {}
         for image in l:
-            newFolderName = os.path.join(image.folder,cd2d(image.date).strftime(str(_("Day_%Y%m%d"))))
+            newFolderName = os.path.join(image.folder, cd2d(image.date).strftime(str(_("Day_%Y%m%d"))))
 
             # fill a temp dict to store foldernode
             if newFolderName not in fold:
@@ -32,5 +32,5 @@ class Plugin(JPlugin):
             if newFolderNode:
                 image.moveToFolder(newFolderNode)
             else:
-                print "can't move",image,"to",newFolderName
+                print "can't move", image, "to", newFolderName
         return True

@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 # dump python dict to ini format file
 # Author: limodou (limodou@gmail.com)
 # Copyleft BSD
@@ -103,8 +103,8 @@ except:
     crypt = None
     
 class DictNode(object):
-    def __init__(self, values, encoding=None, root=None, section=[], orders=[], 
-            sectiondelimeter=section_delimeter, onelevel=False, format="%s = %s", 
+    def __init__(self, values, encoding=None, root=None, section=[], orders=[],
+            sectiondelimeter=section_delimeter, onelevel=False, format="%s = %s",
             normal=False, commentdelimeter='#'):
         self._items = values
         self._orders = orders
@@ -121,16 +121,16 @@ class DictNode(object):
         if self._items.has_key(name):
             value = self._items[name]
             if isinstance(value, dict):
-                return DictNode(value, self._encoding, self._root, self._section + [name], 
-                    sectiondelimeter=self._section_delimeter, onelevel=self._onelevel, 
+                return DictNode(value, self._encoding, self._root, self._section + [name],
+                    sectiondelimeter=self._section_delimeter, onelevel=self._onelevel,
                     format=self._format, normal=self._normal, commentdelimeter=self._commentdelimeter)
             else:
                 return value
         else:
             self._items[name] = {}
             self._root.setorder(self.get_full_keyname(name))
-            return DictNode(self._items[name], self._encoding, self._root, self._section + [name], 
-                sectiondelimeter=self._section_delimeter, onelevel=self._onelevel, 
+            return DictNode(self._items[name], self._encoding, self._root, self._section + [name],
+                sectiondelimeter=self._section_delimeter, onelevel=self._onelevel,
                 format=self._format, normal=self._normal, commentdelimeter=self._commentdelimeter)
 
     def __setitem__(self, name, value):
@@ -148,7 +148,7 @@ class DictNode(object):
                     if isinstance(obj[i], dict):
                         obj = obj[i]
                     else:
-                        obj[i] = {} #may lost some data
+                        obj[i] = {}  # may lost some data
                         obj = obj[i]
                 else:
                     obj[i] = {}
@@ -206,14 +206,14 @@ class DictNode(object):
     def __len__(self):
         return len(self._items)
     
-    #add iterator support
+    # add iterator support
     def __iter__(self):
         return self._items.iteritems()
 
     def has_key(self, name):
         return self._items.has_key(name)
     
-    #add in test support
+    # add in test support
     def __contains__(self, name):
         return self.has_key(name)
 
@@ -251,7 +251,7 @@ class DictIni(DictNode):
     def __init__(self, inifile=None, values=None, encoding=None,
                     commentdelimeter='#', sectiondelimeter=section_delimeter,
                     onelevel=False, format="%s = %s", normal=False,
-                    hideData=False, secretKey=None, secretSections=None ):
+                    hideData=False, secretKey=None, secretSections=None):
                         
         self._items = {}
         self._inifile = inifile
@@ -336,8 +336,8 @@ class DictIni(DictNode):
             #===================================================================
             # manatlan's patch (commented)
             #===================================================================
-            #buf = []
-            #if section:
+            # buf = []
+            # if section:
             #    buf.insert(0, '[%s=]' % self._section_delimeter.join(section))
             #    c = self._comments.get(self._section_delimeter.join(section), '')
             #    if c:
@@ -371,7 +371,7 @@ class DictIni(DictNode):
             try:
                 f = file(inifile, 'r')
             except:
-                return  #may raise Exception is better
+                return  # may raise Exception is better
         elif isinstance(inifile, file):
             f = inifile
         else:
@@ -391,7 +391,7 @@ class DictIni(DictNode):
                     if line.startswith('\xEF\xBB\xBF'):
                         line = line[3:]
                         encoding = 'utf-8'
-                line =  line.strip()
+                line = line.strip()
                 if not line:
                     if comments:
                         comments.append('')
@@ -401,9 +401,9 @@ class DictIni(DictNode):
                 if line.startswith(self._commentdelimeter):
                     comments.append(line.rstrip())
                     continue
-                if line.startswith('['):    #section
+                if line.startswith('['):  # section
                     section = line[1:-1]
-                    #if comment then set it
+                    # if comment then set it
                     if comments:
                         self.comment(section, '\n'.join(comments))
                         comments = []
@@ -417,7 +417,7 @@ class DictIni(DictNode):
                         self[section][key] = value
                     else:
                         self.__setitem__(section + self._section_delimeter + key, value)
-                    #if comment then set it
+                    # if comment then set it
                     if comments:
                         self[section].comment(key, '\n'.join(comments))
 #                        self.__getitem__(section).comment(key, '\n'.join(comments))
@@ -425,7 +425,7 @@ class DictIni(DictNode):
                 else:
                     self[key] = value
 #                    self.__setitem__(key, value)
-                    #if comment then set it
+                    # if comment then set it
                     if comments:
                         self.comment(key, '\n'.join(comments))
                         comments = []
@@ -461,13 +461,13 @@ class DictIni(DictNode):
         buf = []
         listflag = False
         while i < length:
-            if t[i] == '"': #string quote
+            if t[i] == '"':  # string quote
                 buf.append(t[i])
                 i += 1
                 while t[i] != '"':
                     if t[i] == '\\':
                         buf.append(t[i])
-                        buf.append(t[i+1])
+                        buf.append(t[i + 1])
                         i += 2
                     else:
                         buf.append(t[i])
@@ -554,7 +554,7 @@ class DictIni(DictNode):
         return self.protect_value(v, section=self._section_delimeter.join(section))
     
     
-unescapechars = {'"':'"', 't':'\t', 'r':'\r', 'n':'\n', '\\':'\\', 'a':'\a', 'f':'\f', 
+unescapechars = {'"':'"', 't':'\t', 'r':'\r', 'n':'\n', '\\':'\\', 'a':'\a', 'f':'\f',
     "'":"'", 'b':'\b', 'v':'\v'}
 def unescstr(value):
     if value.startswith('"') and value.endswith('"') or value.startswith("'") and value.endswith("'"):
@@ -562,8 +562,8 @@ def unescstr(value):
         i = 1
         end = len(value) - 1
         while i < end:
-            if value[i] == '\\' and unescapechars.has_key(value[i+1]):
-                s.append(unescapechars[value[i+1]])
+            if value[i] == '\\' and unescapechars.has_key(value[i + 1]):
+                s.append(unescapechars[value[i + 1]])
                 i += 2
             else:
                 s.append(value[i])
@@ -578,7 +578,7 @@ def escstr(value):
             s.append(c)
             continue
         v = repr(c).replace('"', r'\"')
-        if '\\' in v and ord(c)<128:
+        if '\\' in v and ord(c) < 128:
             if isinstance(c, str):
                 s.append(v[1:-1])
             else:
@@ -623,64 +623,64 @@ def getdefaultencoding(encoding):
 
 
 if __name__ == '__main__':
-    #d = DictIni('t.ini', format="%s:%s", secretKey='mayowa')
-    #print d
-    #d._comment = 'Test\nTest2'
-    #d.a = 'b'
-    #d.b = 1
-    #d['b'] = 3
-    #d.c.d = (1,2,'b asf "aaa')
-    #d['s']['t'] = u'中国'
-    #d['s'].a = 1
-    #d['m/m'] = 'testing'
-    #d['p'] = r'\?'
-    #d.t.m.p = 'd:\\'
-    #print d
-    #d.save()
+    # d = DictIni('t.ini', format="%s:%s", secretKey='mayowa')
+    # print d
+    # d._comment = 'Test\nTest2'
+    # d.a = 'b'
+    # d.b = 1
+    # d['b'] = 3
+    # d.c.d = (1,2,'b asf "aaa')
+    # d['s']['t'] = u'中国'
+    # d['s'].a = 1
+    # d['m/m'] = 'testing'
+    # d['p'] = r'\?'
+    # d.t.m.p = 'd:\\'
+    # print d
+    # d.save()
     #
-    #d = DictIni('t.ini', format="%s:%s", secretKey='mayowa')
-    #print d.p, d.t.m.p
+    # d = DictIni('t.ini', format="%s:%s", secretKey='mayowa')
+    # print d.p, d.t.m.p
     #
-    #d = DictIni('t2.ini', format="%s:%s", hideData=True)
-    #d.a.a = 'mama'
-    #d.a.b = 'lubs me!'
+    # d = DictIni('t2.ini', format="%s:%s", hideData=True)
+    # d.a.a = 'mama'
+    # d.a.b = 'lubs me!'
     #
-    #d.b.a = 'i'
-    #d.b.b = 'lub bosunmi!'
+    # d.b.a = 'i'
+    # d.b.b = 'lub bosunmi!'
     #
-    #d.c.a = 'dada'
-    #d.c.b = 'lubs me too!'
-    #d.save()
+    # d.c.a = 'dada'
+    # d.c.b = 'lubs me too!'
+    # d.save()
     #
-    #d = DictIni('t2.ini', format="%s:%s", hideData=True)
-    #print d.a.a, d.a.b
-    #print d.b.a, d.b.b
-    #print d.c.a, d.c.b
+    # d = DictIni('t2.ini', format="%s:%s", hideData=True)
+    # print d.a.a, d.a.b
+    # print d.b.a, d.b.b
+    # print d.c.a, d.c.b
     #
-    ## secret sections test
-    #d = DictIni('t3.ini', format="%s:%s", hideData=True, secretSections=['a', 'c/c'])
-    #d.a.a = 'mama'
-    #d.a.b = 'lubs me!'
+    # # secret sections test
+    # d = DictIni('t3.ini', format="%s:%s", hideData=True, secretSections=['a', 'c/c'])
+    # d.a.a = 'mama'
+    # d.a.b = 'lubs me!'
     #
-    #d.b.a = 'i'
-    #d.b.b = 'lub bosunmi!'
+    # d.b.a = 'i'
+    # d.b.b = 'lub bosunmi!'
     #
-    #d.c.a = 'dada'
-    #d.c.b = 'lubs me too!'
-    #d.c.c.a = 'far out!'
-    #d.c.c.b.a = 'ppppp'
+    # d.c.a = 'dada'
+    # d.c.b = 'lubs me too!'
+    # d.c.c.a = 'far out!'
+    # d.c.c.b.a = 'ppppp'
     #
-    #d.save()
+    # d.save()
     #
-    #d = DictIni('t3.ini', format="%s:%s", hideData=True, secretSections=['a', 'c/c'])
-    #print d.a.a, d.a.b
-    #print d.b.a, d.b.b
-    #print d.c.a, d.c.b
-    #print d.c.c.b.a
+    # d = DictIni('t3.ini', format="%s:%s", hideData=True, secretSections=['a', 'c/c'])
+    # print d.a.a, d.a.b
+    # print d.b.a, d.b.b
+    # print d.c.a, d.c.b
+    # print d.c.c.b.a
 
 
     d = DictIni('jojo.ini')
-    d.kij.jim=12
+    d.kij.jim = 12
     print d.kij.jo  # should'nt appears in ini file !!! (manatlan's patch)
     d.save()
     

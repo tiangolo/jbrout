@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-##
-##    Copyright (C) 2010 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##load
-## URL : http://jbrout.googlecode.com
+# #
+# #    Copyright (C) 2010 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #load
+# # URL : http://jbrout.googlecode.com
 
 """
 pyexiv2 wrapper
@@ -92,7 +92,7 @@ class Exiv2Metadata(object):
     def iptcKeys(self):
         return self._md.iptc_keys
 
-    def tagDetails(self, k):               # see viewexif plugin
+    def tagDetails(self, k):  # see viewexif plugin
         md = self._md[k]
         if hasattr(md, "label"):
             lbl = getattr(md, "label")
@@ -100,11 +100,11 @@ class Exiv2Metadata(object):
             lbl = getattr(md, "title")
         return [lbl, md.description, ]
 
-    def interpretedExifValue(self, k):   # see viewexif plugin
+    def interpretedExifValue(self, k):  # see viewexif plugin
         return self._md[k].human_value
     #==============================================
 
-    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
+    # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- new apis
     def xmpKeys(self):
         return self._md.xmp_keys
 
@@ -115,7 +115,7 @@ class Exiv2Metadata(object):
         # /Iptc4xmpCore_1.0-doc-CpanelsUserGuide_13.pdf
         # however
         # http://metadataworkinggroup.com/pdf/mwg_guidance.pdf page 35:
-        ## IPTC Keywords is mapped to XMP (dc:subject)
+        # # IPTC Keywords is mapped to XMP (dc:subject)
         # It seems that the latter is true ... at least according to
         # http://trac.yorba.org/wiki/PhotoTags
 
@@ -171,27 +171,27 @@ class Exiv2Metadata(object):
         self._md.copy(dest, exif, iptc, xmp, comment)
         dest.write()
 
-    #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 ###############################################################################
 if __name__ == "__main__":
     t = Image("/home/manatlan/Documents/python/tests_libs_python" + \
               "/TestJPG/p20030830_130202 (copie).jpg")
-    #~ t=Image("/home/manatlan/Desktop/fotaux/autorot/p20020115_173654(1).jpg")
+    # ~ t=Image("/home/manatlan/Desktop/fotaux/autorot/p20020115_173654(1).jpg")
     t.readMetadata()
 
     ##----
-    #aa=t._image["Xmp.dc.subject"].raw_value[0]
-    #import chardet; print chardet.detect(aa) # it's latin1 encoded as utf8
-    #print aa.decode("utf_8").encode("latin1")
+    # aa=t._image["Xmp.dc.subject"].raw_value[0]
+    # import chardet; print chardet.detect(aa) # it's latin1 encoded as utf8
+    # print aa.decode("utf_8").encode("latin1")
     ##----
 
-    #t.setThumbnailData("")
+    # t.setThumbnailData("")
 
     L = t.getTags()
     print "===>", L
 
-    #t=Image("/home/manatlan/Desktop/fotaux/autorot/jpg/p20090319_061423.jpg")
-    #t.readMetadata()
-    #t.deleteThumbnail()
-    #t.writeMetadata()
+    # t=Image("/home/manatlan/Desktop/fotaux/autorot/jpg/p20090319_061423.jpg")
+    # t.readMetadata()
+    # t.deleteThumbnail()
+    # t.writeMetadata()

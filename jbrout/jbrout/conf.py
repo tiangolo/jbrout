@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 
-##
-##    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published
-## by the Free Software Foundation; version 2 only.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
+# #
+# #    Copyright (C) 2005 manatlan manatlan[at]gmail(dot)com
+# #
+# # This program is free software; you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published
+# # by the Free Software Foundation; version 2 only.
+# #
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# #
 import re, sys, thread, shutil, stat, string
 
 from libs.dict4ini import DictIni
 from plugins import JPlugins
 import os, os.path
-from db import DBPhotos,DBTags
+from db import DBPhotos, DBTags
 import socket
 import glib
 
@@ -25,7 +25,7 @@ import glib
 class Conf(object):
 # ============================================================================================
 
-    def __init__(self,file):
+    def __init__(self, file):
         self.__ini = DictIni(file)
 
         # to recreate the new INI file, bases on dict4ini
@@ -33,19 +33,19 @@ class Conf(object):
             # clear old values, to restart a new one
             self.__ini.clear()
 
-    def __getitem__(self,n):
+    def __getitem__(self, n):
         """ main conf get """
         return self.__ini.jBrout[n]
 
-    def has_key(self,n):
+    def has_key(self, n):
         """ main conf test """
         return self.__ini.jBrout.has_key(n)
 
-    def __setitem__(self,n,v):
+    def __setitem__(self, n, v):
         """ main conf set """
-        self.__ini.jBrout[n]=v
+        self.__ini.jBrout[n] = v
 
-    def getSubConf(self,n):
+    def getSubConf(self, n):
         """ sub conf get """
         return self.__ini[n]
 
@@ -53,30 +53,30 @@ class Conf(object):
         self.__ini.save()
 
 class JBrout:
-    #~ __lockFile = "jbrout.lock"
+    # ~ __lockFile = "jbrout.lock"
     __lockSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    #~ @staticmethod
-    #~ def lockOn():
-        #~ """ create the lock file, return True if it can"""
-        #~ file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
-        #~ if os.path.isfile(file):
-            #~ print file
-            #~ return False
-        #~ else:
-            #~ open(file,"w").write("")
-            #~ return True
+    # ~ @staticmethod
+    # ~ def lockOn():
+        # ~ """ create the lock file, return True if it can"""
+        # ~ file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
+        # ~ if os.path.isfile(file):
+            # ~ print file
+            # ~ return False
+        # ~ else:
+            # ~ open(file,"w").write("")
+            # ~ return True
 
-    #~ @staticmethod
-    #~ def lockOff():
-        #~ """ delete the lockfile """
-        #~ file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
-        #~ if os.path.isfile(file):
-            #~ os.unlink(file)
+    # ~ @staticmethod
+    # ~ def lockOff():
+        # ~ """ delete the lockfile """
+        # ~ file = os.path.join(JBrout.getHomeDir("jbrout"),JBrout.__lockFile)
+        # ~ if os.path.isfile(file):
+            # ~ os.unlink(file)
 
 
     @classmethod
-    def isRunning(cls,p=64738): # "sys 64738" nostaligc ;-)
+    def isRunning(cls, p=64738):  # "sys 64738" nostaligc ;-)
         try:
             JBrout.__lockSocket.bind(("localhost", p))
             JBrout.__lockSocket.listen(1)
@@ -91,16 +91,16 @@ class JBrout:
         (if mkdir is set : it will create a subFolder "mkdir" if the path exist,
         and will append to it (the newfolder can begins with a "." or not))
         """
-        maskDir=False
+        maskDir = False
         glibConfDir = glib.get_user_data_dir()
 
         # Find legacy home dir
-        #windows NT,2k,XP,etc.
+        # windows NT,2k,XP,etc.
         if (os.name == "nt") and ("APPDATA" in os.environ):
             home = os.environ['APPDATA']
             if not os.path.isdir(home):
                 raise OSError("Missing %APPDATA% directory")
-            maskDir=False
+            maskDir = False
         elif ("XDG_CONFIG_HOME" in os.environ):
             home = os.environ['XDG_CONFIG_HOME']
             if not os.path.isdir(home):
@@ -110,21 +110,21 @@ class JBrout:
             home = os.path.expanduser("~")
             if not os.path.isdir(home):
                 raise OSError("Missing ~ directory. Weird.")
-            maskDir=True
+            maskDir = True
         elif ("HOME" in os.environ):
             home = os.environ["HOME"]
             if os.path.isdir(home):
-                conf = os.path.join(home,".config")
+                conf = os.path.join(home, ".config")
                 if os.path.isdir(conf):
                     home = conf
-                    maskDir=False
+                    maskDir = False
                 else:
                     # keep home
-                    maskDir=True
+                    maskDir = True
             else:
                 raise OSError("Missing $HOME directory.")
         else:
-            #What os are people using?
+            # What os are people using?
             home = None
 
         if glibConfDir:
@@ -162,7 +162,7 @@ class JBrout:
             if home:
                 # there is a "jbrout" config dir
                 # the file must be present/created in this dir
-                return os.path.join(home,name)
+                return os.path.join(home, name)
             else:
                 # there is not a "jbrout" config dir
                 # the file must be present/created in this local "./"
@@ -175,15 +175,15 @@ class JBrout:
 
         # initialisation de ".db"
         #======================================================================
-        JBrout.db = DBPhotos( JBrout.getConfFile("db.xml") )
+        JBrout.db = DBPhotos(JBrout.getConfFile("db.xml"))
 
         # initialisation de ".tags"
         #======================================================================
-        JBrout.tags = DBTags( JBrout.getConfFile("tags.xml") )
+        JBrout.tags = DBTags(JBrout.getConfFile("tags.xml"))
 
         # initialisation de ".conf"
         #======================================================================
-        JBrout.conf = Conf( JBrout.getConfFile("jbrout.conf") )
+        JBrout.conf = Conf(JBrout.getConfFile("jbrout.conf"))
 
         # initialisation de ".conf"
         #======================================================================
@@ -193,34 +193,34 @@ class JBrout:
         #======================================================================
         jbroutHomePath = JBrout.getHomeDir("jbrout")
 
-        JBrout.plugins = JPlugins(jbroutHomePath,JBrout.conf)
+        JBrout.plugins = JPlugins(jbroutHomePath, JBrout.conf)
 
 if __name__ == "__main__":
-    #~ doc = lxml.etree.fromstring("<foo>fd<bar>kk</bar>oi</foo>")
-    #~ r = doc.xpath('/foo/bar')
-    #~ print len(r)
-    #~ print r[0].tag
-    #~ print doc.tag
-    #~ print doc.text
+    # ~ doc = lxml.etree.fromstring("<foo>fd<bar>kk</bar>oi</foo>")
+    # ~ r = doc.xpath('/foo/bar')
+    # ~ print len(r)
+    # ~ print r[0].tag
+    # ~ print doc.tag
+    # ~ print doc.text
 
     db = DBPhotos()
-    #db.clearBasket()
-    #~ db.add("/home/manatlan/Desktop/tests")
+    # db.clearBasket()
+    # ~ db.add("/home/manatlan/Desktop/tests")
 
-    #~ print db.cpt()
-    #~ db.save()
-    #~ print db.getRootBasket()
+    # ~ print db.cpt()
+    # ~ db.save()
+    # ~ print db.getRootBasket()
 
-    #~ db=DBTags()
-    #~ r=db.getRootTag()
+    # ~ db=DBTags()
+    # ~ r=db.getRootTag()
 
-    #~ for i in r.getTags():
-        #~ print type(i),i.name
-    #~ for i in r.getCatgs():
-        #~ print type(i),i.name
+    # ~ for i in r.getTags():
+        # ~ print type(i),i.name
+    # ~ for i in r.getCatgs():
+        # ~ print type(i),i.name
 
-    #~ ln = db.select("//photo")
-    #~ for i in ln:
-        #~ print i.name, i.file
-    #~ print ln[0].getParent()
+    # ~ ln = db.select("//photo")
+    # ~ for i in ln:
+        # ~ print i.name, i.file
+    # ~ print ln[0].getParent()
 
