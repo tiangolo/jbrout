@@ -1,19 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__builtins__.__dict__["_"] = lambda x:x
+__builtins__.__dict__["_"] = lambda x: x
 
 import os
 import sys
 import shutil
-from datetime import datetime
 from glob import glob
-############################################################### to be executed here
+########################################################## to be executed here
 if __file__ != "runtests.py":
     # execution from here
-    PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "jbrout")
+    PATH = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "jbrout")
     sys.path.append(PATH)
-    FOLDER = unicode(os.path.join(os.path.dirname(os.path.abspath(__file__)), "photos"))
+    FOLDER = unicode(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "photos"))
     os.chdir(PATH)
 else:
     # execution from main jbrout folder
@@ -32,7 +34,8 @@ if __name__ == "__main__":
 
         dbfile = os.path.join(folder, "db.xml")
         db = DBPhotos(dbfile)
-        l = [i for i in glob(os.path.join(folder, "*.*")) if i.lower().endswith(".jpg")]
+        l = [i for i in glob(os.path.join(folder, "*.*"))
+             if i.lower().endswith(".jpg")]
 
         gen = db.add(folder)
         tot = gen.next()
@@ -55,10 +58,12 @@ if __name__ == "__main__":
         assert not os.path.isfile(os.path.join(folder, FolderNode.commentFile))
 
         assert len(fn.getPhotos()) == len(l)
-        assert len(fn.getParent().getPhotos()) == 0  # there shouldn't be photos in exec path
+        # there shouldn't be photos in exec path
+        assert len(fn.getParent().getPhotos()) == 0
         assert len(fn.getParent().getAllPhotos()) == len(l)
         assert len(fn._select("//photo")) == len(l)
-        assert len(fn.getFolders()) == 0  # there shouldn't be folder in photo temp folder
+        # there shouldn't be folder in photo temp folder
+        assert len(fn.getFolders()) == 0
 
         pn = fn.getPhotos()[0]
 
@@ -71,10 +76,11 @@ if __name__ == "__main__":
         assert len(fn.getFolders()) == 1
 
         nfn2 = fn.createNewFolder(u"tmp1")
-        assert nfn2 == False  # because tmp1 should already exists
+        assert nfn2 is False  # because tmp1 should already exists
 
         nfn2 = fn.createNewFolder(pn.file)
-        assert nfn2 == False  # because this is a photo, and the file already exists
+        # because this is a photo, and the file already exists
+        assert nfn2 is False
 
         # create a "tmp2" folder
         nfn2 = fn.createNewFolder(u"tmp2")
@@ -83,7 +89,7 @@ if __name__ == "__main__":
         assert len(fn.getFolders()) == 2, [i.name for i in fn.getFolders()]
 
         # move a photo to "tmp1" folder
-        assert pn.moveToFolder(nfn1) == True
+        assert pn.moveToFolder(nfn1) is True
         assert len(nfn1.getPhotos()) == 1
         assert len(fn.getPhotos()) == len(l) - 1
         assert pn.folder == os.path.join(folder, u"tmp1")
@@ -98,7 +104,6 @@ if __name__ == "__main__":
         assert len(nfn2.getPhotos()) == 0
         assert len(nfn2.getAllPhotos()) == 1
 
-
         #===========================================================
         # tests PhotoNode
         #===========================================================
@@ -106,13 +111,10 @@ if __name__ == "__main__":
         pn.setComment(u"éàé")
         assert pn.comment == u"éàé"
 
-
         # ~ fn.rename(u"jo")
         # ~ print fn.name
         # ~ print fn.file
         # ~ print db.toXml()
 
-
     finally:
         shutil.rmtree(folder)  # delete tempfolder
-

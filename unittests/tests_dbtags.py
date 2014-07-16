@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__builtins__.__dict__["_"] = lambda x:x
+__builtins__.__dict__["_"] = lambda x: x
 
 from jbrout.db import *
 import os
@@ -12,15 +12,17 @@ if __name__ == "__main__":
     # # Tests DBTags, CatgNode and TagNode
     ##########################################################################
     file = "/home/manatlan/db_jbrout_tags.xml"
-    if os.path.isfile(file): os.unlink(file)
+    if os.path.isfile(file):
+        os.unlink(file)
     dbt = DBTags(file)
     assert dbt.getAllTags() == [], "dbtag not empty"
-    assert dbt.updateImportedTags([u"ab", u"ac"]) == 2, "update import tag error"
-    assert len(dbt.getAllTags()) == 2 , "not 2 tags in dbtag"
+    assert dbt.updateImportedTags([u"ab", u"ac"]) == 2, \
+        "update import tag error"
+    assert len(dbt.getAllTags()) == 2, "not 2 tags in dbtag"
 
     r = dbt.getRootTag()
-    assert r.name == "Tags" , "First catg is not named 'Tags'"
-    assert r.getTags() == [] , "..."
+    assert r.name == "Tags", "First catg is not named 'Tags'"
+    assert r.getTags() == [], "..."
     assert len(r.getAllTags()) == 2
     lrc = r.getCatgs()
     assert len(lrc) == 1
@@ -44,9 +46,9 @@ if __name__ == "__main__":
     assert len(r.getCatgs()) == 2
     assert ncatg.name == u"kôko"
 
-    assert ncatg.expand == True
+    assert ncatg.expand is True
     ncatg.setExpand(False)
-    assert ncatg.expand == False
+    assert ncatg.expand is False
 
     ncatg.moveToCatg(catg)  # move catg in another catg
     assert len(catg.getCatgs()) == 1
@@ -63,7 +65,10 @@ if __name__ == "__main__":
     dbt = DBTags(file)
     assert len(r.getAllTags()) == 3
 
-    assert open(file, "r").read() == """<?xml version="1.0" encoding="UTF-8"?><tags><tags name="Imported Tags"><tag>ab</tag><tag>ac</tag></tags><tag>kloûm</tag></tags>"""
+    assert open(file, "r").read() == \
+        '<?xml version="1.0" encoding="UTF-8"?><tags>' + \
+        '<tags name="Imported Tags"><tag>ab</tag><tag>ac</tag></tags>' + \
+        '<tag>kloûm</tag></tags>'
     os.unlink(file)
 
     # ~ file="/home/manatlan/db_jbrout_albums.xml"

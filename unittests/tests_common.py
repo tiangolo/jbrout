@@ -1,16 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 if __name__ == "__main__":
-    import sys, os
-    PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "jbrout")
-    sys.path.append(PATH)    
-    
+    import sys
+    import os
+    PATH = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "jbrout")
+    sys.path.append(PATH)
+
 from jbrout.common import *
 
 assert cd2rd("20071114111000") == "14/11/2007 11:10:00"
 assert cd2rd("20071114") == "14/11/2007"
 assert cd2rd("") == ""
-assert cd2rd(None) == None
+assert cd2rd(None) is None
 
 from datetime import datetime
 assert cd2d("20071114111000") == datetime(2007, 11, 14, 11, 10, 0)
@@ -27,14 +30,16 @@ assert xpathquoter("fo'o") == '''"fo'o"'''
 assert xpathquoter("fo'o'o") == '''"fo'o'o"'''
 assert xpathquoter('fo"o') == """'fo"o'"""
 assert xpathquoter('fo"o"o') == """'fo"o"o'"""
-assert xpathquoter("""l'eau "de" la""") == """concat("l'eau ",'"','de','"',' la')"""
+assert xpathquoter("""l'eau "de" la""") == \
+    """concat("l'eau ",'"','de','"',' la')"""
 
 from lxml.etree import fromstring, Element
+
 
 def test(val):
     print "test", (val,)
     xml = fromstring("""<root/>""")
-    xml.append(Element("a", {"key":val}))
+    xml.append(Element("a", {"key": val}))
     assert len(xml.xpath("""//a[@key=%s]""" % xpathquoter(val))) == 1
 
 

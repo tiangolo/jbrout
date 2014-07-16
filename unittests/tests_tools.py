@@ -3,11 +3,11 @@
 import os
 import sys
 import shutil
-from datetime import datetime
-############################################################### to be executed here
+########################################################## to be executed here
 if os.path.basename(__file__) != "runtests.py":
     # execution from here
-    PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "jbrout")
+    PATH = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "jbrout")
     sys.path.append(PATH)
     FOLDER = "photos"
 else:
@@ -20,12 +20,12 @@ from jbrout.common import cd2d
 
 if __name__ == "__main__":
 
-
     # make an attribut list
-    la = lambda x: [x.filedate, x.exifdate, x.comment, x.tags, x.isflash, x.readonly, x.resolution]
+    la = lambda x: [x.filedate, x.exifdate, x.comment, x.tags, x.isflash,
+                    x.readonly, x.resolution]
 
+    cpdate = lambda a, b: -3 <= int(a) - int(b) <= 3
 
-    cpdate = lambda a, b:-3 <= int(a) - int(b) <= 3
     def _compare_(a1, a2, compareAll=True):
         if compareAll:
             return a1[1:] == a2[1:] and cpdate(a1[0], a2[0])
@@ -40,7 +40,8 @@ if __name__ == "__main__":
 
     shutil.copytree(FOLDER, folder)  # create a temp folder to work in
     try:
-        l = [os.path.join(folder, i).decode(sys.getfilesystemencoding()) for i in os.listdir(folder) if i.lower().endswith(".jpg")]
+        l = [os.path.join(folder, i).decode(sys.getfilesystemencoding())
+             for i in os.listdir(folder) if i.lower().endswith(".jpg")]
 
         #==================================================================
         # assert photos are readable
@@ -77,7 +78,8 @@ if __name__ == "__main__":
         # test autorotation,
         # without modification of attributes
         #==================================================================
-        l = [os.path.join(folder, i).decode(sys.getfilesystemencoding()) for i in os.listdir(folder) if i.lower().endswith(".jpg")]
+        l = [os.path.join(folder, i).decode(sys.getfilesystemencoding())
+             for i in os.listdir(folder) if i.lower().endswith(".jpg")]
         for f in l:
             p = PhotoCmd(f, needAutoRotation=True)
             p.addTags([u"àùù", ])
@@ -92,7 +94,6 @@ if __name__ == "__main__":
             assert _compare_(attrsAfter[:-1], attrsBefore[:-1])
             p.clear()
             p.addComment(u"")
-
 
         #==================================================================
         # test tags
@@ -138,12 +139,14 @@ if __name__ == "__main__":
             attrsAfter = la(p)
             assert _compare_(attrsAfter, attrsBefore)
 
-
         #==================================================================
         # test redate, normalizename
         # without modification of attributes
         #==================================================================
-        nd = lambda d : (cd2d(d) + timedelta(weeks=1, days=1, hours=1, minutes=1, seconds=1)).strftime("%Y%m%d%H%M%S")
+        def nd(d):
+            delta = timedelta(weeks=1, days=1, hours=1, minutes=1, seconds=1)
+            return (cd2d(d) + delta).strftime("%Y%m%d%H%M%S")
+
         for file in l:
             p = PhotoCmd(file, needAutoRename=True)
             p.addComment(u"kélàçù")
@@ -155,26 +158,26 @@ if __name__ == "__main__":
             filedate = p.filedate
             p.redate(1, 1, 1, 1, 1)
             assert p.file == name  # don't change his name after redate
-            
 
             attrsAfter = la(p)
-            assert _compare_(attrsAfter, attrsBefore, False)  # don't compare dates (done before)
-
+            # don't compare dates (done before)
+            assert _compare_(attrsAfter, attrsBefore, False)
 
             p = PhotoCmd(file, needAutoRename=True)
             newNameShouldBe = cd2d(p.exifdate).strftime(format)
             attrsAfter = la(p)
-            assert _compare_(attrsAfter, attrsBefore, False)  # don't compare dates (done before)
+            # don't compare dates (done before)
+            assert _compare_(attrsAfter, attrsBefore, False)
             assert newNameShouldBe in p.file
             p.addComment(u"")
             p.clear()
-
 
         #==================================================================
         # test rotate
         # without modification of attributes
         #==================================================================
-        l = [os.path.join(folder, i).decode(sys.getfilesystemencoding()) for i in os.listdir(folder) if i.lower().endswith(".jpg")]
+        l = [os.path.join(folder, i).decode(sys.getfilesystemencoding())
+             for i in os.listdir(folder) if i.lower().endswith(".jpg")]
         for file in l:
             p = PhotoCmd(file)
             p.addComment(u"kélàçù")
@@ -184,7 +187,8 @@ if __name__ == "__main__":
             p.rotate("R")
             attrsAfter = la(p)
             assert attrsAfter[-1] != attrsBefore[-1]
-            assert _compare_(attrsAfter[:-1], attrsBefore[:-1])  # don't compare resol
+            # don't compare resol
+            assert _compare_(attrsAfter[:-1], attrsBefore[:-1])
 
             p.rotate("L")
             attrsAfter = la(p)
@@ -218,7 +222,7 @@ if __name__ == "__main__":
             p1 = PhotoCmd(f1)
             p1.addComment(u"kélàçù")
             p1.add(u"kàkà")
-            
+
             f2 = u"../unittests/photos_tmp/jojo.jpg"
             print f1, "--->", f2
             shutil.copy(f1, f2)
