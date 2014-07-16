@@ -5,10 +5,8 @@ from distutils.core import setup
 # import py2exe
 from subprocess import Popen, PIPE
 import time
-import string
 import re
 import sys
-import glob
 
 # patch distutils if it can't cope with the "classifiers" or
 # "download_url" keywords
@@ -19,6 +17,8 @@ if sys.version < '2.2.3':
 import os
 
 from distutils.command.install_data import install_data
+
+
 class smart_install_data(install_data):
     def run(self):
         # need to change self.install_dir to the library dir
@@ -26,11 +26,13 @@ class smart_install_data(install_data):
         self.install_dir = getattr(install_cmd, 'install_lib')
         return install_data.run(self)
 
+
 def isPackage(filename):
     return(
         os.path.isdir(filename) and
         os.path.isfile(os.path.join(filename, '__init__.py'))
     )
+
 
 def packagesFor(filename, basePackage=""):
     """Find all packages in filename"""
@@ -42,9 +44,10 @@ def packagesFor(filename, basePackage=""):
                 moduleName = basePackage + '.' + item
             else:
                 moduleName = item
-            set[ moduleName] = dir
+            set[moduleName] = dir
             set.update(packagesFor(dir, moduleName))
     return set
+
 
 def setVersion(basePath, baseVersion):
     if os.path.isdir(os.path.join(basePath, '.git')):
@@ -53,18 +56,22 @@ def setVersion(basePath, baseVersion):
         infoCmd = ["svn", "info"]
     try:
         p = Popen(infoCmd, shell=False, stdout=PIPE, stderr=PIPE)
-        time.sleep(0.01)  # to avoid "IOError: [Errno 4] Interrupted system call"
-        out = string.join(p.stdout.readlines()).strip()
-        version = baseVersion + "." + re.search("(?<=Revision\: )\d+", out).group()
+        # to avoid "IOError: [Errno 4] Interrupted system call"
+        time.sleep(0.01)
+        out = (" ".join(p.stdout.readlines())).strip()
+        version = baseVersion + "." + \
+            re.search("(?<=Revision\: )\d+", out).group()
         versionFile = os.path.join('jbrout', 'data', 'version.txt')
         open(versionFile, 'w').write(version)
     except:
         try:
-            version = open(os.path.join(srcPath, "jbrout", "data", "version.txt")).read().strip()
+            version = open(os.path.join(srcPath,
+                           "jbrout", "data", "version.txt")).read().strip()
         except:
-            print """Building from unknown source, using 'src' as the version"""
+            print "Building from unknown source, using 'src' as the version"
             version = 'src'
     return version
+
 
 def filesFor(dirname):
     """Return all non-python-file filenames in dir"""
@@ -72,11 +79,10 @@ def filesFor(dirname):
     allResults = []
     for name in os.listdir(dirname):
         path = os.path.join(dirname, name)
-        if (
-            os.path.isfile(path) and
-            os.path.splitext(name)[1] in
-                ('.glade', '.txt', '.pot', '.po', '.mo', '.png', '.xcf', '.ico', '.xsl', '.exe')
-        ):
+        if (os.path.isfile(path) and
+            os.path.splitext(name)[1] in ('.glade', '.txt', '.pot', '.po',
+                                          '.mo', '.png', '.xcf', '.ico',
+                                          '.xsl', '.exe')):
             result.append(path)
         elif os.path.isdir(path) and name.lower() not in ('dist', '.svn'):
             allResults.extend(filesFor(path))
@@ -97,19 +103,20 @@ setup(
     version=__version__,
     author="Marc Lentz",
     author_email="matlan@gmail.com",
-    maintainer="Rob Wallace",
-    maintainer_email="rob@wallace.gen.nz",
+    maintainer="Matej Cepl",
+    maintainer_email="mcepl@cepl.eu",
     url="http://jbrout.googlecode.com",
     packages=packages.keys(),
     data_files=dataFiles,
     license="GPL-2",
     long_description="Photo manager written in python/pygtk for Win32, Linux",
-    cmdclass={'install_data':smart_install_data},
+    cmdclass={'install_data': smart_install_data},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
-        'License :: OSI Approved :: GNU General Public License Version 2 only (GPL-V2)',
+        'License :: OSI Approved :: GNU General Public License ' +
+            'Version 2 only (GPL-V2)',
         'Natural Language :: English',
         'Natural Language :: French',
         'Natural Language :: Italian',
