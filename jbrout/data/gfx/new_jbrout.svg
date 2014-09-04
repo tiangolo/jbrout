@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -13,10 +14,9 @@
    height="200"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.48.4 r9939"
    version="1.0"
-   sodipodi:docbase="/home/manatlan/Desktop"
-   sodipodi:docname="jbrout.svg"
+   sodipodi:docname="new_jbrout.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs4">
@@ -50,16 +50,18 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.1046469"
-     inkscape:cx="103.15494"
+     inkscape:cx="43.049846"
      inkscape:cy="101.69605"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="872"
-     inkscape:window-height="620"
-     inkscape:window-x="236"
-     inkscape:window-y="225" />
+     inkscape:window-width="1680"
+     inkscape:window-height="991"
+     inkscape:window-x="0"
+     inkscape:window-y="57"
+     showgrid="false"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -76,28 +78,31 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-5.4426227,1.1757724)">
-    <rect
-       style="opacity:1;fill:url(#linearGradient3142);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:9.80000019;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect2164"
-       width="190.2"
-       height="190.2"
-       x="10.342623"
-       y="3.7242277"
-       ry="41.956924" />
-    <text
-       xml:space="preserve"
-       style="font-size:290.74902344px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ea0000;fill-opacity:1;stroke:#ffffff;stroke-width:10.15000057;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:Thaleia"
-       x="16.395882"
-       y="316.10715"
-       id="text2160"
-       sodipodi:linespacing="125%"
-       inkscape:transform-center-x="160.11929"
-       inkscape:transform-center-y="-198.21209"
-       transform="scale(0.9999383,1.0000617)"><tspan
-         sodipodi:role="line"
-         id="tspan2162"
-         x="16.395882"
-         y="316.10715"
-         style="stroke-width:10.15000057">*</tspan></text>
+    <g
+       id="g2989">
+      <rect
+         ry="41.956924"
+         y="3.7242277"
+         x="10.342623"
+         height="190.2"
+         width="190.2"
+         id="rect2164"
+         style="opacity:1;fill:url(#linearGradient3142);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:9.80000019;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         transform="scale(0.9999383,1.0000617)"
+         inkscape:transform-center-y="-198.21209"
+         inkscape:transform-center-x="160.11929"
+         sodipodi:linespacing="125%"
+         id="text2160"
+         y="248.30969"
+         x="32.761871"
+         style="font-size:290.74902344px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ea0000;fill-opacity:1;stroke:#ffffff;stroke-width:10.15000057;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Thaleia"
+         xml:space="preserve"><tspan
+           style="stroke-width:10.15000057"
+           y="248.30969"
+           x="32.761871"
+           id="tspan2162"
+           sodipodi:role="line">*</tspan></text>
+    </g>
   </g>
 </svg>
